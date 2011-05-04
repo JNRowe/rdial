@@ -15,12 +15,12 @@ def given_i_have_an_empty_string(step):
     world.input = ""
 
 
-@step(u'When I process it with (.*)')
+@step(u'When I process it with ([^\.]+)$')
 def when_i_process_it_with_function(step, function):
     world.result = getattr(rdial, function)(world.input)
 
 
-@step(u'When I process it with (.*)\.(.*)')
+@step(u'When I process it with ([^\.]+)\.([^\.]+)$')
 def when_i_process_it_with_method(step, obj, method):
     world.result = getattr(getattr(rdial, obj), method)(world.input)
 
