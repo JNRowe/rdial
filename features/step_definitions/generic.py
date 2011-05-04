@@ -10,6 +10,11 @@ def given_i_have_the_string_string(step, string):
     world.input = string
 
 
+@step(u'Given I have an empty string')
+def given_i_have_an_empty_string(step):
+    world.input = ""
+
+
 @step(u'When I process it with (.*)')
 def when_i_process_it_with_function(step, function):
     world.result = getattr(rdial, function)(world.input)
