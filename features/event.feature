@@ -18,3 +18,8 @@ Feature: Handle database events
     | 0 | project  | 2011-05-04 08:00:00+00:00 | 1:00:00 |
     | 1 | project2 | 2011-05-04 09:15:00+00:00 | 0:15:00 |
     | 2 | project  | 2011-05-04 09:30:00+00:00 | 0:00:00 |
+
+  Scenario: Write database
+    Given I have the events from test.txt
+    When I write it to a temp file
+    Then I see an duplicate of test.txt
