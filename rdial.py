@@ -26,6 +26,13 @@ class Event(object):
 
     def __repr__(self):
         return 'Event(%(project)r, %(start)r, %(delta)r)' % self.__dict__
+
+    def writer(self):
+        return {
+            'project': self.project,
+            'start': format_datetime(self.start),
+            'delta': format_delta(self.delta)
+        }
 FIELDS = inspect.getargspec(Event.__init__).args[1:]
 
 
@@ -36,6 +43,11 @@ class Events(list):
     @staticmethod
     def read(file):
         return Events([Event(**d) for d in csv.DictReader(open(file), FIELDS)])
+
+    def write(self, file):
+        writer = csv.DictWriter(open(file, 'w'), FIELDS, lineterminator='\n')
+        for event in self:
+            writer.writerow(event.writer())
 
 
 def parse_delta(string):
