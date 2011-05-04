@@ -21,6 +21,8 @@ def parse_delta(string):
     :param str string: Duration string to parse
     :rtype: datetime.timedelta
     """
+    if not string:
+        return datetime.timedelta(0)
     match = re.match("""
         PT
         ((?P<hours>\d{2})H)?
