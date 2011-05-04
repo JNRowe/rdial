@@ -63,6 +63,8 @@ def format_delta(timedelta_):
     :param datetime.timedelta timedelta_: Duration to process
     :rtype: str
     """
+    if timedelta_ == datetime.timedelta(0):
+        return ""
     hours, minutes = divmod(timedelta_.seconds, 3600)
     minutes, seconds = divmod(minutes, 60)
     return 'PT%02dH%02dM%02dS' % (hours, minutes, seconds)
