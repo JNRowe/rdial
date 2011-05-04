@@ -28,3 +28,8 @@ def when_i_process_it_with_method(step, obj, method):
 @step(u'Then I see the string (.*)')
 def then_i_see_the_string_result(step, expected):
     assert_equal(world.result, expected)
+
+
+@step(u'Then I see an empty string')
+def then_i_see_an_empty_string(step):
+    assert_equal(world.result, "")
