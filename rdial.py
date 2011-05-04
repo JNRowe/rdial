@@ -1,6 +1,8 @@
 #! /usr/bin/env python -tt
 
+import csv
 import datetime
+import inspect
 import re
 
 
@@ -13,6 +15,27 @@ class UTC(datetime.tzinfo):  # pragma: nocover
 
     def tzname(self, dt):
         return 'UTC'
+
+
+class Event(object):
+    """Base object for handling database event"""
+    def __init__(self, project, start, delta=datetime.timedelta(0)):
+        self.project = project
+        self.start = parse_datetime(start)
+        self.delta = parse_delta(delta)
+
+    def __repr__(self):
+        return 'Event(%(project)r, %(start)r, %(delta)r)' % self.__dict__
+FIELDS = inspect.getargspec(Event.__init__).args[1:]
+
+
+class Events(list):
+    def __repr__(self):
+        return 'Events(%r)' % self[:]
+
+    @staticmethod
+    def read(file):
+        return Events([Event(**d) for d in csv.DictReader(open(file), FIELDS)])
 
 
 def parse_delta(string):
