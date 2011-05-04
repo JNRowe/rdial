@@ -22,3 +22,13 @@ Feature: Handle ISO-8601 durations
     | timedelta | result      |
     | 4:30:21   | PT04H30M21S |
     | 0:12:01   | PT00H12M01S |
+
+  Scenario: Parse null duration strings
+    Given I have an empty string
+    When I process it with parse_delta
+    Then I see the timedelta object 0:00:00
+
+  Scenario: Handle empty duration
+    Given I have the timedelta object 0:00:00
+    When I process it with format_delta
+    Then I see an empty string

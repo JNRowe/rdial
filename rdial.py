@@ -1,6 +1,8 @@
 #! /usr/bin/env python -tt
 
+import csv
 import datetime
+import inspect
 import re
 
 
@@ -15,12 +17,47 @@ class UTC(datetime.tzinfo):  # pragma: nocover
         return 'UTC'
 
 
+class Event(object):
+    """Base object for handling database event"""
+    def __init__(self, project, start, delta=datetime.timedelta(0)):
+        self.project = project
+        self.start = parse_datetime(start)
+        self.delta = parse_delta(delta)
+
+    def __repr__(self):
+        return 'Event(%(project)r, %(start)r, %(delta)r)' % self.__dict__
+
+    def writer(self):
+        return {
+            'project': self.project,
+            'start': format_datetime(self.start),
+            'delta': format_delta(self.delta)
+        }
+FIELDS = inspect.getargspec(Event.__init__).args[1:]
+
+
+class Events(list):
+    def __repr__(self):
+        return 'Events(%r)' % self[:]
+
+    @staticmethod
+    def read(file):
+        return Events([Event(**d) for d in csv.DictReader(open(file), FIELDS)])
+
+    def write(self, file):
+        writer = csv.DictWriter(open(file, 'w'), FIELDS, lineterminator='\n')
+        for event in self:
+            writer.writerow(event.writer())
+
+
 def parse_delta(string):
     """Parse ISO-8601 duration string
 
     :param str string: Duration string to parse
     :rtype: datetime.timedelta
     """
+    if not string:
+        return datetime.timedelta(0)
     match = re.match("""
         PT
         ((?P<hours>\d{2})H)?
@@ -38,6 +75,8 @@ def format_delta(timedelta_):
     :param datetime.timedelta timedelta_: Duration to process
     :rtype: str
     """
+    if timedelta_ == datetime.timedelta(0):
+        return ""
     hours, minutes = divmod(timedelta_.seconds, 3600)
     minutes, seconds = divmod(minutes, 60)
     return 'PT%02dH%02dM%02dS' % (hours, minutes, seconds)

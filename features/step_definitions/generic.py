@@ -10,11 +10,26 @@ def given_i_have_the_string_string(step, string):
     world.input = string
 
 
-@step(u'When I process it with (.*)')
+@step(u'Given I have an empty string')
+def given_i_have_an_empty_string(step):
+    world.input = ""
+
+
+@step(u'When I process it with ([^\.]+)$')
 def when_i_process_it_with_function(step, function):
     world.result = getattr(rdial, function)(world.input)
+
+
+@step(u'When I process it with ([^\.]+)\.([^\.]+)$')
+def when_i_process_it_with_method(step, obj, method):
+    world.result = getattr(getattr(rdial, obj), method)(world.input)
 
 
 @step(u'Then I see the string (.*)')
 def then_i_see_the_string_result(step, expected):
     assert_equal(world.result, expected)
+
+
+@step(u'Then I see an empty string')
+def then_i_see_an_empty_string(step):
+    assert_equal(world.result, "")
