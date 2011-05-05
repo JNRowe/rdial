@@ -17,9 +17,9 @@ other applications.  A sample database would be::
 
 The format is a CSV file containing the following fields:
 
-1. Project name
-2. Start time expressed in UTC
-3. Task duration
+#. Project name
+#. Start time expressed in UTC
+#. Task duration
 
 The start time and duration fields are given as ISO-8601 formatted strings.
 
