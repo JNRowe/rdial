@@ -5,6 +5,21 @@ rdial - Simple time tracking for simple people
 
 ``rdial`` is released under the `GPL v3`_ license.
 
+Requirements
+------------
+
+``rdial`` does not depend on any modules that aren't included in Python_'s
+standard library, and as such should run with Python 2.6 or newer [#]_.  If
+``rdial`` doesn't work with the version of Python you have installed, file an
+issue_ and I'll endeavour to fix it.
+
+The module has been tested on many UNIX-like systems, including Linux and OS X,
+but it should work fine on other systems too.
+
+.. [#] If you still use Python v2.5 only small changes are required, for
+       example using the pre-``namedtuple`` syntax for the
+       ``inspect.getargspec`` calls
+
 Database
 --------
 
@@ -37,3 +52,5 @@ Interface
     project2 PT00H15M00S
 
 .. _GPL v3: http://www.gnu.org/licenses/
+.. _Python: http://www.python.org/
+.. _issue: https://github.com/JNRowe/rdial/issues
