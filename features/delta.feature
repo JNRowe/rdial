@@ -32,3 +32,16 @@ Feature: Handle ISO-8601 durations
     Given I have the timedelta object 0:00:00
     When I process it with format_delta
     Then I see an empty string
+
+ Scenario Outline: Handle partial definition durations
+    Given I have the string <string>
+    When I process it with parse_delta
+    Then I see the timedelta object <result>
+
+  Examples:
+    | string   | result  |
+    | PT04H    | 4:00:00 |
+    | PT04H30M | 4:30:00 |
+    | PT30M    | 0:30:00 |
+    | PT04H21S | 4:00:21 |
+    | PT4H     | 4:00:00 |
