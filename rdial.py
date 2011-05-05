@@ -41,8 +41,11 @@ import inspect
 import re
 
 
-class UTC(datetime.tzinfo):  # pragma: nocover
+class UTC(datetime.tzinfo):
     """UTC timezone object"""
+    def __repr__(self):
+        return 'UTC()'
+
     # pylint: disable-msg=W0613
     def utcoffset(self, datetime_):
         return datetime.timedelta(0)
@@ -70,7 +73,9 @@ class Event(object):
 
     def __repr__(self):
         """Self-documenting string representation"""
-        return 'Event(%(project)r, %(start)r, %(delta)r)' % self.__dict__
+        return 'Event(%r, %r, %r)' % (self.project,
+                                      format_datetime(self.start),
+                                      format_delta(self.delta))
 
     def writer(self):
         """Prepare object for export"""
@@ -86,7 +91,7 @@ class Events(list):
     """Container for database events"""
     def __repr__(self):
         """Self-documenting string representation"""
-        return 'Events(%r)' % self[:]
+        return 'Events(%s)' % super(self.__class__, self).__repr__()
 
     @staticmethod
     def read(filename):
