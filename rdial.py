@@ -43,14 +43,16 @@ import re
 
 class UTC(datetime.tzinfo):  # pragma: nocover
     """UTC timezone object"""
-    def utcoffset(self, dt):
+    # pylint: disable-msg=W0613
+    def utcoffset(self, datetime_):
         return datetime.timedelta(0)
 
-    def dst(self, dt):
+    def dst(self, datetime_):
         return datetime.timedelta(0)
 
-    def tzname(self, dt):
+    def tzname(self, datetime_):
         return 'UTC'
+    # pylint: enable-msg=W0613
 
 
 class Event(object):
@@ -87,20 +89,23 @@ class Events(list):
         return 'Events(%r)' % self[:]
 
     @staticmethod
-    def read(file):
+    def read(filename):
         """Read and parse database
 
         :param str filename: Database file to read
         :returns Events: Parsed events database
         """
-        return Events([Event(**d) for d in csv.DictReader(open(file), FIELDS)])
+        # pylint: disable-msg=W0142
+        return Events([Event(**d)
+                       for d in csv.DictReader(open(filename), FIELDS)])
 
-    def write(self, file):
+    def write(self, filename):
         """Write database outline
 
         :param str filename: Database file to write
         """
-        writer = csv.DictWriter(open(file, 'w'), FIELDS, lineterminator='\n')
+        writer = csv.DictWriter(open(filename, 'w'), FIELDS,
+                                lineterminator='\n')
         for event in self:
             writer.writerow(event.writer())
 
@@ -123,7 +128,7 @@ def parse_delta(string):
     """, string, re.VERBOSE)
     match_dict = dict((k, int(v) if v else 0)
                       for k, v in match.groupdict().items())
-    return datetime.timedelta(**match_dict)
+    return datetime.timedelta(**match_dict)  # pylint: disable-msg=W0142
 
 
 def format_delta(timedelta_):
