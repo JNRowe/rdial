@@ -77,7 +77,9 @@ def parse_delta(string):
     if not string:
         return datetime.timedelta(0)
     match = re.match("""
-        PT
+        P
+        ((?P<days>\d+)D)?
+        T?
         ((?P<hours>\d{2})H)?
         ((?P<minutes>\d{2})M)?
         ((?P<seconds>\d{2})S)?
