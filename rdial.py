@@ -60,7 +60,7 @@ class UTC(datetime.tzinfo):
 
 class Event(object):
     """Base object for handling database event"""
-    def __init__(self, project, start, delta=datetime.timedelta(0)):
+    def __init__(self, project, start, delta=""):
         """Initialise a new ``Event`` object
 
         :param str project: Project name to tracking
