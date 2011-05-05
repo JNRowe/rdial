@@ -3,6 +3,8 @@ rdial - Simple time tracking for simple people
 
 ``rdial`` is a simple way to track the time you spend on tasks.
 
+``rdial`` is released under the `GPL v3`_ license.
+
 Database
 --------
 
@@ -34,3 +36,4 @@ Interface
     project  PT01H00M00S
     project2 PT00H15M00S
 
+.. _GPL v3: http://www.gnu.org/licenses/
