@@ -18,6 +18,23 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+__version__ = "0.1.0"
+__date__ = "2011-05-04"
+__author__ = "James Rowe <jnrowe@gmail.com>"
+__copyright__ = "Copyright (C) 2011  James Rowe <jnrowe@gmail.com>"
+__license__ = "GNU General Public License Version 3"
+__credits__ = ""
+__history__ = "See git repository"
+
+from email.utils import parseaddr
+
+__doc__ += """.
+
+A simple time tracking tool, with no frills and no fizzy coating.
+
+.. moduleauthor:: `%s <mailto:%s>`__
+""" % parseaddr(__author__)
+
 import csv
 import datetime
 import inspect
@@ -25,6 +42,7 @@ import re
 
 
 class UTC(datetime.tzinfo):  # pragma: nocover
+    """UTC timezone object"""
     def utcoffset(self, dt):
         return datetime.timedelta(0)
 
@@ -38,14 +56,22 @@ class UTC(datetime.tzinfo):  # pragma: nocover
 class Event(object):
     """Base object for handling database event"""
     def __init__(self, project, start, delta=datetime.timedelta(0)):
+        """Initialise a new ``Event`` object
+
+        :param str project: Project name to tracking
+        :param str start: ISO-8601 start time for event
+        :param str delta: ISO-8601 duration for event
+        """
         self.project = project
         self.start = parse_datetime(start)
         self.delta = parse_delta(delta)
 
     def __repr__(self):
+        """Self-documenting string representation"""
         return 'Event(%(project)r, %(start)r, %(delta)r)' % self.__dict__
 
     def writer(self):
+        """Prepare object for export"""
         return {
             'project': self.project,
             'start': format_datetime(self.start),
@@ -55,14 +81,25 @@ FIELDS = inspect.getargspec(Event.__init__).args[1:]
 
 
 class Events(list):
+    """Container for database events"""
     def __repr__(self):
+        """Self-documenting string representation"""
         return 'Events(%r)' % self[:]
 
     @staticmethod
     def read(file):
+        """Read and parse database
+
+        :param str filename: Database file to read
+        :returns Events: Parsed events database
+        """
         return Events([Event(**d) for d in csv.DictReader(open(file), FIELDS)])
 
     def write(self, file):
+        """Write database outline
+
+        :param str filename: Database file to write
+        """
         writer = csv.DictWriter(open(file, 'w'), FIELDS, lineterminator='\n')
         for event in self:
             writer.writerow(event.writer())
