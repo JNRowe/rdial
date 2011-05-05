@@ -45,3 +45,13 @@ Feature: Handle ISO-8601 durations
     | PT30M    | 0:30:00 |
     | PT04H21S | 4:00:21 |
     | PT4H     | 4:00:00 |
+
+ Scenario Outline: Handle durations including days
+    Given I have the string <string>
+    When I process it with parse_delta
+    Then I see the timedelta object <result>
+
+  Examples:
+    | string  | result          |
+    | P3DT04H | 3 days, 4:00:00 |
+    | P3D     | 3 days, 0:00:00 |
