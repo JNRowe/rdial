@@ -19,7 +19,7 @@
 #
 
 import atexit
-import hashlib
+import difflib
 import os
 
 from nose.tools import assert_equal
@@ -63,7 +63,11 @@ def when_i_write_it_to_a_temp_file(step):
 
 @step(u'Then I see an duplicate of (.*)')
 def then_i_see_an_duplicate_of_test_txt(step, file):
+    def udiff(file1, file2):
+        differ = difflib.unified_diff(open(file1).readlines(),
+                                      open(file2).readlines(),
+                                      file1, "test_output")
+        return "".join(differ)
     file = "%s/../data/%s" % (PATH, file)
-    hash_file = lambda x: hashlib.sha1(open(x).read()).hexdigest()
-    assert_equal(hash_file(world.file), hash_file(file),
-                 "Hash of file content doesn't match!")
+    diff_text = udiff(file, world.file)
+    assert_equal(diff_text, "", "File comparison failed!\n" + diff_text)
