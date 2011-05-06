@@ -22,7 +22,7 @@ import unittest
 
 from nose.tools import assert_equal
 
-from rdial import (Event, Events, UTC)
+from rdial import (Event, Events)
 
 
 def eval_repr(obj):
@@ -49,7 +49,3 @@ class ReprTest(unittest.TestCase):
         ev2 = Event("project", "2011-05-05T12:23:48Z", "PT00H30M00S")
         events = Events([ev1, ev2])
         assert_equal(repr(events), eval_repr(events))
-
-    def test_utc(self):
-        utc = UTC()
-        assert_equal(repr(utc), eval_repr(utc))
