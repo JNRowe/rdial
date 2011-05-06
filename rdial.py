@@ -41,22 +41,7 @@ import inspect
 import os
 import re
 
-
-class UTC(datetime.tzinfo):
-    """UTC timezone object"""
-    def __repr__(self):
-        return 'UTC()'
-
-    # pylint: disable-msg=W0613
-    def utcoffset(self, datetime_):
-        return datetime.timedelta(0)
-
-    def dst(self, datetime_):
-        return datetime.timedelta(0)
-
-    def tzname(self, datetime_):
-        return 'UTC'
-    # pylint: enable-msg=W0613
+import isodate
 
 
 class Event(object):
@@ -69,20 +54,20 @@ class Event(object):
         :param str delta: ISO-8601 duration for event
         """
         self.project = project
-        self.start = parse_datetime(start)
+        self.start = isodate.isodatetime.parse_datetime(start)
         self.delta = parse_delta(delta)
 
     def __repr__(self):
         """Self-documenting string representation"""
         return 'Event(%r, %r, %r)' % (self.project,
-                                      format_datetime(self.start),
+                                      isodate.datetime_isoformat(self.start),
                                       format_delta(self.delta))
 
     def writer(self):
         """Prepare object for export"""
         return {
             'project': self.project,
-            'start': format_datetime(self.start),
+            'start': isodate.datetime_isoformat(self.start),
             'delta': format_delta(self.delta)
         }
 FIELDS = inspect.getargspec(Event.__init__).args[1:]
@@ -157,23 +142,3 @@ def format_delta(timedelta_):
     seconds = "%02dS" % seconds if seconds else ""
     return 'P%s%s%s%s%s' % (days, "T" if hours or minutes or seconds else "",
                             hours, minutes, seconds)
-
-
-def parse_datetime(string):
-    """Parse ISO-8601 datetime string
-
-    :param str string: Datetime string to parse
-    :rtype: datetime.datetime
-    """
-    datetime_ = datetime.datetime.strptime(string, '%Y-%m-%dT%H:%M:%SZ')
-    return datetime_.replace(tzinfo=UTC())
-
-
-def format_datetime(datetime_):
-    """Format ISO-8601 datetime string
-
-    :param datetime.datetime datetime_: Datetime to process
-    :rtype: str
-    """
-    # Can't call isoformat method as it uses the +00:00 form
-    return datetime_.strftime('%Y-%m-%dT%H:%M:%SZ')
