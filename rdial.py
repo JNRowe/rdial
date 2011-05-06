@@ -147,7 +147,11 @@ def format_delta(timedelta_):
     days = "%dD" % timedelta_.days if timedelta_.days else ""
     hours, minutes = divmod(timedelta_.seconds, 3600)
     minutes, seconds = divmod(minutes, 60)
-    return 'P%sT%02dH%02dM%02dS' % (days, hours, minutes, seconds)
+    hours = "%02dH" % hours if hours else ""
+    minutes = "%02dM" % minutes if minutes else ""
+    seconds = "%02dS" % seconds if seconds else ""
+    return 'P%s%s%s%s%s' % (days, "T" if hours or minutes or seconds else "",
+                            hours, minutes, seconds)
 
 
 def parse_datetime(string):
