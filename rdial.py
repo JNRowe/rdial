@@ -119,6 +119,10 @@ class Events(list):
         for event in self:
             writer.writerow(event.writer())
 
+    def projects(self):
+        """Generate a list of projects in the database"""
+        return sorted(set(event.project for event in self))
+
 
 def parse_delta(string):
     """Parse ISO-8601 duration string
