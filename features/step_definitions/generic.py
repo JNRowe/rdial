@@ -57,7 +57,10 @@ def then_i_see_an_empty_string(step):
 
 @step(u'When I call (.*) on ([^ ]+)$')
 def when_i_call_method_on_obj(step, method, obj):
-    getattr(getattr(world, obj), method)()
+    try:
+        getattr(getattr(world, obj), method)()
+    except Exception as e:
+        world.exception = e
 
 
 @step(u'When I check output for calling (.*) on ([^ ]+)$')
