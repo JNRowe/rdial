@@ -53,3 +53,8 @@ def then_i_see_the_string_result(step, expected):
 @step(u'Then I see an empty string')
 def then_i_see_an_empty_string(step):
     assert_equal(world.result, "")
+
+
+@step(u'When I call (.*) on (.*)')
+def when_i_call_method_on_obj(step, method, obj):
+    world.result = unicode(getattr(getattr(world, obj), method)())

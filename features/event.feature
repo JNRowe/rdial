@@ -23,3 +23,9 @@ Feature: Handle database events
     Given I have the events from test.txt
     When I write it to a temp file
     Then I see an duplicate of test.txt
+
+  Scenario: List projects
+    Given I have the database test.txt
+    When I process it with Events.read
+    When I call projects on result
+    Then I see the string ['project', 'project2']
