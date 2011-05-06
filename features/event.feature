@@ -27,17 +27,30 @@ Feature: Handle database events
   Scenario: List projects
     Given I have the database test.txt
     When I process it with Events.read
-    When I call projects on result
+    When I check output for calling projects on result
     Then I see the string ['project', 'project2']
 
   Scenario: Currently running event
     Given I have the database test.txt
     When I process it with Events.read
-    When I call running on result
+    When I check output for calling running on result
     Then I see the string project
 
   Scenario: No currently running event
     Given I have the database test_not_running.txt
     When I process it with Events.read
-    When I call running on result
+    When I check output for calling running on result
     Then I see the string False
+
+  Scenario: Start event
+    Given I have the database test_not_running.txt
+    When I process it with Events.read
+    When I call start on result with project=project2
+    When I check output for calling running on result
+    Then I see the string project2
+
+  Scenario: Fail starting when currently running
+    Given I have the database test.txt
+    When I process it with Events.read
+    When I call start on result with project=project2
+    Then I receive ValueError

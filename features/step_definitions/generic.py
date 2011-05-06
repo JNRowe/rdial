@@ -55,6 +55,25 @@ def then_i_see_an_empty_string(step):
     assert_equal(world.result, "")
 
 
-@step(u'When I call (.*) on (.*)')
+@step(u'When I call (.*) on ([^ ]+)$')
 def when_i_call_method_on_obj(step, method, obj):
+    getattr(getattr(world, obj), method)()
+
+
+@step(u'When I check output for calling (.*) on ([^ ]+)$')
+def when_i_check_output_for_calling_method(step, method, obj):
     world.result = unicode(getattr(getattr(world, obj), method)())
+
+
+@step(u'When I call (.*) on ([^ ]+) with ([^=]+)=(.*)$')
+def when_i_call_method_on_obj_with_args(step, method, obj, param, value):
+    params = {str(param): value}
+    try:
+        getattr(getattr(world, obj), method)(**params)
+    except Exception as e:
+        world.exception = e
+
+
+@step(u'Then I receive (.*)$')
+def then_i_receive_exception(step, expected):
+    assert_equal(unicode(world.exception.__class__.__name__), expected)
