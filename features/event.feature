@@ -67,3 +67,9 @@ Feature: Handle database events
     When I process it with Events.read
     When I call stop on result
     Then I receive ValueError
+
+  Scenario: Fetch events for specific project
+    Given I have the database test.txt
+    When I process it with Events.read
+    When I check return value for calling for_project on result with project=project2
+    Then I see 1 events

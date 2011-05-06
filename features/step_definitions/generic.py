@@ -77,6 +77,13 @@ def when_i_call_method_on_obj_with_args(step, method, obj, param, value):
         world.exception = e
 
 
+@step(u'When I check return value for calling (.*) on ([^ ]+) with ([^=]+)=(.*)$')
+def when_i_check_retval_for_calling_method_with_args(step, method, obj, param,
+                                                     value):
+    params = {str(param): value}
+    world.result = getattr(getattr(world, obj), method)(**params)
+
+
 @step(u'Then I receive (.*)$')
 def then_i_receive_exception(step, expected):
     assert_equal(unicode(world.exception.__class__.__name__), expected)
