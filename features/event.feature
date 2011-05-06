@@ -29,3 +29,15 @@ Feature: Handle database events
     When I process it with Events.read
     When I call projects on result
     Then I see the string ['project', 'project2']
+
+  Scenario: Currently running event
+    Given I have the database test.txt
+    When I process it with Events.read
+    When I call running on result
+    Then I see the string project
+
+  Scenario: No currently running event
+    Given I have the database test_not_running.txt
+    When I process it with Events.read
+    When I call running on result
+    Then I see the string False
