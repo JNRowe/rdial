@@ -38,6 +38,7 @@ A simple time tracking tool, with no frills and no fizzy coating.
 import csv
 import datetime
 import inspect
+import os
 import re
 
 
@@ -97,9 +98,13 @@ class Events(list):
     def read(filename):
         """Read and parse database
 
+        Assume a new ``Events`` object should be created if the file is missing
+
         :param str filename: Database file to read
         :returns Events: Parsed events database
         """
+        if not os.path.exists(filename):
+            return Events()
         # pylint: disable-msg=W0142
         return Events([Event(**d)
                        for d in csv.DictReader(open(filename), FIELDS)])
