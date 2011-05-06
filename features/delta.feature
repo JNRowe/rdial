@@ -55,3 +55,14 @@ Feature: Handle ISO-8601 durations
     | string  | result          |
     | P3DT04H | 3 days, 4:00:00 |
     | P3D     | 3 days, 0:00:00 |
+
+  Scenario Outline: Produce ISO-8601 durations including days
+    Given I have the timedelta object <timedelta>
+    When I process it with format_delta
+    Then I see the string <result>
+
+  Examples:
+    | timedelta        | result        |
+    | 3 days, 4:00:00  | P3DT04H00M00S |
+    | 3 days, 0:00:00  | P3DT00H00M00S |
+    | 2 days, 22:00:00 | P2DT22H00M00S |

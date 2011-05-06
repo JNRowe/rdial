@@ -32,6 +32,12 @@ def then_i_see_the_timedelta_object_result(step, expected):
 
 @step(u'Given I have the timedelta object (.*)')
 def given_i_have_the_timedelta_object_timedelta(step, string):
-    hours, minutes, seconds = map(int, string.split(":"))
-    world.input = datetime.timedelta(hours=hours, minutes=minutes,
+    if ', ' in string:
+        days, time = string.split(", ")
+        days = int(days.split(" ")[0])
+    else:
+        days = 0
+        time = string
+    hours, minutes, seconds = map(int, time.split(":"))
+    world.input = datetime.timedelta(days=days, hours=hours, minutes=minutes,
                                      seconds=seconds)
