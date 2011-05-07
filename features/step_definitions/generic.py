@@ -77,11 +77,18 @@ def when_i_call_method_on_obj_with_args(step, method, obj, param, value):
         world.exception = e
 
 
-@step(u'When I check return value for calling (.*) on ([^ ]+) with ([^=]+)=(.*)$')
-def when_i_check_retval_for_calling_method_with_args(step, method, obj, param,
-                                                     value):
-    params = {str(param): value}
-    world.result = getattr(getattr(world, obj), method)(**params)
+@step(u'When I check return value for calling (.*) on ([^ ]+) with ([^=]+)=([^ ,]+)(?:, ([^=]+)=([^ ,]+))?(?:, ([^=]+)=([^ ,]+))?$')
+def when_i_check_retval_for_calling_method_with_args(step, method, obj,
+                                                     *params):
+    used_params = filter(None, params)
+    d = {}
+    # Build dictionary with integer values, if possible
+    for k, v in zip(used_params[0::2], used_params[1::2]):
+        try:
+            d[k] = int(v)
+        except ValueError:
+            d[k] = v
+    world.result = getattr(getattr(world, obj), method)(**d)
 
 
 @step(u'Then I receive (.*)$')
