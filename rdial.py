@@ -91,6 +91,15 @@ class Event(object):
         if self.delta == datetime.timedelta(0):
             return self.project
         return False
+
+    def stop(self):
+        """Stop currently running event
+
+        :raise ValueError: Event not running
+        """
+        if self.delta:
+            raise ValueError('Not running!')
+        self.delta = datetime.datetime.utcnow().replace(tzinfo=UTC()) - self.start
 FIELDS = inspect.getargspec(Event.__init__).args[1:]
 
 
@@ -152,6 +161,15 @@ class Events(list):
         if self.running():
             raise ValueError('Currently running task!')
         self.append(Event(project))
+
+    def stop(self):
+        """Stop currently running event
+
+        :raise ValueError: No currently running task
+        """
+        if not self.running():
+            raise ValueError('No currently running task!')
+        self.last().stop()
 
 
 def parse_delta(string):
