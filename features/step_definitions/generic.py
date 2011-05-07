@@ -37,12 +37,12 @@ def given_i_have_an_empty_string(step):
     world.input = ""
 
 
-@step(u'When I process it with %(IDENTIFIER)s$')
+@step(u'When I process it with %(IDENTIFIER)s')
 def when_i_process_it_with_function(step, function):
     world.result = getattr(rdial, function)(world.input)
 
 
-@step(u'When I process it with %(IDENTIFIER)s\.%(IDENTIFIER)s$')
+@step(u'When I process it with %(IDENTIFIER)s\.%(IDENTIFIER)s')
 def when_i_process_it_with_method(step, obj, method):
     world.result = getattr(getattr(rdial, obj), method)(world.input)
 
@@ -57,7 +57,7 @@ def then_i_see_an_empty_string(step):
     assert_equal(world.result, "")
 
 
-@step(u'When I call %(IDENTIFIER)s on %(IDENTIFIER)s$')
+@step(u'When I call %(IDENTIFIER)s on %(IDENTIFIER)s')
 def when_i_call_method_on_obj(step, method, obj):
     try:
         getattr(getattr(world, obj), method)()
@@ -65,12 +65,12 @@ def when_i_call_method_on_obj(step, method, obj):
         world.exception = e
 
 
-@step(u'When I check output for calling %(IDENTIFIER)s on %(IDENTIFIER)s$')
+@step(u'When I check output for calling %(IDENTIFIER)s on %(IDENTIFIER)s')
 def when_i_check_output_for_calling_method(step, method, obj):
     world.result = unicode(getattr(getattr(world, obj), method)())
 
 
-@step(u'When I call %(IDENTIFIER)s on %(IDENTIFIER)s with %(NAMED_PARAM)s$')
+@step(u'When I call %(IDENTIFIER)s on %(IDENTIFIER)s with %(NAMED_PARAM)s')
 def when_i_call_method_on_obj_with_args(step, method, obj, param, value):
     params = {str(param): value}
     try:
@@ -80,7 +80,7 @@ def when_i_call_method_on_obj_with_args(step, method, obj, param, value):
 
 
 @step(u'When I check return value for calling %(IDENTIFIER)s on '
-       '%(IDENTIFIER)s with %(NAMED_PARAM)s%(OPT_PARAM)s%(OPT_PARAM)s$')
+       '%(IDENTIFIER)s with %(NAMED_PARAM)s%(OPT_PARAM)s%(OPT_PARAM)s')
 def when_i_check_retval_for_calling_method_with_args(step, method, obj,
                                                      *params):
     used_params = filter(None, params)
@@ -94,6 +94,6 @@ def when_i_check_retval_for_calling_method_with_args(step, method, obj,
     world.result = getattr(getattr(world, obj), method)(**d)
 
 
-@step(u'Then I receive %(IDENTIFIER)s$')
+@step(u'Then I receive %(IDENTIFIER)s')
 def then_i_receive_exception(step, expected):
     assert_equal(unicode(world.exception.__class__.__name__), expected)

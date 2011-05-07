@@ -35,4 +35,4 @@ def step(match):
     definitions.
     """
     consts = dict(filter(lambda e: e[0].upper() == e[0], globals().items()))
-    return lettuce_step(match % consts)
+    return lettuce_step("%s$" % match % consts)
