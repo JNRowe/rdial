@@ -22,7 +22,9 @@ import datetime
 
 from nose.tools import assert_equal
 
-from lettuce import (step, world)
+from lettuce import world
+
+from util import step
 
 
 @step(u'Then I see the timedelta object (.*)')

@@ -24,7 +24,10 @@ import os
 
 from nose.tools import assert_equal
 
-from lettuce import (step, world)
+from lettuce import world
+
+from util import step
+
 
 PATH = os.path.dirname(os.path.abspath(__file__))
 

@@ -1,7 +1,7 @@
 #
 # vim: set sw=4 sts=4 et tw=80 fileencoding=utf-8:
 #
-"""iso_datetime - Lettuce step functions for checking datetime support"""
+"""util - Lettuce utility functions for rdial"""
 # Copyright (C) 2011  James Rowe <jnrowe@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -18,20 +18,21 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import datetime
 
-from nose.tools import assert_equal
-
-from lettuce import world
-
-from util import step
+from lettuce import step as lettuce_step
 
 
-@step(u'Then I see the datetime object (.*)')
-def then_i_see_the_datetime_object_result(step, expected):
-    assert_equal(str(world.result), expected)
+IDENTIFIER = u'([a-zA-Z_]\w*)'
+NAMED_PARAM = u'([^=]+)=([^ ,]+)'
+OPT_PARAM = u'(?:, ([^=]+)=([^ ,]+))?'
 
 
-@step(u'Given I have the datetime object (.*)')
-def given_i_have_the_datetime_object_datetime(step, string):
-    world.input = datetime.datetime.strptime(string, "%Y-%m-%d %H:%M:%S")
+def step(match):
+    """Replace values in match strings with constants from module
+
+    The purpose is entirely to improve the look and readability of the steps
+    defined below, it provides nothing over hard coding the values in step
+    definitions.
+    """
+    consts = dict(filter(lambda e: e[0].upper() == e[0], globals().items()))
+    return lettuce_step(match % consts)
