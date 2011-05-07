@@ -54,7 +54,7 @@ def then_i_see_the_string_result(step, expected):
 
 @step(u'Then I see an empty string')
 def then_i_see_an_empty_string(step):
-    assert_equal(world.result, "")
+    step.given('Then I see the string ""')
 
 
 @step(u'When I call %(IDENTIFIER)s on %(IDENTIFIER)s')
@@ -107,9 +107,11 @@ def when_i_check_retval_for_calling_method_with_args(step, method, obj,
 
 @step(u'Then I receive %(IDENTIFIER)s')
 def then_i_receive_exception(step, expected):
-    assert_equal(unicode(world.exception.__class__.__name__), expected)
+    world.result = world.exception.__class__.__name__
+    step.given('Then I see the string "%s"' % expected)
 
 
 @step(u'Then I see the %(NON_GROUPING_IDENTIFIER)s object (.*)')
 def then_i_see_the_identifier_object_result(step, expected):
-    assert_equal(str(world.result), expected)
+    world.result = str(world.result)
+    step.given('Then I see the string "%s"' % expected)
