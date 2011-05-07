@@ -219,6 +219,13 @@ class Events(list):
         filt = lambda x: x.start.date() == datetime.date(year, month, day)
         return self.filter(filt)
 
+    def sum(self):
+        """Sum duration of all events
+
+        :rtype: datetime.timedelta
+        """
+        return sum(map(lambda x: x.delta, self), datetime.timedelta(0))
+
 
 def parse_delta(string):
     """Parse ISO-8601 duration string
