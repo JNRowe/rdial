@@ -171,6 +171,14 @@ class Events(list):
             raise ValueError('No currently running task!')
         self.last().stop()
 
+    def for_project(self, project):
+        """Filter events for a specific project
+
+        :param str project: Project name to filter on
+        :rtype: Events
+        """
+        return Events(filter(lambda x: x.project == project, self))
+
 
 def parse_delta(string):
     """Parse ISO-8601 duration string
