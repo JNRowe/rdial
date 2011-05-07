@@ -83,7 +83,7 @@ class Event(object):
         """
         if self.delta:
             raise ValueError('Not running!')
-        self.delta = datetime.datetime.utcnow().replace(tzinfo=isodate.UTC) - self.start
+        self.delta = utcnow() - self.start
 FIELDS = inspect.getargspec(Event.__init__).args[1:]
 
 
@@ -240,7 +240,15 @@ def parse_datetime(string):
     :rtype: datetime.datetime
     """
     if string == "":
-        datetime_ = datetime.datetime.utcnow().replace(tzinfo=isodate.UTC)
+        datetime_ = utcnow()
     else:
         datetime_ = isodate.isodatetime.parse_datetime(string)
     return datetime_
+
+
+def utcnow():
+    """Wrapper for producing timezone aware current timestamp
+
+    :rtype: datetime.datetime
+    """
+    return datetime.datetime.utcnow().replace(tzinfo=isodate.UTC)
