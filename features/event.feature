@@ -91,3 +91,9 @@ Feature: Handle database events
     When I process it with Events.read
     When I check return value for calling for_day on result with year=2011, month=3, day=1
     Then I see 1 events
+
+    Scenario: Sum event durations in database
+    Given I have the database test_not_running.txt
+    When I process it with Events.read
+    When I check output for calling sum on result
+    Then I see the string 2:15:00
