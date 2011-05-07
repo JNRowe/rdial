@@ -44,6 +44,10 @@ class ReprTest(unittest.TestCase):
         ev = Event("project", "2011-05-05T11:23:48Z", "")
         assert_equal(repr(ev), eval_repr(ev))
 
+    def test_event_with_message(self):
+        ev = Event("project", "2011-05-05T11:23:48Z", "PT01H00M00S", "message")
+        assert_equal(repr(ev), eval_repr(ev))
+
     def test_events(self):
         ev1 = Event("project", "2011-05-05T11:23:48Z", "PT01H00M00S")
         ev2 = Event("project", "2011-05-05T12:23:48Z", "PT00H30M00S")

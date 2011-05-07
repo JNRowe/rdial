@@ -97,3 +97,10 @@ Feature: Handle database events
         When I process it with Events.read
         When I check output for calling sum on result
         Then I see the string 2:15:00
+
+    Scenario: Store messages with events
+        Given I have the database test.txt
+        When I process it with Events.read
+        When I check return value for calling last on result
+        When I check message attribute of result
+        Then I see the string finished

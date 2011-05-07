@@ -65,6 +65,11 @@ def when_i_call_method_on_obj(step, method, obj):
         world.exception = e
 
 
+@step(u'When I check %(IDENTIFIER)s attribute of %(IDENTIFIER)s')
+def when_i_check_attribute(step, method, obj):
+    world.result = unicode(getattr(getattr(world, obj), method))
+
+
 @step(u'When I check output for calling %(IDENTIFIER)s on %(IDENTIFIER)s')
 def when_i_check_output_for_calling_method(step, method, obj):
     world.result = unicode(getattr(getattr(world, obj), method)())
@@ -77,6 +82,12 @@ def when_i_call_method_on_obj_with_args(step, method, obj, param, value):
         getattr(getattr(world, obj), method)(**params)
     except Exception as e:
         world.exception = e
+
+
+@step(u'When I check return value for calling %(IDENTIFIER)s on '
+       '%(IDENTIFIER)s')
+def when_i_check_retval_for_calling_method(step, method, obj):
+    world.result = getattr(getattr(world, obj), method)()
 
 
 @step(u'When I check return value for calling %(IDENTIFIER)s on '
