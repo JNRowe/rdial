@@ -28,26 +28,26 @@ Feature: Handle database events
         Given I have the database test.txt
         When I process it with Events.read
         When I check output for calling projects on result
-        Then I see the string ['project', 'project2']
+        Then I see the string "['project', 'project2']"
 
     Scenario: Currently running event
         Given I have the database test.txt
         When I process it with Events.read
         When I check output for calling running on result
-        Then I see the string project
+        Then I see the string 'project'
 
     Scenario: No currently running event
         Given I have the database test_not_running.txt
         When I process it with Events.read
         When I check output for calling running on result
-        Then I see the string False
+        Then I see the string 'False'
 
     Scenario: Start event
         Given I have the database test_not_running.txt
         When I process it with Events.read
         When I call start on result with project=project2
         When I check output for calling running on result
-        Then I see the string project2
+        Then I see the string 'project2'
 
     Scenario: Fail starting when currently running
         Given I have the database test.txt
@@ -60,7 +60,7 @@ Feature: Handle database events
         When I process it with Events.read
         When I call stop on result
         When I check output for calling running on result
-        Then I see the string False
+        Then I see the string 'False'
 
     Scenario: Fail stopping when not currently running
         Given I have the database test_not_running.txt
@@ -96,18 +96,18 @@ Feature: Handle database events
         Given I have the database test_not_running.txt
         When I process it with Events.read
         When I check output for calling sum on result
-        Then I see the string 2:15:00
+        Then I see the string '2:15:00'
 
     Scenario: Store messages with events
         Given I have the database test.txt
         When I process it with Events.read
         When I check return value for calling last on result
         When I check message attribute of result
-        Then I see the string finished
+        Then I see the string 'finished'
 
     Scenario: Support databases without message fields on events
         Given I have the database test_no_message_field.txt
         When I process it with Events.read
         When I check return value for calling last on result
         When I check message attribute of result
-        Then I see the string None
+        Then I see the string 'None'
