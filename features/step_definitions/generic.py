@@ -108,3 +108,8 @@ def when_i_check_retval_for_calling_method_with_args(step, method, obj,
 @step(u'Then I receive %(IDENTIFIER)s')
 def then_i_receive_exception(step, expected):
     assert_equal(unicode(world.exception.__class__.__name__), expected)
+
+
+@step(u'Then I see the %(NON_GROUPING_IDENTIFIER)s object (.*)')
+def then_i_see_the_identifier_object_result(step, expected):
+    assert_equal(str(world.result), expected)

@@ -20,16 +20,9 @@
 
 import datetime
 
-from nose.tools import assert_equal
-
 from lettuce import world
 
 from util import step
-
-
-@step(u'Then I see the timedelta object (.*)')
-def then_i_see_the_timedelta_object_result(step, expected):
-    assert_equal(str(world.result), expected)
 
 
 @step(u'Given I have the timedelta object (.*)')
