@@ -179,6 +179,38 @@ class Events(list):
         """
         return Events(filter(lambda x: x.project == project, self))
 
+    def for_year(self, year):
+        """Filter events for a specific year
+
+        :param str project: Project name to filter on
+        :param int year: Year to filter on
+        :rtype: Events
+        """
+        return Events(filter(lambda x: x.start.year == year, self))
+
+    def for_month(self, year, month):
+        """Filter events for a specific month
+
+        :param str project: Project name to filter on
+        :param int year: Year to filter on
+        :param int month: Month to filter on
+        :rtype: Events
+        """
+        filt = lambda x: (x.start.year, x.start.month) == (year, month)
+        return Events(filter(filt, self))
+
+    def for_day(self, year, month, day):
+        """Filter events for a specific day
+
+        :param str project: Project name to filter on
+        :param int year: Year to filter on
+        :param int month: Month to filter on
+        :param int day: Day to filter on
+        :rtype: Events
+        """
+        filt = lambda x: (x.start.year, x.start.month, x.start.day) == (year, month, day)
+        return Events(filter(filt, self))
+
 
 def parse_delta(string):
     """Parse ISO-8601 duration string
