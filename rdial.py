@@ -61,7 +61,7 @@ class UTC(datetime.tzinfo):
 
 class Event(object):
     """Base object for handling database event"""
-    def __init__(self, project, start, delta=""):
+    def __init__(self, project, start="", delta=""):
         """Initialise a new ``Event`` object
 
         :param str project: Project name to tracking
@@ -144,6 +144,15 @@ class Events(list):
         last = self.last()
         return last.running() if last else False
 
+    def start(self, project):
+        """Start a new event
+
+        :param str project: Project name to tracking
+        """
+        if self.running():
+            raise ValueError('Currently running task!')
+        self.append(Event(project))
+
 
 def parse_delta(string):
     """Parse ISO-8601 duration string
@@ -190,7 +199,10 @@ def parse_datetime(string):
     :param str string: Datetime string to parse
     :rtype: datetime.datetime
     """
-    datetime_ = datetime.datetime.strptime(string, '%Y-%m-%dT%H:%M:%SZ')
+    if string == "":
+        datetime_ = datetime.datetime.utcnow()
+    else:
+        datetime_ = datetime.datetime.strptime(string, '%Y-%m-%dT%H:%M:%SZ')
     return datetime_.replace(tzinfo=UTC())
 
 
