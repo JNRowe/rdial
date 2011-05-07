@@ -19,9 +19,9 @@ Feature: Handle ISO-8601 durations
     Then I see the string <result>
 
   Examples:
-    | timedelta | result      |
-    | 4:30:21   | PT04H30M21S |
-    | 0:12:01   | PT12M01S |
+    | timedelta | result     |
+    | 4:30:21   | PT4H30M21S |
+    | 0:12:01   | PT12M1S    |
 
   Scenario: Parse null duration strings
     Given I have an empty string
@@ -63,7 +63,7 @@ Feature: Handle ISO-8601 durations
 
   Examples:
     | timedelta        | result  |
-    | 3 days, 4:00:00  | P3DT04H |
+    | 3 days, 4:00:00  | P3DT4H  |
     | 3 days, 0:00:00  | P3D     |
     | 2 days, 22:00:00 | P2DT22H |
 
@@ -73,9 +73,9 @@ Feature: Handle ISO-8601 durations
     Then I see the string <result>
 
   Examples:
-    | timedelta | result   |
-    | 4:00:00   | PT04H    |
-    | 4:30:00   | PT04H30M |
-    | 0:30:00   | PT30M    |
-    | 4:00:21   | PT04H21S |
-    | 4:00:00   | PT04H    |
+    | timedelta | result  |
+    | 4:00:00   | PT4H    |
+    | 4:30:00   | PT4H30M |
+    | 0:30:00   | PT30M   |
+    | 4:00:21   | PT4H21S |
+    | 4:00:00   | PT4H    |

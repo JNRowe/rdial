@@ -39,24 +39,8 @@ import csv
 import datetime
 import inspect
 import os
-import re
 
-
-class UTC(datetime.tzinfo):
-    """UTC timezone object"""
-    def __repr__(self):
-        return 'UTC()'
-
-    # pylint: disable-msg=W0613
-    def utcoffset(self, datetime_):
-        return datetime.timedelta(0)
-
-    def dst(self, datetime_):
-        return datetime.timedelta(0)
-
-    def tzname(self, datetime_):
-        return 'UTC'
-    # pylint: enable-msg=W0613
+import isodate
 
 
 class Event(object):
@@ -75,14 +59,14 @@ class Event(object):
     def __repr__(self):
         """Self-documenting string representation"""
         return 'Event(%r, %r, %r)' % (self.project,
-                                      format_datetime(self.start),
+                                      isodate.datetime_isoformat(self.start),
                                       format_delta(self.delta))
 
     def writer(self):
         """Prepare object for export"""
         return {
             'project': self.project,
-            'start': format_datetime(self.start),
+            'start': isodate.datetime_isoformat(self.start),
             'delta': format_delta(self.delta)
         }
 
@@ -99,7 +83,7 @@ class Event(object):
         """
         if self.delta:
             raise ValueError('Not running!')
-        self.delta = datetime.datetime.utcnow().replace(tzinfo=UTC()) - self.start
+        self.delta = datetime.datetime.utcnow().replace(tzinfo=isodate.UTC) - self.start
 FIELDS = inspect.getargspec(Event.__init__).args[1:]
 
 
@@ -235,17 +219,7 @@ def parse_delta(string):
     """
     if not string:
         return datetime.timedelta(0)
-    match = re.match("""
-        P
-        ((?P<days>\d+)D)?
-        T?
-        ((?P<hours>\d{1,2})H)?
-        ((?P<minutes>\d{1,2})M)?
-        ((?P<seconds>\d{1,2})S)?
-    """, string, re.VERBOSE)
-    match_dict = dict((k, int(v) if v else 0)
-                      for k, v in match.groupdict().items())
-    return datetime.timedelta(**match_dict)  # pylint: disable-msg=W0142
+    return isodate.isoduration.parse_duration(string)
 
 
 def format_delta(timedelta_):
@@ -256,14 +230,7 @@ def format_delta(timedelta_):
     """
     if timedelta_ == datetime.timedelta(0):
         return ""
-    days = "%dD" % timedelta_.days if timedelta_.days else ""
-    hours, minutes = divmod(timedelta_.seconds, 3600)
-    minutes, seconds = divmod(minutes, 60)
-    hours = "%02dH" % hours if hours else ""
-    minutes = "%02dM" % minutes if minutes else ""
-    seconds = "%02dS" % seconds if seconds else ""
-    return 'P%s%s%s%s%s' % (days, "T" if hours or minutes or seconds else "",
-                            hours, minutes, seconds)
+    return isodate.duration_isoformat(timedelta_)
 
 
 def parse_datetime(string):
@@ -273,17 +240,7 @@ def parse_datetime(string):
     :rtype: datetime.datetime
     """
     if string == "":
-        datetime_ = datetime.datetime.utcnow()
+        datetime_ = datetime.datetime.utcnow().replace(tzinfo=isodate.UTC)
     else:
-        datetime_ = datetime.datetime.strptime(string, '%Y-%m-%dT%H:%M:%SZ')
-    return datetime_.replace(tzinfo=UTC())
-
-
-def format_datetime(datetime_):
-    """Format ISO-8601 datetime string
-
-    :param datetime.datetime datetime_: Datetime to process
-    :rtype: str
-    """
-    # Can't call isoformat method as it uses the +00:00 form
-    return datetime_.strftime('%Y-%m-%dT%H:%M:%SZ')
+        datetime_ = isodate.isodatetime.parse_datetime(string)
+    return datetime_
