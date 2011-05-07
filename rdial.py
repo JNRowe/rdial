@@ -45,29 +45,32 @@ import isodate
 
 class Event(object):
     """Base object for handling database event"""
-    def __init__(self, project, start="", delta=""):
+    def __init__(self, project, start="", delta="", message=""):
         """Initialise a new ``Event`` object
 
         :param str project: Project name to tracking
         :param str start: ISO-8601 start time for event
         :param str delta: ISO-8601 duration for event
+        :param str message: Message to attach to event
         """
         self.project = project
         self.start = parse_datetime(start)
         self.delta = parse_delta(delta)
+        self.message = message
 
     def __repr__(self):
         """Self-documenting string representation"""
-        return 'Event(%r, %r, %r)' % (self.project,
-                                      isodate.datetime_isoformat(self.start),
-                                      format_delta(self.delta))
+        return 'Event(%r, %r, %r, %r)' \
+            % (self.project, isodate.datetime_isoformat(self.start),
+               format_delta(self.delta), self.message)
 
     def writer(self):
         """Prepare object for export"""
         return {
             'project': self.project,
             'start': isodate.datetime_isoformat(self.start),
-            'delta': format_delta(self.delta)
+            'delta': format_delta(self.delta),
+            'message': self.message,
         }
 
     def running(self):
