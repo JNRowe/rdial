@@ -171,13 +171,21 @@ class Events(list):
             raise ValueError('No currently running task!')
         self.last().stop()
 
+    def filter(self, filt):
+        """Apply filter to events
+
+        :param func filt: Function to filter with
+        :rtype: Events
+        """
+        return Events(filter(filt, self))
+
     def for_project(self, project):
         """Filter events for a specific project
 
         :param str project: Project name to filter on
         :rtype: Events
         """
-        return Events(filter(lambda x: x.project == project, self))
+        return self.filter(lambda x: x.project == project)
 
     def for_year(self, year):
         """Filter events for a specific year
@@ -186,7 +194,7 @@ class Events(list):
         :param int year: Year to filter on
         :rtype: Events
         """
-        return Events(filter(lambda x: x.start.year == year, self))
+        return self.filter(lambda x: x.start.year == year)
 
     def for_month(self, year, month):
         """Filter events for a specific month
@@ -197,7 +205,7 @@ class Events(list):
         :rtype: Events
         """
         filt = lambda x: (x.start.year, x.start.month) == (year, month)
-        return Events(filter(filt, self))
+        return self.filter(filt)
 
     def for_day(self, year, month, day):
         """Filter events for a specific day
@@ -208,8 +216,8 @@ class Events(list):
         :param int day: Day to filter on
         :rtype: Events
         """
-        filt = lambda x: (x.start.year, x.start.month, x.start.day) == (year, month, day)
-        return Events(filter(filt, self))
+        filt = lambda x: x.start.date() == datetime.date(year, month, day)
+        return self.filter(filt)
 
 
 def parse_delta(string):
