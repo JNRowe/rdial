@@ -85,6 +85,12 @@ class Event(object):
             'start': format_datetime(self.start),
             'delta': format_delta(self.delta)
         }
+
+    def running(self):
+        """Check if event is running"""
+        if self.delta == datetime.timedelta(0):
+            return self.project
+        return False
 FIELDS = inspect.getargspec(Event.__init__).args[1:]
 
 
@@ -122,6 +128,21 @@ class Events(list):
     def projects(self):
         """Generate a list of projects in the database"""
         return sorted(set(event.project for event in self))
+
+    def last(self):
+        """Return current/last event
+
+        This handles the empty database case by returning ``False``
+        """
+        if len(self) > 0:
+            return self[-1]
+        else:
+            return False
+
+    def running(self):
+        """Check if an event is running"""
+        last = self.last()
+        return last.running() if last else False
 
 
 def parse_delta(string):
