@@ -222,7 +222,7 @@ def parse_delta(string):
     """
     if not string:
         return datetime.timedelta(0)
-    return isodate.isoduration.parse_duration(string)
+    return isodate.parse_duration(string)
 
 
 def format_delta(timedelta_):
@@ -245,7 +245,7 @@ def parse_datetime(string):
     if string == "":
         datetime_ = utcnow()
     else:
-        datetime_ = isodate.isodatetime.parse_datetime(string)
+        datetime_ = isodate.parse_datetime(string)
     return datetime_
 
 
