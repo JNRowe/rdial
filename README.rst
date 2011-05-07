@@ -8,10 +8,10 @@ rdial - Simple time tracking for simple people
 Requirements
 ------------
 
-``rdial`` does not depend on any modules that aren't included in Python_'s
-standard library, and as such should run with Python 2.6 or newer [#]_.  If
-``rdial`` doesn't work with the version of Python you have installed, file an
-issue_ and I'll endeavour to fix it.
+``rdial``'s only dependency outside of the standard library is isodate_.  It
+should work with any version of Python_ 2.6 or newer [#]_.  If ``rdial`` doesn't
+work with the version of Python you have installed, file an issue_ and I'll
+endeavour to fix it.
 
 The module has been tested on many UNIX-like systems, including Linux and OS X,
 but it should work fine on other systems too.
@@ -52,5 +52,6 @@ Interface
     project2 PT00H15M00S
 
 .. _GPL v3: http://www.gnu.org/licenses/
+.. _isodate: http://pypi.python.org/pypi/isodate/
 .. _Python: http://www.python.org/
 .. _issue: https://github.com/JNRowe/rdial/issues
