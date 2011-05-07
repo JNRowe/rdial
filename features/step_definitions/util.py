@@ -22,9 +22,11 @@
 from lettuce import step as lettuce_step
 
 
-IDENTIFIER = u'([a-zA-Z_]\w*)'
-NAMED_PARAM = u'([^=]+)=([^ ,]+)'
-OPT_PARAM = u'(?:, ([^=]+)=([^ ,]+))?'
+REPLACEMENTS = {
+    'IDENTIFIER': u'([a-zA-Z_]\w*)',
+    'NAMED_PARAM': u'([^=]+)=([^ ,]+)',
+    'OPT_PARAM': u'(?:, ([^=]+)=([^ ,]+))?',
+}
 
 
 def step(match):
@@ -34,5 +36,4 @@ def step(match):
     defined below, it provides nothing over hard coding the values in step
     definitions.
     """
-    consts = dict(filter(lambda e: e[0].upper() == e[0], globals().items()))
-    return lettuce_step("%s$" % match % consts)
+    return lettuce_step("%s$" % match % REPLACEMENTS)
