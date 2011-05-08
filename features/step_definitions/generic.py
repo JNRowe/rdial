@@ -78,7 +78,7 @@ def when_i_call_method_on_obj_with_args(step, method, obj, *params):
     params = param_dict(params)
     try:
         getattr(getattr(world, obj), method)(**params)
-    except Exception as e:
+    except (Exception, ), e:
         world.exception = e
 
 
