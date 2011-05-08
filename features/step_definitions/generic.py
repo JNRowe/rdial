@@ -20,11 +20,17 @@
 
 from nose.tools import assert_equal
 
-from lettuce import world
+from lettuce import (before, world)
 
 import rdial
 
 from util import (param_dict, step)
+
+
+@before.all
+def intro():
+    print 'These tests should all run successfully with Python 2.5-2.7,'
+    print 'if you receive errors please report a bug!'
 
 
 @step(u'Given I have the string ["\']?(.*?)["\']?')
