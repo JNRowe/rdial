@@ -59,10 +59,7 @@ def then_i_see_an_empty_string(step):
 
 @step(u'When I call %(IDENTIFIER)s on %(IDENTIFIER)s')
 def when_i_call_method_on_obj(step, method, obj):
-    try:
-        getattr(getattr(world, obj), method)()
-    except Exception as e:
-        world.exception = e
+    step.given(u'When I call %s on %s without args' % (method, obj))
 
 
 @step(u'When I check %(IDENTIFIER)s attribute of %(IDENTIFIER)s')
@@ -75,7 +72,8 @@ def when_i_check_output_for_calling_method(step, method, obj):
     world.result = unicode(getattr(getattr(world, obj), method)())
 
 
-@step(u'When I call %(IDENTIFIER)s on %(IDENTIFIER)s with %(NAMED_PARAM)s')
+@step(u'When I call %(IDENTIFIER)s on %(IDENTIFIER)s '
+       '(?:with %(NAMED_PARAM)s|without args)')
 def when_i_call_method_on_obj_with_args(step, method, obj, *params):
     params = param_dict(params)
     try:
@@ -87,11 +85,12 @@ def when_i_call_method_on_obj_with_args(step, method, obj, *params):
 @step(u'When I check return value for calling %(IDENTIFIER)s on '
        '%(IDENTIFIER)s')
 def when_i_check_retval_for_calling_method(step, method, obj):
-    world.result = getattr(getattr(world, obj), method)()
+    step.given(u'When I check return value for calling %s on %s without args'
+        % (method, obj))
 
 
-@step(u'When I check return value for calling %(IDENTIFIER)s on '
-       '%(IDENTIFIER)s with %(NAMED_PARAM)s%(OPT_PARAM)s%(OPT_PARAM)s')
+@step(u'When I check return value for calling %(IDENTIFIER)s on %(IDENTIFIER)s'
+       ' (?:with %(NAMED_PARAM)s%(OPT_PARAM)s%(OPT_PARAM)s|without args)')
 def when_i_check_retval_for_calling_method_with_args(step, method, obj,
                                                      *params):
     params = param_dict(params)
