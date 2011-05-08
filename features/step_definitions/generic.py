@@ -105,5 +105,5 @@ def then_i_receive_exception(step, expected):
 
 @step(u'Then I see the %(NON_GROUPING_IDENTIFIER)s object (.*)')
 def then_i_see_the_identifier_object_result(step, expected):
-    world.result = str(world.result)
+    world.result = unicode(world.result)
     step.given('Then I see the string "%s"' % expected)
