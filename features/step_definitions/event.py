@@ -52,8 +52,10 @@ def then_i_see_event_n_contains_(step, event, project, start, delta):
 
 @step(u'Given I have the events from (.*)')
 def given_i_have_the_events_from_test_txt(step, database):
-    step.given('I have the database %s' % database)
-    step.given('I process it with Events.read')
+    step.behave_as(u"""
+        I have the database %s
+        I process it with Events.read
+    """ % database)
 
 
 @step(u'When I write it to a temp file')
