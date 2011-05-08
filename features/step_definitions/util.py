@@ -38,3 +38,28 @@ def step(match):
     definitions.
     """
     return lettuce_step("%s$" % match % REPLACEMENTS)
+
+
+def param_dict(params):
+    """Generate a dictionary from parameter list
+
+    Parameters are expected to be in repeating ``key, value`` pairs.
+
+    All ``None`` keys and their associated values(regardless of content) are
+    scrubbed, to make it easier to reuse steps.
+
+    Values are converted to ``int`` if possible.
+
+    :param list params: List of parameters
+    :return dict: Dictionary of parameters
+    """
+    d = {}
+    # Build dictionary with integer values, if possible
+    for k, v in zip(params[0::2], params[1::2]):
+        if k is None:
+            continue
+        try:
+            d[k] = int(v)
+        except ValueError:
+            d[k] = v
+    return d

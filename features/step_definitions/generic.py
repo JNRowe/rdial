@@ -24,7 +24,7 @@ from lettuce import world
 
 import rdial
 
-from util import step
+from util import (param_dict, step)
 
 
 @step(u'Given I have the string ["\']?(.*?)["\']?')
@@ -76,8 +76,8 @@ def when_i_check_output_for_calling_method(step, method, obj):
 
 
 @step(u'When I call %(IDENTIFIER)s on %(IDENTIFIER)s with %(NAMED_PARAM)s')
-def when_i_call_method_on_obj_with_args(step, method, obj, param, value):
-    params = {str(param): value}
+def when_i_call_method_on_obj_with_args(step, method, obj, *params):
+    params = param_dict(params)
     try:
         getattr(getattr(world, obj), method)(**params)
     except Exception as e:
@@ -94,15 +94,8 @@ def when_i_check_retval_for_calling_method(step, method, obj):
        '%(IDENTIFIER)s with %(NAMED_PARAM)s%(OPT_PARAM)s%(OPT_PARAM)s')
 def when_i_check_retval_for_calling_method_with_args(step, method, obj,
                                                      *params):
-    used_params = filter(None, params)
-    d = {}
-    # Build dictionary with integer values, if possible
-    for k, v in zip(used_params[0::2], used_params[1::2]):
-        try:
-            d[k] = int(v)
-        except ValueError:
-            d[k] = v
-    world.result = getattr(getattr(world, obj), method)(**d)
+    params = param_dict(params)
+    world.result = getattr(getattr(world, obj), method)(**params)
 
 
 @step(u'Then I receive %(IDENTIFIER)s')
