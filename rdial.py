@@ -87,7 +87,7 @@ class Event(object):
         if self.delta:
             raise ValueError('Not running!')
         self.delta = utcnow() - self.start
-FIELDS = inspect.getargspec(Event.__init__).args[1:]
+FIELDS = inspect.getargspec(Event.__init__)[0][1:]
 
 
 class Events(list):

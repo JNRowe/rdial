@@ -59,7 +59,7 @@ def param_dict(params):
         if k is None:
             continue
         try:
-            d[k] = int(v)
+            d[str(k)] = int(v)
         except ValueError:
-            d[k] = v
+            d[str(k)] = v
     return d
