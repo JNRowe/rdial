@@ -63,8 +63,8 @@ def when_i_call_method_on_obj(step, method, obj):
 
 
 @step(u'When I check %(IDENTIFIER)s attribute of %(IDENTIFIER)s')
-def when_i_check_attribute(step, method, obj):
-    world.result = unicode(getattr(getattr(world, obj), method))
+def when_i_check_attribute(step, attribute, obj):
+    world.result = unicode(getattr(getattr(world, obj), attribute))
 
 
 @step(u'When I check output for calling %(IDENTIFIER)s on %(IDENTIFIER)s')
