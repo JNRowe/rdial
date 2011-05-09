@@ -33,6 +33,15 @@ def intro():
     print 'if you receive errors please report a bug!'
 
 
+@after.all
+def outro(total):
+    if not total.scenarios_ran == total.scenarios_passed:
+        print
+        print "Whoops, you'll be wanting the bug report address then:"
+        print '    https://github.com/JNRowe/rdial/issues'
+        print
+
+
 @step(u'Given I have the string ["\']?(.*?)["\']?')
 def given_i_have_the_string_string(step, string):
     world.input = string
