@@ -117,6 +117,10 @@ class Events(list):
 
         :param str filename: Database file to write
         """
+        dir = os.path.dirname(filename)
+        if not os.path.isdir(dir):
+            os.mkdir(dir)
+
         writer = csv.DictWriter(open(filename, 'w'), FIELDS,
                                 lineterminator='\n')
         for event in self:
