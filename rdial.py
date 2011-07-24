@@ -40,6 +40,7 @@ import datetime
 import inspect
 import os
 
+import argh
 import isodate
 
 
@@ -255,3 +256,33 @@ def utcnow():
     :rtype: datetime.datetime
     """
     return datetime.datetime.utcnow().replace(tzinfo=isodate.UTC)
+
+
+@argh.arg('task', default='default', nargs='?', help='task name')
+def start(args):
+    "start task"
+    return True
+
+
+def stop(args):
+    "stop task"
+    return True
+
+
+@argh.arg('task', nargs='?', help='task name')
+def report(args):
+    "report time tracking data"
+    return True
+
+
+def main():
+    """Main script"""
+    description = __doc__.splitlines()[0].split("-", 1)[1]
+    epilog = "Please report bugs to jnrowe@gmail.com"
+    parser = argh.ArghParser(description=description, epilog=epilog,
+                             version="%%(prog)s %s" % __version__)
+    parser.add_commands([start, stop, report])
+    parser.dispatch()
+
+if __name__ == '__main__':
+    main()
