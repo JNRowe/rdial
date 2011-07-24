@@ -20,7 +20,7 @@
 
 from nose.tools import assert_equal
 
-from lettuce import (before, world)
+from lettuce import (after, before, world)
 
 import rdial
 
