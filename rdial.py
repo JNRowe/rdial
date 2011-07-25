@@ -305,13 +305,24 @@ def report(args):
             % (current.project, isodate.datetime_isoformat(current.start))
 
 
+def running(args):
+    "display running task, if any"
+    events = Events.read(xdg_data_file())
+    if events.running():
+        current = events.last()
+        yield 'Currently running %s since %s' \
+            % (current.project, isodate.datetime_isoformat(current.start))
+    else:
+        yield 'No task is running!'
+
+
 def main():
     """Main script"""
     description = __doc__.splitlines()[0].split("-", 1)[1]
     epilog = "Please report bugs to jnrowe@gmail.com"
     parser = argh.ArghParser(description=description, epilog=epilog,
                              version="%%(prog)s %s" % __version__)
-    parser.add_commands([start, stop, report])
+    parser.add_commands([start, stop, report, running])
     parser.dispatch()
 
 if __name__ == '__main__':
