@@ -276,6 +276,24 @@ def xdg_data_file(file='data'):
     return os.path.join(user_dir, 'rdial', file)
 
 
+COMMANDS = []
+
+
+def command(func):
+    """Simple decorator to add function to ``COMMANDS`` list
+
+    The purpose of this decorator is to make the definition of commands simpler
+    by reducing duplication, it is purely a convenience.
+
+    :param func func: Function to wrap
+    :rtype: func
+    :returns: Original function
+    """
+    COMMANDS.append(func)
+    return func
+
+
+@command
 @argh.arg('task', default='default', nargs='?', help='task name')
 def start(args):
     "start task"
@@ -284,6 +302,7 @@ def start(args):
     events.write(xdg_data_file())
 
 
+@command
 @argh.arg('-m', '--message', help='closing message')
 def stop(args):
     "stop task"
@@ -292,6 +311,7 @@ def stop(args):
     events.write(xdg_data_file())
 
 
+@command
 @argh.arg('task', nargs='?', help='task name')
 def report(args):
     "report time tracking data"
@@ -305,6 +325,7 @@ def report(args):
             % (current.project, isodate.datetime_isoformat(current.start))
 
 
+@command
 def running(args):
     "display running task, if any"
     events = Events.read(xdg_data_file())
@@ -322,7 +343,7 @@ def main():
     epilog = "Please report bugs to jnrowe@gmail.com"
     parser = argh.ArghParser(description=description, epilog=epilog,
                              version="%%(prog)s %s" % __version__)
-    parser.add_commands([start, stop, report, running])
+    parser.add_commands(COMMANDS)
     parser.dispatch()
 
 if __name__ == '__main__':
