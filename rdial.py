@@ -283,7 +283,9 @@ def start(args):
 
 def stop(args):
     "stop task"
-    return True
+    events = Events.read(xdg_data_file())
+    events.stop()
+    events.write(xdg_data_file())
 
 
 @argh.arg('task', nargs='?', help='task name')
