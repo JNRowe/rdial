@@ -23,6 +23,14 @@ Feature: Handle event triggers
         When I check output for calling running on result
         Then I see the string 'False'
 
+    Scenario: Stop event with message
+        Given I have the database test.txt
+        When I process it with Events.read
+        When I call stop on result with message=test
+        When I check return value for calling last on result
+        When I check message attribute of result
+        Then I see the string 'test'
+
     Scenario: Fail stopping when not currently running
         Given I have the database test_not_running.txt
         When I process it with Events.read

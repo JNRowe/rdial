@@ -80,14 +80,16 @@ class Event(object):
             return self.project
         return False
 
-    def stop(self):
+    def stop(self, message=None):
         """Stop currently running event
 
+        :param str message: Message to attach to event
         :raise ValueError: Event not running
         """
         if self.delta:
             raise ValueError('Not running!')
         self.delta = utcnow() - self.start
+        self.message = message
 FIELDS = inspect.getargspec(Event.__init__)[0][1:]
 
 
@@ -154,14 +156,15 @@ class Events(list):
             raise ValueError('Currently running task!')
         self.append(Event(project))
 
-    def stop(self):
+    def stop(self, message=None):
         """Stop currently running event
 
+        :param str message: Message to attach to event
         :raise ValueError: No currently running task
         """
         if not self.running():
             raise ValueError('No currently running task!')
-        self.last().stop()
+        self.last().stop(message)
 
     def filter(self, filt):
         """Apply filter to events
@@ -281,10 +284,11 @@ def start(args):
     events.write(xdg_data_file())
 
 
+@argh.arg('-m', '--message', help='closing message')
 def stop(args):
     "stop task"
     events = Events.read(xdg_data_file())
-    events.stop()
+    events.stop(args.message)
     events.write(xdg_data_file())
 
 
