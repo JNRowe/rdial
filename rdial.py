@@ -291,7 +291,14 @@ def stop(args):
 @argh.arg('task', nargs='?', help='task name')
 def report(args):
     "report time tracking data"
-    return True
+    events = Events.read(xdg_data_file())
+    if args.task:
+        events = events.for_project(args.task)
+    yield events.sum()
+    if events.running():
+        current = events.last()
+        yield 'Currently running %s since %s' \
+            % (current.project, isodate.datetime_isoformat(current.start))
 
 
 def main():
