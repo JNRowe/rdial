@@ -262,10 +262,23 @@ def utcnow():
     return datetime.datetime.utcnow().replace(tzinfo=isodate.UTC)
 
 
+def xdg_data_file(file='data'):
+    """Return a data location honouring $XDG_DATA_HOME
+
+    :param str file: Filename in data storage directory
+    :rtype: str
+    """
+    user_dir = os.getenv('XDG_DATA_HOME', os.path.join(os.getenv('HOME', '/'),
+                         '.local/share'))
+    return os.path.join(user_dir, 'rdial', file)
+
+
 @argh.arg('task', default='default', nargs='?', help='task name')
 def start(args):
     "start task"
-    return True
+    events = Events.read(xdg_data_file())
+    events.start(args.task)
+    events.write(xdg_data_file())
 
 
 def stop(args):
