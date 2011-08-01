@@ -317,18 +317,20 @@ def stop(args):
 @argh.arg('-s', '--sort', default='task', choices=['task', 'time'],
           help='field to sort by')
 @argh.arg('-r', '--reverse', default=False, help='reverse sort order')
+@argh.arg('--html', default=False, help='produce HTML output')
 def report(args):
     "report time tracking data"
     events = Events.read(xdg_data_file())
     if args.task:
         events = events.for_project(args.task)
     table = prettytable.PrettyTable(['task', 'time'])
+    formatter = table.get_html_string if args.html else table.get_string
     table.set_field_align('task', 'l')
     for project in events.projects():
         table.add_row([project, events.for_project(project).sum()])
 
-    yield table.get_string(sortby=args.sort, reversesort=args.reverse)
-    if events.running():
+    yield formatter(sortby=args.sort, reversesort=args.reverse)
+    if events.running() and not args.html:
         current = events.last()
         yield "Currently running `%s' since %s" \
             % (current.project, isodate.datetime_isoformat(current.start))
