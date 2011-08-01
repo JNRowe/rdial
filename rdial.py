@@ -314,6 +314,9 @@ def stop(args):
 
 @command
 @argh.arg('task', nargs='?', help='task name')
+@argh.arg('-d', '--duration', default='all',
+          choices=['day', 'month', 'year', 'all'],
+          help="filter events for specified time period")
 @argh.arg('-s', '--sort', default='task', choices=['task', 'time'],
           help='field to sort by')
 @argh.arg('-r', '--reverse', default=False, help='reverse sort order')
@@ -323,6 +326,15 @@ def report(args):
     events = Events.read(xdg_data_file())
     if args.task:
         events = events.for_project(args.task)
+    if not args.duration == "all":
+        today = datetime.date.today()
+        if args.duration == "day":
+            events = events.for_day(today.year, today.month, today.day)
+        if args.duration == "month":
+            events = events.for_month(today.year, today.month)
+        if args.duration == "year":
+            events = events.for_year(today.year)
+
     table = prettytable.PrettyTable(['task', 'time'])
     formatter = table.get_html_string if args.html else table.get_string
     table.set_field_align('task', 'l')
