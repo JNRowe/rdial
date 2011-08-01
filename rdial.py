@@ -298,18 +298,18 @@ def command(func):
 @argh.arg('task', default='default', nargs='?', help='task name')
 def start(args):
     "start task"
-    events = Events.read(xdg_data_file())
+    events = Events.read(args.filename)
     events.start(args.task)
-    events.write(xdg_data_file())
+    events.write(args.filename)
 
 
 @command
 @argh.arg('-m', '--message', help='closing message')
 def stop(args):
     "stop task"
-    events = Events.read(xdg_data_file())
+    events = Events.read(args.filename)
     events.stop(args.message)
-    events.write(xdg_data_file())
+    events.write(args.filename)
 
 
 @command
@@ -323,7 +323,7 @@ def stop(args):
 @argh.arg('--html', default=False, help='produce HTML output')
 def report(args):
     "report time tracking data"
-    events = Events.read(xdg_data_file())
+    events = Events.read(args.filename)
     if args.task:
         events = events.for_task(args.task)
     if not args.duration == "all":
@@ -351,7 +351,7 @@ def report(args):
 @command
 def running(args):
     "display running task, if any"
-    events = Events.read(xdg_data_file())
+    events = Events.read(args.filename)
     if events.running():
         current = events.last()
         yield 'Currently running %s since %s' \
@@ -366,6 +366,8 @@ def main():
     epilog = "Please report bugs to jnrowe@gmail.com"
     parser = argh.ArghParser(description=description, epilog=epilog,
                              version="%%(prog)s %s" % __version__)
+    parser.add_argument('-f', '--filename', default=xdg_data_file(),
+                        metavar='file', help='file to read/write to')
     parser.add_commands(COMMANDS)
     parser.dispatch()
 
