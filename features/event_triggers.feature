@@ -6,14 +6,14 @@ Feature: Handle event triggers
     Scenario: Start event
         Given I have the database test_not_running.txt
         When I process it with Events.read
-        When I call start on result with project=project2
+        When I call start on result with task=task2
         When I check output for calling running on result
-        Then I see the string 'project2'
+        Then I see the string 'task2'
 
     Scenario: Fail starting when currently running
         Given I have the database test.txt
         When I process it with Events.read
-        When I call start on result with project=project2
+        When I call start on result with task=task2
         Then I receive ValueError
 
     Scenario: Stop event

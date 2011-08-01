@@ -11,13 +11,13 @@ Feature: Handle database events
     Scenario Outline: Check events
         Given I have the database test.txt
         When I process it with Events.read
-        Then I see event <n> contains <project>, <start> and <delta>
+        Then I see event <n> contains <task>, <start> and <delta>
 
         Examples:
-            | n | project  | start                     | delta   |
-            | 0 | project  | 2011-05-04 08:00:00+00:00 | 1:00:00 |
-            | 1 | project2 | 2011-05-04 09:15:00+00:00 | 0:15:00 |
-            | 2 | project  | 2011-05-04 09:30:00+00:00 | 0:00:00 |
+            | n | task  | start                     | delta   |
+            | 0 | task  | 2011-05-04 08:00:00+00:00 | 1:00:00 |
+            | 1 | task2 | 2011-05-04 09:15:00+00:00 | 0:15:00 |
+            | 2 | task  | 2011-05-04 09:30:00+00:00 | 0:00:00 |
 
     Scenario: Write database
         Given I have the events from test.txt

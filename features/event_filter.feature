@@ -3,10 +3,10 @@ Feature: Filter database events
     As a user
     We'll implement basic filtering methods
 
-    Scenario: Fetch events for specific project
+    Scenario: Fetch events for specific task
         Given I have the database test.txt
         When I process it with Events.read
-        When I check return value for calling for_project on result with project=project2
+        When I check return value for calling for_task on result with task=task2
         Then I see 1 events
 
     Scenario: Fetch events for specific year

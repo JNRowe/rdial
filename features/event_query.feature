@@ -3,17 +3,17 @@ Feature: Query database events
     As a user
     We'll implement simple query methods
 
-    Scenario: List projects
+    Scenario: List tasks
         Given I have the database test.txt
         When I process it with Events.read
-        When I check output for calling projects on result
-        Then I see the string "['project', 'project2']"
+        When I check output for calling tasks on result
+        Then I see the string "['task', 'task2']"
 
     Scenario: Currently running event
         Given I have the database test.txt
         When I process it with Events.read
         When I check output for calling running on result
-        Then I see the string 'project'
+        Then I see the string 'task'
 
     Scenario: No currently running event
         Given I have the database test_not_running.txt

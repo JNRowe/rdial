@@ -31,13 +31,13 @@ Database
 The database is just a simple text file, making it very easy to use and abuse in
 other applications.  A sample database would be::
 
-    project,2011-05-04T08:00:00Z,PT01H00M00S
-    project2,2011-05-04T09:15:00Z,PT00H15M00S
-    project,2011-05-04T09:30:00Z,
+    task,2011-05-04T08:00:00Z,PT01H00M00S
+    task2,2011-05-04T09:15:00Z,PT00H15M00S
+    task,2011-05-04T09:30:00Z,
 
 The format is a CSV file containing the following fields:
 
-#. Project name
+#. Task name
 #. Start time expressed in UTC
 #. Task duration
 
@@ -50,7 +50,7 @@ Interface
 
 ::
 
-    $ rdial.py start <project_name>
+    $ rdial.py start <task_name>
     $ rdial.py stop
     $ rdial.py report
     +-------+-------------+

@@ -43,9 +43,9 @@ def then_i_see_n_events(step, expected):
 
 
 @step(u'Then I see event (\d+) contains (.*), (.*) and (.*)')
-def then_i_see_event_n_contains_(step, event, project, start, delta):
+def then_i_see_event_n_contains_(step, event, task, start, delta):
     event = int(event)
-    assert_equal(world.result[event].project, project)
+    assert_equal(world.result[event].task, task)
     assert_equal(str(world.result[event].start), start)
     assert_equal(str(world.result[event].delta), delta)
 

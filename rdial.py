@@ -47,15 +47,15 @@ import prettytable
 
 class Event(object):
     """Base object for handling database event"""
-    def __init__(self, project, start="", delta="", message=""):
+    def __init__(self, task, start="", delta="", message=""):
         """Initialise a new ``Event`` object
 
-        :param str project: Project name to tracking
+        :param str task: Task name to tracking
         :param str start: ISO-8601 start time for event
         :param str delta: ISO-8601 duration for event
         :param str message: Message to attach to event
         """
-        self.project = project
+        self.task = task
         self.start = parse_datetime(start)
         self.delta = parse_delta(delta)
         self.message = message
@@ -63,13 +63,13 @@ class Event(object):
     def __repr__(self):
         """Self-documenting string representation"""
         return 'Event(%r, %r, %r, %r)' \
-            % (self.project, isodate.datetime_isoformat(self.start),
+            % (self.task, isodate.datetime_isoformat(self.start),
                format_delta(self.delta), self.message)
 
     def writer(self):
         """Prepare object for export"""
         return {
-            'project': self.project,
+            'task': self.task,
             'start': isodate.datetime_isoformat(self.start),
             'delta': format_delta(self.delta),
             'message': self.message,
@@ -78,7 +78,7 @@ class Event(object):
     def running(self):
         """Check if event is running"""
         if self.delta == datetime.timedelta(0):
-            return self.project
+            return self.task
         return False
 
     def stop(self, message=None):
@@ -129,9 +129,9 @@ class Events(list):
         for event in self:
             writer.writerow(event.writer())
 
-    def projects(self):
-        """Generate a list of projects in the database"""
-        return sorted(set(event.project for event in self))
+    def tasks(self):
+        """Generate a list of tasks in the database"""
+        return sorted(set(event.task for event in self))
 
     def last(self):
         """Return current/last event
@@ -148,14 +148,14 @@ class Events(list):
         last = self.last()
         return last.running() if last else False
 
-    def start(self, project):
+    def start(self, task):
         """Start a new event
 
-        :param str project: Project name to tracking
+        :param str task: Task name to tracking
         """
         if self.running():
             raise ValueError('Currently running task!')
-        self.append(Event(project))
+        self.append(Event(task))
 
     def stop(self, message=None):
         """Stop currently running event
@@ -175,18 +175,18 @@ class Events(list):
         """
         return Events(filter(filt, self))
 
-    def for_project(self, project):
-        """Filter events for a specific project
+    def for_task(self, task):
+        """Filter events for a specific task
 
-        :param str project: Project name to filter on
+        :param str task: Task name to filter on
         :rtype: Events
         """
-        return self.filter(lambda x: x.project == project)
+        return self.filter(lambda x: x.task == task)
 
     def for_year(self, year):
         """Filter events for a specific year
 
-        :param str project: Project name to filter on
+        :param str task: Task name to filter on
         :param int year: Year to filter on
         :rtype: Events
         """
@@ -195,7 +195,7 @@ class Events(list):
     def for_month(self, year, month):
         """Filter events for a specific month
 
-        :param str project: Project name to filter on
+        :param str task: Task name to filter on
         :param int year: Year to filter on
         :param int month: Month to filter on
         :rtype: Events
@@ -206,7 +206,7 @@ class Events(list):
     def for_day(self, year, month, day):
         """Filter events for a specific day
 
-        :param str project: Project name to filter on
+        :param str task: Task name to filter on
         :param int year: Year to filter on
         :param int month: Month to filter on
         :param int day: Day to filter on
@@ -325,7 +325,7 @@ def report(args):
     "report time tracking data"
     events = Events.read(xdg_data_file())
     if args.task:
-        events = events.for_project(args.task)
+        events = events.for_task(args.task)
     if not args.duration == "all":
         today = datetime.date.today()
         if args.duration == "day":
@@ -338,14 +338,14 @@ def report(args):
     table = prettytable.PrettyTable(['task', 'time'])
     formatter = table.get_html_string if args.html else table.get_string
     table.set_field_align('task', 'l')
-    for project in events.projects():
-        table.add_row([project, events.for_project(project).sum()])
+    for task in events.tasks():
+        table.add_row([task, events.for_task(task).sum()])
 
     yield formatter(sortby=args.sort, reversesort=args.reverse)
     if events.running() and not args.html:
         current = events.last()
         yield "Currently running `%s' since %s" \
-            % (current.project, isodate.datetime_isoformat(current.start))
+            % (current.task, isodate.datetime_isoformat(current.start))
 
 
 @command
@@ -355,7 +355,7 @@ def running(args):
     if events.running():
         current = events.last()
         yield 'Currently running %s since %s' \
-            % (current.project, isodate.datetime_isoformat(current.start))
+            % (current.task, isodate.datetime_isoformat(current.start))
     else:
         yield 'No task is running!'
 
