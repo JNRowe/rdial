@@ -42,6 +42,7 @@ import os
 
 import argh
 import isodate
+import prettytable
 
 
 class Event(object):
@@ -318,10 +319,15 @@ def report(args):
     events = Events.read(xdg_data_file())
     if args.task:
         events = events.for_project(args.task)
-    yield events.sum()
+    table = prettytable.PrettyTable(['task', 'time'])
+    table.set_field_align('task', 'l')
+    for project in events.projects():
+        table.add_row([project, events.for_project(project).sum()])
+
+    yield table.get_string()
     if events.running():
         current = events.last()
-        yield 'Currently running %s since %s' \
+        yield "Currently running `%s' since %s" \
             % (current.project, isodate.datetime_isoformat(current.start))
 
 
