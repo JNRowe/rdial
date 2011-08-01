@@ -314,6 +314,9 @@ def stop(args):
 
 @command
 @argh.arg('task', nargs='?', help='task name')
+@argh.arg('-s', '--sort', default='task', choices=['task', 'time'],
+          help='field to sort by')
+@argh.arg('-r', '--reverse', default=False, help='reverse sort order')
 def report(args):
     "report time tracking data"
     events = Events.read(xdg_data_file())
@@ -324,7 +327,7 @@ def report(args):
     for project in events.projects():
         table.add_row([project, events.for_project(project).sum()])
 
-    yield table.get_string()
+    yield table.get_string(sortby=args.sort, reversesort=args.reverse)
     if events.running():
         current = events.last()
         yield "Currently running `%s' since %s" \
