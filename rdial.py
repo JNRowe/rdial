@@ -36,6 +36,7 @@ A simple time tracking tool, with no frills and no fizzy coating.
 """ % parseaddr(__author__)
 
 import csv
+import contextlib
 import datetime
 import inspect
 import os
@@ -222,6 +223,19 @@ class Events(list):
         """
         return sum(map(lambda x: x.delta, self), datetime.timedelta(0))
 
+    @staticmethod
+    @contextlib.contextmanager
+    def context(filename):
+        """Convenience context handler to manage reading and writing database
+
+        :param str filename: Database file to write
+        """
+        events = Events.read(filename)
+        original = hash(repr(events))
+        yield events
+        if not hash(repr(events)) == original:
+            events.write(filename)
+
 
 def parse_delta(string):
     """Parse ISO-8601 duration string
@@ -298,18 +312,16 @@ def command(func):
 @argh.arg('task', default='default', nargs='?', help='task name')
 def start(args):
     "start task"
-    events = Events.read(args.filename)
-    events.start(args.task)
-    events.write(args.filename)
+    with Events.context(args.filename) as events:
+        events.start(args.task)
 
 
 @command
 @argh.arg('-m', '--message', help='closing message')
 def stop(args):
     "stop task"
-    events = Events.read(args.filename)
-    events.stop(args.message)
-    events.write(args.filename)
+    with Events.context(args.filename) as events:
+        events.stop(args.message)
 
 
 @command
