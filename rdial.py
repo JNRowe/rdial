@@ -270,6 +270,10 @@ def parse_datetime(string):
         datetime_ = utcnow()
     else:
         datetime_ = isodate.parse_datetime(string)
+        if datetime_.tzinfo:
+            datetime_ = datetime_.astimezone(isodate.UTC)
+        else:
+            datetime_ = datetime_.replace(tzinfo=isodate.UTC)
     return datetime_
 
 
