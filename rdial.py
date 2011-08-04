@@ -149,14 +149,15 @@ class Events(list):
         last = self.last()
         return last.running() if last else False
 
-    def start(self, task):
+    def start(self, task, start=''):
         """Start a new event
 
         :param str task: Task name to tracking
+        :param str start: ISO-8601 start time for event
         """
         if self.running():
             raise ValueError('Currently running task!')
-        self.append(Event(task))
+        self.append(Event(task, start))
 
     def stop(self, message=None):
         """Stop currently running event
@@ -310,10 +311,11 @@ def command(func):
 
 @command
 @argh.arg('task', default='default', nargs='?', help='task name')
+@argh.arg('-t', '--time', default='', help='set start time')
 def start(args):
     "start task"
     with Events.context(args.filename) as events:
-        events.start(args.task)
+        events.start(args.task, args.time)
 
 
 @command
