@@ -82,13 +82,14 @@ class Event(object):
             return self.task
         return False
 
-    def stop(self, message=None):
+    def stop(self, message=None, force=False):
         """Stop currently running event
 
         :param str message: Message to attach to event
+        :param bool force: Re-stop a previously stopped event
         :raise ValueError: Event not running
         """
-        if self.delta:
+        if not force and self.delta:
             raise ValueError('Not running!')
         self.delta = utcnow() - self.start
         self.message = message
@@ -159,15 +160,16 @@ class Events(list):
             raise ValueError('Currently running task!')
         self.append(Event(task, start))
 
-    def stop(self, message=None):
+    def stop(self, message=None, force=False):
         """Stop currently running event
 
         :param str message: Message to attach to event
+        :param bool force: Re-stop a previously stopped event
         :raise ValueError: No currently running task
         """
-        if not self.running():
+        if not force and not self.running():
             raise ValueError('No currently running task!')
-        self.last().stop(message)
+        self.last().stop(message, force)
 
     def filter(self, filt):
         """Apply filter to events
@@ -324,10 +326,11 @@ def start(args):
 
 @command
 @argh.arg('-m', '--message', help='closing message')
+@argh.arg('--amend', default=False, help='amend previous stop entry')
 def stop(args):
     "stop task"
     with Events.context(args.filename) as events:
-        events.stop(args.message)
+        events.stop(args.message, force=args.amend)
 
 
 @command
