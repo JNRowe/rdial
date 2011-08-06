@@ -114,8 +114,7 @@ class Events(list):
         if not os.path.exists(filename):
             return Events()
         # pylint: disable-msg=W0142
-        return Events([Event(**d)
-                       for d in csv.DictReader(open(filename), FIELDS)])
+        return Events([Event(**d) for d in csv.DictReader(open(filename))])
 
     def write(self, filename):
         """Write database outline
@@ -128,6 +127,7 @@ class Events(list):
 
         writer = csv.DictWriter(open(filename, 'w'), FIELDS,
                                 lineterminator='\n')
+        writer.writeheader()
         for event in self:
             writer.writerow(event.writer())
 
