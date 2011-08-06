@@ -187,37 +187,21 @@ class Events(list):
         """
         return self.filter(lambda x: x.task == task)
 
-    def for_year(self, year):
-        """Filter events for a specific year
-
-        :param str task: Task name to filter on
-        :param int year: Year to filter on
-        :rtype: Events
-        """
-        return self.filter(lambda x: x.start.year == year)
-
-    def for_month(self, year, month):
-        """Filter events for a specific month
-
-        :param str task: Task name to filter on
-        :param int year: Year to filter on
-        :param int month: Month to filter on
-        :rtype: Events
-        """
-        filt = lambda x: (x.start.year, x.start.month) == (year, month)
-        return self.filter(filt)
-
-    def for_day(self, year, month, day):
+    def for_date(self, year, month=None, day=None):
         """Filter events for a specific day
 
         :param str task: Task name to filter on
         :param int year: Year to filter on
-        :param int month: Month to filter on
-        :param int day: Day to filter on
+        :param int month: Month to filter on, or ``None``
+        :param int day: Day to filter on, or ``None``
         :rtype: Events
         """
-        filt = lambda x: x.start.date() == datetime.date(year, month, day)
-        return self.filter(filt)
+        events = self.filter(lambda x: x.start.year == year)
+        if month:
+            events = events.filter(lambda x: x.start.month == month)
+        if day:
+            events = events.filter(lambda x: x.start.day == day)
+        return events
 
     def sum(self):
         """Sum duration of all events
@@ -348,13 +332,13 @@ def report(args):
     if args.task:
         events = events.for_task(args.task)
     if not args.duration == "all":
-        today = datetime.date.today()
-        if args.duration == "day":
-            events = events.for_day(today.year, today.month, today.day)
+        year, month, day = datetime.date.today().timetuple()[:3]
         if args.duration == "month":
-            events = events.for_month(today.year, today.month)
-        if args.duration == "year":
-            events = events.for_year(today.year)
+            day = None
+        elif args.duration == "year":
+            month = None
+            day = None
+        events = events.for_date(year, month, day)
 
     table = prettytable.PrettyTable(['task', 'time'])
     formatter = table.get_html_string if args.html else table.get_string
