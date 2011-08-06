@@ -18,8 +18,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-__version__ = "0.1.0"
-__date__ = "2011-05-04"
+__version__ = "0.2.0"
+__date__ = "2011-08-06"
 __author__ = "James Rowe <jnrowe@gmail.com>"
 __copyright__ = "Copyright (C) 2011  James Rowe <jnrowe@gmail.com>"
 __license__ = "GNU General Public License Version 3"
