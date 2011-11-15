@@ -304,6 +304,7 @@ def command(func):
 
 
 @command
+@argh.wrap_errors(ValueError)
 @argh.arg('task', default='default', nargs='?', help='task name')
 @argh.arg('-t', '--time', default='', help='set start time')
 def start(args):
@@ -313,6 +314,7 @@ def start(args):
 
 
 @command
+@argh.wrap_errors(ValueError)
 @argh.arg('-m', '--message', help='closing message')
 @argh.arg('--amend', default=False, help='amend previous stop entry')
 def stop(args):
