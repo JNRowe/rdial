@@ -159,6 +159,7 @@ class Events(list):
 
         :param str task: Task name to tracking
         :param str start: ISO-8601 start time for event
+        :raise ValueError: An event is already running
         """
         if self.running():
             raise ValueError('Currently running task!')
