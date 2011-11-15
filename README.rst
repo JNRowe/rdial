@@ -67,6 +67,29 @@ Interface
     | task2 | PT00H15M00S |
     +-------+-------------+
 
+Hacking
+-------
+
+Patches are most welcome, but I'd appreciate it if you could follow the
+guidelines below to make it easier to integrate your changes.  These are
+guidelines however, and as such can be broken if the need arises or you
+just want to convince me that your style is better.
+
+* `PEP 8`_, the style guide, should be followed where possible.
+* While support for Python versions prior to v2.5 may be added in the future if
+  such a need were to arise, you are encouraged to use v2.5 features now.
+* All new classes and methods should be accompanied by new tests, and Sphinx_
+  ``autodoc``-compatible descriptions.
+
+Bugs
+----
+
+If you find any problems, bugs or just have a question about this package either
+file an issue_ or drop me a mail_.
+
+If you've found a bug please attempt to include a minimal testcase so I can
+reproduce the problem, or even better a patch!
+
 .. _GPL v3: http://www.gnu.org/licenses/
 .. _argh: http://pypi.python.org/pypi/argh/
 .. _isodate: http://pypi.python.org/pypi/isodate/
@@ -75,3 +98,6 @@ Interface
 .. _issue: https://github.com/JNRowe/rdial/issues
 .. _nose: http://pypi.python.org/pypi/nose
 .. _nose-lettuce: http://github.com/passy/nose-lettuce
+.. _PEP 8: http://www.python.org/dev/peps/pep-0008/
+.. _Sphinx: http://sphinx.pocoo.org/
+.. _mail: jnrowe@gmail.com
