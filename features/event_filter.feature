@@ -26,3 +26,9 @@ Feature: Filter database events
         When I process it with Events.read
         When I check return value for calling for_date on result with year=2011, month=3, day=1
         Then I see 1 events
+
+    Scenario: Fetch events for current week
+        Given I have the database date_filtering.txt
+        When I process it with Events.read
+        When I check return value for calling for_week on result with year=2011, week=9
+        Then I see 1 events
