@@ -208,6 +208,22 @@ class Events(list):
             events = events.filter(lambda x: x.start.day == day)
         return events
 
+    def for_week(self, year, week):
+        """Filter events for a specific ISO-2015 week
+
+        ISO-2015 defines a week as Monday to Sunday, with the first week of
+        a year being the first week containing a Thursday.
+
+        :param int year: Year to filter events on
+        :param int week: ISO-2015 month number to filter events on
+        :rtype: Events
+        """
+        bound = datetime.date(year, 1, 4)
+        iso_start = bound - datetime.timedelta(days=bound.isocalendar()[1])
+        start = iso_start + datetime.timedelta(weeks=week - 1)
+        end = start + datetime.timedelta(days=7)
+        return self.filter(lambda x: start <= x.start.date() < end)
+
     def sum(self):
         """Sum duration of all events
 
@@ -327,7 +343,7 @@ def stop(args):
 @command
 @argh.arg('task', nargs='?', help='task name')
 @argh.arg('-d', '--duration', default='all',
-          choices=['day', 'month', 'year', 'all'],
+          choices=['day', 'week', 'month', 'year', 'all'],
           help="filter events for specified time period")
 @argh.arg('-s', '--sort', default='task', choices=['task', 'time'],
           help='field to sort by')
@@ -339,13 +355,17 @@ def report(args):
     if args.task:
         events = events.for_task(args.task)
     if not args.duration == "all":
-        year, month, day = datetime.date.today().timetuple()[:3]
-        if args.duration == "month":
-            day = None
-        elif args.duration == "year":
-            month = None
-            day = None
-        events = events.for_date(year, month, day)
+        if args.duration == "week":
+            today = datetime.date.today()
+            events = events.for_week(*today.isocalendar()[:2])
+        else:
+            year, month, day = datetime.date.today().timetuple()[:3]
+            if args.duration == "month":
+                day = None
+            elif args.duration == "year":
+                month = None
+                day = None
+            events = events.for_date(year, month, day)
 
     table = prettytable.PrettyTable(['task', 'time'])
     formatter = table.get_html_string if args.html else table.get_string
