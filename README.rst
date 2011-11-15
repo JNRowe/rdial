@@ -27,8 +27,9 @@ The module has been tested on many UNIX-like systems, including Linux and OS X,
 but it should work fine on other systems too.
 
 To run the tests you'll need nose_ and nose-lettuce_.  Once you have both
-packages you can run the tests with::
+packages you can run the tests with one of the following commands::
 
+    $ ./setup.py nosetests
     $ nosetests --with-lettuce --with-coverage --cover-package=rdial -s
 
 Database
