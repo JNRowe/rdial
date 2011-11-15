@@ -49,7 +49,8 @@ The format is a CSV file containing the following fields:
 
 The start time and duration fields are given as ISO-8601 formatted strings.
 
-If a line does not contain a duration entry then the task is currently running.
+If a line does not contain a duration entry then the task is considered to be
+currently running.
 
 Interface
 ---------
