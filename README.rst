@@ -26,6 +26,11 @@ endeavour to fix it.
 The module has been tested on many UNIX-like systems, including Linux and OS X,
 but it should work fine on other systems too.
 
+To run the tests you'll need nose_ and nose-lettuce_.  Once you have both
+packages you can run the tests with::
+
+    $ nosetests --with-lettuce --with-coverage --cover-package=rdial -s
+
 Database
 --------
 
@@ -67,3 +72,5 @@ Interface
 .. _prettytable: http://code.google.com/p/prettytable/
 .. _Python: http://www.python.org/
 .. _issue: https://github.com/JNRowe/rdial/issues
+.. _nose: http://pypi.python.org/pypi/nose
+.. _nose-lettuce: http://github.com/passy/nose-lettuce
