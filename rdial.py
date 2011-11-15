@@ -28,6 +28,7 @@ __history__ = "See git repository"
 
 from email.utils import parseaddr
 
+# pylint: disable-msg=W0622
 __doc__ += """.
 
 A simple time tracking tool, with no frills and no fizzy coating.
@@ -113,12 +114,11 @@ class Events(list):
         """
         if not os.path.exists(filename):
             return Events()
-        # pylint: disable-msg=W0142
         data = list(csv.DictReader(open(filename), FIELDS))
         # Handle old-style data with no header line
         if sorted(data[0].values()) == sorted(FIELDS):
             data = data[1:]
-        return Events([Event(**d) for d in data])
+        return Events([Event(**d) for d in data])  # pylint: disable-msg=W0142
 
     def write(self, filename):
         """Write database outline
