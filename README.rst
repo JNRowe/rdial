@@ -2,10 +2,11 @@ rdial - Simple time tracking for simple people
 ==============================================
 
 .. warning::
-   This tool is incomplete.  It was written, in part, for use in a talk on testing
-   methodologies and hasn't been worked on since!
+   This tool is incomplete.  It was written, in part, for use as a toy project
+   in a talk on testing methodologies and hasn't been worked on since!
 
-``rdial`` is a simple way to track the time you spend on tasks.
+``rdial`` is a simple way to track the time you spend on tasks.  It tracks the
+name of a task, its start time and its duration… nothing more.
 
 ``rdial`` is released under the `GPL v3`_ license.
 
