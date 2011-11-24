@@ -143,12 +143,12 @@ class Events(list):
     def last(self):
         """Return current/last event
 
-        This handles the empty database case by returning ``False``
+        This handles the empty database case by returning ``None``
         """
         if len(self) > 0:
             return self[-1]
         else:
-            return False
+            return None
 
     def running(self):
         """Check if an event is running"""
