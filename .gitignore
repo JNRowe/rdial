@@ -2,6 +2,9 @@
 *.pyc
 
 .ropeproject/
+build/
+dist/
+rdial.egg-info/
 
 .coverage
 .noseids
