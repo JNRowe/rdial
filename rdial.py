@@ -131,7 +131,8 @@ class Events(list):
 
         writer = csv.DictWriter(open(filename, 'w'), FIELDS,
                                 lineterminator='\n')
-        writer.writeheader()
+        # Can't use writeheader, it wasn't added until 2.7.
+        writer.writerow(dict(zip(FIELDS, FIELDS)))
         for event in self:
             writer.writerow(event.writer())
 
