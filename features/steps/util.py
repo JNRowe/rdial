@@ -32,34 +32,18 @@ REPLACEMENTS = {
 }
 
 
-def given(match):
+def step(f):
     """Replace values in match strings with constants from module
 
-    The purpose is entirely to improve the look and readability of the steps
-    defined below, it provides nothing over hard coding the values in step
-    definitions.
+    This is only used to improve the look and readability of steps with large
+    regular expressions, it provides nothing else over hard coding the values
+    in step definitions.
     """
-    return behave_given("%s" % match % REPLACEMENTS)
+    return lambda match: f("%s" % match % REPLACEMENTS)
 
-
-def then(match):
-    """Replace values in match strings with constants from module
-
-    The purpose is entirely to improve the look and readability of the steps
-    defined below, it provides nothing over hard coding the values in step
-    definitions.
-    """
-    return behave_then("%s" % match % REPLACEMENTS)
-
-
-def when(match):
-    """Replace values in match strings with constants from module
-
-    The purpose is entirely to improve the look and readability of the steps
-    defined below, it provides nothing over hard coding the values in step
-    definitions.
-    """
-    return behave_when("%s" % match % REPLACEMENTS)
+given = step(behave_given)
+then = step(behave_then)
+when = step(behave_when)
 
 
 def param_dict(params):
