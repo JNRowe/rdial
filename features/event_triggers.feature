@@ -5,27 +5,27 @@ Feature: Handle event triggers
 
     Scenario: Start event
         Given I have the database test_not_running.txt
-        When I process it with Events.read
+        When I apply the Events.read method
         When I call start on result with task=task2
         When I check output for calling running on result
         Then I see the string 'task2'
 
     Scenario: Fail starting when currently running
         Given I have the database test.txt
-        When I process it with Events.read
+        When I apply the Events.read method
         When I call start on result with task=task2
         Then I receive ValueError
 
     Scenario: Stop event
         Given I have the database test.txt
-        When I process it with Events.read
+        When I apply the Events.read method
         When I call stop on result
         When I check output for calling running on result
         Then I see the string 'False'
 
     Scenario: Stop event with message
         Given I have the database test.txt
-        When I process it with Events.read
+        When I apply the Events.read method
         When I call stop on result with message=test
         When I check return value for calling last on result
         When I check message attribute of result
@@ -33,6 +33,6 @@ Feature: Handle event triggers
 
     Scenario: Fail stopping when not currently running
         Given I have the database test_not_running.txt
-        When I process it with Events.read
+        When I apply the Events.read method
         When I call stop on result
         Then I receive ValueError

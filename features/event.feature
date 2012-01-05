@@ -5,12 +5,12 @@ Feature: Handle database events
 
     Scenario: Read database
         Given I have the database test.txt
-        When I process it with Events.read
+        When I apply the Events.read method
         Then I see 3 events
 
     Scenario Outline: Check events
         Given I have the database test.txt
-        When I process it with Events.read
+        When I apply the Events.read method
         Then I see event <n> contains <task>, <start> and <delta>
 
         Examples:
@@ -26,7 +26,7 @@ Feature: Handle database events
 
     Scenario: Store messages with events
         Given I have the database test.txt
-        When I process it with Events.read
+        When I apply the Events.read method
         When I check return value for calling last on result
         When I check message attribute of result
         Then I see the string 'finished'

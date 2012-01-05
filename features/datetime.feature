@@ -15,7 +15,7 @@ Feature: Handle ISO-8601 datetimes
 
   Scenario Outline: Produce ISO-8601 datetimes
     Given I have the datetime object <datetime>
-    When I process it with isodate.datetime_isoformat
+    When I apply the isodate.datetime_isoformat method
     Then I see the string <result>
 
   Examples:

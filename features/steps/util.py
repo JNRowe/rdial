@@ -1,7 +1,7 @@
 #
 # vim: set sw=4 sts=4 et tw=80 fileencoding=utf-8:
 #
-"""util - Lettuce utility functions for rdial"""
+"""util - Behave utility functions for rdial"""
 # Copyright (C) 2011  James Rowe <jnrowe@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,9 @@
 #
 
 
-from lettuce import step as lettuce_step
+from behave import given as behave_given
+from behave import then as behave_then
+from behave import when as behave_when
 
 
 REPLACEMENTS = {
@@ -30,14 +32,34 @@ REPLACEMENTS = {
 }
 
 
-def step(match):
+def given(match):
     """Replace values in match strings with constants from module
 
     The purpose is entirely to improve the look and readability of the steps
     defined below, it provides nothing over hard coding the values in step
     definitions.
     """
-    return lettuce_step("%s$" % match % REPLACEMENTS)
+    return behave_given("%s" % match % REPLACEMENTS)
+
+
+def then(match):
+    """Replace values in match strings with constants from module
+
+    The purpose is entirely to improve the look and readability of the steps
+    defined below, it provides nothing over hard coding the values in step
+    definitions.
+    """
+    return behave_then("%s" % match % REPLACEMENTS)
+
+
+def when(match):
+    """Replace values in match strings with constants from module
+
+    The purpose is entirely to improve the look and readability of the steps
+    defined below, it provides nothing over hard coding the values in step
+    definitions.
+    """
+    return behave_when("%s" % match % REPLACEMENTS)
 
 
 def param_dict(params):

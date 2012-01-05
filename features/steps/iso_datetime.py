@@ -1,7 +1,7 @@
 #
 # vim: set sw=4 sts=4 et tw=80 fileencoding=utf-8:
 #
-"""iso_datetime - Lettuce step functions for checking datetime support"""
+"""iso_datetime - Behave step functions for checking datetime support"""
 # Copyright (C) 2011  James Rowe <jnrowe@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -22,12 +22,10 @@ import datetime
 
 import isodate
 
-from lettuce import world
-
-from util import step
+from behave import given
 
 
-@step(u'Given I have the datetime object (.*)')
-def given_i_have_the_datetime_object_datetime(step, string):
+@given('I have the datetime object {string}')
+def g_have_datetime(context, string):
     datetime_ = datetime.datetime.strptime(string, "%Y-%m-%d %H:%M:%S")
-    world.input = datetime_.replace(tzinfo=isodate.UTC)
+    context.input = datetime_.replace(tzinfo=isodate.UTC)
