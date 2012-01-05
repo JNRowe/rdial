@@ -28,7 +28,6 @@ REPLACEMENTS = {
     'IDENTIFIER': u'([a-zA-Z_]\w*)',
     'NON_GROUPING_IDENTIFIER': u'(?:[a-zA-Z_]\w*)',
     'NAMED_PARAM': u'([^=]+)=([^ ,]+)',
-    'OPT_PARAM': u'(?:, ([^=]+)=([^ ,]+))?',
 }
 
 
