@@ -54,8 +54,7 @@ def g_have_events_database(context, database):
 
 @when('I write it to a temp file')
 def w_write_temp(context):
-    file = "features/data/test_write.txt"
-    context.file = file
+    context.file = "features/data/test_write.txt"
     context.result.write(context.file)
     atexit.register(os.unlink, context.file)
 
