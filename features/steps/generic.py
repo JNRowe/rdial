@@ -27,21 +27,28 @@ import rdial
 from util import (given, param_dict, then, when)
 
 
+@given('I have an empty string')
+def g_have_empty_string(context):
+    context.input = ""
+
+
+@then('I see an empty string')
+def t_see_empty_string(context):
+    context.execute_steps(u'Then I see the string ""')
+
+
+@then('I receive {error}')
+def t_receive_exception(context, error):
+    context.result = context.exception.__class__.__name__
+    context.execute_steps('Then I see the string "%s"' % error)
+
+
 step_matcher('re')
 
 
 @given('I have the string ["\']?(.*?)["\']?$')
 def g_have_string(context, string):
     context.input = string
-
-step_matcher('parse')
-
-
-@given('I have an empty string')
-def g_have_empty_string(context):
-    context.input = ""
-
-step_matcher('re')
 
 
 @when('I process it with %(IDENTIFIER)s')
@@ -54,20 +61,9 @@ def w_process_with_method(context, obj, method):
     context.result = getattr(getattr(rdial, obj), method)(context.input)
 
 
-@then('I see the string ["\']?(?P<result>.*?)["\']?$')
+@then('I see the string ["\']?(.*?)["\']?$')
 def t_see_string(context, result):
     assert_equal(context.result, result)
-
-
-step_matcher('parse')
-
-
-@then('I see an empty string')
-def t_see_empty_string(context):
-    context.execute_steps(u'Then I see the string ""')
-
-
-step_matcher('re')
 
 
 @when('I call %(IDENTIFIER)s on %(IDENTIFIER)s$')
@@ -121,18 +117,6 @@ def w_check_method_retval_two_args(context, method, obj, *params):
       ' with %(NAMED_PARAM)s, %(NAMED_PARAM)s and %(NAMED_PARAM)s$')
 def w_check_method_retval_three_args(context, method, obj, *params):
     call_with_args(context, method, obj, *params)
-
-
-step_matcher('parse')
-
-
-@then('I receive {error}')
-def t_receive_exception(context, error):
-    context.result = context.exception.__class__.__name__
-    context.execute_steps('Then I see the string "%s"' % error)
-
-
-step_matcher('re')
 
 
 @then('I see the %(NON_GROUPING_IDENTIFIER)s object (.*)')
