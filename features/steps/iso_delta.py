@@ -23,14 +23,14 @@ import datetime
 from behave import given
 
 
-@given('I have the timedelta object {string}')
-def g_have_timedelta(context, string):
-    if ', ' in string:
-        days, time = string.split(", ")
-        days = int(days.split(" ")[0])
-    else:
-        days = 0
-        time = string
-    hours, minutes, seconds = map(int, time.split(":"))
+@given('I have the timedelta object {days:d} days,'
+       ' {hours:d}:{minutes:d}:{seconds:d}')
+def g_have_timedelta_with_days(context, days, hours, minutes, seconds):
     context.input = datetime.timedelta(days=days, hours=hours, minutes=minutes,
+                                       seconds=seconds)
+
+
+@given('I have the timedelta object {hours:d}:{minutes:d}:{seconds:d}')
+def g_have_timedelta(context, hours, minutes, seconds):
+    context.input = datetime.timedelta(hours=hours, minutes=minutes,
                                        seconds=seconds)
