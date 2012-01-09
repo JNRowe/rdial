@@ -26,11 +26,11 @@ endeavour to fix it.
 The module has been tested on many UNIX-like systems, including Linux and OS X,
 but it should work fine on other systems too.
 
-To run the tests you'll need nose_ and nose-lettuce_.  Once you have both
-packages you can run the tests with one of the following commands::
+To run the tests you'll need nose_ and behave_.  Once you have both packages you
+can run the tests with the following commands::
 
     $ ./setup.py nosetests
-    $ nosetests --with-lettuce --with-coverage --cover-package=rdial -s
+    $ behave
 
 Database
 --------
@@ -97,8 +97,8 @@ reproduce the problem, or even better a patch!
 .. _prettytable: http://code.google.com/p/prettytable/
 .. _Python: http://www.python.org/
 .. _issue: https://github.com/JNRowe/rdial/issues
-.. _nose: http://pypi.python.org/pypi/nose
-.. _nose-lettuce: http://github.com/passy/nose-lettuce
+.. _nose: http://pypi.python.org/pypi/nose/
+.. _behave: http://pypi.python.org/pypi/behave/
 .. _PEP 8: http://www.python.org/dev/peps/pep-0008/
 .. _Sphinx: http://sphinx.pocoo.org/
 .. _mail: jnrowe@gmail.com

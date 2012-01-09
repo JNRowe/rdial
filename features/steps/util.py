@@ -1,7 +1,7 @@
 #
 # vim: set sw=4 sts=4 et tw=80 fileencoding=utf-8:
 #
-"""util - Lettuce utility functions for rdial"""
+"""util - Behave utility functions for rdial"""
 # Copyright (C) 2011  James Rowe <jnrowe@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -19,25 +19,30 @@
 #
 
 
-from lettuce import step as lettuce_step
+from behave import given as behave_given
+from behave import then as behave_then
+from behave import when as behave_when
 
 
 REPLACEMENTS = {
     'IDENTIFIER': u'([a-zA-Z_]\w*)',
     'NON_GROUPING_IDENTIFIER': u'(?:[a-zA-Z_]\w*)',
     'NAMED_PARAM': u'([^=]+)=([^ ,]+)',
-    'OPT_PARAM': u'(?:, ([^=]+)=([^ ,]+))?',
 }
 
 
-def step(match):
+def step(f):
     """Replace values in match strings with constants from module
 
-    The purpose is entirely to improve the look and readability of the steps
-    defined below, it provides nothing over hard coding the values in step
-    definitions.
+    This is only used to improve the look and readability of steps with large
+    regular expressions, it provides nothing else over hard coding the values
+    in step definitions.
     """
-    return lettuce_step("%s$" % match % REPLACEMENTS)
+    return lambda match: f("%s" % match % REPLACEMENTS)
+
+given = step(behave_given)
+then = step(behave_then)
+when = step(behave_when)
 
 
 def param_dict(params):

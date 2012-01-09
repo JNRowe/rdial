@@ -1,7 +1,7 @@
 #
 # vim: set sw=4 sts=4 et tw=80 fileencoding=utf-8:
 #
-"""iso_datetime - Lettuce step functions for checking datetime support"""
+"""iso_delta - Behave step functions for checking delta support"""
 # Copyright (C) 2011  James Rowe <jnrowe@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -20,14 +20,17 @@
 
 import datetime
 
-import isodate
-
-from lettuce import world
-
-from util import step
+from behave import given
 
 
-@step(u'Given I have the datetime object (.*)')
-def given_i_have_the_datetime_object_datetime(step, string):
-    datetime_ = datetime.datetime.strptime(string, "%Y-%m-%d %H:%M:%S")
-    world.input = datetime_.replace(tzinfo=isodate.UTC)
+@given('I have the timedelta object {days:d} days,'
+       ' {hours:d}:{minutes:d}:{seconds:d}')
+def g_have_timedelta_with_days(context, days, hours, minutes, seconds):
+    context.input = datetime.timedelta(days=days, hours=hours, minutes=minutes,
+                                       seconds=seconds)
+
+
+@given('I have the timedelta object {hours:d}:{minutes:d}:{seconds:d}')
+def g_have_timedelta(context, hours, minutes, seconds):
+    context.input = datetime.timedelta(hours=hours, minutes=minutes,
+                                       seconds=seconds)
