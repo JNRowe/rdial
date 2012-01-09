@@ -32,14 +32,13 @@ def g_have_database(context, database):
     context.input = "features/data/%s" % database
 
 
-@then('I see {events} events')
+@then('I see {events:d} events')
 def t_see_events(context, events):
-    assert_equal(len(context.result), int(events))
+    assert_equal(len(context.result), events)
 
 
-@then('I see event {event} contains {task}, {start} and {delta}')
+@then('I see event {event:d} contains {task}, {start} and {delta}')
 def t_see_event_contains(context, event, task, start, delta):
-    event = int(event)
     assert_equal(context.result[event].task, task)
     assert_equal(str(context.result[event].start), start)
     assert_equal(str(context.result[event].delta), delta)
