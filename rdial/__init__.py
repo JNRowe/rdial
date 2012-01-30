@@ -342,6 +342,8 @@ def stop(args):
     "stop task"
     with Events.context(args.filename) as events:
         events.stop(args.message, force=args.amend)
+    last = events.last()
+    yield 'Task %s running for %s' % (last.task, last.delta)
 
 
 @command
