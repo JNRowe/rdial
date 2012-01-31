@@ -44,6 +44,7 @@ import contextlib
 import datetime
 import inspect
 import os
+import tempfile
 
 import argh
 import isodate
@@ -123,21 +124,23 @@ class Events(list):
             data = data[1:]
         return Events([Event(**d) for d in data])  # pylint: disable-msg=W0142
 
-    def write(self, filename):
+    def write(self, path):
         """Write database outline
 
-        :param str filename: Database file to write
+        :param str path: Database file to write
         """
-        dir = os.path.dirname(filename)
-        if not os.path.isdir(dir):
-            os.mkdir(dir)
+        directory, filename = os.path.split(path)
+        if not os.path.isdir(directory):
+            os.mkdir(directory)
 
-        writer = csv.DictWriter(open(filename, 'w'), FIELDS,
-                                lineterminator='\n')
+        temp = tempfile.NamedTemporaryFile(prefix='.', dir=directory,
+                                           delete=False)
+        writer = csv.DictWriter(temp, FIELDS, lineterminator='\n')
         # Can't use writeheader, it wasn't added until 2.7.
         writer.writerow(dict(zip(FIELDS, FIELDS)))
         for event in self:
             writer.writerow(event.writer())
+        os.rename(temp.name, path)
 
     def tasks(self):
         """Generate a list of tasks in the database"""
