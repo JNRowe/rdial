@@ -1,5 +1,4 @@
 #
-# vim: set sw=4 sts=4 et tw=80 fileencoding=utf-8:
 #
 """repr_tests - Test __repr__ methods for self-reproducibility"""
 # Copyright (C) 2011-2012  James Rowe <jnrowe@gmail.com>
