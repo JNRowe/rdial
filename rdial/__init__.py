@@ -1,4 +1,4 @@
-#! /usr/bin/python -tt
+#
 #
 """rdial - Simple time tracking for simple people"""
 # Copyright (C) 2011-2012  James Rowe <jnrowe@gmail.com>
