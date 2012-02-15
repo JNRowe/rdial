@@ -135,12 +135,12 @@ class Events(list):
             data = data[1:]
         return Events([Event(**d) for d in data])  # pylint: disable-msg=W0142
 
-    def write(self, path):
+    def write(self, filename):
         """Write database outline
 
         :param str path: Database file to write
         """
-        directory, filename = os.path.split(path)
+        directory, name = os.path.split(filename)
         if not os.path.isdir(directory):
             os.mkdir(directory)
 
@@ -151,7 +151,7 @@ class Events(list):
         writer.writerow(dict(zip(FIELDS, FIELDS)))
         for event in self:
             writer.writerow(event.writer())
-        os.rename(temp.name, path)
+        os.rename(temp.name, filename)
 
     def tasks(self):
         """Generate a list of tasks in the database"""
