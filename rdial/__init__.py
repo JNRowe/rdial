@@ -168,7 +168,10 @@ class Events(list):
             return None
 
     def running(self):
-        """Check if an event is running"""
+        """Check if an event is running
+
+        We return the currently running task, if one exists, for easy access.
+        """
         last = self.last()
         return last.running() if last else False
 
