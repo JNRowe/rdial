@@ -50,6 +50,18 @@ import isodate
 import prettytable
 
 
+class RdialError(ValueError):
+    """Generic exception for rdial"""
+
+
+class TaskNotRunningError(RdialError):
+    """Exception for calling mutators when a task is not running"""
+
+
+class TaskRunningError(RdialError):
+    """Exception for starting task when a task is already running"""
+
+
 class Event(object):
     """Base object for handling database event"""
     def __init__(self, task, start="", delta="", message=""):
@@ -91,10 +103,10 @@ class Event(object):
 
         :param str message: Message to attach to event
         :param bool force: Re-stop a previously stopped event
-        :raise ValueError: Event not running
+        :raise TaskNotRunningError: Event not running
         """
         if not force and self.delta:
-            raise ValueError('Not running!')
+            raise TaskNotRunningError('No task currently running!')
         self.delta = utcnow() - self.start
         self.message = message
 FIELDS = inspect.getargspec(Event.__init__)[0][1:]
@@ -165,11 +177,11 @@ class Events(list):
 
         :param str task: Task name to tracking
         :param str start: ISO-8601 start time for event
-        :raise ValueError: An event is already running
+        :raise TaskRunningError: An event is already running
         """
         running = self.running()
         if running:
-            raise ValueError('Currently running task %s!' % running)
+            raise TaskRunningError('Currently running task %s!' % running)
         self.append(Event(task, start))
 
     def stop(self, message=None, force=False):
@@ -177,10 +189,10 @@ class Events(list):
 
         :param str message: Message to attach to event
         :param bool force: Re-stop a previously stopped event
-        :raise ValueError: No currently running task
+        :raise TaskNotRunningError: No task currently running!
         """
         if not force and not self.running():
-            raise ValueError('No currently running task!')
+            raise TaskNotRunningError('No task currently running!')
         self.last().stop(message, force)
 
     def filter(self, filt):
@@ -328,23 +340,27 @@ def command(func):
 
 
 @command
-@argh.wrap_errors(ValueError)
 @argh.arg('task', default='default', nargs='?', help='task name')
 @argh.arg('-t', '--time', default='', help='set start time')
 def start(args):
     "start task"
     with Events.context(args.filename) as events:
-        events.start(args.task, args.time)
+        try:
+            events.start(args.task, args.time)
+        except TaskRunningError as e:
+            raise argh.CommandError(e.message)
 
 
 @command
-@argh.wrap_errors(ValueError)
 @argh.arg('-m', '--message', help='closing message')
 @argh.arg('--amend', default=False, help='amend previous stop entry')
 def stop(args):
     "stop task"
     with Events.context(args.filename) as events:
-        events.stop(args.message, force=args.amend)
+        try:
+            events.stop(args.message, force=args.amend)
+        except TaskNotRunningError as e:
+            raise argh.CommandError(e.message)
     last = events.last()
     yield 'Task %s running for %s' % (last.task, last.delta)
 

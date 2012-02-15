@@ -14,7 +14,7 @@ Feature: Handle event triggers
         Given I have the database test.txt
         When I apply the Events.read method
         When I call start on result with task=task2
-        Then I receive ValueError
+        Then I receive TaskRunningError
 
     Scenario: Stop event
         Given I have the database test.txt
@@ -35,4 +35,4 @@ Feature: Handle event triggers
         Given I have the database test_not_running.txt
         When I apply the Events.read method
         When I call stop on result
-        Then I receive ValueError
+        Then I receive TaskNotRunningError
