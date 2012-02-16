@@ -18,8 +18,10 @@
 #
 
 import atexit
-import difflib
 import os
+
+from difflib import unified_diff
+from glob import glob
 
 from behave import (given, then, when)
 
@@ -51,20 +53,28 @@ def g_have_events_database(context, database):
     ''' % database)
 
 
-@when('I write it to a temp file')
+@when('I write it to a temp directory')
 def w_write_temp(context):
-    context.file = "features/data/test_write.txt"
-    context.result.write(context.file)
-    atexit.register(os.unlink, context.file)
+    context.directory = "features/data/test_write"
+    context.result.write(context.directory)
 
 
-@then('I see an duplicate of {file}')
-def t_see_duplicate(context, file):
+@then('I see an duplicate of {directory}')
+def t_see_duplicate(context, directory):
+    def remove_temp(directory):
+        for i in os.listdir(directory):
+            os.unlink('%s/%s' % (directory, i))
+        os.rmdir(directory)
+    atexit.register(remove_temp, context.directory)
+
     def udiff(file1, file2):
-        differ = difflib.unified_diff(open(file1).readlines(),
-                                      open(file2).readlines(),
-                                      file1, "test_output")
+        differ = unified_diff(open(file1).readlines(), open(file2).readlines(),
+                              file1, "test_output")
         return "".join(differ)
-    file = "features/data/%s" % file
-    diff_text = udiff(file, context.file)
+    old_files = sorted(glob("features/data/%s/*.csv" % directory))
+    new_files = sorted(glob("%s/*.csv" % context.directory))
+    diff_text = []
+    for old, new in zip(old_files, new_files):
+        diff_text.extend(udiff(old, new))
+    diff_text = "\n".join(diff_text)
     assert_equal(diff_text, "", "File comparison failed!\n" + diff_text)

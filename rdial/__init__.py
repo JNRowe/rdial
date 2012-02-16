@@ -41,7 +41,9 @@ A simple time tracking tool, with no frills and no fizzy coating.
 import csv
 import contextlib
 import datetime
+import glob
 import inspect
+import operator
 import os
 import tempfile
 
@@ -86,7 +88,6 @@ class Event(object):
     def writer(self):
         """Prepare object for export"""
         return {
-            'task': self.task,
             'start': isodate.datetime_isoformat(self.start),
             'delta': format_delta(self.delta),
             'message': self.message,
@@ -109,7 +110,7 @@ class Event(object):
             raise TaskNotRunningError('No task currently running!')
         self.delta = utcnow() - self.start
         self.message = message
-FIELDS = inspect.getargspec(Event.__init__)[0][1:]
+FIELDS = inspect.getargspec(Event.__init__)[0][2:]
 
 
 class Events(list):
@@ -119,39 +120,41 @@ class Events(list):
         return 'Events(%s)' % super(self.__class__, self).__repr__()
 
     @staticmethod
-    def read(filename):
+    def read(directory):
         """Read and parse database
 
         Assume a new ``Events`` object should be created if the file is missing
 
-        :param str filename: Database file to read
+        :param str directory: Location to read database files from
         :returns Events: Parsed events database
         """
-        if not os.path.exists(filename):
+        if not os.path.exists(directory):
             return Events()
-        data = list(csv.DictReader(open(filename), FIELDS))
-        # Handle old-style data with no header line
-        if sorted(data[0].values()) == sorted(FIELDS):
-            data = data[1:]
-        return Events([Event(**d) for d in data])  # pylint: disable-msg=W0142
+        events = []
+        for file in glob.glob('%s/*.csv' % directory):
+            task = os.path.basename(file)[:-4]
+            events.extend(Event(task, **d)
+                          for d in list(csv.DictReader(open(file))))
+        return Events(sorted(events, key=operator.attrgetter('start')))
 
-    def write(self, filename):
-        """Write database outline
+    def write(self, directory):
+        """Write database file
 
-        :param str path: Database file to write
+        :param str directory: Location to write database files to
         """
-        directory, name = os.path.split(filename)
         if not os.path.isdir(directory):
             os.mkdir(directory)
 
-        temp = tempfile.NamedTemporaryFile(prefix='.', dir=directory,
-                                           delete=False)
-        writer = csv.DictWriter(temp, FIELDS, lineterminator='\n')
-        # Can't use writeheader, it wasn't added until 2.7.
-        writer.writerow(dict(zip(FIELDS, FIELDS)))
-        for event in self:
-            writer.writerow(event.writer())
-        os.rename(temp.name, filename)
+        for task in self.tasks():
+            events = self.for_task(task)
+            temp = tempfile.NamedTemporaryFile(prefix='.', dir=directory,
+                                               delete=False)
+            writer = csv.DictWriter(temp, FIELDS, lineterminator='\n')
+            # Can't use writeheader, it wasn't added until 2.7.
+            writer.writerow(dict(zip(FIELDS, FIELDS)))
+            for event in events:
+                writer.writerow(event.writer())
+            os.rename(temp.name, "%s/%s.csv" % (directory, task))
 
     def tasks(self):
         """Generate a list of tasks in the database"""
@@ -255,16 +258,16 @@ class Events(list):
 
     @staticmethod
     @contextlib.contextmanager
-    def context(filename):
+    def context(directory):
         """Convenience context handler to manage reading and writing database
 
-        :param str filename: Database file to write
+        :param str directory: Database location
         """
-        events = Events.read(filename)
+        events = Events.read(directory)
         original = hash(repr(events))
         yield events
         if not hash(repr(events)) == original:
-            events.write(filename)
+            events.write(directory)
 
 
 def parse_delta(string):
@@ -314,15 +317,14 @@ def utcnow():
     return datetime.datetime.utcnow().replace(tzinfo=isodate.UTC)
 
 
-def xdg_data_file(file='data'):
+def xdg_data_location():
     """Return a data location honouring $XDG_DATA_HOME
 
-    :param str file: Filename in data storage directory
     :rtype: str
     """
     user_dir = os.getenv('XDG_DATA_HOME', os.path.join(os.getenv('HOME', '/'),
                          '.local/share'))
-    return os.path.join(user_dir, 'rdial', file)
+    return os.path.join(user_dir, 'rdial')
 
 
 COMMANDS = []
@@ -347,7 +349,7 @@ def command(func):
 @argh.arg('-t', '--time', default='', help='set start time')
 def start(args):
     "start task"
-    with Events.context(args.filename) as events:
+    with Events.context(args.directory) as events:
         try:
             events.start(args.task, args.time)
         except TaskRunningError as e:
@@ -359,7 +361,7 @@ def start(args):
 @argh.arg('--amend', default=False, help='amend previous stop entry')
 def stop(args):
     "stop task"
-    with Events.context(args.filename) as events:
+    with Events.context(args.directory) as events:
         try:
             events.stop(args.message, force=args.amend)
         except TaskNotRunningError as e:
@@ -379,7 +381,7 @@ def stop(args):
 @argh.arg('--html', default=False, help='produce HTML output')
 def report(args):
     "report time tracking data"
-    events = Events.read(args.filename)
+    events = Events.read(args.directory)
     if args.task:
         events = events.for_task(args.task)
     if not args.duration == "all":
@@ -411,7 +413,7 @@ def report(args):
 @command
 def running(args):
     "display running task, if any"
-    events = Events.read(args.filename)
+    events = Events.read(args.directory)
     if events.running():
         current = events.last()
         yield 'Currently running %s since %s' \
@@ -426,7 +428,7 @@ def main():
     epilog = "Please report bugs to jnrowe@gmail.com"
     parser = argh.ArghParser(description=description, epilog=epilog,
                              version="%%(prog)s %s" % __version__)
-    parser.add_argument('-f', '--filename', default=xdg_data_file(),
-                        metavar='file', help='file to read/write to')
+    parser.add_argument('-d', '--directory', default=xdg_data_location(),
+                        metavar='dir', help='directory to read/write to')
     parser.add_commands(COMMANDS)
     parser.dispatch()

@@ -4,12 +4,12 @@ Feature: Handle database events
     We'll implement database reading and writing
 
     Scenario: Read database
-        Given I have the database test.txt
+        Given I have the database test/
         When I apply the Events.read method
         Then I see 3 events
 
     Scenario Outline: Check events
-        Given I have the database test.txt
+        Given I have the database test/
         When I apply the Events.read method
         Then I see event <n> contains <task>, <start> and <delta>
 
@@ -20,12 +20,12 @@ Feature: Handle database events
             | 2 | task  | 2011-05-04 09:30:00+00:00 | 0:00:00 |
 
     Scenario: Write database
-        Given I have the events from test.txt
-        When I write it to a temp file
-        Then I see an duplicate of test.txt
+        Given I have the events from test/
+        When I write it to a temp directory
+        Then I see an duplicate of test/
 
     Scenario: Store messages with events
-        Given I have the database test.txt
+        Given I have the database test/
         When I apply the Events.read method
         When I check return value for calling last on result
         When I check message attribute of result

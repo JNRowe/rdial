@@ -26,16 +26,10 @@ import rdial
 @patch('rdial.os.getenv')
 def test_no_args(getenv):
     getenv.return_value = '~/.local/share'
-    assert_equal(rdial.xdg_data_file(), '~/.local/share/rdial/data')
-
-
-@patch('rdial.os.getenv')
-def test_custom_name(getenv):
-    getenv.return_value = '~/.local/share'
-    assert_equal(rdial.xdg_data_file('file'), '~/.local/share/rdial/file')
+    assert_equal(rdial.xdg_data_location(), '~/.local/share/rdial')
 
 
 @patch('rdial.os.getenv')
 def test_no_home(getenv):
     getenv.side_effect = lambda k, v: v
-    assert_equal(rdial.xdg_data_file('file'), '/.local/share/rdial/file')
+    assert_equal(rdial.xdg_data_location(), '/.local/share/rdial')
