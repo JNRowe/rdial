@@ -115,6 +115,11 @@ FIELDS = inspect.getargspec(Event.__init__)[0][2:]
 
 class Events(list):
     """Container for database events"""
+
+    def __init__(self, iterable=None):
+        super(Events, self).__init__(iterable if iterable else [])
+        self._dirty = set()
+
     def __repr__(self):
         """Self-documenting string representation"""
         return 'Events(%s)' % super(self.__class__, self).__repr__()
@@ -145,7 +150,7 @@ class Events(list):
         if not os.path.isdir(directory):
             os.mkdir(directory)
 
-        for task in self.tasks():
+        for task in self._dirty:
             events = self.for_task(task)
             temp = tempfile.NamedTemporaryFile(prefix='.', dir=directory,
                                                delete=False)
@@ -189,6 +194,7 @@ class Events(list):
         if running:
             raise TaskRunningError('Currently running task %s!' % running)
         self.append(Event(task, start))
+        self._dirty.add(task)
 
     def stop(self, message=None, force=False):
         """Stop currently running event
@@ -200,6 +206,7 @@ class Events(list):
         if not force and not self.running():
             raise TaskNotRunningError('No task currently running!')
         self.last().stop(message, force)
+        self._dirty.add(self.last().task)
 
     def filter(self, filt):
         """Apply filter to events
@@ -264,9 +271,8 @@ class Events(list):
         :param str directory: Database location
         """
         events = Events.read(directory)
-        original = hash(repr(events))
         yield events
-        if not hash(repr(events)) == original:
+        if events._dirty:
             events.write(directory)
 
 
