@@ -369,6 +369,9 @@ def stop(args):
     "stop task"
     with Events.context(args.directory) as events:
         try:
+            if args.amend and not args.message:
+                last = events.last()
+                args.message = last.message
             events.stop(args.message, force=args.amend)
         except TaskNotRunningError as e:
             raise argh.CommandError(e.message)
