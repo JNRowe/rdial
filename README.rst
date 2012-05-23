@@ -1,6 +1,9 @@
 rdial - Simple time tracking for simple people
 ==============================================
 
+.. image:: https://secure.travis-ci.org/JNRowe/rdial.png?branch=master
+   :target: http://travis-ci.org/JNRowe/rdial
+
 .. warning::
    This tool is incomplete.  It was written, in part, for use as a toy project
    in a talk on testing methodologies and hasn't been worked on since!
