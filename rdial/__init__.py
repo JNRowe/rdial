@@ -408,7 +408,10 @@ def report(args):
 
     table = prettytable.PrettyTable(['task', 'time'])
     formatter = table.get_html_string if args.html else table.get_string
-    table.set_field_align('task', 'l')
+    try:
+        table.align['task'] = 'l'
+    except AttributeError:  # prettytable 0.5 compatibility
+        table.set_field_align('task', 'l')
     for task in events.tasks():
         table.add_row([task, events.for_task(task).sum()])
 
