@@ -29,10 +29,10 @@ endeavour to fix it.
 The module has been tested on many UNIX-like systems, including Linux and OS X,
 but it should work fine on other systems too.
 
-To run the tests you'll need nose_ and behave_.  Once you have both packages you
+To run the tests you'll need nose2_ and behave_.  Once you have both packages you
 can run the tests with the following commands::
 
-    $ ./setup.py nosetests
+    $ nose2 -v tests
     $ behave
 
 Database
@@ -100,7 +100,7 @@ reproduce the problem, or even better a patch!
 .. _prettytable: http://code.google.com/p/prettytable/
 .. _Python: http://www.python.org/
 .. _issue: https://github.com/JNRowe/rdial/issues
-.. _nose: http://pypi.python.org/pypi/nose/
+.. _nose2: http://pypi.python.org/pypi/nose2/
 .. _behave: http://pypi.python.org/pypi/behave/
 .. _PEP 8: http://www.python.org/dev/peps/pep-0008/
 .. _Sphinx: http://sphinx.pocoo.org/

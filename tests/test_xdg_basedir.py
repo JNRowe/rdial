@@ -1,6 +1,6 @@
 #
 #
-"""xdg_basedir_tests - Test XDG base directory support"""
+"""test_xdg_basedir - Test XDG base directory support"""
 # Copyright (C) 2011-2012  James Rowe <jnrowe@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify

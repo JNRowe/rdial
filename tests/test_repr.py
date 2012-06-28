@@ -1,6 +1,6 @@
 #
 #
-"""repr_tests - Test __repr__ methods for self-reproducibility"""
+"""test_repr - Test __repr__ methods for self-reproducibility"""
 # Copyright (C) 2011-2012  James Rowe <jnrowe@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
