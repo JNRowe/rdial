@@ -27,7 +27,7 @@ from rdial import (Event, Events)
 def eval_repr(obj):
     """Regenerate an object from its __repr__ output
 
-    :param object obj: Object to evalutate
+    :param object obj: Object to evaluate
     """
     return repr(eval(repr(obj)))
 
