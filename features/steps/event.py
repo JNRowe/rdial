@@ -24,8 +24,7 @@ from difflib import unified_diff
 from glob import glob
 
 from behave import (given, then, when)
-
-from nose.tools import assert_equal
+from expecter import expect
 
 
 @given('I have the database {database}')
@@ -35,14 +34,14 @@ def g_have_database(context, database):
 
 @then('I see {events:d} events')
 def t_see_events(context, events):
-    assert_equal(len(context.result), events)
+    expect(len(context.result)) == events
 
 
 @then('I see event {event:d} contains {task}, {start} and {delta}')
 def t_see_event_contains(context, event, task, start, delta):
-    assert_equal(context.result[event].task, task)
-    assert_equal(str(context.result[event].start), start)
-    assert_equal(str(context.result[event].delta), delta)
+    expect(context.result[event].task) == task
+    expect(str(context.result[event].start)) == start
+    expect(str(context.result[event].delta)) == delta
 
 
 @given('I have the events from {database}')
@@ -77,4 +76,4 @@ def t_see_duplicate(context, directory):
     for old, new in zip(old_files, new_files):
         diff_text.extend(udiff(old, new))
     diff_text = "\n".join(diff_text)
-    assert_equal(diff_text, "", "File comparison failed!\n" + diff_text)
+    expect(diff_text) == ""

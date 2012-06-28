@@ -19,7 +19,7 @@
 
 import unittest
 
-from nose.tools import assert_equal
+from expecter import expect
 
 from rdial import Events
 
@@ -28,4 +28,4 @@ class NoFileTest(unittest.TestCase):
     """Should return empty Events with non-existent file"""
 
     def test_no_file(self):
-        assert_equal(Events(), Events.read("I_NEVER_EXIST"))
+        expect(Events()) == Events.read("I_NEVER_EXIST")

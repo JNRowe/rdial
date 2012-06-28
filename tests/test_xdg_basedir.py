@@ -17,8 +17,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+from expecter import expect
 from mock import patch
-from nose.tools import assert_equal
 
 import rdial
 
@@ -26,10 +26,10 @@ import rdial
 @patch('rdial.os.getenv')
 def test_no_args(getenv):
     getenv.return_value = '~/.local/share'
-    assert_equal(rdial.xdg_data_location(), '~/.local/share/rdial')
+    expect(rdial.xdg_data_location()) == '~/.local/share/rdial'
 
 
 @patch('rdial.os.getenv')
 def test_no_home(getenv):
     getenv.side_effect = lambda k, v: v
-    assert_equal(rdial.xdg_data_location(), '/.local/share/rdial')
+    expect(rdial.xdg_data_location()) == '/.local/share/rdial'

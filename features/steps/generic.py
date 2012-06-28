@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from nose.tools import assert_equal
+from expecter import expect
 
 from behave import step_matcher
 
@@ -62,7 +62,7 @@ def w_process_with_method(context, obj, method):
 
 @then('I see the string ["\']?(.*?)["\']?$')
 def t_see_string(context, result):
-    assert_equal(context.result, result)
+    expect(context.result) == result
 
 
 @when('I call %(IDENTIFIER)s on %(IDENTIFIER)s$')
