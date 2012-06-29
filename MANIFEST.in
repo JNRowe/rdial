@@ -1,5 +1,2 @@
 include COPYING *.rst
-include features/data/*
-include features/step_definitions/*.py
-include features/*.feature
 include tests/*.py

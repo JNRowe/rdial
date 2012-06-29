@@ -1,6 +1,6 @@
 #
 #
-"""repr_tests - Test __repr__ methods for self-reproducibility"""
+"""test_repr - Test __repr__ methods for self-reproducibility"""
 # Copyright (C) 2011-2012  James Rowe <jnrowe@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@
 
 import unittest
 
-from nose.tools import assert_equal
+from expecter import expect
 
 from rdial import (Event, Events)
 
@@ -37,18 +37,18 @@ class ReprTest(unittest.TestCase):
 
     def test_event(self):
         ev = Event("task", "2011-05-05T11:23:48Z", "PT01H00M00S")
-        assert_equal(repr(ev), eval_repr(ev))
+        expect(repr(ev)) == eval_repr(ev)
 
     def test_event_no_delta(self):
         ev = Event("task", "2011-05-05T11:23:48Z", "")
-        assert_equal(repr(ev), eval_repr(ev))
+        expect(repr(ev)) == eval_repr(ev)
 
     def test_event_with_message(self):
         ev = Event("task", "2011-05-05T11:23:48Z", "PT01H00M00S", "message")
-        assert_equal(repr(ev), eval_repr(ev))
+        expect(repr(ev)) == eval_repr(ev)
 
     def test_events(self):
         ev1 = Event("task", "2011-05-05T11:23:48Z", "PT01H00M00S")
         ev2 = Event("task", "2011-05-05T12:23:48Z", "PT00H30M00S")
         events = Events([ev1, ev2])
-        assert_equal(repr(events), eval_repr(events))
+        expect(repr(events)) == eval_repr(events)

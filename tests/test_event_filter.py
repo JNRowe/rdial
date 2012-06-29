@@ -1,6 +1,6 @@
 #
 #
-"""xdg_basedir_tests - Test XDG base directory support"""
+"""test_event_filter - Test event filter handling"""
 # Copyright (C) 2011-2012  James Rowe <jnrowe@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -17,19 +17,28 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from mock import patch
-from nose.tools import assert_equal
+from expecter import expect
+from nose2.tools import params
 
-import rdial
-
-
-@patch('rdial.os.getenv')
-def test_no_args(getenv):
-    getenv.return_value = '~/.local/share'
-    assert_equal(rdial.xdg_data_location(), '~/.local/share/rdial')
+from rdial import Events
 
 
-@patch('rdial.os.getenv')
-def test_no_home(getenv):
-    getenv.side_effect = lambda k, v: v
-    assert_equal(rdial.xdg_data_location(), '/.local/share/rdial')
+def test_fetch_events_for_task():
+    events = Events.read('tests/data/test')
+    expect(len(events.for_task(task='task2'))) == 1
+
+
+@params(
+    ({'year': 2011, }, 2),
+    ({'year': 2011, 'month': 1}, 1),
+    ({'year': 2011, 'month': 3, 'day': 1}, 1),
+
+)
+def test_fetch_events_for_date(date, expected):
+    events = Events.read('tests/data/date_filtering')
+    expect(len(events.for_date(**date))) == expected
+
+
+def test_fetch_events_for_week():
+    events = Events.read('tests/data/date_filtering')
+    expect(len(events.for_week(year=2011, week=9))) == 1

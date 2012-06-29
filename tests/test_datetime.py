@@ -1,6 +1,6 @@
 #
 #
-"""iso_delta - Behave step functions for checking delta support"""
+"""test_datetime - Test ISO-8601 handling"""
 # Copyright (C) 2011-2012  James Rowe <jnrowe@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -17,19 +17,25 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import datetime
+from datetime import datetime
 
-from behave import given
+from expecter import expect
+from nose2.tools import params
 
-
-@given('I have the timedelta object {days:d} days,'
-       ' {hours:d}:{minutes:d}:{seconds:d}')
-def g_have_timedelta_with_days(context, days, hours, minutes, seconds):
-    context.input = datetime.timedelta(days=days, hours=hours, minutes=minutes,
-                                       seconds=seconds)
+from rdial import (isodate, parse_datetime)
 
 
-@given('I have the timedelta object {hours:d}:{minutes:d}:{seconds:d}')
-def g_have_timedelta(context, hours, minutes, seconds):
-    context.input = datetime.timedelta(hours=hours, minutes=minutes,
-                                       seconds=seconds)
+@params(
+    ('2011-05-04T08:00:00Z', datetime(2011, 5, 4, 8, 0, tzinfo=isodate.UTC)),
+    ('2011-05-04T09:15:00Z', datetime(2011, 5, 4, 9, 15, tzinfo=isodate.UTC)),
+)
+def test_parse_datetime(string, expected):
+    expect(parse_datetime(string)) == expected
+
+
+@params(
+    (datetime(2011, 5, 4, 8, 0, tzinfo=isodate.UTC), '2011-05-04T08:00:00Z'),
+    (datetime(2011, 5, 4, 9, 15, tzinfo=isodate.UTC), '2011-05-04T09:15:00Z'),
+)
+def test_format_datetime(dt, expected):
+    expect(isodate.datetime_isoformat(dt)) == expected

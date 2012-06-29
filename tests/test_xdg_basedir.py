@@ -1,6 +1,6 @@
 #
 #
-"""iso_datetime - Behave step functions for checking datetime support"""
+"""test_xdg_basedir - Test XDG base directory support"""
 # Copyright (C) 2011-2012  James Rowe <jnrowe@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -17,14 +17,19 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import datetime
+from expecter import expect
+from mock import patch
 
-import isodate
-
-from behave import given
+import rdial
 
 
-@given('I have the datetime object {string}')
-def g_have_datetime(context, string):
-    datetime_ = datetime.datetime.strptime(string, "%Y-%m-%d %H:%M:%S")
-    context.input = datetime_.replace(tzinfo=isodate.UTC)
+@patch('rdial.os.getenv')
+def test_no_args(getenv):
+    getenv.return_value = '~/.local/share'
+    expect(rdial.xdg_data_location()) == '~/.local/share/rdial'
+
+
+@patch('rdial.os.getenv')
+def test_no_home(getenv):
+    getenv.side_effect = lambda k, v: v
+    expect(rdial.xdg_data_location()) == '/.local/share/rdial'

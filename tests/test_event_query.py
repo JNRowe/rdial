@@ -1,6 +1,6 @@
 #
 #
-"""environment - Behave environment for rdial"""
+"""test_event_query - Test event query handling"""
 # Copyright (C) 2011-2012  James Rowe <jnrowe@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -17,22 +17,28 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import coverage
+from datetime import timedelta
+
+from expecter import expect
+
+from rdial import Events
 
 
-def before_all(context):
-    """Set up coverage monitoring
-
-    :param behave.runner.Context context: Behave execution context
-    """
-    context.coverage = coverage.coverage(branch=True, source=['rdial', ])
-    context.coverage.start()
+def test_list_tasks():
+    events = Events.read('tests/data/test')
+    expect(events.tasks()) == ['task', 'task2']
 
 
-def after_all(context):
-    """Finish and save coverage monitoring
+def test_current_running_event():
+    events = Events.read('tests/data/test')
+    expect(events.running()) == 'task'
 
-    :param behave.runner.Context context: Behave execution context
-    """
-    context.coverage.stop()
-    context.coverage.save()
+
+def test_no_currently_running_event():
+    events = Events.read('tests/data/test_not_running')
+    expect(events.running()) == False
+
+
+def test_sum_durations_in_database():
+    events = Events.read('tests/data/test_not_running')
+    expect(events.sum()) == timedelta(hours=2, minutes=15)
