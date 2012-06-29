@@ -388,6 +388,7 @@ def stop(args):
           help='field to sort by')
 @argh.arg('-r', '--reverse', default=False, help='reverse sort order')
 @argh.arg('--html', default=False, help='produce HTML output')
+@argh.arg('--human', default=False, help='produce human-readable output')
 def report(args):
     "report time tracking data"
     events = Events.read(args.directory)
@@ -405,17 +406,24 @@ def report(args):
                 month = None
                 day = None
             events = events.for_date(year, month, day)
+    if args.human:
+        yield '%d events in query' % len(events)
+        yield 'Duration of events %s' % events.sum()
+        yield 'First entry started at %s' % events[0].start
+        yield 'Last entry started at %s' % events[-1].start
+        dates = set(e.start.date() for e in events)
+        yield 'Events exist on %d dates' % len(dates)
+    else:
+        table = prettytable.PrettyTable(['task', 'time'])
+        formatter = table.get_html_string if args.html else table.get_string
+        try:
+            table.align['task'] = 'l'
+        except AttributeError:  # prettytable 0.5 compatibility
+            table.set_field_align('task', 'l')
+        for task in events.tasks():
+            table.add_row([task, events.for_task(task).sum()])
 
-    table = prettytable.PrettyTable(['task', 'time'])
-    formatter = table.get_html_string if args.html else table.get_string
-    try:
-        table.align['task'] = 'l'
-    except AttributeError:  # prettytable 0.5 compatibility
-        table.set_field_align('task', 'l')
-    for task in events.tasks():
-        table.add_row([task, events.for_task(task).sum()])
-
-    yield formatter(sortby=args.sort, reversesort=args.reverse)
+        yield formatter(sortby=args.sort, reversesort=args.reverse)
     if events.running() and not args.html:
         current = events.last()
         yield "Currently running `%s' since %s" \
