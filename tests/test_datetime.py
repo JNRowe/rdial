@@ -1,6 +1,6 @@
 #
 #
-"""environment - Behave environment for rdial"""
+"""test_datetime - Test ISO-8601 handling"""
 # Copyright (C) 2011-2012  James Rowe <jnrowe@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -17,22 +17,25 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import coverage
+from datetime import datetime
+
+from expecter import expect
+from nose2.tools import params
+
+from rdial import (isodate, parse_datetime)
 
 
-def before_all(context):
-    """Set up coverage monitoring
+@params(
+    ('2011-05-04T08:00:00Z', datetime(2011, 5, 4, 8, 0, tzinfo=isodate.UTC)),
+    ('2011-05-04T09:15:00Z', datetime(2011, 5, 4, 9, 15, tzinfo=isodate.UTC)),
+)
+def test_parse_datetime(string, expected):
+    expect(parse_datetime(string)) == expected
 
-    :param behave.runner.Context context: Behave execution context
-    """
-    context.coverage = coverage.coverage(branch=True, source=['rdial', ])
-    context.coverage.start()
 
-
-def after_all(context):
-    """Finish and save coverage monitoring
-
-    :param behave.runner.Context context: Behave execution context
-    """
-    context.coverage.stop()
-    context.coverage.save()
+@params(
+    (datetime(2011, 5, 4, 8, 0, tzinfo=isodate.UTC), '2011-05-04T08:00:00Z'),
+    (datetime(2011, 5, 4, 9, 15, tzinfo=isodate.UTC), '2011-05-04T09:15:00Z'),
+)
+def test_format_datetime(dt, expected):
+    expect(isodate.datetime_isoformat(dt)) == expected

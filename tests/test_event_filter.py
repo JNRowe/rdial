@@ -1,6 +1,6 @@
 #
 #
-"""iso_delta - Behave step functions for checking delta support"""
+"""test_event_filter - Test event filter handling"""
 # Copyright (C) 2011-2012  James Rowe <jnrowe@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -17,19 +17,28 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import datetime
+from expecter import expect
+from nose2.tools import params
 
-from behave import given
-
-
-@given('I have the timedelta object {days:d} days,'
-       ' {hours:d}:{minutes:d}:{seconds:d}')
-def g_have_timedelta_with_days(context, days, hours, minutes, seconds):
-    context.input = datetime.timedelta(days=days, hours=hours, minutes=minutes,
-                                       seconds=seconds)
+from rdial import Events
 
 
-@given('I have the timedelta object {hours:d}:{minutes:d}:{seconds:d}')
-def g_have_timedelta(context, hours, minutes, seconds):
-    context.input = datetime.timedelta(hours=hours, minutes=minutes,
-                                       seconds=seconds)
+def test_fetch_events_for_task():
+    events = Events.read('tests/data/test')
+    expect(len(events.for_task(task='task2'))) == 1
+
+
+@params(
+    ({'year': 2011, }, 2),
+    ({'year': 2011, 'month': 1}, 1),
+    ({'year': 2011, 'month': 3, 'day': 1}, 1),
+
+)
+def test_fetch_events_for_date(date, expected):
+    events = Events.read('tests/data/date_filtering')
+    expect(len(events.for_date(**date))) == expected
+
+
+def test_fetch_events_for_week():
+    events = Events.read('tests/data/date_filtering')
+    expect(len(events.for_week(year=2011, week=9))) == 1

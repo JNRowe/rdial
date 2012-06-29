@@ -3,11 +3,10 @@ python:
   - 2.6
   - 2.7
 install:
-  - pip install --use-mirrors behave coverage expecter nose2 nose2_cov
+  - pip install --use-mirrors coverage expecter nose2 nose2_cov
   - pip install --use-mirrors .
 script:
   - nose2 -v tests
-  - behave
 branches:
   except:
     - /^play\/.*$/

@@ -1,6 +1,6 @@
 #
 #
-"""iso_datetime - Behave step functions for checking datetime support"""
+"""test_event_query - Test event query handling"""
 # Copyright (C) 2011-2012  James Rowe <jnrowe@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -17,14 +17,28 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import datetime
+from datetime import timedelta
 
-import isodate
+from expecter import expect
 
-from behave import given
+from rdial import Events
 
 
-@given('I have the datetime object {string}')
-def g_have_datetime(context, string):
-    datetime_ = datetime.datetime.strptime(string, "%Y-%m-%d %H:%M:%S")
-    context.input = datetime_.replace(tzinfo=isodate.UTC)
+def test_list_tasks():
+    events = Events.read('tests/data/test')
+    expect(events.tasks()) == ['task', 'task2']
+
+
+def test_current_running_event():
+    events = Events.read('tests/data/test')
+    expect(events.running()) == 'task'
+
+
+def test_no_currently_running_event():
+    events = Events.read('tests/data/test_not_running')
+    expect(events.running()) == False
+
+
+def test_sum_durations_in_database():
+    events = Events.read('tests/data/test_not_running')
+    expect(events.sum()) == timedelta(hours=2, minutes=15)

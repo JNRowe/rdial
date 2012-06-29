@@ -7,5 +7,4 @@ dist/
 rdial.egg-info/
 
 .coverage
-.coverage.behave
 .noseids
