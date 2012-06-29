@@ -54,31 +54,31 @@ import prettytable
 
 class RdialError(ValueError):
 
-    """Generic exception for rdial"""
+    """Generic exception for rdial."""
 
     pass
 
 
 class TaskNotRunningError(RdialError):
 
-    """Exception for calling mutators when a task is not running"""
+    """Exception for calling mutators when a task is not running."""
 
     pass
 
 
 class TaskRunningError(RdialError):
 
-    """Exception for starting task when a task is already running"""
+    """Exception for starting task when a task is already running."""
 
     pass
 
 
 class Event(object):
 
-    """Base object for handling database event"""
+    """Base object for handling database event."""
 
     def __init__(self, task, start="", delta="", message=""):
-        """Initialise a new ``Event`` object
+        """Initialise a new ``Event`` object.
 
         :param str task: Task name to tracking
         :param str start: ISO-8601 start time for event
@@ -92,13 +92,13 @@ class Event(object):
         self.message = message
 
     def __repr__(self):
-        """Self-documenting string representation"""
+        """Self-documenting string representation."""
         return 'Event(%r, %r, %r, %r)' \
             % (self.task, isodate.datetime_isoformat(self.start),
                format_delta(self.delta), self.message)
 
     def writer(self):
-        """Prepare object for export"""
+        """Prepare object for export."""
         return {
             'start': isodate.datetime_isoformat(self.start),
             'delta': format_delta(self.delta),
@@ -106,13 +106,13 @@ class Event(object):
         }
 
     def running(self):
-        """Check if event is running"""
+        """Check if event is running."""
         if self.delta == datetime.timedelta(0):
             return self.task
         return False
 
     def stop(self, message=None, force=False):
-        """Stop currently running event
+        """Stop currently running event.
 
         :param str message: Message to attach to event
         :param bool force: Re-stop a previously stopped event
@@ -128,19 +128,19 @@ FIELDS = inspect.getargspec(Event.__init__)[0][2:]
 
 class Events(list):
 
-    """Container for database events"""
+    """Container for database events."""
 
     def __init__(self, iterable=None):
         super(Events, self).__init__(iterable if iterable else [])
         self._dirty = set()
 
     def __repr__(self):
-        """Self-documenting string representation"""
+        """Self-documenting string representation."""
         return 'Events(%s)' % super(self.__class__, self).__repr__()
 
     @staticmethod
     def read(directory):
-        """Read and parse database
+        """Read and parse database.
 
         Assume a new ``Events`` object should be created if the file is missing
 
@@ -158,7 +158,7 @@ class Events(list):
         return Events(sorted(events, key=operator.attrgetter('start')))
 
     def write(self, directory):
-        """Write database file
+        """Write database file.
 
         :param str directory: Location to write database files to
 
@@ -178,11 +178,11 @@ class Events(list):
             os.rename(temp.name, "%s/%s.csv" % (directory, task))
 
     def tasks(self):
-        """Generate a list of tasks in the database"""
+        """Generate a list of tasks in the database."""
         return sorted(set(event.task for event in self))
 
     def last(self):
-        """Return current/last event
+        """Return current/last event.
 
         This handles the empty database case by returning ``None``
 
@@ -193,7 +193,7 @@ class Events(list):
             return None
 
     def running(self):
-        """Check if an event is running
+        """Check if an event is running.
 
         We return the currently running task, if one exists, for easy access.
 
@@ -202,7 +202,7 @@ class Events(list):
         return last.running() if last else False
 
     def start(self, task, start=''):
-        """Start a new event
+        """Start a new event.
 
         :param str task: Task name to tracking
         :param str start: ISO-8601 start time for event
@@ -216,7 +216,7 @@ class Events(list):
         self._dirty.add(task)
 
     def stop(self, message=None, force=False):
-        """Stop currently running event
+        """Stop currently running event.
 
         :param str message: Message to attach to event
         :param bool force: Re-stop a previously stopped event
@@ -229,7 +229,7 @@ class Events(list):
         self._dirty.add(self.last().task)
 
     def filter(self, filt):
-        """Apply filter to events
+        """Apply filter to events.
 
         :param func filt: Function to filter with
         :rtype: Events
@@ -238,7 +238,7 @@ class Events(list):
         return Events(filter(filt, self))
 
     def for_task(self, task):
-        """Filter events for a specific task
+        """Filter events for a specific task.
 
         :param str task: Task name to filter on
         :rtype: Events
@@ -247,7 +247,7 @@ class Events(list):
         return self.filter(lambda x: x.task == task)
 
     def for_date(self, year, month=None, day=None):
-        """Filter events for a specific day
+        """Filter events for a specific day.
 
         :param str task: Task name to filter on
         :param int year: Year to filter on
@@ -264,7 +264,7 @@ class Events(list):
         return events
 
     def for_week(self, year, week):
-        """Filter events for a specific ISO-2015 week
+        """Filter events for a specific ISO-2015 week.
 
         ISO-2015 defines a week as Monday to Sunday, with the first week of
         a year being the first week containing a Thursday.
@@ -281,7 +281,7 @@ class Events(list):
         return self.filter(lambda x: start <= x.start.date() < end)
 
     def sum(self):
-        """Sum duration of all events
+        """Sum duration of all events.
 
         :rtype: datetime.timedelta
 
@@ -291,7 +291,7 @@ class Events(list):
     @staticmethod
     @contextlib.contextmanager
     def context(directory):
-        """Convenience context handler to manage reading and writing database
+        """Convenience context handler to manage reading and writing database.
 
         :param str directory: Database location
 
@@ -303,7 +303,7 @@ class Events(list):
 
 
 def parse_delta(string):
-    """Parse ISO-8601 duration string
+    """Parse ISO-8601 duration string.
 
     :param str string: Duration string to parse
     :rtype: datetime.timedelta
@@ -315,7 +315,7 @@ def parse_delta(string):
 
 
 def format_delta(timedelta_):
-    """Format ISO-8601 duration string
+    """Format ISO-8601 duration string.
 
     :param datetime.timedelta timedelta_: Duration to process
     :rtype: str
@@ -327,7 +327,7 @@ def format_delta(timedelta_):
 
 
 def parse_datetime(string):
-    """Parse ISO-8601 datetime string
+    """Parse ISO-8601 datetime string.
 
     :param str string: Datetime string to parse
     :rtype: datetime.datetime
@@ -345,7 +345,7 @@ def parse_datetime(string):
 
 
 def utcnow():
-    """Wrapper for producing timezone aware current timestamp
+    """Wrapper for producing timezone aware current timestamp.
 
     :rtype: datetime.datetime
 
@@ -354,7 +354,7 @@ def utcnow():
 
 
 def xdg_data_location():
-    """Return a data location honouring $XDG_DATA_HOME
+    """Return a data location honouring $XDG_DATA_HOME.
 
     :rtype: str
 
@@ -365,7 +365,7 @@ def xdg_data_location():
 
 
 def filter_events(args):
-    """Filter events for report processing
+    """Filter events for report processing.
 
     :rtype: Events
 
@@ -392,7 +392,7 @@ COMMANDS = []
 
 
 def command(func):
-    """Simple decorator to add function to ``COMMANDS`` list
+    """Simple decorator to add function to ``COMMANDS`` list.
 
     The purpose of this decorator is to make the definition of commands simpler
     by reducing duplication, it is purely a convenience.
@@ -511,7 +511,7 @@ def ledger(args):
 
 
 def main():
-    """Main script"""
+    """Main script."""
     description = __doc__.splitlines()[0].split("-", 1)[1]
     epilog = "Please report bugs to jnrowe@gmail.com"
     parser = argh.ArghParser(description=description, epilog=epilog,
