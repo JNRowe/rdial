@@ -442,6 +442,44 @@ def running(args):
         yield 'No task is running!'
 
 
+@command
+@argh.arg('task', nargs='?', help='task name')
+@argh.arg('-d', '--duration', default='all',
+          choices=['day', 'week', 'month', 'year', 'all'],
+          help="filter events for specified time period")
+def ledger(args):
+    "generate ledger compatible date file"
+    events = Events.read(args.directory)
+    if args.task:
+        events = events.for_task(args.task)
+    if not args.duration == "all":
+        if args.duration == "week":
+            today = datetime.date.today()
+            events = events.for_week(*today.isocalendar()[:2])
+        else:
+            year, month, day = datetime.date.today().timetuple()[:3]
+            if args.duration == "month":
+                day = None
+            elif args.duration == "year":
+                month = None
+                day = None
+            events = events.for_date(year, month, day)
+    if events.running():
+        yield ';; Currently running event not included in output!'
+    for event in events:
+        if not event.delta:
+            break
+        end = event.start + event.delta
+        # Can't use timedelta.total_seconds() as it was only added in 2.7
+        seconds = event.delta.days * 86400 + event.delta.seconds
+        hours = seconds / 3600.0
+        yield '%s-%s' % (event.start.strftime('%Y-%m-%d * %H:%M'),
+                         end.strftime('%H:%M'))
+        yield '    (task:%s)  %.2fh' % (event.task, hours)
+    if events.running():
+        yield ';; Currently running event not included in output!'
+
+
 def main():
     """Main script"""
     description = __doc__.splitlines()[0].split("-", 1)[1]
