@@ -447,6 +447,7 @@ def running(args):
 @argh.arg('-d', '--duration', default='all',
           choices=['day', 'week', 'month', 'year', 'all'],
           help="filter events for specified time period")
+@argh.arg('-r', '--rate', help='hourly rate for task output')
 def ledger(args):
     "generate ledger compatible date file"
     events = Events.read(args.directory)
@@ -475,7 +476,8 @@ def ledger(args):
         hours = seconds / 3600.0
         yield '%s-%s' % (event.start.strftime('%Y-%m-%d * %H:%M'),
                          end.strftime('%H:%M'))
-        yield '    (task:%s)  %.2fh' % (event.task, hours)
+        yield '    (task:%s)  %.2fh%s' \
+            % (event.task, hours, ' @ %s' % args.rate if args.rate else '')
     if events.running():
         yield ';; Currently running event not included in output!'
 
