@@ -333,6 +333,29 @@ def xdg_data_location():
     return os.path.join(user_dir, 'rdial')
 
 
+def filter_events(args):
+    """Filter events for report processing
+
+    :rtype: Events
+    """
+    events = Events.read(args.directory)
+    if args.task:
+        events = events.for_task(args.task)
+    if not args.duration == "all":
+        if args.duration == "week":
+            today = datetime.date.today()
+            events = events.for_week(*today.isocalendar()[:2])
+        else:
+            year, month, day = datetime.date.today().timetuple()[:3]
+            if args.duration == "month":
+                day = None
+            elif args.duration == "year":
+                month = None
+                day = None
+            events = events.for_date(year, month, day)
+    return events
+
+
 COMMANDS = []
 
 
@@ -391,21 +414,7 @@ def stop(args):
 @argh.arg('--human', default=False, help='produce human-readable output')
 def report(args):
     "report time tracking data"
-    events = Events.read(args.directory)
-    if args.task:
-        events = events.for_task(args.task)
-    if not args.duration == "all":
-        if args.duration == "week":
-            today = datetime.date.today()
-            events = events.for_week(*today.isocalendar()[:2])
-        else:
-            year, month, day = datetime.date.today().timetuple()[:3]
-            if args.duration == "month":
-                day = None
-            elif args.duration == "year":
-                month = None
-                day = None
-            events = events.for_date(year, month, day)
+    events = filter_events(args)
     if args.human:
         yield '%d events in query' % len(events)
         yield 'Duration of events %s' % events.sum()
@@ -450,21 +459,7 @@ def running(args):
 @argh.arg('-r', '--rate', help='hourly rate for task output')
 def ledger(args):
     "generate ledger compatible date file"
-    events = Events.read(args.directory)
-    if args.task:
-        events = events.for_task(args.task)
-    if not args.duration == "all":
-        if args.duration == "week":
-            today = datetime.date.today()
-            events = events.for_week(*today.isocalendar()[:2])
-        else:
-            year, month, day = datetime.date.today().timetuple()[:3]
-            if args.duration == "month":
-                day = None
-            elif args.duration == "year":
-                month = None
-                day = None
-            events = events.for_date(year, month, day)
+    events = filter_events(args)
     if events.running():
         yield ';; Currently running event not included in output!'
     for event in events:
