@@ -92,13 +92,23 @@ class Event(object):
         self.message = message
 
     def __repr__(self):
-        """Self-documenting string representation."""
+        """Self-documenting string representation.
+
+        :rtype: str
+        :return: Event representation suitable for ``eval()``
+
+        """
         return 'Event(%r, %r, %r, %r)' \
             % (self.task, isodate.datetime_isoformat(self.start),
                format_delta(self.delta), self.message)
 
     def writer(self):
-        """Prepare object for export."""
+        """Prepare object for export.
+
+        :rtype: dict
+        :return: Event data for object storage
+
+        """
         return {
             'start': isodate.datetime_isoformat(self.start),
             'delta': format_delta(self.delta),
@@ -106,7 +116,12 @@ class Event(object):
         }
 
     def running(self):
-        """Check if event is running."""
+        """Check if event is running.
+
+        :rtype: str
+        :return: Event name, if running
+
+        """
         if self.delta == datetime.timedelta(0):
             return self.task
         return False
@@ -135,7 +150,12 @@ class Events(list):
         self._dirty = set()
 
     def __repr__(self):
-        """Self-documenting string representation."""
+        """Self-documenting string representation.
+
+        :rtype: str
+        :return: Events representation suitable for ``eval()``
+
+        """
         return 'Events(%s)' % super(self.__class__, self).__repr__()
 
     @staticmethod
@@ -145,7 +165,8 @@ class Events(list):
         Assume a new ``Events`` object should be created if the file is missing
 
         :param str directory: Location to read database files from
-        :returns Events: Parsed events database
+        :rtype: Events
+        :returns: Parsed events database
 
         """
         if not os.path.exists(directory):
@@ -178,13 +199,21 @@ class Events(list):
             os.rename(temp.name, "%s/%s.csv" % (directory, task))
 
     def tasks(self):
-        """Generate a list of tasks in the database."""
+        """Generate a list of tasks in the database.
+
+        :rtype: list of str
+        :return: Names of tasks in database
+
+        """
         return sorted(set(event.task for event in self))
 
     def last(self):
         """Return current/last event.
 
         This handles the empty database case by returning ``None``
+
+        :rtype: Event
+        :return: Last recorded event
 
         """
         if len(self) > 0:
@@ -196,6 +225,9 @@ class Events(list):
         """Check if an event is running.
 
         We return the currently running task, if one exists, for easy access.
+
+        :rtype: Event
+        :return: Running event, if an event running
 
         """
         last = self.last()
@@ -233,6 +265,7 @@ class Events(list):
 
         :param func filt: Function to filter with
         :rtype: Events
+        :return: Events matching given filter function
 
         """
         return Events(filter(filt, self))
@@ -242,6 +275,7 @@ class Events(list):
 
         :param str task: Task name to filter on
         :rtype: Events
+        :return: Events marked with given task name
 
         """
         return self.filter(lambda x: x.task == task)
@@ -254,6 +288,7 @@ class Events(list):
         :param int month: Month to filter on, or ``None``
         :param int day: Day to filter on, or ``None``
         :rtype: Events
+        :return: Events occurring within specified date
 
         """
         events = self.filter(lambda x: x.start.year == year)
@@ -272,6 +307,7 @@ class Events(list):
         :param int year: Year to filter events on
         :param int week: ISO-2015 month number to filter events on
         :rtype: Events
+        :return: Events occurring in given ISO-2015 week
 
         """
         bound = datetime.date(year, 1, 4)
@@ -284,6 +320,7 @@ class Events(list):
         """Sum duration of all events.
 
         :rtype: datetime.timedelta
+        :return: Sum of all event deltas
 
         """
         return sum(map(lambda x: x.delta, self), datetime.timedelta(0))
@@ -307,6 +344,7 @@ def parse_delta(string):
 
     :param str string: Duration string to parse
     :rtype: datetime.timedelta
+    :return: Parsed delta object
 
     """
     if not string:
@@ -319,6 +357,7 @@ def format_delta(timedelta_):
 
     :param datetime.timedelta timedelta_: Duration to process
     :rtype: str
+    :return: ISO-8601 representation of duration
 
     """
     if timedelta_ == datetime.timedelta(0):
@@ -331,6 +370,7 @@ def parse_datetime(string):
 
     :param str string: Datetime string to parse
     :rtype: datetime.datetime
+    :return: Parsed datetime object
 
     """
     if string == "":
@@ -348,6 +388,7 @@ def utcnow():
     """Wrapper for producing timezone aware current timestamp.
 
     :rtype: datetime.datetime
+    :return: Current date and time, in UTC
 
     """
     return datetime.datetime.utcnow().replace(tzinfo=isodate.UTC)
@@ -368,6 +409,7 @@ def filter_events(args):
     """Filter events for report processing.
 
     :rtype: Events
+    :return: Events matching criteria specified in ``args``
 
     """
     events = Events.read(args.directory)
