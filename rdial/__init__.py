@@ -53,19 +53,30 @@ import prettytable
 
 
 class RdialError(ValueError):
+
     """Generic exception for rdial"""
+
+    pass
 
 
 class TaskNotRunningError(RdialError):
+
     """Exception for calling mutators when a task is not running"""
+
+    pass
 
 
 class TaskRunningError(RdialError):
+
     """Exception for starting task when a task is already running"""
+
+    pass
 
 
 class Event(object):
+
     """Base object for handling database event"""
+
     def __init__(self, task, start="", delta="", message=""):
         """Initialise a new ``Event`` object
 
@@ -73,6 +84,7 @@ class Event(object):
         :param str start: ISO-8601 start time for event
         :param str delta: ISO-8601 duration for event
         :param str message: Message to attach to event
+
         """
         self.task = task
         self.start = parse_datetime(start)
@@ -105,6 +117,7 @@ class Event(object):
         :param str message: Message to attach to event
         :param bool force: Re-stop a previously stopped event
         :raise TaskNotRunningError: Event not running
+
         """
         if not force and self.delta:
             raise TaskNotRunningError('No task currently running!')
@@ -114,6 +127,7 @@ FIELDS = inspect.getargspec(Event.__init__)[0][2:]
 
 
 class Events(list):
+
     """Container for database events"""
 
     def __init__(self, iterable=None):
@@ -132,6 +146,7 @@ class Events(list):
 
         :param str directory: Location to read database files from
         :returns Events: Parsed events database
+
         """
         if not os.path.exists(directory):
             return Events()
@@ -146,6 +161,7 @@ class Events(list):
         """Write database file
 
         :param str directory: Location to write database files to
+
         """
         if not os.path.isdir(directory):
             os.mkdir(directory)
@@ -169,6 +185,7 @@ class Events(list):
         """Return current/last event
 
         This handles the empty database case by returning ``None``
+
         """
         if len(self) > 0:
             return self[-1]
@@ -179,6 +196,7 @@ class Events(list):
         """Check if an event is running
 
         We return the currently running task, if one exists, for easy access.
+
         """
         last = self.last()
         return last.running() if last else False
@@ -189,6 +207,7 @@ class Events(list):
         :param str task: Task name to tracking
         :param str start: ISO-8601 start time for event
         :raise TaskRunningError: An event is already running
+
         """
         running = self.running()
         if running:
@@ -202,6 +221,7 @@ class Events(list):
         :param str message: Message to attach to event
         :param bool force: Re-stop a previously stopped event
         :raise TaskNotRunningError: No task currently running!
+
         """
         if not force and not self.running():
             raise TaskNotRunningError('No task currently running!')
@@ -213,6 +233,7 @@ class Events(list):
 
         :param func filt: Function to filter with
         :rtype: Events
+
         """
         return Events(filter(filt, self))
 
@@ -221,6 +242,7 @@ class Events(list):
 
         :param str task: Task name to filter on
         :rtype: Events
+
         """
         return self.filter(lambda x: x.task == task)
 
@@ -232,6 +254,7 @@ class Events(list):
         :param int month: Month to filter on, or ``None``
         :param int day: Day to filter on, or ``None``
         :rtype: Events
+
         """
         events = self.filter(lambda x: x.start.year == year)
         if month:
@@ -249,6 +272,7 @@ class Events(list):
         :param int year: Year to filter events on
         :param int week: ISO-2015 month number to filter events on
         :rtype: Events
+
         """
         bound = datetime.date(year, 1, 4)
         iso_start = bound - datetime.timedelta(days=bound.isocalendar()[1])
@@ -260,6 +284,7 @@ class Events(list):
         """Sum duration of all events
 
         :rtype: datetime.timedelta
+
         """
         return sum(map(lambda x: x.delta, self), datetime.timedelta(0))
 
@@ -269,6 +294,7 @@ class Events(list):
         """Convenience context handler to manage reading and writing database
 
         :param str directory: Database location
+
         """
         events = Events.read(directory)
         yield events
@@ -281,6 +307,7 @@ def parse_delta(string):
 
     :param str string: Duration string to parse
     :rtype: datetime.timedelta
+
     """
     if not string:
         return datetime.timedelta(0)
@@ -292,6 +319,7 @@ def format_delta(timedelta_):
 
     :param datetime.timedelta timedelta_: Duration to process
     :rtype: str
+
     """
     if timedelta_ == datetime.timedelta(0):
         return ""
@@ -303,6 +331,7 @@ def parse_datetime(string):
 
     :param str string: Datetime string to parse
     :rtype: datetime.datetime
+
     """
     if string == "":
         datetime_ = utcnow()
@@ -319,6 +348,7 @@ def utcnow():
     """Wrapper for producing timezone aware current timestamp
 
     :rtype: datetime.datetime
+
     """
     return datetime.datetime.utcnow().replace(tzinfo=isodate.UTC)
 
@@ -327,6 +357,7 @@ def xdg_data_location():
     """Return a data location honouring $XDG_DATA_HOME
 
     :rtype: str
+
     """
     user_dir = os.getenv('XDG_DATA_HOME', os.path.join(os.getenv('HOME', '/'),
                          '.local/share'))
@@ -337,6 +368,7 @@ def filter_events(args):
     """Filter events for report processing
 
     :rtype: Events
+
     """
     events = Events.read(args.directory)
     if args.task:
@@ -368,6 +400,7 @@ def command(func):
     :param func func: Function to wrap
     :rtype: func
     :returns: Original function
+
     """
     COMMANDS.append(func)
     return func
@@ -377,7 +410,7 @@ def command(func):
 @argh.arg('task', default='default', nargs='?', help='task name')
 @argh.arg('-t', '--time', default='', help='set start time')
 def start(args):
-    "start task"
+    """start task"""
     with Events.context(args.directory) as events:
         try:
             events.start(args.task, args.time)
@@ -389,7 +422,7 @@ def start(args):
 @argh.arg('-m', '--message', help='closing message')
 @argh.arg('--amend', default=False, help='amend previous stop entry')
 def stop(args):
-    "stop task"
+    """stop task"""
     with Events.context(args.directory) as events:
         try:
             if args.amend and not args.message:
@@ -413,7 +446,7 @@ def stop(args):
 @argh.arg('--html', default=False, help='produce HTML output')
 @argh.arg('--human', default=False, help='produce human-readable output')
 def report(args):
-    "report time tracking data"
+    """report time tracking data"""
     events = filter_events(args)
     if args.human:
         yield '%d events in query' % len(events)
@@ -441,7 +474,7 @@ def report(args):
 
 @command
 def running(args):
-    "display running task, if any"
+    """display running task, if any"""
     events = Events.read(args.directory)
     if events.running():
         current = events.last()
@@ -458,7 +491,7 @@ def running(args):
           help="filter events for specified time period")
 @argh.arg('-r', '--rate', help='hourly rate for task output')
 def ledger(args):
-    "generate ledger compatible date file"
+    """generate ledger compatible data file"""
     events = filter_events(args)
     if events.running():
         yield ';; Currently running event not included in output!'
