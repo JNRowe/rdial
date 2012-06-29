@@ -288,7 +288,6 @@ class Events(list):
     def for_date(self, year, month=None, day=None):
         """Filter events for a specific day.
 
-        :param str task: Task name to filter on
         :param int year: Year to filter on
         :param int month: Month to filter on, or ``None``
         :param int day: Day to filter on, or ``None``
@@ -413,6 +412,7 @@ def xdg_data_location():
 def filter_events(args):
     """Filter events for report processing.
 
+    :param argparse.Namespace args: Command line arguments
     :rtype: Events
     :return: Events matching criteria specified in ``args``
 
