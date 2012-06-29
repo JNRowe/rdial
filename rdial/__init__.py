@@ -146,6 +146,11 @@ class Events(list):
     """Container for database events."""
 
     def __init__(self, iterable=None):
+        """Initialise a new ``Events`` object.
+
+        :param list iterable: Objects to add to container
+
+        """
         super(Events, self).__init__(iterable if iterable else [])
         self._dirty = set()
 
