@@ -94,7 +94,7 @@ class Event(object):
     def __repr__(self):
         """Self-documenting string representation.
 
-        :rtype: str
+        :rtype: `str`
         :return: Event representation suitable for ``eval()``
 
         """
@@ -105,7 +105,7 @@ class Event(object):
     def writer(self):
         """Prepare object for export.
 
-        :rtype: dict
+        :rtype: `dict`
         :return: Event data for object storage
 
         """
@@ -118,7 +118,7 @@ class Event(object):
     def running(self):
         """Check if event is running.
 
-        :rtype: str
+        :rtype: `str`
         :return: Event name, if running
 
         """
@@ -157,7 +157,7 @@ class Events(list):
     def __repr__(self):
         """Self-documenting string representation.
 
-        :rtype: str
+        :rtype: `str`
         :return: Events representation suitable for ``eval()``
 
         """
@@ -170,7 +170,7 @@ class Events(list):
         Assume a new ``Events`` object should be created if the file is missing
 
         :param str directory: Location to read database files from
-        :rtype: Events
+        :rtype: `Events`
         :returns: Parsed events database
 
         """
@@ -206,7 +206,7 @@ class Events(list):
     def tasks(self):
         """Generate a list of tasks in the database.
 
-        :rtype: list of str
+        :rtype: `list` of `str`
         :return: Names of tasks in database
 
         """
@@ -217,7 +217,7 @@ class Events(list):
 
         This handles the empty database case by returning ``None``
 
-        :rtype: Event
+        :rtype: `Event`
         :return: Last recorded event
 
         """
@@ -231,7 +231,7 @@ class Events(list):
 
         We return the currently running task, if one exists, for easy access.
 
-        :rtype: Event
+        :rtype: `Event`
         :return: Running event, if an event running
 
         """
@@ -269,7 +269,7 @@ class Events(list):
         """Apply filter to events.
 
         :param func filt: Function to filter with
-        :rtype: Events
+        :rtype: `Events`
         :return: Events matching given filter function
 
         """
@@ -279,7 +279,7 @@ class Events(list):
         """Filter events for a specific task.
 
         :param str task: Task name to filter on
-        :rtype: Events
+        :rtype: `Events`
         :return: Events marked with given task name
 
         """
@@ -291,7 +291,7 @@ class Events(list):
         :param int year: Year to filter on
         :param int month: Month to filter on, or ``None``
         :param int day: Day to filter on, or ``None``
-        :rtype: Events
+        :rtype: `Events`
         :return: Events occurring within specified date
 
         """
@@ -310,7 +310,7 @@ class Events(list):
 
         :param int year: Year to filter events on
         :param int week: ISO-2015 month number to filter events on
-        :rtype: Events
+        :rtype: `Events`
         :return: Events occurring in given ISO-2015 week
 
         """
@@ -323,7 +323,7 @@ class Events(list):
     def sum(self):
         """Sum duration of all events.
 
-        :rtype: datetime.timedelta
+        :rtype: `datetime.timedelta`
         :return: Sum of all event deltas
 
         """
@@ -347,7 +347,7 @@ def parse_delta(string):
     """Parse ISO-8601 duration string.
 
     :param str string: Duration string to parse
-    :rtype: datetime.timedelta
+    :rtype: `datetime.timedelta`
     :return: Parsed delta object
 
     """
@@ -360,7 +360,7 @@ def format_delta(timedelta_):
     """Format ISO-8601 duration string.
 
     :param datetime.timedelta timedelta_: Duration to process
-    :rtype: str
+    :rtype: `str`
     :return: ISO-8601 representation of duration
 
     """
@@ -373,7 +373,7 @@ def parse_datetime(string):
     """Parse ISO-8601 datetime string.
 
     :param str string: Datetime string to parse
-    :rtype: datetime.datetime
+    :rtype: `datetime.datetime`
     :return: Parsed datetime object
 
     """
@@ -391,7 +391,7 @@ def parse_datetime(string):
 def utcnow():
     """Wrapper for producing timezone aware current timestamp.
 
-    :rtype: datetime.datetime
+    :rtype: `datetime.datetime`
     :return: Current date and time, in UTC
 
     """
@@ -401,7 +401,7 @@ def utcnow():
 def xdg_data_location():
     """Return a data location honouring $XDG_DATA_HOME.
 
-    :rtype: str
+    :rtype: `str`
 
     """
     user_dir = os.getenv('XDG_DATA_HOME', os.path.join(os.getenv('HOME', '/'),
@@ -413,7 +413,7 @@ def filter_events(args):
     """Filter events for report processing.
 
     :param argparse.Namespace args: Command line arguments
-    :rtype: Events
+    :rtype: `Events`
     :return: Events matching criteria specified in ``args``
 
     """
@@ -445,7 +445,7 @@ def command(func):
     by reducing duplication, it is purely a convenience.
 
     :param func func: Function to wrap
-    :rtype: func
+    :rtype: `func`
     :returns: Original function
 
     """

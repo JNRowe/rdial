@@ -4,6 +4,7 @@
 .ropeproject/
 build/
 dist/
+doc/.build/
 rdial.egg-info/
 
 .coverage
