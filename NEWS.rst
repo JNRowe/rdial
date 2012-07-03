@@ -3,6 +3,19 @@ User-visible changes
 
 .. contents::
 
+0.4.0 - 2012-07-03
+------------------
+
+* ``ledger`` subcommand to create output suitable for processing with ledger_
+* ``--human`` option for ``report`` subcommand, with simpler output
+* Initial user manual, using Sphinx_
+* Tests now require nose2_ and expecter_, and ``behave`` is no longer required
+
+.. _ledger: http://ledger-cli.org/
+.. _Sphinx: http://sphinx.pocoo.org/
+.. _nose2: http://pypi.python.org/pypi/nose2/
+.. _expecter: http://pypi.python.org/pypi/expecter/
+
 0.3.0 - 2012-02-16
 ------------------
 
