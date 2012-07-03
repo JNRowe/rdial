@@ -1,7 +1,7 @@
 .. currentmodule:: rdial
 
-Utilties
-========
+Utilities
+=========
 
 .. note::
 

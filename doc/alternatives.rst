@@ -4,20 +4,20 @@ Alternatives
 Before diving in and spitting out this package I looked at the alternatives
 below.  If I have missed something please drop me a mail_.
 
-gtimelog
---------
-
-hammertime
-----------
-
-ktimetracker
+``gtimelog``
 ------------
 
-org-mode
---------
+``hammertime``
+--------------
 
-taskwarrior
------------
+``ktimetracker``
+----------------
+
+``org-mode``
+------------
+
+``taskwarrior``
+---------------
 
 .. _mail: jnrowe@gmail.com
 .. _shtool: http://www.gnu.org/software/shtool/shtool.html
