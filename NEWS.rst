@@ -3,6 +3,18 @@ User-visible changes
 
 .. contents::
 
+0.5.0 - 2012-08-08
+------------------
+
+* Python 3 is now supported, and support for 2.5 has been dropped
+* aaargh_ is now required
+* zsh_ completion script in ``extra``
+* pip_ requirements files in ``extra``
+
+.. _aaargh: http://pypi.python.org/pypi/aaargh/
+.. _zsh: http://www.zsh.org/
+.. _pip: http://pypi.python.org/pypi/pip/
+
 0.4.0 - 2012-07-03
 ------------------
 
