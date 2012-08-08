@@ -45,6 +45,7 @@ import glob
 import inspect
 import operator
 import os
+import sys
 import tempfile
 
 import aaargh
@@ -199,9 +200,15 @@ class Events(list):
 
         for task in self._dirty:
             events = self.for_task(task)
-            temp = tempfile.NamedTemporaryFile(prefix='.', dir=directory,
-                                               delete=False)
-            writer = csv.DictWriter(temp, FIELDS, lineterminator='\n')
+            if sys.version_info[0] == 3:
+                temp = tempfile.NamedTemporaryFile(mode='w', newline='',
+                                                   prefix='.', dir=directory,
+                                                   delete=False)
+                writer = csv.DictWriter(temp, FIELDS)
+            else:
+                temp = tempfile.NamedTemporaryFile(prefix='.', dir=directory,
+                                                   delete=False)
+                writer = csv.DictWriter(temp, FIELDS, lineterminator='\n')
             # Can't use writeheader, it wasn't added until 2.7.
             writer.writerow(dict(zip(FIELDS, FIELDS)))
             for event in events:
