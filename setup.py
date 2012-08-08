@@ -41,5 +41,5 @@ setup(
     include_package_data=False,
     entry_points={'console_scripts': ['rdial = rdial:main', ]},
     zip_safe=False,
-    install_requires=['argh', 'isodate', 'prettytable'],
+    install_requires=['aaargh', 'isodate', 'prettytable'],
 )
