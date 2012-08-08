@@ -45,11 +45,17 @@ import glob
 import inspect
 import operator
 import os
+import sys
 import tempfile
 
-import argh
+import aaargh
 import isodate
 import prettytable
+
+
+APP = aaargh.App(description=__doc__.splitlines()[0].split("-", 1)[1],
+                 epilog="Please report bugs to jnrowe@gmail.com",
+                 version="%%(prog)s %s" % __version__)
 
 
 class RdialError(ValueError):
@@ -194,9 +200,15 @@ class Events(list):
 
         for task in self._dirty:
             events = self.for_task(task)
-            temp = tempfile.NamedTemporaryFile(prefix='.', dir=directory,
-                                               delete=False)
-            writer = csv.DictWriter(temp, FIELDS, lineterminator='\n')
+            if sys.version_info[0] == 3:
+                temp = tempfile.NamedTemporaryFile(mode='w', newline='',
+                                                   prefix='.', dir=directory,
+                                                   delete=False)
+                writer = csv.DictWriter(temp, FIELDS)
+            else:
+                temp = tempfile.NamedTemporaryFile(prefix='.', dir=directory,
+                                                   delete=False)
+                writer = csv.DictWriter(temp, FIELDS, lineterminator='\n')
             # Can't use writeheader, it wasn't added until 2.7.
             writer.writerow(dict(zip(FIELDS, FIELDS)))
             for event in events:
@@ -409,7 +421,7 @@ def xdg_data_location():
     return os.path.join(user_dir, 'rdial')
 
 
-def filter_events(args):
+def filter_events(directory, task=None, duration=None):
     """Filter events for report processing.
 
     :param argparse.Namespace args: Command line arguments
@@ -417,94 +429,70 @@ def filter_events(args):
     :return: Events matching criteria specified in ``args``
 
     """
-    events = Events.read(args.directory)
-    if args.task:
-        events = events.for_task(args.task)
-    if not args.duration == "all":
-        if args.duration == "week":
+    events = Events.read(directory)
+    if task:
+        events = events.for_task(task)
+    if not duration == "all":
+        if duration == "week":
             today = datetime.date.today()
             events = events.for_week(*today.isocalendar()[:2])
         else:
             year, month, day = datetime.date.today().timetuple()[:3]
-            if args.duration == "month":
+            if duration == "month":
                 day = None
-            elif args.duration == "year":
+            elif duration == "year":
                 month = None
                 day = None
             events = events.for_date(year, month, day)
     return events
 
 
-COMMANDS = []
-
-
-def command(func):
-    """Simple decorator to add function to ``COMMANDS`` list.
-
-    The purpose of this decorator is to make the definition of commands simpler
-    by reducing duplication, it is purely a convenience.
-
-    :param func func: Function to wrap
-    :rtype: `func`
-    :returns: Original function
-
-    """
-    COMMANDS.append(func)
-    return func
-
-
-@command
-@argh.arg('task', default='default', nargs='?', help='task name')
-@argh.arg('-t', '--time', default='', help='set start time')
-def start(args):
+@APP.cmd
+@APP.cmd_arg('task', default='default', nargs='?', help='task name')
+@APP.cmd_arg('-t', '--time', default='', help='set start time')
+def start(directory, task, time):
     """start task"""
-    with Events.context(args.directory) as events:
-        try:
-            events.start(args.task, args.time)
-        except TaskRunningError as e:
-            raise argh.CommandError(e.message)
+    with Events.context(directory) as events:
+        events.start(task, time)
 
 
-@command
-@argh.arg('-m', '--message', help='closing message')
-@argh.arg('--amend', default=False, help='amend previous stop entry')
-def stop(args):
+@APP.cmd
+@APP.cmd_arg('-m', '--message', help='closing message')
+@APP.cmd_arg('--amend', default=False, help='amend previous stop entry')
+def stop(directory, message, amend):
     """stop task"""
-    with Events.context(args.directory) as events:
-        try:
-            if args.amend and not args.message:
-                last = events.last()
-                args.message = last.message
-            events.stop(args.message, force=args.amend)
-        except TaskNotRunningError as e:
-            raise argh.CommandError(e.message)
+    with Events.context(directory) as events:
+        if amend and not message:
+            last = events.last()
+            message = last.message
+        events.stop(message, force=amend)
     last = events.last()
-    yield 'Task %s running for %s' % (last.task, last.delta)
+    print('Task %s running for %s' % (last.task, last.delta))
 
 
-@command
-@argh.arg('task', nargs='?', help='task name')
-@argh.arg('-d', '--duration', default='all',
+@APP.cmd
+@APP.cmd_arg('task', nargs='?', help='task name')
+@APP.cmd_arg('-d', '--duration', default='all',
           choices=['day', 'week', 'month', 'year', 'all'],
           help="filter events for specified time period")
-@argh.arg('-s', '--sort', default='task', choices=['task', 'time'],
+@APP.cmd_arg('-s', '--sort', default='task', choices=['task', 'time'],
           help='field to sort by')
-@argh.arg('-r', '--reverse', default=False, help='reverse sort order')
-@argh.arg('--html', default=False, help='produce HTML output')
-@argh.arg('--human', default=False, help='produce human-readable output')
-def report(args):
+@APP.cmd_arg('-r', '--reverse', default=False, help='reverse sort order')
+@APP.cmd_arg('--html', default=False, help='produce HTML output')
+@APP.cmd_arg('--human', default=False, help='produce human-readable output')
+def report(directory, task, duration, sort, reverse, html, human):
     """report time tracking data"""
-    events = filter_events(args)
-    if args.human:
-        yield '%d events in query' % len(events)
-        yield 'Duration of events %s' % events.sum()
-        yield 'First entry started at %s' % events[0].start
-        yield 'Last entry started at %s' % events[-1].start
+    events = filter_events(directory, task, duration)
+    if human:
+        print('%d events in query' % len(events))
+        print('Duration of events %s' % events.sum())
+        print('First entry started at %s' % events[0].start)
+        print('Last entry started at %s' % events[-1].start)
         dates = set(e.start.date() for e in events)
-        yield 'Events exist on %d dates' % len(dates)
+        print('Events exist on %d dates' % len(dates))
     else:
         table = prettytable.PrettyTable(['task', 'time'])
-        formatter = table.get_html_string if args.html else table.get_string
+        formatter = table.get_html_string if html else table.get_string
         try:
             table.align['task'] = 'l'
         except AttributeError:  # prettytable 0.5 compatibility
@@ -512,36 +500,36 @@ def report(args):
         for task in events.tasks():
             table.add_row([task, events.for_task(task).sum()])
 
-        yield formatter(sortby=args.sort, reversesort=args.reverse)
-    if events.running() and not args.html:
+        print(formatter(sortby=sort, reversesort=reverse))
+    if events.running() and not html:
         current = events.last()
-        yield "Currently running `%s' since %s" \
-            % (current.task, isodate.datetime_isoformat(current.start))
+        print("Currently running `%s' since %s"
+              % (current.task, isodate.datetime_isoformat(current.start)))
 
 
-@command
-def running(args):
+@APP.cmd
+def running(directory):
     """display running task, if any"""
-    events = Events.read(args.directory)
+    events = Events.read(directory)
     if events.running():
         current = events.last()
-        yield 'Currently running %s since %s' \
-            % (current.task, isodate.datetime_isoformat(current.start))
+        print('Currently running %s since %s'
+              % (current.task, isodate.datetime_isoformat(current.start)))
     else:
-        yield 'No task is running!'
+        print('No task is running!')
 
 
-@command
-@argh.arg('task', nargs='?', help='task name')
-@argh.arg('-d', '--duration', default='all',
+@APP.cmd
+@APP.cmd_arg('task', nargs='?', help='task name')
+@APP.cmd_arg('-d', '--duration', default='all',
           choices=['day', 'week', 'month', 'year', 'all'],
           help="filter events for specified time period")
-@argh.arg('-r', '--rate', help='hourly rate for task output')
-def ledger(args):
+@APP.cmd_arg('-r', '--rate', help='hourly rate for task output')
+def ledger(directory, task, duration, rate):
     """generate ledger compatible data file"""
-    events = filter_events(args)
+    events = filter_events(directory, task, duration)
     if events.running():
-        yield ';; Currently running event not included in output!'
+        print(';; Currently running event not included in output!')
     for event in events:
         if not event.delta:
             break
@@ -549,21 +537,19 @@ def ledger(args):
         # Can't use timedelta.total_seconds() as it was only added in 2.7
         seconds = event.delta.days * 86400 + event.delta.seconds
         hours = seconds / 3600.0
-        yield '%s-%s' % (event.start.strftime('%Y-%m-%d * %H:%M'),
-                         end.strftime('%H:%M'))
-        yield '    (task:%s)  %.2fh%s' \
-            % (event.task, hours, ' @ %s' % args.rate if args.rate else '')
+        print('%s-%s' % (event.start.strftime('%Y-%m-%d * %H:%M'),
+                         end.strftime('%H:%M')))
+        print('    (task:%s)  %.2fh%s'
+              % (event.task, hours, ' @ %s' % rate if rate else ''))
     if events.running():
-        yield ';; Currently running event not included in output!'
+        print(';; Currently running event not included in output!')
 
 
 def main():
     """Main script."""
-    description = __doc__.splitlines()[0].split("-", 1)[1]
-    epilog = "Please report bugs to jnrowe@gmail.com"
-    parser = argh.ArghParser(description=description, epilog=epilog,
-                             version="%%(prog)s %s" % __version__)
-    parser.add_argument('-d', '--directory', default=xdg_data_location(),
-                        metavar='dir', help='directory to read/write to')
-    parser.add_commands(COMMANDS)
-    parser.dispatch()
+    APP.arg('-d', '--directory', default=xdg_data_location(),
+            metavar='dir', help='directory to read/write to')
+    try:
+        APP.run()
+    except RdialError as e:
+        APP._parser.error(e)

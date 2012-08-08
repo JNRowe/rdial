@@ -30,6 +30,9 @@ setup(
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.1',
+        'Programming Language :: Python :: 3.2',
         'Topic :: Office/Business',
         'Topic :: Office/Business :: News/Diary',
         'Topic :: Office/Business :: Scheduling',
@@ -41,5 +44,5 @@ setup(
     include_package_data=False,
     entry_points={'console_scripts': ['rdial = rdial:main', ]},
     zip_safe=False,
-    install_requires=['argh', 'isodate', 'prettytable'],
+    install_requires=['aaargh', 'isodate', 'prettytable'],
 )
