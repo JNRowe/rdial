@@ -1,2 +1,10 @@
-include COPYING *.rst
+include .travis.yml
+include COPYING
+include *.rst
+include doc/*.rst
+include doc/conf.py
+include extra/requirements*.txt
+include nose2.cfg
 include tests/*.py
+include tox.ini
+recursive-include tests/data *.csv
