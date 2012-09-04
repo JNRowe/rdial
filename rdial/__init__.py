@@ -458,7 +458,8 @@ def start(directory, task, time):
 
 @APP.cmd
 @APP.cmd_arg('-m', '--message', help='closing message')
-@APP.cmd_arg('--amend', default=False, help='amend previous stop entry')
+@APP.cmd_arg('--amend', action='store_true', default=False,
+             help='amend previous stop entry')
 def stop(directory, message, amend):
     """stop task"""
     with Events.context(directory) as events:
