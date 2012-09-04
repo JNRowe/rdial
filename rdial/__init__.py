@@ -474,10 +474,10 @@ def stop(directory, message, amend):
 @APP.cmd
 @APP.cmd_arg('task', nargs='?', help='task name')
 @APP.cmd_arg('-d', '--duration', default='all',
-          choices=['day', 'week', 'month', 'year', 'all'],
-          help="filter events for specified time period")
+             choices=['day', 'week', 'month', 'year', 'all'],
+             help="filter events for specified time period")
 @APP.cmd_arg('-s', '--sort', default='task', choices=['task', 'time'],
-          help='field to sort by')
+             help='field to sort by')
 @APP.cmd_arg('-r', '--reverse', default=False, help='reverse sort order')
 @APP.cmd_arg('--html', default=False, help='produce HTML output')
 @APP.cmd_arg('--human', default=False, help='produce human-readable output')
@@ -523,8 +523,8 @@ def running(directory):
 @APP.cmd
 @APP.cmd_arg('task', nargs='?', help='task name')
 @APP.cmd_arg('-d', '--duration', default='all',
-          choices=['day', 'week', 'month', 'year', 'all'],
-          help="filter events for specified time period")
+             choices=['day', 'week', 'month', 'year', 'all'],
+             help="filter events for specified time period")
 @APP.cmd_arg('-r', '--rate', help='hourly rate for task output')
 def ledger(directory, task, duration, rate):
     """generate ledger compatible data file"""
