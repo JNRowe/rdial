@@ -93,6 +93,15 @@ Commands
 
     rdial running [-h]
 
+``last`` - Display last task, if any
+''''''''''''''''''''''''''''''''''''
+
+.. program:: rdial last
+
+::
+
+    rdial last [-h]
+
 ``ledger`` - Generate ``ledger`` compatible data file
 '''''''''''''''''''''''''''''''''''''''''''''''''''''
 

@@ -16,6 +16,7 @@ which is normally created in :func:`main`.
 .. autofunction:: stop
 .. autofunction:: report
 .. autofunction:: running
+.. autofunction:: last
 .. autofunction:: ledger
 
 .. autofunction:: main

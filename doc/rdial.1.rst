@@ -80,6 +80,11 @@ Report time tracking data
 
 Display running task, if any
 
+``last``
+''''''''
+
+Display last task, if any
+
 ``ledger``
 ''''''''''
 

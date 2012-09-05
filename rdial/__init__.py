@@ -512,12 +512,23 @@ def report(directory, task, duration, sort, reverse, html, human):
 def running(directory):
     """display running task, if any"""
     events = Events.read(directory)
-    last = events.last()
     if events.running():
+        current = events.last()
         print('Currently running %s since %s'
-              % (last.task, isodate.datetime_isoformat(last.start)))
+            % (current.task, isodate.datetime_isoformat(current.start)))
     else:
+        print('No task is running!')
+
+
+@APP.cmd
+def last(directory):
+    """display last event, if any"""
+    events = Events.read(directory)
+    last = events.last()
+    if not events.running():
         print('Last task %s, ran for %s' % (last.task, last.delta))
+    else:
+        print('Task %s is still running' % last.task)
 
 
 @APP.cmd
