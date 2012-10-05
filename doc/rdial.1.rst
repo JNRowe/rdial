@@ -41,6 +41,9 @@ Commands
 
 Start task
 
+-n, --new
+   start a new task
+
 -t <start time>, --time=<start time>
    manually set start time for task
 

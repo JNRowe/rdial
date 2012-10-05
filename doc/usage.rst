@@ -34,6 +34,10 @@ Commands
 
     rdial.py start [-h] [-t time] <task>
 
+.. cmdoption:: -n, --new
+
+   start a new task
+
 .. cmdoption:: -t <time>, --time <time>
 
    manually set start time for task

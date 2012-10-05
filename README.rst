@@ -70,6 +70,30 @@ Interface
     | task2 | PT00H15M00S |
     +-------+-------------+
 
+Contributors
+------------
+
+I'd like to thank the following people who have contributed to
+``rdial``.
+
+Patches
+'''''''
+
+* <your name here?>
+
+Bug reports
+'''''''''''
+
+* <your name here?>
+
+Ideas
+'''''
+
+* Adam Baxter
+
+If I've forgotten to include your name I wholeheartedly apologise.  Just
+drop me a mail_ and I'll update the list!
+
 Hacking
 -------
 

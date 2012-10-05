@@ -79,6 +79,13 @@ class TaskRunningError(RdialError):
     pass
 
 
+class TaskNotExistError(RdialError):
+
+    """Exception for attempting to operate on a non-existing task."""
+
+    pass
+
+
 class Event(object):
 
     """Base object for handling database event."""
@@ -250,7 +257,7 @@ class Events(list):
         last = self.last()
         return last.running() if last else False
 
-    def start(self, task, start=''):
+    def start(self, task, new=False, start=''):
         """Start a new event.
 
         :param str task: Task name to tracking
@@ -261,6 +268,9 @@ class Events(list):
         running = self.running()
         if running:
             raise TaskRunningError('Currently running task %s!' % running)
+        if not new and task not in self.tasks():
+            raise TaskNotExistError("Task %s does not exist!  Use `--new' to "
+                                    "create it" % task)
         self.append(Event(task, start))
         self._dirty.add(task)
 
@@ -449,11 +459,12 @@ def filter_events(directory, task=None, duration=None):
 
 @APP.cmd
 @APP.cmd_arg('task', default='default', nargs='?', help='task name')
+@APP.cmd_arg('-n', '--new', default=False, help='start a new task')
 @APP.cmd_arg('-t', '--time', default='', help='set start time')
-def start(directory, task, time):
+def start(directory, task, new, time):
     """start task"""
     with Events.context(directory) as events:
-        events.start(task, time)
+        events.start(task, new, time)
 
 
 @APP.cmd

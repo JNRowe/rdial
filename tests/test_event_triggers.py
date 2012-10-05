@@ -20,13 +20,22 @@
 
 from expecter import expect
 
-from rdial import (Events, TaskNotRunningError, TaskRunningError)
+from rdial import (Events, TaskNotExistError, TaskNotRunningError,
+                   TaskRunningError)
 
 
 def test_start_event():
     events = Events.read('tests/data/test_not_running')
     events.start(task='task2')
     expect(events.running()) == 'task2'
+
+
+def test_fail_start_when_task_typo():
+    events = Events.read('tests/data/test_not_running')
+    with expect.raises(TaskNotExistError,
+                       "Task non_existant does not exist!  Use `--new' to "
+                       "create it"):
+        events.start(task='non_existant')
 
 
 def test_fail_start_when_running():
