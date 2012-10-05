@@ -3,6 +3,13 @@ User-visible changes
 
 .. contents::
 
+0.6.0 - 2012-10-05
+------------------
+
+* New ``last`` subcommand for showing the last event stored
+* New tasks must now be accompanied by ``-new`` option when starting, this is
+  to catch typos
+
 0.5.0 - 2012-08-08
 ------------------
 
