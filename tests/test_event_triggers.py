@@ -47,7 +47,7 @@ def test_fail_start_when_running():
 def test_stop_event():
     events = Events.read('tests/data/test')
     events.stop()
-    expect(events.running()) == False
+    expect(events.running()) is False
 
 
 def test_stop_event_with_message():
