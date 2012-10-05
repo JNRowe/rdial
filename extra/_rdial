@@ -56,8 +56,9 @@ case "$words[1]" in
         '--duration[filter events for specified time period]:select time period:(day week month year all)' \
         '--sort[field to sort by]:select sort field:(task time)' \
         '--reverse[reverse sort order]' \
-        '--html[produce HTML output] ' \
-        '--human[produce human-readable output]'
+        '--html[produce HTML output]' \
+        '--human[produce human-readable output]' \
+        ':select task:__list_tasks'
     ;;
 (running)
     _arguments '--help[show help message and exit]'
@@ -68,7 +69,8 @@ case "$words[1]" in
 (ledger)
     _arguments '--help[show help message and exit]' \
         '--duration[filter events for specified time period]:select time period:(day week month year all)' \
-        '--rate=[hourly rate for task output]:set hourly rate: '
+        '--rate=[hourly rate for task output]:set hourly rate: ' \
+        ':select task:__list_tasks'
     ;;
 (*)
     ;;
