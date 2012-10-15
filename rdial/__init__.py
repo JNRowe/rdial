@@ -459,7 +459,7 @@ def filter_events(directory, task=None, duration=None):
 
 @APP.cmd
 @APP.cmd_arg('task', default='default', nargs='?', help='task name')
-@APP.cmd_arg('-n', '--new', default=False, help='start a new task')
+@APP.cmd_arg('-n', '--new', action='store_true', help='start a new task')
 @APP.cmd_arg('-t', '--time', default='', help='set start time')
 def start(directory, task, new, time):
     """start task"""
