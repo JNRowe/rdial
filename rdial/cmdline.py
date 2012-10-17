@@ -91,11 +91,12 @@ def process_command_line():
                          help='start a new task')
     start_p.add_argument('-t', '--time', help='set start time', default='',
                          type=start_time_typecheck)
+    task_names = start_p.add_mutually_exclusive_group()
     dirname = os.path.basename(os.path.abspath(os.curdir))
-    start_p.add_argument('-d', '--from-dir', action='store_true',
-                         help='use directory name as task [%s]' % dirname)
-    start_p.add_argument('task', default='default', nargs='?',
-                         help='task name', type=task_name_typecheck)
+    task_names.add_argument('-d', '--from-dir', action='store_true',
+                            help='use directory name as task [%s]' % dirname)
+    task_names.add_argument('task', default='default', nargs='?',
+                            help='task name', type=task_name_typecheck)
     start_p.set_defaults(func=start)
 
     stop_p = subs.add_parser('stop', help='stop task')
@@ -114,10 +115,11 @@ def process_command_line():
                           help='field to sort by [%(default)s]')
     report_p.add_argument('-r', '--reverse', action='store_true',
                           help='reverse sort order')
-    report_p.add_argument('--html', action='store_true',
-                          help='produce HTML output')
-    report_p.add_argument('--human', action='store_true',
-                          help='produce human-readable output')
+    output_types = report_p.add_mutually_exclusive_group()
+    output_types.add_argument('--html', action='store_true',
+                              help='produce HTML output')
+    output_types.add_argument('--human', action='store_true',
+                              help='produce human-readable output')
     report_p.add_argument('task', nargs='?', help='task name',
                           type=task_name_typecheck)
     report_p.set_defaults(func=report)
