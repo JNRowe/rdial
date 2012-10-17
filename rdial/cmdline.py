@@ -55,6 +55,24 @@ def filter_events(directory, task=None, duration=None):
     return events
 
 
+def start_time_typecheck(string):
+    """Check given start time is valid."""
+    try:
+        utils.parse_datetime(string)
+    except ValueError:
+        raise argparse.ArgumentTypeError('%r is not a valid ISO-8601 time '
+                                         'string' % string)
+    return string
+
+
+def task_name_typecheck(string):
+    """Check given task name is valid."""
+    if '/' in string:
+        raise argparse.ArgumentTypeError('%r is not a valid task name'
+                                         % string)
+    return string
+
+
 def process_command_line():
     """Process command line arguments."""
     parser = argparse.ArgumentParser(
@@ -71,12 +89,13 @@ def process_command_line():
     start_p = subs.add_parser('start', help='start task')
     start_p.add_argument('-n', '--new', action='store_true',
                          help='start a new task')
-    start_p.add_argument('-t', '--time', help='set start time', default='')
+    start_p.add_argument('-t', '--time', help='set start time', default='',
+                         type=start_time_typecheck)
     dirname = os.path.basename(os.path.abspath(os.curdir))
     start_p.add_argument('-d', '--from-dir', action='store_true',
                          help='use directory name as task [%s]' % dirname)
     start_p.add_argument('task', default='default', nargs='?',
-                         help='task name')
+                         help='task name', type=task_name_typecheck)
     start_p.set_defaults(func=start)
 
     stop_p = subs.add_parser('stop', help='stop task')
@@ -99,7 +118,8 @@ def process_command_line():
                           help='produce HTML output')
     report_p.add_argument('--human', action='store_true',
                           help='produce human-readable output')
-    report_p.add_argument('task', nargs='?', help='task name')
+    report_p.add_argument('task', nargs='?', help='task name',
+                          type=task_name_typecheck)
     report_p.set_defaults(func=report)
 
     running_p = subs.add_parser('running', help='display running task, if any')
@@ -115,7 +135,8 @@ def process_command_line():
                           help=('filter events for specified time period '
                                 '[%(default)s]'))
     ledger_p.add_argument('-r', '--rate', help='hourly rate for task output')
-    ledger_p.add_argument('task', nargs='?', help='task name')
+    ledger_p.add_argument('task', nargs='?', help='task name',
+                          type=task_name_typecheck)
     ledger_p.set_defaults(func=ledger)
 
     return parser.parse_args()
