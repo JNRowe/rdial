@@ -73,77 +73,6 @@ def task_name_typecheck(string):
     return string
 
 
-def process_command_line():
-    """Process command line arguments."""
-    parser = argparse.ArgumentParser(
-        description=__doc__.splitlines()[0].split('-', 1)[1],
-        epilog='Please report bugs to jnrowe@gmail.com',
-        version='%%(prog)s %s' % _version.dotted)
-
-    parser.add_argument('-d', '--directory', default=utils.xdg_data_location(),
-                        metavar='dir',
-                        help='directory to read/write to (%(default)s)')
-
-    subs = parser.add_subparsers(title='subcommands')
-
-    start_p = subs.add_parser('start', help='start task')
-    start_p.add_argument('-n', '--new', action='store_true',
-                         help='start a new task')
-    start_p.add_argument('-t', '--time', help='set start time', default='',
-                         type=start_time_typecheck)
-    task_names = start_p.add_mutually_exclusive_group()
-    dirname = os.path.basename(os.path.abspath(os.curdir))
-    task_names.add_argument('-d', '--from-dir', action='store_true',
-                            help='use directory name as task [%s]' % dirname)
-    task_names.add_argument('task', default='default', nargs='?',
-                            help='task name', type=task_name_typecheck)
-    start_p.set_defaults(func=start)
-
-    stop_p = subs.add_parser('stop', help='stop task')
-    stop_p.add_argument('-m', '--message', help='closing message')
-    stop_p.add_argument('--amend', action='store_true',
-                        help='amend previous stop entry')
-    stop_p.set_defaults(func=stop)
-
-    report_p = subs.add_parser('report', help='report time tracking data')
-    report_p.add_argument('-d', '--duration', default='all',
-                          choices=['day', 'week', 'month', 'year', 'all'],
-                          help=('filter events for specified time period '
-                                '[%(default)s]'))
-    report_p.add_argument('-s', '--sort', default='task',
-                          choices=['task', 'time'],
-                          help='field to sort by [%(default)s]')
-    report_p.add_argument('-r', '--reverse', action='store_true',
-                          help='reverse sort order')
-    output_types = report_p.add_mutually_exclusive_group()
-    output_types.add_argument('--html', action='store_true',
-                              help='produce HTML output')
-    output_types.add_argument('--human', action='store_true',
-                              help='produce human-readable output')
-    report_p.add_argument('task', nargs='?', help='task name',
-                          type=task_name_typecheck)
-    report_p.set_defaults(func=report)
-
-    running_p = subs.add_parser('running', help='display running task, if any')
-    running_p.set_defaults(func=running)
-
-    last_p = subs.add_parser('last', help='display last event, if any')
-    last_p.set_defaults(func=last)
-
-    ledger_p = subs.add_parser('ledger',
-                               help='generate ledger compatible data file')
-    ledger_p.add_argument('-d', '--duration', default='all',
-                          choices=['day', 'week', 'month', 'year', 'all'],
-                          help=('filter events for specified time period '
-                                '[%(default)s]'))
-    ledger_p.add_argument('-r', '--rate', help='hourly rate for task output')
-    ledger_p.add_argument('task', nargs='?', help='task name',
-                          type=task_name_typecheck)
-    ledger_p.set_defaults(func=ledger)
-
-    return parser.parse_args()
-
-
 def start(args):
     """Start task."""
     if args.from_dir:
@@ -233,9 +162,74 @@ def ledger(args):
 
 def main():
     """Main script."""
-    args = process_command_line()
+    parser = argparse.ArgumentParser(
+        description=__doc__.splitlines()[0].split('-', 1)[1],
+        epilog='Please report bugs to jnrowe@gmail.com',
+        version='%%(prog)s %s' % _version.dotted)
+
+    parser.add_argument('-d', '--directory', default=utils.xdg_data_location(),
+                        metavar='dir',
+                        help='directory to read/write to (%(default)s)')
+
+    subs = parser.add_subparsers(title='subcommands')
+
+    start_p = subs.add_parser('start', help='start task')
+    start_p.add_argument('-n', '--new', action='store_true',
+                         help='start a new task')
+    start_p.add_argument('-t', '--time', help='set start time', default='',
+                         type=start_time_typecheck)
+    task_names = start_p.add_mutually_exclusive_group()
+    dirname = os.path.basename(os.path.abspath(os.curdir))
+    task_names.add_argument('-d', '--from-dir', action='store_true',
+                            help='use directory name as task [%s]' % dirname)
+    task_names.add_argument('task', default='default', nargs='?',
+                            help='task name', type=task_name_typecheck)
+    start_p.set_defaults(func=start)
+
+    stop_p = subs.add_parser('stop', help='stop task')
+    stop_p.add_argument('-m', '--message', help='closing message')
+    stop_p.add_argument('--amend', action='store_true',
+                        help='amend previous stop entry')
+    stop_p.set_defaults(func=stop)
+
+    report_p = subs.add_parser('report', help='report time tracking data')
+    report_p.add_argument('-d', '--duration', default='all',
+                          choices=['day', 'week', 'month', 'year', 'all'],
+                          help=('filter events for specified time period '
+                                '[%(default)s]'))
+    report_p.add_argument('-s', '--sort', default='task',
+                          choices=['task', 'time'],
+                          help='field to sort by [%(default)s]')
+    report_p.add_argument('-r', '--reverse', action='store_true',
+                          help='reverse sort order')
+    output_types = report_p.add_mutually_exclusive_group()
+    output_types.add_argument('--html', action='store_true',
+                              help='produce HTML output')
+    output_types.add_argument('--human', action='store_true',
+                              help='produce human-readable output')
+    report_p.add_argument('task', nargs='?', help='task name',
+                          type=task_name_typecheck)
+    report_p.set_defaults(func=report)
+
+    running_p = subs.add_parser('running', help='display running task, if any')
+    running_p.set_defaults(func=running)
+
+    last_p = subs.add_parser('last', help='display last event, if any')
+    last_p.set_defaults(func=last)
+
+    ledger_p = subs.add_parser('ledger',
+                               help='generate ledger compatible data file')
+    ledger_p.add_argument('-d', '--duration', default='all',
+                          choices=['day', 'week', 'month', 'year', 'all'],
+                          help=('filter events for specified time period '
+                                '[%(default)s]'))
+    ledger_p.add_argument('-r', '--rate', help='hourly rate for task output')
+    ledger_p.add_argument('task', nargs='?', help='task name',
+                          type=task_name_typecheck)
+    ledger_p.set_defaults(func=ledger)
+
+    args = parser.parse_args()
     try:
         args.func(args)
     except utils.RdialError as error:
-        print('Error: %s' % error)
-        return 2
+        parser.error(error)
