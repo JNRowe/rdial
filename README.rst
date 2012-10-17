@@ -33,18 +33,24 @@ the tests with the following commands::
 Database
 --------
 
-The database is just a simple text file, making it very easy to use and abuse in
-other applications.  A sample database would be::
+The database is just a directory of simple text files, making it very easy to
+use and abuse in other applications.  A sample database could be a file named
+``task.csv`` with the following contents::
 
-    task,2011-05-04T08:00:00Z,PT01H00M00S
-    task2,2011-05-04T09:15:00Z,PT00H15M00S
-    task,2011-05-04T09:30:00Z,
+    start,delta,message
+    2011-05-04T08:00:00Z,PT01H00M00S,working on issue 4
+    2011-05-04T09:30:00Z,,
+
+and a ``task2.csv`` file with the following contents::
+
+    start,delta,message
+    2011-05-04T09:15:00Z,PT00H15M00S
 
 The format is a CSV file containing the following fields:
 
-#. Task name
-#. Start time expressed in UTC
-#. Task duration
+1. Start time expressed in UTC
+2. Task duration
+3. Message associated with the event
 
 The start time and duration fields are given as ISO-8601 formatted strings.
 
