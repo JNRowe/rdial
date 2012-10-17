@@ -75,8 +75,7 @@ Interface
 Contributors
 ------------
 
-I'd like to thank the following people who have contributed to
-``rdial``.
+I'd like to thank the following people who have contributed to ``rdial``.
 
 Patches
 '''''''
@@ -93,16 +92,16 @@ Ideas
 
 * Adam Baxter
 
-If I've forgotten to include your name I wholeheartedly apologise.  Just
-drop me a mail_ and I'll update the list!
+If I've forgotten to include your name I wholeheartedly apologise.  Just drop me
+a mail_ and I'll update the list!
 
 Hacking
 -------
 
 Patches are most welcome, but I'd appreciate it if you could follow the
 guidelines below to make it easier to integrate your changes.  These are
-guidelines however, and as such can be broken if the need arises or you
-just want to convince me that your style is better.
+guidelines however, and as such can be broken if the need arises or you just
+want to convince me that your style is better.
 
 * `PEP 8`_, the style guide, should be followed where possible.
 * While support for Python versions prior to v2.6 may be added in the future if
