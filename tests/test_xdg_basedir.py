@@ -20,16 +20,16 @@
 from expecter import expect
 from mock import patch
 
-import rdial
+from rdial.utils import xdg_data_location
 
 
-@patch('rdial.os.getenv')
+@patch('rdial.utils.os.getenv')
 def test_no_args(getenv):
     getenv.return_value = '~/.local/share'
-    expect(rdial.xdg_data_location()) == '~/.local/share/rdial'
+    expect(xdg_data_location()) == '~/.local/share/rdial'
 
 
-@patch('rdial.os.getenv')
+@patch('rdial.utils.os.getenv')
 def test_no_home(getenv):
     getenv.side_effect = lambda k, v: v
-    expect(rdial.xdg_data_location()) == '/.local/share/rdial'
+    expect(xdg_data_location()) == '/.local/share/rdial'

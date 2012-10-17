@@ -23,9 +23,10 @@ from datetime import (datetime, timedelta)
 from glob import glob
 
 from expecter import expect
+import isodate
 from nose2.tools import params
 
-from rdial import (Events, isodate)
+from rdial.events import Events
 
 
 def test_read_datebase():

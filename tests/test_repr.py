@@ -21,7 +21,7 @@ import unittest
 
 from expecter import expect
 
-from rdial import (Event, Events)
+from rdial.events import (Event, Events)
 
 
 def eval_repr(obj):

@@ -1,4 +1,4 @@
-.. currentmodule:: rdial
+.. currentmodule:: rdial.utils
 
 Utilities
 =========
@@ -12,10 +12,6 @@ Utilities
 .. autofunction:: parse_delta
 .. autofunction:: format_delta
 .. autofunction:: parse_datetime
-
-.. autofunction:: command
-
-.. autofunction:: filter_events
 
 .. autofunction:: utcnow
 

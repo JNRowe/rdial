@@ -19,7 +19,7 @@
 
 import sys
 
-import rdial
+from rdial import cmdline
 
 
-sys.exit(rdial.main())
+sys.exit(cmdline.main())

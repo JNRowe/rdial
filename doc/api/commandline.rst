@@ -1,4 +1,4 @@
-.. currentmodule:: rdial
+.. currentmodule:: rdial.cmdline
 
 Command line
 ============
@@ -20,6 +20,8 @@ which is normally created in :func:`main`.
 .. autofunction:: ledger
 
 .. autofunction:: main
+
+.. autofunction:: filter_events
 
 Examples
 --------

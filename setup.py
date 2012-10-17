@@ -42,7 +42,7 @@ setup(
     ],
     packages=['rdial', ],
     include_package_data=False,
-    entry_points={'console_scripts': ['rdial = rdial:main', ]},
+    entry_points={'console_scripts': ['rdial = rdial.cmdline:main', ]},
     zip_safe=False,
     install_requires=['aaargh', 'isodate', 'prettytable'],
 )

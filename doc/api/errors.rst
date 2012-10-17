@@ -1,5 +1,3 @@
-.. currentmodule:: rdial
-
 Errors
 ======
 
@@ -9,9 +7,10 @@ Errors
   :mod:`rdial`, and can be skipped if you are simply using the tool from the
   command line.
 
-.. autoexception:: RdialError
-.. autoexception:: TaskNotRunningError
-.. autoexception:: TaskRunningError
+.. autoexception:: rdial.utils.RdialError
+
+.. autoexception:: rdial.events.TaskNotRunningError
+.. autoexception:: rdial.events.TaskRunningError
 
 Examples
 --------

@@ -22,7 +22,7 @@ from datetime import datetime
 from expecter import expect
 from nose2.tools import params
 
-from rdial import (isodate, parse_datetime)
+from rdial.utils import (isodate, parse_datetime)
 
 
 @params(

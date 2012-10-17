@@ -20,7 +20,7 @@
 from expecter import expect
 from nose2.tools import params
 
-from rdial import Events
+from rdial.events import Events
 
 
 def test_fetch_events_for_task():

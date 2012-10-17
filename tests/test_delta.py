@@ -22,7 +22,7 @@ from datetime import timedelta
 from expecter import expect
 from nose2.tools import params
 
-from rdial import (format_delta, parse_delta)
+from rdial.utils import (format_delta, parse_delta)
 
 
 @params(

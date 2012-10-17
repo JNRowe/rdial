@@ -20,8 +20,8 @@
 
 from expecter import expect
 
-from rdial import (Events, TaskNotExistError, TaskNotRunningError,
-                   TaskRunningError)
+from rdial.events import (Events, TaskNotExistError, TaskNotRunningError,
+                          TaskRunningError)
 
 
 def test_start_event():

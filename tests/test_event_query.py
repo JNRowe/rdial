@@ -21,7 +21,7 @@ from datetime import timedelta
 
 from expecter import expect
 
-from rdial import Events
+from rdial.events import Events
 
 
 def test_list_tasks():
