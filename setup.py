@@ -1,14 +1,8 @@
 #! /usr/bin/python -tt
 
-import imp
-
 from setuptools import setup
 
-# Hack to import _version file without importing rdial/__init__.py, its
-# purpose is to allow import without requiring dependencies at this point.
-ver_file = open("rdial/_version.py")
-_version = imp.load_module("_version", ver_file, ver_file.name,
-                           (".py", ver_file.mode, imp.PY_SOURCE))
+from rdial import _version
 
 setup(
     name='rdial',
