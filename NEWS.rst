@@ -3,6 +3,13 @@ User-visible changes
 
 .. contents::
 
+0.7.0 - 2012-10-17
+------------------
+
+* This may be the final minor release before version 1.0.0 is cut, please report
+  any issues no matter how small you find!
+* ``--from-dir`` option to ``start`` to set the task from the directory name
+
 0.6.0 - 2012-10-05
 ------------------
 
