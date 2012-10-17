@@ -42,6 +42,10 @@ Commands
 
    manually set start time for task
 
+.. cmdoption:: -d, --from-dir
+
+   use directory name as task
+
 ``stop`` - Stop task
 ''''''''''''''''''''
 

@@ -44,6 +44,7 @@ case "$words[1]" in
     _arguments '--help[show help message and exit]' \
         '--new[start a new task]' \
         '--time[set start time]:' \
+        '--from-dir[use directory name as task]' \
         ':select task:__list_tasks'
     ;;
 (stop)

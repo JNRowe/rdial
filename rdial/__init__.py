@@ -461,8 +461,12 @@ def filter_events(directory, task=None, duration=None):
 @APP.cmd_arg('task', default='default', nargs='?', help='task name')
 @APP.cmd_arg('-n', '--new', action='store_true', help='start a new task')
 @APP.cmd_arg('-t', '--time', default='', help='set start time')
-def start(directory, task, new, time):
+@APP.cmd_arg('-d', '--from-dir', action='store_true',
+             help='use directory name as task')
+def start(directory, task, new, time, from_dir):
     """start task"""
+    if from_dir:
+        task = os.path.basename(os.path.abspath(os.curdir))
     with Events.context(directory) as events:
         events.start(task, new, time)
 
