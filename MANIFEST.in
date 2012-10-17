@@ -1,10 +1,14 @@
 include .travis.yml
 include COPYING
 include *.rst
-include doc/*.rst
 include doc/conf.py
+include doc/wordlist.txt
+include extra/_rdial
 include extra/requirements*.txt
 include nose2.cfg
+include rdial.py
 include tests/*.py
 include tox.ini
+
+recursive-include doc/ *.rst
 recursive-include tests/data *.csv
