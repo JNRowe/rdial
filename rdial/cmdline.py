@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+import argparse
 import datetime
 import os
 
@@ -60,10 +61,30 @@ def filter_events(directory, task=None, duration=None):
     return events
 
 
+def start_time_typecheck(string):
+    """Check given start time is valid."""
+    try:
+        utils.parse_datetime(string)
+    except ValueError:
+        raise argparse.ArgumentTypeError('%r is not a valid ISO-8601 time '
+                                         'string' % string)
+    return string
+
+
+def task_name_typecheck(string):
+    """Check given task name is valid."""
+    if '/' in string:
+        raise argparse.ArgumentTypeError('%r is not a valid task name'
+                                         % string)
+    return string
+
+
 @APP.cmd
-@APP.cmd_arg('task', default='default', nargs='?', help='task name')
+@APP.cmd_arg('task', default='default', nargs='?', help='task name',
+             type=task_name_typecheck)
 @APP.cmd_arg('-n', '--new', action='store_true', help='start a new task')
-@APP.cmd_arg('-t', '--time', default='', help='set start time')
+@APP.cmd_arg('-t', '--time', default='', help='set start time',
+             type=start_time_typecheck)
 @APP.cmd_arg('-d', '--from-dir', action='store_true',
              help='use directory name as task')
 def start(directory, task, new, time, from_dir):
@@ -90,7 +111,7 @@ def stop(directory, message, amend):
 
 
 @APP.cmd
-@APP.cmd_arg('task', nargs='?', help='task name')
+@APP.cmd_arg('task', nargs='?', help='task name', type=task_name_typecheck)
 @APP.cmd_arg('-d', '--duration', default='all',
              choices=['day', 'week', 'month', 'year', 'all'],
              help="filter events for specified time period")
@@ -150,7 +171,7 @@ def last(directory):
 
 
 @APP.cmd
-@APP.cmd_arg('task', nargs='?', help='task name')
+@APP.cmd_arg('task', nargs='?', help='task name', type=task_name_typecheck)
 @APP.cmd_arg('-d', '--duration', default='all',
              choices=['day', 'week', 'month', 'year', 'all'],
              help="filter events for specified time period")
