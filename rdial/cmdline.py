@@ -73,7 +73,7 @@ def start_time_typecheck(string):
 
 def task_name_typecheck(string):
     """Check given task name is valid."""
-    if '/' in string:
+    if '/' in string or '\000' in string:
         raise argparse.ArgumentTypeError('%r is not a valid task name'
                                          % string)
     return string
