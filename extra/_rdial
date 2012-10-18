@@ -24,7 +24,7 @@
 (( $+functions[__list_tasks] )) ||
 __list_tasks() {
     local tmp
-    tmp=($(for file in ~/.xdg/local/rdial/*; do echo ${${file##*/}%.csv}; done))
+    tmp=($(for file in ${XDG_DATA_HOME:-~/.local}/rdial/*; do echo ${${file##*/}%.csv}; done))
     if [ -z "${tmp}" ]; then
         _message "No rdial tasks found!"
     else
