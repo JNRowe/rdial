@@ -7,6 +7,10 @@ include extra/_rdial
 include extra/requirements*.txt
 include nose2.cfg
 include rdial.py
+include rdial/locale/rdial.pot
+include rdial/locale/*/LC_MESSAGES/*.mo
+include rdial/locale/*/LC_MESSAGES/*.po
+
 include tests/*.py
 
 recursive-include doc/ *.rst
