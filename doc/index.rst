@@ -23,6 +23,7 @@ Contents
    rdial manpage <rdial.1>
    faq
    alternatives
+   release
    api/index
 
 Indices and tables
