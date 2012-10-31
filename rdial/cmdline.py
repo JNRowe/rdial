@@ -31,8 +31,7 @@ from . import utils
 
 
 APP = aaargh.App(description=__doc__.splitlines()[0].split("-", 1)[1],
-                 epilog="Please report bugs to jnrowe@gmail.com",
-                 version="%%(prog)s %s" % _version.dotted)
+                 epilog="Please report bugs to jnrowe@gmail.com")
 
 
 def filter_events(directory, task=None, duration=None):
@@ -200,6 +199,8 @@ def main():
     """Main script."""
     APP.arg('-d', '--directory', default=utils.xdg_data_location(),
             metavar='dir', help='directory to read/write to')
+    APP.arg('--version', action='version',
+            version="%%(prog)s %s" % _version.dotted)
     try:
         APP.run()
     except utils.RdialError as e:
