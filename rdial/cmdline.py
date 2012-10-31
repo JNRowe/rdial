@@ -61,7 +61,14 @@ def filter_events(directory, task=None, duration=None):
 
 
 def start_time_typecheck(string):
-    """Check given start time is valid."""
+    """Check given start time is valid.
+
+    :param str string: Timestamps to check
+    :rtype: str
+    :returns: Timestamp, if valid
+    :raises argparse.ArgparseTypeError: If timestamp is invalid
+
+    """
     try:
         utils.parse_datetime(string)
     except ValueError:
@@ -71,7 +78,14 @@ def start_time_typecheck(string):
 
 
 def task_name_typecheck(string):
-    """Check given task name is valid."""
+    """Check given task name is valid.
+
+    :param str string: Task name to check
+    :rtype: str
+    :returns: Task name, if valid
+    :raises argparse.ArgparseTypeError: If task name is invalid
+
+    """
     if '/' in string or '\000' in string:
         raise argparse.ArgumentTypeError('%r is not a valid task name'
                                          % string)
