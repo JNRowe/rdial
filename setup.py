@@ -4,6 +4,8 @@ from setuptools import setup
 
 from rdial import _version
 
+install_requires = map(str.strip, open('extra/requirements.txt').readlines())
+
 setup(
     name='rdial',
     version=_version.dotted,
@@ -38,5 +40,5 @@ setup(
     include_package_data=False,
     entry_points={'console_scripts': ['rdial = rdial.cmdline:main', ]},
     zip_safe=False,
-    install_requires=['aaargh', 'isodate', 'prettytable'],
+    install_requires=install_requires,
 )
