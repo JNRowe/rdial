@@ -8,7 +8,6 @@ include extra/requirements*.txt
 include nose2.cfg
 include rdial.py
 include tests/*.py
-include tox.ini
 
 recursive-include doc/ *.rst
 recursive-include tests/data *.csv

@@ -2,7 +2,6 @@
 *.pyc
 
 .ropeproject/
-.tox/
 build/
 dist/
 doc/.build/
