@@ -26,6 +26,7 @@ import isodate
 import prettytable
 
 from .events import Events
+from .i18n import (_, N_)
 from . import _version
 from . import utils
 
