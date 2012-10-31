@@ -1,7 +1,6 @@
 *.html
 *.pyc
 
-.ropeproject/
 build/
 dist/
 doc/.build/
