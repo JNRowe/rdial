@@ -1,0 +1,167 @@
+# Translations template for rdial.
+# Copyright (C) 2012 ORGANIZATION
+# This file is distributed under the same license as the rdial project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: rdial 0.7.0\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2012-10-31 19:04+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 0.9.6\n"
+
+#: rdial/cmdline.py:34
+msgid "Please report bugs to jnrowe@gmail.com"
+msgstr ""
+
+#: rdial/cmdline.py:75
+#, python-format
+msgid "%r is not a valid ISO-8601 time string"
+msgstr ""
+
+#: rdial/cmdline.py:90
+#, python-format
+msgid "%r is not a valid task name"
+msgstr ""
+
+#: rdial/cmdline.py:95
+msgid "start task"
+msgstr ""
+
+#: rdial/cmdline.py:96 rdial/cmdline.py:127 rdial/cmdline.py:188
+msgid "task name"
+msgstr ""
+
+#: rdial/cmdline.py:98
+msgid "start a new task"
+msgstr ""
+
+#: rdial/cmdline.py:99
+msgid "set start time"
+msgstr ""
+
+#: rdial/cmdline.py:102
+msgid "use directory name as task"
+msgstr ""
+
+#: rdial/cmdline.py:111
+msgid "stop task"
+msgstr ""
+
+#: rdial/cmdline.py:112
+msgid "closing message"
+msgstr ""
+
+#: rdial/cmdline.py:114
+msgid "amend previous stop entry"
+msgstr ""
+
+#: rdial/cmdline.py:123
+#, python-format
+msgid "Task %s running for %s"
+msgstr ""
+
+#: rdial/cmdline.py:126
+msgid "report time tracking data"
+msgstr ""
+
+#: rdial/cmdline.py:130 rdial/cmdline.py:191
+msgid "filter events for specified time period"
+msgstr ""
+
+#: rdial/cmdline.py:132
+msgid "field to sort by"
+msgstr ""
+
+#: rdial/cmdline.py:133
+msgid "reverse sort order"
+msgstr ""
+
+#: rdial/cmdline.py:134
+msgid "produce HTML output"
+msgstr ""
+
+#: rdial/cmdline.py:135
+msgid "produce human-readable output"
+msgstr ""
+
+#: rdial/cmdline.py:140
+#, python-format
+msgid "%d event in query"
+msgstr ""
+
+#: rdial/cmdline.py:142
+#, python-format
+msgid "Duration of events %s"
+msgstr ""
+
+#: rdial/cmdline.py:143
+#, python-format
+msgid "First entry started at %s"
+msgstr ""
+
+#: rdial/cmdline.py:144
+#, python-format
+msgid "Last entry started at %s"
+msgstr ""
+
+#: rdial/cmdline.py:146
+#, python-format
+msgid "Events exist on %d dates"
+msgstr ""
+
+#: rdial/cmdline.py:160
+#, python-format
+msgid "Currently running `%s' since %s"
+msgstr ""
+
+#: rdial/cmdline.py:164
+msgid "display running task, if any"
+msgstr ""
+
+#: rdial/cmdline.py:170
+#, python-format
+msgid "Currently running %s since %s"
+msgstr ""
+
+#: rdial/cmdline.py:173
+msgid "No task is running!"
+msgstr ""
+
+#: rdial/cmdline.py:176
+msgid "display last event, if any"
+msgstr ""
+
+#: rdial/cmdline.py:182
+#, python-format
+msgid "Last task %s, ran for %s"
+msgstr ""
+
+#: rdial/cmdline.py:184
+#, python-format
+msgid "Task %s is still running"
+msgstr ""
+
+#: rdial/cmdline.py:187
+msgid "generate ledger compatible data file"
+msgstr ""
+
+#: rdial/cmdline.py:192
+msgid "hourly rate for task output"
+msgstr ""
+
+#: rdial/cmdline.py:197 rdial/cmdline.py:210
+msgid ";; Currently running event not included in output!"
+msgstr ""
+
+#: rdial/cmdline.py:218
+msgid "directory to read/write to"
+msgstr ""
+
