@@ -78,7 +78,7 @@ def task_name_typecheck(string):
     return string
 
 
-@APP.cmd
+@APP.cmd(help="start task")
 @APP.cmd_arg('task', default='default', nargs='?', help='task name',
              type=task_name_typecheck)
 @APP.cmd_arg('-n', '--new', action='store_true', help='start a new task')
@@ -87,19 +87,19 @@ def task_name_typecheck(string):
 @APP.cmd_arg('-d', '--from-dir', action='store_true',
              help='use directory name as task')
 def start(directory, task, new, time, from_dir):
-    """start task"""
+    """Start task."""
     if from_dir:
         task = os.path.basename(os.path.abspath(os.curdir))
     with Events.context(directory) as events:
         events.start(task, new, time)
 
 
-@APP.cmd
+@APP.cmd(help="stop task")
 @APP.cmd_arg('-m', '--message', help='closing message')
 @APP.cmd_arg('--amend', action='store_true', default=False,
              help='amend previous stop entry')
 def stop(directory, message, amend):
-    """stop task"""
+    """Stop task."""
     with Events.context(directory) as events:
         if amend and not message:
             last = events.last()
@@ -109,7 +109,7 @@ def stop(directory, message, amend):
     print('Task %s running for %s' % (last.task, last.delta))
 
 
-@APP.cmd
+@APP.cmd(help="report time tracking data")
 @APP.cmd_arg('task', nargs='?', help='task name', type=task_name_typecheck)
 @APP.cmd_arg('-d', '--duration', default='all',
              choices=['day', 'week', 'month', 'year', 'all'],
@@ -120,7 +120,7 @@ def stop(directory, message, amend):
 @APP.cmd_arg('--html', default=False, help='produce HTML output')
 @APP.cmd_arg('--human', default=False, help='produce human-readable output')
 def report(directory, task, duration, sort, reverse, html, human):
-    """report time tracking data"""
+    """Report time tracking data."""
     events = filter_events(directory, task, duration)
     if human:
         print('%d events in query' % len(events))
@@ -146,9 +146,9 @@ def report(directory, task, duration, sort, reverse, html, human):
               % (current.task, isodate.datetime_isoformat(current.start)))
 
 
-@APP.cmd
+@APP.cmd(help="display running task, if any")
 def running(directory):
-    """display running task, if any"""
+    """Display running task, if any."""
     events = Events.read(directory)
     if events.running():
         current = events.last()
@@ -158,9 +158,9 @@ def running(directory):
         print('No task is running!')
 
 
-@APP.cmd
+@APP.cmd(help="display last event, if any")
 def last(directory):
-    """display last event, if any"""
+    """Display last event, if any."""
     events = Events.read(directory)
     last = events.last()
     if not events.running():
@@ -169,14 +169,14 @@ def last(directory):
         print('Task %s is still running' % last.task)
 
 
-@APP.cmd
+@APP.cmd(help="generate ledger compatible data file")
 @APP.cmd_arg('task', nargs='?', help='task name', type=task_name_typecheck)
 @APP.cmd_arg('-d', '--duration', default='all',
              choices=['day', 'week', 'month', 'year', 'all'],
              help="filter events for specified time period")
 @APP.cmd_arg('-r', '--rate', help='hourly rate for task output')
 def ledger(directory, task, duration, rate):
-    """generate ledger compatible data file"""
+    """Generate ledger compatible data file."""
     events = filter_events(directory, task, duration)
     if events.running():
         print(';; Currently running event not included in output!')
