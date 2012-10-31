@@ -30,9 +30,8 @@ from .i18n import (_, N_)
 from . import _version
 from . import utils
 
-
 APP = aaargh.App(description=__doc__.splitlines()[0].split("-", 1)[1],
-                 epilog="Please report bugs to jnrowe@gmail.com",
+                 epilog=_("Please report bugs to jnrowe@gmail.com"),
                  version="%%(prog)s %s" % _version.dotted)
 
 
@@ -67,27 +66,27 @@ def start_time_typecheck(string):
     try:
         utils.parse_datetime(string)
     except ValueError:
-        raise argparse.ArgumentTypeError('%r is not a valid ISO-8601 time '
-                                         'string' % string)
+        raise argparse.ArgumentTypeError(_('%r is not a valid ISO-8601 time '
+                                           'string') % string)
     return string
 
 
 def task_name_typecheck(string):
     """Check given task name is valid."""
     if '/' in string or '\000' in string:
-        raise argparse.ArgumentTypeError('%r is not a valid task name'
+        raise argparse.ArgumentTypeError(_('%r is not a valid task name')
                                          % string)
     return string
 
 
 @APP.cmd
-@APP.cmd_arg('task', default='default', nargs='?', help='task name',
+@APP.cmd_arg('task', default='default', nargs='?', help=_('task name'),
              type=task_name_typecheck)
-@APP.cmd_arg('-n', '--new', action='store_true', help='start a new task')
-@APP.cmd_arg('-t', '--time', default='', help='set start time',
+@APP.cmd_arg('-n', '--new', action='store_true', help=_('start a new task'))
+@APP.cmd_arg('-t', '--time', default='', help=_('set start time'),
              type=start_time_typecheck)
 @APP.cmd_arg('-d', '--from-dir', action='store_true',
-             help='use directory name as task')
+             help=_('use directory name as task'))
 def start(directory, task, new, time, from_dir):
     """start task"""
     if from_dir:
@@ -97,9 +96,9 @@ def start(directory, task, new, time, from_dir):
 
 
 @APP.cmd
-@APP.cmd_arg('-m', '--message', help='closing message')
+@APP.cmd_arg('-m', '--message', help=_('closing message'))
 @APP.cmd_arg('--amend', action='store_true', default=False,
-             help='amend previous stop entry')
+             help=_('amend previous stop entry'))
 def stop(directory, message, amend):
     """stop task"""
     with Events.context(directory) as events:
@@ -108,29 +107,30 @@ def stop(directory, message, amend):
             message = last.message
         events.stop(message, force=amend)
     last = events.last()
-    print('Task %s running for %s' % (last.task, last.delta))
+    print(_('Task %s running for %s') % (last.task, last.delta))
 
 
 @APP.cmd
-@APP.cmd_arg('task', nargs='?', help='task name', type=task_name_typecheck)
+@APP.cmd_arg('task', nargs='?', help=_('task name'), type=task_name_typecheck)
 @APP.cmd_arg('-d', '--duration', default='all',
              choices=['day', 'week', 'month', 'year', 'all'],
-             help="filter events for specified time period")
+             help=_("filter events for specified time period"))
 @APP.cmd_arg('-s', '--sort', default='task', choices=['task', 'time'],
-             help='field to sort by')
-@APP.cmd_arg('-r', '--reverse', default=False, help='reverse sort order')
-@APP.cmd_arg('--html', default=False, help='produce HTML output')
-@APP.cmd_arg('--human', default=False, help='produce human-readable output')
+             help=_('field to sort by'))
+@APP.cmd_arg('-r', '--reverse', default=False, help=_('reverse sort order'))
+@APP.cmd_arg('--html', default=False, help=_('produce HTML output'))
+@APP.cmd_arg('--human', default=False, help=_('produce human-readable output'))
 def report(directory, task, duration, sort, reverse, html, human):
     """report time tracking data"""
     events = filter_events(directory, task, duration)
     if human:
-        print('%d events in query' % len(events))
-        print('Duration of events %s' % events.sum())
-        print('First entry started at %s' % events[0].start)
-        print('Last entry started at %s' % events[-1].start)
+        print(N_('%d event in query', '%d events in query', len(events))
+                 % len(events))
+        print(_('Duration of events %s') % events.sum())
+        print(_('First entry started at %s') % events[0].start)
+        print(_('Last entry started at %s') % events[-1].start)
         dates = set(e.start.date() for e in events)
-        print('Events exist on %d dates' % len(dates))
+        print(_('Events exist on %d dates') % len(dates))
     else:
         table = prettytable.PrettyTable(['task', 'time'])
         formatter = table.get_html_string if html else table.get_string
@@ -144,7 +144,7 @@ def report(directory, task, duration, sort, reverse, html, human):
         print(formatter(sortby=sort, reversesort=reverse))
     if events.running() and not html:
         current = events.last()
-        print("Currently running `%s' since %s"
+        print(_("Currently running `%s' since %s")
               % (current.task, isodate.datetime_isoformat(current.start)))
 
 
@@ -154,10 +154,10 @@ def running(directory):
     events = Events.read(directory)
     if events.running():
         current = events.last()
-        print('Currently running %s since %s'
+        print(_('Currently running %s since %s')
             % (current.task, isodate.datetime_isoformat(current.start)))
     else:
-        print('No task is running!')
+        print(_('No task is running!'))
 
 
 @APP.cmd
@@ -166,22 +166,22 @@ def last(directory):
     events = Events.read(directory)
     last = events.last()
     if not events.running():
-        print('Last task %s, ran for %s' % (last.task, last.delta))
+        print(_('Last task %s, ran for %s') % (last.task, last.delta))
     else:
-        print('Task %s is still running' % last.task)
+        print(_('Task %s is still running') % last.task)
 
 
 @APP.cmd
-@APP.cmd_arg('task', nargs='?', help='task name', type=task_name_typecheck)
+@APP.cmd_arg('task', nargs='?', help=_('task name'), type=task_name_typecheck)
 @APP.cmd_arg('-d', '--duration', default='all',
              choices=['day', 'week', 'month', 'year', 'all'],
-             help="filter events for specified time period")
-@APP.cmd_arg('-r', '--rate', help='hourly rate for task output')
+             help=_("filter events for specified time period"))
+@APP.cmd_arg('-r', '--rate', help=_('hourly rate for task output'))
 def ledger(directory, task, duration, rate):
     """generate ledger compatible data file"""
     events = filter_events(directory, task, duration)
     if events.running():
-        print(';; Currently running event not included in output!')
+        print(_(';; Currently running event not included in output!'))
     for event in events:
         if not event.delta:
             break
@@ -194,13 +194,13 @@ def ledger(directory, task, duration, rate):
         print('    (task:%s)  %.2fh%s'
               % (event.task, hours, ' @ %s' % rate if rate else ''))
     if events.running():
-        print(';; Currently running event not included in output!')
+        print(_(';; Currently running event not included in output!'))
 
 
 def main():
     """Main script."""
     APP.arg('-d', '--directory', default=utils.xdg_data_location(),
-            metavar='dir', help='directory to read/write to')
+            metavar='dir', help=_('directory to read/write to'))
     try:
         APP.run()
     except utils.RdialError as e:
