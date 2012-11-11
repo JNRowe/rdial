@@ -72,6 +72,7 @@ case "$words[1]" in
     _arguments '--help[show help message and exit]' \
         '--duration[filter events for specified time period]:select time period:(day week month year all)' \
         '--rate=[hourly rate for task output]:set hourly rate: ' \
+        '--from-dir[use directory name as task]' \
         ':select task:__list_tasks'
     ;;
 (*)

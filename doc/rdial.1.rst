@@ -105,6 +105,9 @@ Generate `ledger <http://ledger-cli.org/>`__ compatible data file
 -r <rate>, --rate <rate>
    hourly rate for task output
 
+-x, --from-dir
+   use directory name as task
+
 BUGS
 ----
 

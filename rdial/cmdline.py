@@ -194,8 +194,12 @@ def last(directory):
              choices=['day', 'week', 'month', 'year', 'all'],
              help=_("filter events for specified time period"))
 @APP.cmd_arg('-r', '--rate', help=_('hourly rate for task output'))
-def ledger(directory, task, duration, rate):
+@APP.cmd_arg('-x', '--from-dir', action='store_true',
+             help=_('use directory name as task'))
+def ledger(directory, task, duration, rate, from_dir):
     """Generate ledger compatible data file."""
+    if from_dir:
+        task = os.path.basename(os.path.abspath(os.curdir))
     events = filter_events(directory, task, duration)
     if events.running():
         print(_(';; Currently running event not included in output!'))

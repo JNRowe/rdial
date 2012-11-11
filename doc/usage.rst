@@ -130,3 +130,7 @@ Commands
 .. cmdoption:: -r <rate>, --rate <rate>
 
    hourly rate for task output
+
+.. cmdoption:: -x, --from-dir
+
+   use directory name as task
