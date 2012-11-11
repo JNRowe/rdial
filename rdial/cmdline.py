@@ -146,15 +146,22 @@ def stop(directory, message, amend):
     print(_('Task %s running for %s') % (event.task, event.delta))
 
 
+# pylint: disable-msg=C0103
+output_parser = argparse.ArgumentParser(add_help=False)
+output_group = output_parser.add_mutually_exclusive_group()
+output_group.add_argument('--html', action='store_true',
+                          help=_('produce HTML output'))
+output_group.add_argument('--human', action='store_true',
+                          help=_('produce human-readable output'))
+# pylint: ensable-msg=C0103
+
+
 @APP.cmd(help=_("report time tracking data"),
-         parents=[duration_parser, task_parser])
+         parents=[duration_parser, task_parser, output_parser])
 @APP.cmd_arg('-s', '--sort', default='task', choices=['task', 'time'],
              help=_('field to sort by'))
 @APP.cmd_arg('-r', '--reverse', action='store_true',
              help=_('reverse sort order'))
-@APP.cmd_arg('--html', action='store_true', help=_('produce HTML output'))
-@APP.cmd_arg('--human', action='store_true',
-             help=_('produce human-readable output'))
 def report(directory, task, duration, sort, reverse, html, human, from_dir):
     """Report time tracking data."""
     if task == 'default':
