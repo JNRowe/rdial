@@ -15,6 +15,7 @@ Requirements
 ``rdial``'s dependencies outside of the standard library are:
 
 * aaargh_
+* blessings_
 * isodate_
 * prettytable_
 
@@ -106,6 +107,7 @@ reproduce the problem, or even better a patch!
 
 .. _GPL v3: http://www.gnu.org/licenses/
 .. _aaargh: http://pypi.python.org/pypi/aaargh/
+.. _blessings: http://pypi.python.org/pypi/blessings/
 .. _isodate: http://pypi.python.org/pypi/isodate/
 .. _prettytable: http://code.google.com/p/prettytable/
 .. _Python: http://www.python.org/

@@ -22,7 +22,56 @@
 import datetime
 import os
 
+import blessings
 import isodate
+
+T = blessings.Terminal()
+
+
+# Set up informational message functions
+def _colourise(text, colour):
+    """Colour text, if possible.
+
+    :param str text: Text to colourise
+    :param str colour: Colour to display text in
+    :rtype: ``str``
+    :return: Colourised text, if possible
+
+    """
+    return getattr(T, colour.replace(' ', '_'))(text)
+
+
+def success(text):
+    """Output a success message.
+
+    :param str text:  Text to format
+    :rtype: ``str`
+    :return: Bright green text, if possible
+
+    """
+    return _colourise(text, 'bright green')
+
+
+def fail(text):
+    """Output a failure message.
+
+    :param str text:  Text to format
+    :rtype: ``str`
+    :return: Bright red text, if possible
+
+    """
+    return _colourise(text, 'bright red')
+
+
+def warn(text):
+    """Output a warning message.
+
+    :param str text:  Text to format
+    :rtype: ``str`
+    :return: Bright yellow text, if possible
+
+    """
+    return _colourise(text, 'bright yellow')
 
 
 class RdialError(ValueError):
