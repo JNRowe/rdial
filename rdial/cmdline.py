@@ -63,19 +63,18 @@ def task_name_typecheck(string):
 
 
 # pylint: disable-msg=C0103
-dir_parser = argparse.ArgumentParser(add_help=False)
-dir_parser.add_argument('-x', '--from-dir', action='store_true',
-                        help=_('use directory name as task'))
+task_parser = argparse.ArgumentParser(add_help=False)
+names_group = task_parser.add_mutually_exclusive_group()
+names_group.add_argument('-x', '--from-dir', action='store_true',
+                         help=_('use directory name as task'))
+names_group.add_argument('task', default='default', nargs='?',
+                         action=TaskAction, help=_('task name'),
+                         type=task_name_typecheck)
 
 duration_parser = argparse.ArgumentParser(add_help=False)
 duration_parser.add_argument('-d', '--duration', default='all',
                              choices=['day', 'week', 'month', 'year', 'all'],
                              help=_("filter events for specified time period"))
-
-task_parser = argparse.ArgumentParser(add_help=False)
-task_parser.add_argument('task', default='default', nargs='?',
-                         action=TaskAction, help=_('task name'),
-                         type=task_name_typecheck)
 # pylint: enable-msg=C0103
 
 
@@ -122,7 +121,7 @@ def start_time_typecheck(string):
     return string
 
 
-@APP.cmd(help=_("start task"), parents=[dir_parser, task_parser])
+@APP.cmd(help=_("start task"), parents=[task_parser])
 @APP.cmd_arg('-n', '--new', action='store_true', help=_('start a new task'))
 @APP.cmd_arg('-t', '--time', metavar='time', default='',
              help=_('set start time'), type=start_time_typecheck)
@@ -148,7 +147,7 @@ def stop(directory, message, amend):
 
 
 @APP.cmd(help=_("report time tracking data"),
-         parents=[dir_parser, duration_parser, task_parser])
+         parents=[duration_parser, task_parser])
 @APP.cmd_arg('-s', '--sort', default='task', choices=['task', 'time'],
              help=_('field to sort by'))
 @APP.cmd_arg('-r', '--reverse', action='store_true',
@@ -211,7 +210,7 @@ def last(directory):
 
 
 @APP.cmd(help=_("generate ledger compatible data file"),
-         parents=[dir_parser, duration_parser, task_parser])
+         parents=[duration_parser, task_parser])
 @APP.cmd_arg('-r', '--rate', metavar='rate',
              help=_('hourly rate for task output'))
 def ledger(directory, task, duration, rate, from_dir):
