@@ -34,9 +34,28 @@ APP = aaargh.App(description=__doc__.splitlines()[0].split("-", 1)[1],
                  epilog=_("Please report bugs to jnrowe@gmail.com"))
 
 
+def task_name_typecheck(string):
+    """Check given task name is valid.
+
+    :param str string: Task name to check
+    :rtype: str
+    :returns: Task name, if valid
+    :raises argparse.ArgparseTypeError: If task name is invalid
+
+    """
+    if '/' in string or '\000' in string:
+        raise argparse.ArgumentTypeError(_('%r is not a valid task name')
+                                         % string)
+    return string
+
+
 dir_parser = argparse.ArgumentParser(add_help=False)
 dir_parser.add_argument('-x', '--from-dir', action='store_true',
                         help=_('use directory name as task'))
+
+task_parser = argparse.ArgumentParser(add_help=False)
+task_parser.add_argument('task', default='default', nargs='?',
+                         help=_('task name'), type=task_name_typecheck)
 
 
 def filter_events(directory, task=None, duration=None):
@@ -82,24 +101,7 @@ def start_time_typecheck(string):
     return string
 
 
-def task_name_typecheck(string):
-    """Check given task name is valid.
-
-    :param str string: Task name to check
-    :rtype: str
-    :returns: Task name, if valid
-    :raises argparse.ArgparseTypeError: If task name is invalid
-
-    """
-    if '/' in string or '\000' in string:
-        raise argparse.ArgumentTypeError(_('%r is not a valid task name')
-                                         % string)
-    return string
-
-
-@APP.cmd(help=_("start task"), parents=[dir_parser, ])
-@APP.cmd_arg('task', default='default', nargs='?', help=_('task name'),
-             type=task_name_typecheck)
+@APP.cmd(help=_("start task"), parents=[dir_parser, task_parser])
 @APP.cmd_arg('-n', '--new', action='store_true', help=_('start a new task'))
 @APP.cmd_arg('-t', '--time', default='', help=_('set start time'),
              type=start_time_typecheck)
@@ -126,8 +128,8 @@ def stop(directory, message, amend):
     print(_('Task %s running for %s') % (last.task, last.delta))
 
 
-@APP.cmd(help=_("report time tracking data"), parents=[dir_parser, ])
-@APP.cmd_arg('task', nargs='?', help=_('task name'), type=task_name_typecheck)
+@APP.cmd(help=_("report time tracking data"),
+         parents=[dir_parser, task_parser])
 @APP.cmd_arg('-d', '--duration', default='all',
              choices=['day', 'week', 'month', 'year', 'all'],
              help=_("filter events for specified time period"))
@@ -140,6 +142,9 @@ def report(directory, task, duration, sort, reverse, html, human, from_dir):
     """Report time tracking data."""
     if from_dir:
         task = os.path.basename(os.path.abspath(os.curdir))
+    elif task == 'default':
+        # Lazy way to remove duplicate argument definitions
+        task = None
     events = filter_events(directory, task, duration)
     if human:
         print(N_('%d event in query', '%d events in query', len(events))
@@ -190,8 +195,7 @@ def last(directory):
 
 
 @APP.cmd(help=_("generate ledger compatible data file"),
-         parents=[dir_parser, ])
-@APP.cmd_arg('task', nargs='?', help=_('task name'), type=task_name_typecheck)
+         parents=[dir_parser, task_parser])
 @APP.cmd_arg('-d', '--duration', default='all',
              choices=['day', 'week', 'month', 'year', 'all'],
              help=_("filter events for specified time period"))
