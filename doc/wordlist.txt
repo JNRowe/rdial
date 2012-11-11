@@ -1,7 +1,9 @@
+bzr
 datetime
 gtimelog
 hammertime
 ktimetracker
 taskwarrior
+tarballs
 timezone
 timestamp
