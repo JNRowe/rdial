@@ -143,7 +143,8 @@ def stop(directory, message, amend):
             message = event.message
         events.stop(message, force=amend)
     event = events.last()
-    print(_('Task %s running for %s') % (event.task, event.delta))
+    print(_('Task %s running for %s') % (event.task,
+                                         str(event.delta).split('.')[0]))
 
 
 # pylint: disable-msg=C0103
