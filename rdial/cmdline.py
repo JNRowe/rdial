@@ -120,7 +120,7 @@ def start(directory, task, new, time, from_dir):
 
 @APP.cmd(help=_("stop task"))
 @APP.cmd_arg('-m', '--message', help=_('closing message'))
-@APP.cmd_arg('--amend', action='store_true', default=False,
+@APP.cmd_arg('--amend', action='store_true',
              help=_('amend previous stop entry'))
 def stop(directory, message, amend):
     """Stop task."""
@@ -137,9 +137,11 @@ def stop(directory, message, amend):
          parents=[dir_parser, duration_parser, task_parser])
 @APP.cmd_arg('-s', '--sort', default='task', choices=['task', 'time'],
              help=_('field to sort by'))
-@APP.cmd_arg('-r', '--reverse', default=False, help=_('reverse sort order'))
-@APP.cmd_arg('--html', default=False, help=_('produce HTML output'))
-@APP.cmd_arg('--human', default=False, help=_('produce human-readable output'))
+@APP.cmd_arg('-r', '--reverse', action='store_true',
+             help=_('reverse sort order'))
+@APP.cmd_arg('--html', action='store_true', help=_('produce HTML output'))
+@APP.cmd_arg('--human', action='store_true',
+             help=_('produce human-readable output'))
 def report(directory, task, duration, sort, reverse, html, human, from_dir):
     """Report time tracking data."""
     if from_dir:
