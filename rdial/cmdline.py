@@ -36,6 +36,17 @@ APP = aaargh.App(description=__doc__.splitlines()[0].split("-", 1)[1],
                  epilog=_("Please report bugs to jnrowe@gmail.com"))
 
 
+class TaskAction(argparse.Action):
+
+    """Define task name, handling --from-dir option."""
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        if namespace.from_dir:
+            namespace.task = os.path.basename(os.path.abspath(os.curdir))
+        else:
+            namespace.task = values
+
+
 def task_name_typecheck(string):
     """Check given task name is valid.
 
@@ -63,7 +74,8 @@ duration_parser.add_argument('-d', '--duration', default='all',
 
 task_parser = argparse.ArgumentParser(add_help=False)
 task_parser.add_argument('task', default='default', nargs='?',
-                         help=_('task name'), type=task_name_typecheck)
+                         action=TaskAction, help=_('task name'),
+                         type=task_name_typecheck)
 # pylint: enable-msg=C0103
 
 
@@ -116,8 +128,6 @@ def start_time_typecheck(string):
              type=start_time_typecheck)
 def start(directory, task, new, time, from_dir):
     """Start task."""
-    if from_dir:
-        task = os.path.basename(os.path.abspath(os.curdir))
     with Events.context(directory) as events:
         events.start(task, new, time)
 
@@ -148,9 +158,7 @@ def stop(directory, message, amend):
              help=_('produce human-readable output'))
 def report(directory, task, duration, sort, reverse, html, human, from_dir):
     """Report time tracking data."""
-    if from_dir:
-        task = os.path.basename(os.path.abspath(os.curdir))
-    elif task == 'default':
+    if task == 'default':
         # Lazy way to remove duplicate argument definitions
         task = None
     events = filter_events(directory, task, duration)
@@ -207,8 +215,6 @@ def last(directory):
 @APP.cmd_arg('-r', '--rate', help=_('hourly rate for task output'))
 def ledger(directory, task, duration, rate, from_dir):
     """Generate ledger compatible data file."""
-    if from_dir:
-        task = os.path.basename(os.path.abspath(os.curdir))
     events = filter_events(directory, task, duration)
     if events.running():
         print(_(';; Currently running event not included in output!'))
