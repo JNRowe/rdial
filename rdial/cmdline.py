@@ -202,7 +202,7 @@ def running(directory):
         print(_('Currently running %s since %s')
             % (current.task, isodate.datetime_isoformat(current.start)))
     else:
-        print(_('No task is running!'))
+        print(utils.warn(_('No task is running!')))
 
 
 @APP.cmd(help=_("display last event, if any"))
@@ -213,7 +213,7 @@ def last(directory):
     if not events.running():
         print(_('Last task %s, ran for %s') % (event.task, event.delta))
     else:
-        print(_('Task %s is still running') % event.task)
+        print(utils.warn(_('Task %s is still running') % event.task))
 
 
 @APP.cmd(help=_("generate ledger compatible data file"),
@@ -249,5 +249,5 @@ def main():
     try:
         APP.run()
     except utils.RdialError as error:
-        print(error.message)
+        print(utils.fail(error.message))
         return 2
