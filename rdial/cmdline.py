@@ -53,6 +53,11 @@ dir_parser = argparse.ArgumentParser(add_help=False)
 dir_parser.add_argument('-x', '--from-dir', action='store_true',
                         help=_('use directory name as task'))
 
+duration_parser = argparse.ArgumentParser(add_help=False)
+duration_parser.add_argument('-d', '--duration', default='all',
+                             choices=['day', 'week', 'month', 'year', 'all'],
+                             help=_("filter events for specified time period"))
+
 task_parser = argparse.ArgumentParser(add_help=False)
 task_parser.add_argument('task', default='default', nargs='?',
                          help=_('task name'), type=task_name_typecheck)
@@ -129,10 +134,7 @@ def stop(directory, message, amend):
 
 
 @APP.cmd(help=_("report time tracking data"),
-         parents=[dir_parser, task_parser])
-@APP.cmd_arg('-d', '--duration', default='all',
-             choices=['day', 'week', 'month', 'year', 'all'],
-             help=_("filter events for specified time period"))
+         parents=[dir_parser, duration_parser, task_parser])
 @APP.cmd_arg('-s', '--sort', default='task', choices=['task', 'time'],
              help=_('field to sort by'))
 @APP.cmd_arg('-r', '--reverse', default=False, help=_('reverse sort order'))
@@ -195,10 +197,7 @@ def last(directory):
 
 
 @APP.cmd(help=_("generate ledger compatible data file"),
-         parents=[dir_parser, task_parser])
-@APP.cmd_arg('-d', '--duration', default='all',
-             choices=['day', 'week', 'month', 'year', 'all'],
-             help=_("filter events for specified time period"))
+         parents=[dir_parser, duration_parser, task_parser])
 @APP.cmd_arg('-r', '--rate', help=_('hourly rate for task output'))
 def ledger(directory, task, duration, rate, from_dir):
     """Generate ledger compatible data file."""
