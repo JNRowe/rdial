@@ -31,9 +31,9 @@ favour of trying to fix it.  Most moved on to ``org-mode``, and some to
 hammertime_ is a great tool for tracking time in a simple manner, however it has
 a couple of drawbacks for my use case.
 
-Firstly, it stores data in a ``git`` branch which means all projects need
-a their own ``git`` repository.  This works well surprisingly well for the most
-part, but makes fetching all the stored data across multiple projects quite
+Firstly, it stores data in a ``git`` branch which means all projects need their
+own ``git`` repository.  This works well surprisingly well for the most part,
+but makes fetching all the stored data across multiple projects quite
 cumbersome.
 
 The more significant problem *for me* is that the implementation works by
