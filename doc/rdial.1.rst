@@ -47,7 +47,7 @@ Start task
 -t <start time>, --time=<start time>
    manually set start time for task
 
--d, --from-dir
+-x, --from-dir
    use directory name as task
 
 ``stop``

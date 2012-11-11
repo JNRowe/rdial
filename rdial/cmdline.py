@@ -98,7 +98,7 @@ def task_name_typecheck(string):
 @APP.cmd_arg('-n', '--new', action='store_true', help=_('start a new task'))
 @APP.cmd_arg('-t', '--time', default='', help=_('set start time'),
              type=start_time_typecheck)
-@APP.cmd_arg('-d', '--from-dir', action='store_true',
+@APP.cmd_arg('-x', '--from-dir', action='store_true',
              help=_('use directory name as task'))
 def start(directory, task, new, time, from_dir):
     """Start task."""

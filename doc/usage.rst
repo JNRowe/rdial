@@ -42,7 +42,7 @@ Commands
 
    manually set start time for task
 
-.. cmdoption:: -d, --from-dir
+.. cmdoption:: -x, --from-dir
 
    use directory name as task
 
