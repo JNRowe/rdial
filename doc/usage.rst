@@ -92,6 +92,10 @@ Commands
 
    produce human-readable output
 
+.. cmdoption:: -x, --from-dir
+
+   use directory name as task
+
 ``running`` - Display running task, if any
 ''''''''''''''''''''''''''''''''''''''''''
 

@@ -81,6 +81,9 @@ Report time tracking data
 --human
    produce human-readable output
 
+-x, --from-dir
+   use directory name as task
+
 ``running``
 '''''''''''
 

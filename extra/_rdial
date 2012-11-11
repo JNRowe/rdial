@@ -59,6 +59,7 @@ case "$words[1]" in
         '--reverse[reverse sort order]' \
         '--html[produce HTML output]' \
         '--human[produce human-readable output]' \
+        '--from-dir[use directory name as task]' \
         ':select task:__list_tasks'
     ;;
 (running)

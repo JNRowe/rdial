@@ -133,8 +133,12 @@ def stop(directory, message, amend):
 @APP.cmd_arg('-r', '--reverse', default=False, help=_('reverse sort order'))
 @APP.cmd_arg('--html', default=False, help=_('produce HTML output'))
 @APP.cmd_arg('--human', default=False, help=_('produce human-readable output'))
-def report(directory, task, duration, sort, reverse, html, human):
+@APP.cmd_arg('-x', '--from-dir', action='store_true',
+             help=_('use directory name as task'))
+def report(directory, task, duration, sort, reverse, html, human, from_dir):
     """Report time tracking data."""
+    if from_dir:
+        task = os.path.basename(os.path.abspath(os.curdir))
     events = filter_events(directory, task, duration)
     if human:
         print(N_('%d event in query', '%d events in query', len(events))
