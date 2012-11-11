@@ -42,7 +42,7 @@ Commands
 
    manually set start time for task
 
-.. cmdoption:: -d, --from-dir
+.. cmdoption:: -x, --from-dir
 
    use directory name as task
 
@@ -92,6 +92,10 @@ Commands
 
    produce human-readable output
 
+.. cmdoption:: -x, --from-dir
+
+   use directory name as task
+
 ``running`` - Display running task, if any
 ''''''''''''''''''''''''''''''''''''''''''
 
@@ -126,3 +130,7 @@ Commands
 .. cmdoption:: -r <rate>, --rate <rate>
 
    hourly rate for task output
+
+.. cmdoption:: -x, --from-dir
+
+   use directory name as task

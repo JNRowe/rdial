@@ -47,7 +47,7 @@ Start task
 -t <start time>, --time=<start time>
    manually set start time for task
 
--d, --from-dir
+-x, --from-dir
    use directory name as task
 
 ``stop``
@@ -81,6 +81,9 @@ Report time tracking data
 --human
    produce human-readable output
 
+-x, --from-dir
+   use directory name as task
+
 ``running``
 '''''''''''
 
@@ -101,6 +104,9 @@ Generate `ledger <http://ledger-cli.org/>`__ compatible data file
 
 -r <rate>, --rate <rate>
    hourly rate for task output
+
+-x, --from-dir
+   use directory name as task
 
 BUGS
 ----

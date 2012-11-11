@@ -98,7 +98,7 @@ def task_name_typecheck(string):
 @APP.cmd_arg('-n', '--new', action='store_true', help=_('start a new task'))
 @APP.cmd_arg('-t', '--time', default='', help=_('set start time'),
              type=start_time_typecheck)
-@APP.cmd_arg('-d', '--from-dir', action='store_true',
+@APP.cmd_arg('-x', '--from-dir', action='store_true',
              help=_('use directory name as task'))
 def start(directory, task, new, time, from_dir):
     """Start task."""
@@ -133,8 +133,12 @@ def stop(directory, message, amend):
 @APP.cmd_arg('-r', '--reverse', default=False, help=_('reverse sort order'))
 @APP.cmd_arg('--html', default=False, help=_('produce HTML output'))
 @APP.cmd_arg('--human', default=False, help=_('produce human-readable output'))
-def report(directory, task, duration, sort, reverse, html, human):
+@APP.cmd_arg('-x', '--from-dir', action='store_true',
+             help=_('use directory name as task'))
+def report(directory, task, duration, sort, reverse, html, human, from_dir):
     """Report time tracking data."""
+    if from_dir:
+        task = os.path.basename(os.path.abspath(os.curdir))
     events = filter_events(directory, task, duration)
     if human:
         print(N_('%d event in query', '%d events in query', len(events))
@@ -190,8 +194,12 @@ def last(directory):
              choices=['day', 'week', 'month', 'year', 'all'],
              help=_("filter events for specified time period"))
 @APP.cmd_arg('-r', '--rate', help=_('hourly rate for task output'))
-def ledger(directory, task, duration, rate):
+@APP.cmd_arg('-x', '--from-dir', action='store_true',
+             help=_('use directory name as task'))
+def ledger(directory, task, duration, rate, from_dir):
     """Generate ledger compatible data file."""
+    if from_dir:
+        task = os.path.basename(os.path.abspath(os.curdir))
     events = filter_events(directory, task, duration)
     if events.running():
         print(_(';; Currently running event not included in output!'))
