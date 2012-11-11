@@ -17,6 +17,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+# pylint: disable-msg=C0121
+
 import argparse
 import datetime
 import os
@@ -116,11 +118,11 @@ def stop(directory, message, amend):
     """Stop task."""
     with Events.context(directory) as events:
         if amend and not message:
-            last = events.last()
-            message = last.message
+            event = events.last()
+            message = event.message
         events.stop(message, force=amend)
-    last = events.last()
-    print(_('Task %s running for %s') % (last.task, last.delta))
+    event = events.last()
+    print(_('Task %s running for %s') % (event.task, event.delta))
 
 
 @APP.cmd(help=_("report time tracking data"))
@@ -181,11 +183,11 @@ def running(directory):
 def last(directory):
     """Display last event, if any."""
     events = Events.read(directory)
-    last = events.last()
+    event = events.last()
     if not events.running():
-        print(_('Last task %s, ran for %s') % (last.task, last.delta))
+        print(_('Last task %s, ran for %s') % (event.task, event.delta))
     else:
-        print(_('Task %s is still running') % last.task)
+        print(_('Task %s is still running') % event.task)
 
 
 @APP.cmd(help=_("generate ledger compatible data file"))
@@ -226,5 +228,6 @@ def main():
             metavar='dir', help=_('directory to read/write to'))
     try:
         APP.run()
-    except utils.RdialError as e:
-        APP._parser.error(e)
+    except utils.RdialError as error:
+        print(error.message)
+        return 2
