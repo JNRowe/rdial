@@ -189,7 +189,7 @@ def report(directory, task, duration, sort, reverse, html, human, from_dir):
         print(formatter(sortby=sort, reversesort=reverse))
     if events.running() and not html:
         current = events.last()
-        print(_("Currently running `%s' since %s")
+        print(_("Running `%s' since %s")
               % (current.task, isodate.datetime_isoformat(current.start)))
 
 
@@ -199,7 +199,7 @@ def running(directory):
     events = Events.read(directory)
     if events.running():
         current = events.last()
-        print(_('Currently running %s since %s')
+        print(_('Running %s since %s')
             % (current.task, isodate.datetime_isoformat(current.start)))
     else:
         print(utils.warn(_('No task is running!')))
@@ -224,7 +224,7 @@ def ledger(directory, task, duration, rate, from_dir):
     """Generate ledger compatible data file."""
     events = filter_events(directory, task, duration)
     if events.running():
-        print(_(';; Currently running event not included in output!'))
+        print(_(';; Running event not included in output!'))
     for event in events:
         if not event.delta:
             break
@@ -237,7 +237,7 @@ def ledger(directory, task, duration, rate, from_dir):
         print('    (task:%s)  %.2fh%s'
               % (event.task, hours, ' @ %s' % rate if rate else ''))
     if events.running():
-        print(_(';; Currently running event not included in output!'))
+        print(_(';; Running event not included in output!'))
 
 
 def main():

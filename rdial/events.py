@@ -109,7 +109,7 @@ class Event(object):
         return False
 
     def stop(self, message=None, force=False):
-        """Stop currently running event.
+        """Stop running event.
 
         :param str message: Message to attach to event
         :param bool force: Re-stop a previously stopped event
@@ -117,7 +117,7 @@ class Event(object):
 
         """
         if not force and self.delta:
-            raise TaskNotRunningError('No task currently running!')
+            raise TaskNotRunningError('No task running!')
         self.delta = utils.utcnow() - self.start
         self.message = message
 FIELDS = inspect.getargspec(Event.__init__)[0][2:]
@@ -217,7 +217,7 @@ class Events(list):
     def running(self):
         """Check if an event is running.
 
-        We return the currently running task, if one exists, for easy access.
+        We return the running task, if one exists, for easy access.
 
         :rtype: `Event`
         :return: Running event, if an event running
@@ -236,7 +236,7 @@ class Events(list):
         """
         running = self.running()
         if running:
-            raise TaskRunningError('Currently running task %s!' % running)
+            raise TaskRunningError('Running task %s!' % running)
         if not new and task not in self.tasks():
             raise TaskNotExistError("Task %s does not exist!  Use `--new' to "
                                     "create it" % task)
@@ -244,15 +244,15 @@ class Events(list):
         self._dirty.add(task)
 
     def stop(self, message=None, force=False):
-        """Stop currently running event.
+        """Stop running event.
 
         :param str message: Message to attach to event
         :param bool force: Re-stop a previously stopped event
-        :raise TaskNotRunningError: No task currently running!
+        :raise TaskNotRunningError: No task running!
 
         """
         if not force and not self.running():
-            raise TaskNotRunningError('No task currently running!')
+            raise TaskNotRunningError('No task running!')
         self.last().stop(message, force)
         self._dirty.add(self.last().task)
 

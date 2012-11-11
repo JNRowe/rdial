@@ -40,7 +40,7 @@ def test_fail_start_when_task_typo():
 
 def test_fail_start_when_running():
     events = Events.read('tests/data/test')
-    with expect.raises(TaskRunningError, 'Currently running task task!'):
+    with expect.raises(TaskRunningError, 'Running task task!'):
         events.start(task='task2')
 
 
@@ -59,5 +59,5 @@ def test_stop_event_with_message():
 
 def test_fail_stop_when_not_running():
     events = Events.read('tests/data/test_not_running')
-    with expect.raises(TaskNotRunningError, 'No task currently running!'):
+    with expect.raises(TaskNotRunningError, 'No task running!'):
         events.stop()

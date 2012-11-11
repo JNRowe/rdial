@@ -11,7 +11,7 @@ session:
 
     ▶ rdial start my_task
     ▶ rdial running
-    Currently running my_task since 2012-06-29T22:35:43Z
+    Running my_task since 2012-06-29T22:35:43Z
     ▶ rdial stop -m'Fixed bug #40'
     Task my_task running for 0:44:00.793449
 

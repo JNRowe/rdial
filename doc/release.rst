@@ -17,7 +17,7 @@ In the general case tests can be run via ``nose2``::
     $ nose2 -vv tests
 
 When preparing a release it is important to check that :mod:`rdial` works with
-all currently supported Python versions, and that the documentation is correct.
+all supported Python versions, and that the documentation is correct.
 
 Prepare release
 ---------------

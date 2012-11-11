@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: rdial 0.7.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2012-11-11 17:35+0000\n"
+"POT-Creation-Date: 2012-11-11 19:27+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -119,7 +119,7 @@ msgstr ""
 
 #: rdial/cmdline.py:192
 #, python-format
-msgid "Currently running `%s' since %s"
+msgid "Running `%s' since %s"
 msgstr ""
 
 #: rdial/cmdline.py:196
@@ -128,7 +128,7 @@ msgstr ""
 
 #: rdial/cmdline.py:202
 #, python-format
-msgid "Currently running %s since %s"
+msgid "Running %s since %s"
 msgstr ""
 
 #: rdial/cmdline.py:205
@@ -158,7 +158,7 @@ msgid "hourly rate for task output"
 msgstr ""
 
 #: rdial/cmdline.py:227 rdial/cmdline.py:240
-msgid ";; Currently running event not included in output!"
+msgid ";; Running event not included in output!"
 msgstr ""
 
 #: rdial/cmdline.py:248
