@@ -124,8 +124,8 @@ def start_time_typecheck(string):
 
 @APP.cmd(help=_("start task"), parents=[dir_parser, task_parser])
 @APP.cmd_arg('-n', '--new', action='store_true', help=_('start a new task'))
-@APP.cmd_arg('-t', '--time', default='', help=_('set start time'),
-             type=start_time_typecheck)
+@APP.cmd_arg('-t', '--time', metavar='time', default='',
+             help=_('set start time'), type=start_time_typecheck)
 def start(directory, task, new, time, from_dir):
     """Start task."""
     with Events.context(directory) as events:
@@ -133,7 +133,7 @@ def start(directory, task, new, time, from_dir):
 
 
 @APP.cmd(help=_("stop task"))
-@APP.cmd_arg('-m', '--message', help=_('closing message'))
+@APP.cmd_arg('-m', '--message', metavar='message', help=_('closing message'))
 @APP.cmd_arg('--amend', action='store_true',
              help=_('amend previous stop entry'))
 def stop(directory, message, amend):
@@ -212,7 +212,8 @@ def last(directory):
 
 @APP.cmd(help=_("generate ledger compatible data file"),
          parents=[dir_parser, duration_parser, task_parser])
-@APP.cmd_arg('-r', '--rate', help=_('hourly rate for task output'))
+@APP.cmd_arg('-r', '--rate', metavar='rate',
+             help=_('hourly rate for task output'))
 def ledger(directory, task, duration, rate, from_dir):
     """Generate ledger compatible data file."""
     events = filter_events(directory, task, duration)

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: rdial 0.7.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2012-11-11 17:21+0000\n"
+"POT-Creation-Date: 2012-11-11 17:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -51,7 +51,7 @@ msgstr ""
 msgid "start a new task"
 msgstr ""
 
-#: rdial/cmdline.py:127
+#: rdial/cmdline.py:128
 msgid "set start time"
 msgstr ""
 
@@ -153,15 +153,15 @@ msgstr ""
 msgid "generate ledger compatible data file"
 msgstr ""
 
-#: rdial/cmdline.py:215
+#: rdial/cmdline.py:216
 msgid "hourly rate for task output"
 msgstr ""
 
-#: rdial/cmdline.py:220 rdial/cmdline.py:233
+#: rdial/cmdline.py:221 rdial/cmdline.py:234
 msgid ";; Currently running event not included in output!"
 msgstr ""
 
-#: rdial/cmdline.py:241
+#: rdial/cmdline.py:242
 msgid "directory to read/write to"
 msgstr ""
 
