@@ -199,8 +199,9 @@ def running(directory):
     events = Events.read(directory)
     if events.running():
         current = events.last()
-        print(_('Running %s since %s')
-            % (current.task, isodate.datetime_isoformat(current.start)))
+        print(_('Task %s has been running for %s')
+            % (current.task,
+               str(utils.utcnow() - current.start).split('.')[0]))
     else:
         print(utils.warn(_('No task is running!')))
 
