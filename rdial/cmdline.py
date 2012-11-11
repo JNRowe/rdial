@@ -34,6 +34,11 @@ APP = aaargh.App(description=__doc__.splitlines()[0].split("-", 1)[1],
                  epilog=_("Please report bugs to jnrowe@gmail.com"))
 
 
+dir_parser = argparse.ArgumentParser(add_help=False)
+dir_parser.add_argument('-x', '--from-dir', action='store_true',
+                        help=_('use directory name as task'))
+
+
 def filter_events(directory, task=None, duration=None):
     """Filter events for report processing.
 
@@ -92,14 +97,12 @@ def task_name_typecheck(string):
     return string
 
 
-@APP.cmd(help=_("start task"))
+@APP.cmd(help=_("start task"), parents=[dir_parser, ])
 @APP.cmd_arg('task', default='default', nargs='?', help=_('task name'),
              type=task_name_typecheck)
 @APP.cmd_arg('-n', '--new', action='store_true', help=_('start a new task'))
 @APP.cmd_arg('-t', '--time', default='', help=_('set start time'),
              type=start_time_typecheck)
-@APP.cmd_arg('-x', '--from-dir', action='store_true',
-             help=_('use directory name as task'))
 def start(directory, task, new, time, from_dir):
     """Start task."""
     if from_dir:
@@ -123,7 +126,7 @@ def stop(directory, message, amend):
     print(_('Task %s running for %s') % (last.task, last.delta))
 
 
-@APP.cmd(help=_("report time tracking data"))
+@APP.cmd(help=_("report time tracking data"), parents=[dir_parser, ])
 @APP.cmd_arg('task', nargs='?', help=_('task name'), type=task_name_typecheck)
 @APP.cmd_arg('-d', '--duration', default='all',
              choices=['day', 'week', 'month', 'year', 'all'],
@@ -133,8 +136,6 @@ def stop(directory, message, amend):
 @APP.cmd_arg('-r', '--reverse', default=False, help=_('reverse sort order'))
 @APP.cmd_arg('--html', default=False, help=_('produce HTML output'))
 @APP.cmd_arg('--human', default=False, help=_('produce human-readable output'))
-@APP.cmd_arg('-x', '--from-dir', action='store_true',
-             help=_('use directory name as task'))
 def report(directory, task, duration, sort, reverse, html, human, from_dir):
     """Report time tracking data."""
     if from_dir:
@@ -188,14 +189,13 @@ def last(directory):
         print(_('Task %s is still running') % last.task)
 
 
-@APP.cmd(help=_("generate ledger compatible data file"))
+@APP.cmd(help=_("generate ledger compatible data file"),
+         parents=[dir_parser, ])
 @APP.cmd_arg('task', nargs='?', help=_('task name'), type=task_name_typecheck)
 @APP.cmd_arg('-d', '--duration', default='all',
              choices=['day', 'week', 'month', 'year', 'all'],
              help=_("filter events for specified time period"))
 @APP.cmd_arg('-r', '--rate', help=_('hourly rate for task output'))
-@APP.cmd_arg('-x', '--from-dir', action='store_true',
-             help=_('use directory name as task'))
 def ledger(directory, task, duration, rate, from_dir):
     """Generate ledger compatible data file."""
     if from_dir:
