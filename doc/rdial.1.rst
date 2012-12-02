@@ -5,7 +5,7 @@
 :Manual group: user
 
 rdial
-======
+=====
 
 Simple time tracking for simple people
 --------------------------------------
@@ -33,7 +33,7 @@ OPTIONS
 -d <directory>, --directory=<directory>
     database location, defaults to ``${XDG_DATA_HOME:-/.local}/rdial``
 
-Commands
+COMMANDS
 --------
 
 ``start``
