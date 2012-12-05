@@ -46,6 +46,7 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.1',
         'Programming Language :: Python :: 3.2',
+        'Programming Language :: Python :: 3.3',
         'Topic :: Office/Business',
         'Topic :: Office/Business :: News/Diary',
         'Topic :: Office/Business :: Scheduling',
