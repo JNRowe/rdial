@@ -21,6 +21,7 @@
 
 import datetime
 import os
+import sys
 
 import blessings
 import isodate
@@ -78,7 +79,11 @@ class RdialError(ValueError):
 
     """Generic exception for rdial."""
 
-    pass
+    if sys.version_info[0] == 3:
+        @property
+        def message(self):
+            """Compatibility hack for Python 3"""
+            return self.args[0]
 
 
 def parse_delta(string):
