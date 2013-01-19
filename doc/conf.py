@@ -54,9 +54,8 @@ source_suffix = '.rst'
 # The master toctree document.
 master_doc = 'index'
 
-# General information about the project.
-project = u'rdial'
-copyright = u'2011, 2012, 2013  James Rowe'
+project = 'rdial'
+copyright = '2011, 2012, 2013  James Rowe'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -200,8 +199,7 @@ htmlhelp_basename = 'rdialdoc'
 # (source start file, target name, title, author,
 #  documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'rdial.tex', u'rdial Documentation',
-   u'James Rowe', 'manual'),
+    ('index', 'rdial.tex', 'rdial Documentation', 'James Rowe', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -233,8 +231,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('rdial.1', 'rdial', u'rdial Documentation',
-     [u'James Rowe'], 1)
+    ('rdial.1', 'rdial', 'rdial Documentation',
+     ['James Rowe'], 1)
 ]
 
 # Autodoc extension settings
