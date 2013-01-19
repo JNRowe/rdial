@@ -3,6 +3,16 @@ User-visible changes
 
 .. contents::
 
+0.8.0 - 2013-01-19
+------------------
+
+* blessings_ is now required
+* ``--from-dir`` option has been added to ``report`` and ``ledger`` subcommands
+* ``gettext`` support, submit your translations!
+* Python 3.3 compatible
+
+.. _blessings: http://pypi.python.org/pypi/blessings/
+
 0.7.0 - 2012-10-17
 ------------------
 
