@@ -41,7 +41,7 @@ class TaskAction(argparse.Action):
     """Define task name, handling --from-dir option."""
 
     def __call__(self, parser, namespace, values, option_string=None):
-        if namespace.from_dir:
+        if namespace.task is True:
             namespace.task = os.path.basename(os.path.abspath(os.curdir))
         else:
             namespace.task = values
@@ -65,7 +65,7 @@ def task_name_typecheck(string):
 # pylint: disable-msg=C0103
 task_parser = argparse.ArgumentParser(add_help=False)
 names_group = task_parser.add_mutually_exclusive_group()
-names_group.add_argument('-x', '--from-dir', action='store_true',
+names_group.add_argument('-x', '--from-dir', action='store_true', dest='task',
                          help=_('use directory name as task'))
 names_group.add_argument('task', default='default', nargs='?',
                          action=TaskAction, help=_('task name'),
@@ -125,7 +125,7 @@ def start_time_typecheck(string):
 @APP.cmd_arg('-n', '--new', action='store_true', help=_('start a new task'))
 @APP.cmd_arg('-t', '--time', metavar='time', default='',
              help=_('set start time'), type=start_time_typecheck)
-def start(directory, task, new, time, from_dir):
+def start(directory, task, new, time):
     """Start task."""
     with Events.context(directory) as events:
         events.start(task, new, time)
@@ -163,7 +163,7 @@ output_group.add_argument('--human', action='store_true',
              help=_('field to sort by'))
 @APP.cmd_arg('-r', '--reverse', action='store_true',
              help=_('reverse sort order'))
-def report(directory, task, duration, sort, reverse, html, human, from_dir):
+def report(directory, task, duration, sort, reverse, html, human):
     """Report time tracking data."""
     if task == 'default':
         # Lazy way to remove duplicate argument definitions
@@ -222,7 +222,7 @@ def last(directory):
          parents=[duration_parser, task_parser])
 @APP.cmd_arg('-r', '--rate', metavar='rate',
              help=_('hourly rate for task output'))
-def ledger(directory, task, duration, rate, from_dir):
+def ledger(directory, task, duration, rate):
     """Generate ledger compatible data file."""
     events = filter_events(directory, task, duration)
     if events.running():
