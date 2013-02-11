@@ -19,7 +19,7 @@ ideas are quite well thought out, and the interface is very simple to use.  I'm
 sure it's great for people with strictly structured working days, but that
 definitely isn't me.
 
-As a side note, when we we're playing with it at the office a number of
+As a side note, when we were playing with it at the office a number of
 co-workers stumbled across various bugs that dogged its usage.  Unfortunately,
 the project is developed with bzr and launchpad, so it was simply abandoned in
 favour of trying to fix it.  Most moved on to ``org-mode``, and some to
