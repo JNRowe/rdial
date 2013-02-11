@@ -36,6 +36,7 @@ APP = aaargh.App(description=__doc__.splitlines()[0].split("-", 1)[1],
                  epilog=_("Please report bugs to jnrowe@gmail.com"))
 
 
+# pylint: disable-msg=R0903
 class TaskAction(argparse.Action):
 
     """Define task name, handling --from-dir option."""
@@ -45,6 +46,7 @@ class TaskAction(argparse.Action):
             namespace.task = os.path.basename(os.path.abspath(os.curdir))
         else:
             namespace.task = values
+# pylint: enable-msg=R0903
 
 
 def task_name_typecheck(string):
@@ -169,7 +171,7 @@ output_group.add_argument('--html', action='store_true',
                           help=_('produce HTML output'))
 output_group.add_argument('--human', action='store_true',
                           help=_('produce human-readable output'))
-# pylint: ensable-msg=C0103
+# pylint: enable-msg=C0103
 
 
 @APP.cmd(help=_("report time tracking data"),
@@ -196,7 +198,7 @@ def report(directory, task, duration, sort, reverse, html, human):
     events = filter_events(directory, task, duration)
     if human:
         print(N_('%d event in query', '%d events in query', len(events))
-                 % len(events))
+              % len(events))
         print(_('Duration of events %s') % events.sum())
         print(_('First entry started at %s') % events[0].start)
         print(_('Last entry started at %s') % events[-1].start)
@@ -230,8 +232,8 @@ def running(directory):
     if events.running():
         current = events.last()
         print(_('Task %s has been running for %s')
-            % (current.task,
-               str(utils.utcnow() - current.start).split('.')[0]))
+              % (current.task,
+                 str(utils.utcnow() - current.start).split('.')[0]))
     else:
         print(utils.warn(_('No task is running!')))
 
