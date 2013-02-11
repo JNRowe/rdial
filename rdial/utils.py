@@ -35,18 +35,18 @@ def _colourise(text, colour):
 
     :param str text: Text to colourise
     :param str colour: Colour to display text in
-    :rtype: ``str``
-    :return: Colourised text, if possible
+    :rtype: :obj:`str`
+    :return str: Colourised text, if possible
 
     """
     return getattr(T, colour.replace(' ', '_'))(text)
 
 
 def success(text):
-    """Output a success message.
+    """Pretty print a success message.
 
-    :param str text:  Text to format
-    :rtype: ``str`
+    :param str text: Text to format
+    :rtype: :obj:`str`
     :return: Bright green text, if possible
 
     """
@@ -54,10 +54,10 @@ def success(text):
 
 
 def fail(text):
-    """Output a failure message.
+    """Pretty print a failure message.
 
-    :param str text:  Text to format
-    :rtype: ``str`
+    :param str text: Text to format
+    :rtype: :obj:`str`
     :return: Bright red text, if possible
 
     """
@@ -65,10 +65,10 @@ def fail(text):
 
 
 def warn(text):
-    """Output a warning message.
+    """Pretty print a warning message.
 
-    :param str text:  Text to format
-    :rtype: ``str`
+    :param str text: Text to format
+    :rtype: ``str``
     :return: Bright yellow text, if possible
 
     """
@@ -82,7 +82,7 @@ class RdialError(ValueError):
     if sys.version_info[0] == 3:
         @property
         def message(self):
-            """Compatibility hack for Python 3"""
+            """Compatibility hack for Python 3."""
             return self.args[0]
 
 
@@ -90,7 +90,7 @@ def parse_delta(string):
     """Parse ISO-8601 duration string.
 
     :param str string: Duration string to parse
-    :rtype: `datetime.timedelta`
+    :rtype: :obj:`datetime.timedelta`
     :return: Parsed delta object
 
     """
@@ -103,7 +103,7 @@ def format_delta(timedelta_):
     """Format ISO-8601 duration string.
 
     :param datetime.timedelta timedelta_: Duration to process
-    :rtype: `str`
+    :rtype: :obj:`str`
     :return: ISO-8601 representation of duration
 
     """
@@ -116,7 +116,7 @@ def parse_datetime(string):
     """Parse ISO-8601 datetime string.
 
     :param str string: Datetime string to parse
-    :rtype: `datetime.datetime`
+    :rtype: :obj:`datetime.datetime`
     :return: Parsed datetime object
 
     """
@@ -134,7 +134,7 @@ def parse_datetime(string):
 def utcnow():
     """Wrapper for producing timezone aware current timestamp.
 
-    :rtype: `datetime.datetime`
+    :rtype: obj:`datetime.datetime`
     :return: Current date and time, in UTC
 
     """
@@ -144,7 +144,7 @@ def utcnow():
 def xdg_data_location():
     """Return a data location honouring $XDG_DATA_HOME.
 
-    :rtype: `str`
+    :rtype: :obj:`str`
 
     """
     user_dir = os.getenv('XDG_DATA_HOME', os.path.join(os.getenv('HOME', '/'),

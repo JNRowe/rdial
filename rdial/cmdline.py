@@ -51,7 +51,7 @@ def task_name_typecheck(string):
     """Check given task name is valid.
 
     :param str string: Task name to check
-    :rtype: str
+    :rtype: :obj:`str`
     :returns: Task name, if valid
     :raises argparse.ArgparseTypeError: If task name is invalid
 
@@ -81,9 +81,11 @@ duration_parser.add_argument('-d', '--duration', default='all',
 def filter_events(directory, task=None, duration=None):
     """Filter events for report processing.
 
-    :param argparse.Namespace args: Command line arguments
-    :rtype: `Events`
-    :return: Events matching criteria specified in ``args``
+    :param str directory: Directory to read events from
+    :param str task: Task name to filter on
+    :param str duration: Time window to filter on
+    :rtype: :obj:`rdial.events.Events`
+    :return: Events matching specified criteria
 
     """
     events = Events.read(directory)
@@ -108,7 +110,7 @@ def start_time_typecheck(string):
     """Check given start time is valid.
 
     :param str string: Timestamps to check
-    :rtype: str
+    :rtype: :obj:`str`
     :returns: Timestamp, if valid
     :raises argparse.ArgparseTypeError: If timestamp is invalid
 
@@ -126,7 +128,14 @@ def start_time_typecheck(string):
 @APP.cmd_arg('-t', '--time', metavar='time', default='',
              help=_('set start time'), type=start_time_typecheck)
 def start(directory, task, new, time):
-    """Start task."""
+    """Start task.
+
+    :param str directory: Directory to read events from
+    :param str task: Task name to operate on
+    :param bool new: Create a new task
+    :param datetime.datetime time: Task start time
+
+    """
     with Events.context(directory) as events:
         events.start(task, new, time)
 
@@ -136,7 +145,13 @@ def start(directory, task, new, time):
 @APP.cmd_arg('--amend', action='store_true',
              help=_('amend previous stop entry'))
 def stop(directory, message, amend):
-    """Stop task."""
+    """Stop task.
+
+    :param str directory: Directory to read events from
+    :param str message: Message to assign to event
+    :param bool amend: Amend a previously stopped event
+
+    """
     with Events.context(directory) as events:
         if amend and not message:
             event = events.last()
@@ -164,7 +179,17 @@ output_group.add_argument('--human', action='store_true',
 @APP.cmd_arg('-r', '--reverse', action='store_true',
              help=_('reverse sort order'))
 def report(directory, task, duration, sort, reverse, html, human):
-    """Report time tracking data."""
+    """Report time tracking data.
+
+    :param str directory: Directory to read events from
+    :param str task: Task name to operate on
+    :param str duration: Time window to filter on
+    :param str sort: Key to sort events on
+    :param bool reverse: Reverse sort order
+    :param bool html: Produce HTML output
+    :param bool human: Produce human-readble output
+
+    """
     if task == 'default':
         # Lazy way to remove duplicate argument definitions
         task = None
@@ -196,7 +221,11 @@ def report(directory, task, duration, sort, reverse, html, human):
 
 @APP.cmd(help=_("display running task, if any"))
 def running(directory):
-    """Display running task, if any."""
+    """Display running task, if any.
+
+    :param str directory: Directory to read events from
+
+    """
     events = Events.read(directory)
     if events.running():
         current = events.last()
@@ -209,7 +238,11 @@ def running(directory):
 
 @APP.cmd(help=_("display last event, if any"))
 def last(directory):
-    """Display last event, if any."""
+    """Display last event, if any.
+
+    :param str directory: Directory to read events from
+
+    """
     events = Events.read(directory)
     event = events.last()
     if not events.running():
@@ -223,7 +256,14 @@ def last(directory):
 @APP.cmd_arg('-r', '--rate', metavar='rate',
              help=_('hourly rate for task output'))
 def ledger(directory, task, duration, rate):
-    """Generate ledger compatible data file."""
+    """Generate ledger compatible data file.
+
+    :param str directory: Directory to read events from
+    :param str task: Task name to operate on
+    :param str duration: Time window to filter on
+    :param str rate: Rate to assign hours in report
+
+    """
     events = filter_events(directory, task, duration)
     if events.running():
         print(_(';; Running event not included in output!'))

@@ -76,8 +76,8 @@ class Event(object):
     def __repr__(self):
         """Self-documenting string representation.
 
-        :rtype: `str`
-        :return: Event representation suitable for ``eval()``
+        :rtype: :obj:`str`
+        :return: Event representation suitable for :func:`eval`
 
         """
         return 'Event(%r, %r, %r, %r)' \
@@ -87,7 +87,7 @@ class Event(object):
     def writer(self):
         """Prepare object for export.
 
-        :rtype: `dict`
+        :rtype: :obj:`dict`
         :return: Event data for object storage
 
         """
@@ -100,7 +100,7 @@ class Event(object):
     def running(self):
         """Check if event is running.
 
-        :rtype: `str`
+        :rtype: :obj:`str`
         :return: Event name, if running
 
         """
@@ -139,8 +139,8 @@ class Events(list):
     def __repr__(self):
         """Self-documenting string representation.
 
-        :rtype: `str`
-        :return: Events representation suitable for ``eval()``
+        :rtype: :obj:`str`
+        :return: Events representation suitable for :func:`eval`
 
         """
         return 'Events(%s)' % super(self.__class__, self).__repr__()
@@ -149,10 +149,11 @@ class Events(list):
     def read(directory):
         """Read and parse database.
 
-        Assume a new ``Events`` object should be created if the file is missing
+        Assume a new :obj:`Events` object should be created if the file is
+        missing
 
         :param str directory: Location to read database files from
-        :rtype: `Events`
+        :rtype: :obj:`Events`
         :returns: Parsed events database
 
         """
@@ -194,7 +195,7 @@ class Events(list):
     def tasks(self):
         """Generate a list of tasks in the database.
 
-        :rtype: `list` of `str`
+        :rtype: :obj:`list` of :obj:`str`
         :return: Names of tasks in database
 
         """
@@ -260,7 +261,7 @@ class Events(list):
         """Apply filter to events.
 
         :param func filt: Function to filter with
-        :rtype: `Events`
+        :rtype: :obj:`Events`
         :return: Events matching given filter function
 
         """
@@ -270,19 +271,19 @@ class Events(list):
         """Filter events for a specific task.
 
         :param str task: Task name to filter on
-        :rtype: `Events`
+        :rtype: :obj:`Events`
         :return: Events marked with given task name
 
         """
         return self.filter(lambda x: x.task == task)
 
     def for_date(self, year, month=None, day=None):
-        """Filter events for a specific day.
+        """Filter events for a specific date.
 
         :param int year: Year to filter on
-        :param int month: Month to filter on, or ``None``
-        :param int day: Day to filter on, or ``None``
-        :rtype: `Events`
+        :param int month: Month to filter on, or :obj:`None`
+        :param int day: Day to filter on, or :obj:`None`
+        :rtype: :obj:`Events`
         :return: Events occurring within specified date
 
         """
@@ -301,7 +302,7 @@ class Events(list):
 
         :param int year: Year to filter events on
         :param int week: ISO-2015 month number to filter events on
-        :rtype: `Events`
+        :rtype: :obj:`Events`
         :return: Events occurring in given ISO-2015 week
 
         """
@@ -314,7 +315,7 @@ class Events(list):
     def sum(self):
         """Sum duration of all events.
 
-        :rtype: `datetime.timedelta`
+        :rtype: :obj:`datetime.timedelta`
         :return: Sum of all event deltas
 
         """
