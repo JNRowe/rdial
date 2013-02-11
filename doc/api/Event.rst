@@ -14,3 +14,31 @@
 
 Examples
 --------
+
+.. testsetup::
+
+
+    from rdial.events import (Event, Events)
+
+.. doctest::
+
+    >>> event = Event('test')
+    >>> event.running()
+    'test'
+    >>> event.stop('complete')
+    >>> event.running()
+    False
+    >>> data = event.writer()
+    >>> data['message']
+    'complete'
+    >>> event2 = Event('test', start="2013-01-01T12:00:00Z")
+
+    >>> events = Events([event, event2])
+    >>> events.filter(lambda x: x.message == 'complete')
+    Events([Event('test', '...', '...', 'complete')])
+    >>> events.for_date(2013, 1)
+    Events([Event('test', '2013-01-01T12:00:00Z', '', '')])
+    >>> events.for_week(2012, 53)
+    Events([Event('test', '2013-01-01T12:00:00Z', '', '')])
+    >>> events.running()
+    'test'

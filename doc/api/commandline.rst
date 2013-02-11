@@ -22,6 +22,3 @@ object, which is normally created in :func:`main`.
 .. autofunction:: main
 
 .. autofunction:: filter_events
-
-Examples
---------

@@ -14,3 +14,21 @@ Errors
 
 Examples
 --------
+
+.. testsetup::
+
+    from rdial.events import (Events, TaskNotRunningError, TaskRunningError)
+    events_running = Events()
+    events_running.start('test', new=True)
+    events_stopped = Events()
+
+.. doctest::
+
+    >>> events_stopped.stop()
+    Traceback (most recent call last):
+      ...
+    TaskNotRunningError: No task running!
+    >>> events_running.start('rdial')
+    Traceback (most recent call last):
+      ...
+    TaskRunningError: Running task test!
