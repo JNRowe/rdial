@@ -17,5 +17,13 @@ Utilities
 
 .. autofunction:: xdg_data_location
 
+Text formatting
+'''''''''''''''
+
+.. autofunction:: _colourise
+.. autofunction:: success
+.. autofunction:: fail
+.. autofunction:: warn
+
 Examples
 --------
