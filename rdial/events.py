@@ -134,7 +134,7 @@ class Events(list):
 
         """
         super(Events, self).__init__(iterable if iterable else [])
-        self._dirty = set()
+        self._dirty = []
 
     def __repr__(self):
         """Self-documenting string representation.
@@ -144,6 +144,26 @@ class Events(list):
 
         """
         return 'Events(%s)' % super(self.__class__, self).__repr__()
+
+    @property
+    def dirty(self):
+        """Tasks requiring sync against storage."""
+        return self._dirty
+
+    @dirty.setter
+    def dirty(self, value):
+        """Mark task as needing sync.
+
+        :param str value: Task to mark as dirty
+
+        """
+        if not value in self._dirty:
+            self._dirty.append(value)
+
+    @dirty.deleter
+    def dirty(self):
+        """Mark dirty queue as flushed."""
+        self._dirty = []
 
     @staticmethod
     def read(directory):
@@ -175,7 +195,7 @@ class Events(list):
         if not os.path.isdir(directory):
             os.mkdir(directory)
 
-        for task in self._dirty:
+        for task in self.dirty:
             events = self.for_task(task)
             if sys.version_info[0] == 3:
                 temp = tempfile.NamedTemporaryFile(mode='w', newline='',
@@ -191,6 +211,7 @@ class Events(list):
             for event in events:
                 writer.writerow(event.writer())
             os.rename(temp.name, "%s/%s.csv" % (directory, task))
+        del self.dirty
 
     def tasks(self):
         """Generate a list of tasks in the database.
@@ -242,7 +263,7 @@ class Events(list):
             raise TaskNotExistError("Task %s does not exist!  Use `--new' to "
                                     "create it" % task)
         self.append(Event(task, start))
-        self._dirty.add(task)
+        self.dirty = task
 
     def stop(self, message=None, force=False):
         """Stop running event.
@@ -255,7 +276,7 @@ class Events(list):
         if not force and not self.running():
             raise TaskNotRunningError('No task running!')
         self.last().stop(message, force)
-        self._dirty.add(self.last().task)
+        self.dirty = self.last().task
 
     def filter(self, filt):
         """Apply filter to events.
@@ -331,5 +352,5 @@ class Events(list):
         """
         events = Events.read(directory)
         yield events
-        if events._dirty:
+        if events.dirty:
             events.write(directory)
