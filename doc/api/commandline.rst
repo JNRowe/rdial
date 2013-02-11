@@ -9,9 +9,6 @@ Command line
   :mod:`rdial`, and can be skipped if you are simply using the tool from the
   command line.
 
-The ``args`` parameter in the functions below is an :class:`argparse.Namespace`
-object, which is normally created in :func:`main`.
-
 .. autofunction:: start
 .. autofunction:: stop
 .. autofunction:: report
