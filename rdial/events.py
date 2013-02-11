@@ -340,7 +340,8 @@ class Events(list):
         :return: Sum of all event deltas
 
         """
-        return sum(map(lambda x: x.delta, self), datetime.timedelta(0))
+        return sum(map(operator.attrgetter('delta'), self),
+                   datetime.timedelta(0))
 
     @staticmethod
     @contextlib.contextmanager
