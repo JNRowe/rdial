@@ -196,6 +196,7 @@ class Events(list):
             os.mkdir(directory)
 
         for task in self.dirty:
+            task_file = "%s/%s.csv" % (directory, task)
             events = self.for_task(task)
             if sys.version_info[0] == 3:
                 temp = tempfile.NamedTemporaryFile(mode='w', newline='',
@@ -210,7 +211,9 @@ class Events(list):
             writer.writerow(dict(zip(FIELDS, FIELDS)))
             for event in events:
                 writer.writerow(event.writer())
-            os.rename(temp.name, "%s/%s.csv" % (directory, task))
+            if os.path.exists(task_file):
+                os.rename(task_file, "%s~" % task_file)
+            os.rename(temp.name, task_file)
         del self.dirty
 
     def tasks(self):
