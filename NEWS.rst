@@ -3,6 +3,14 @@ User-visible changes
 
 .. contents::
 
+0.9.0 - 2013-02-18
+------------------
+
+* When using the CLI the currently executing task is stored in ``.current``,
+  so it can be used in status bars and such
+* Backup data files are now stored in ``<taskname>.csv~``
+* The API docs should hopefully be a lot clearer now thanks to many examples
+
 0.8.0 - 2013-01-19
 ------------------
 
