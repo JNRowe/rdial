@@ -140,6 +140,7 @@ def start(directory, task, new, time):
     """
     with Events.context(directory) as events:
         events.start(task, new, time)
+    open('%s/.current' % directory, 'w').write(task)
 
 
 @APP.cmd(help=_("stop task"))
@@ -162,6 +163,8 @@ def stop(directory, message, amend):
     event = events.last()
     print(_('Task %s running for %s') % (event.task,
                                          str(event.delta).split('.')[0]))
+    if os.path.isfile('%s/.current' % directory):
+        os.unlink('%s/.current' % directory)
 
 
 # pylint: disable-msg=C0103
