@@ -20,7 +20,7 @@
 import os
 import sys
 
-from subprocess import check_output
+from subprocess import (CalledProcessError, check_output)
 
 root_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 sys.path.insert(0, root_dir)
@@ -55,9 +55,12 @@ pygments_style = 'sphinx'
 html_theme_options = {
     "externalrefs": True,
 }
-html_last_updated_fmt = check_output(['git', 'log',
-                                      "--pretty=format:'%ad [%h]'",
-                                      '--date=short', '-n1'])
+try:
+    html_last_updated_fmt = check_output(['git', 'log',
+                                          "--pretty=format:'%ad [%h]'",
+                                          '--date=short', '-n1'])
+except CalledProcessError:
+    pass
 
 man_pages = [
     ('rdial.1', 'rdial', u'rdial Documentation', [u'James Rowe'], 1)
