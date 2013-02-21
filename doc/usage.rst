@@ -63,6 +63,27 @@ Commands
 
    amend previous stop entry
 
+``switch`` - Switch to another task
+'''''''''''''''''''''''''''''''''''
+
+.. program:: rdial switch
+
+::
+
+    rdial.py switch [-h] [-x] [-n] [-m <message>] [task]
+
+.. cmdoption:: -x, --from-dir
+
+   use directory name as task
+
+.. cmdoption:: -n, --new
+
+   start a new task
+
+.. cmdoption:: -m <message>, --message <message>
+
+   closing message for current task
+
 ``report`` - Report time tracking data
 ''''''''''''''''''''''''''''''''''''''
 

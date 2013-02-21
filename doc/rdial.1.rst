@@ -61,6 +61,20 @@ Stop task
 --amend
    amend previous stop entry
 
+``switch``
+''''''''''
+
+Switch to another task
+
+-x, --from-dir
+   use directory name as task
+
+-n, --new
+   start a new task
+
+-m <message>, --message <message>
+   closing message for current task
+
 ``report``
 ''''''''''
 

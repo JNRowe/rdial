@@ -35,7 +35,7 @@ __list_tasks() {
 _arguments '--help[show help message and exit]' \
     "--version[show program's version number and exit]" \
     "--directory=[directory to read/write to]:select directory:_files -W ${XDG_DATA_HOME:-~/.local}" \
-    ':rdial command:(start stop report running last ledger)' \
+    ':rdial command:(start stop switch report running last ledger)' \
     '*::subcmd:->subcmd' && return 0
 
 ### DGEN_TAG: Generated from rdial/__init__.py {{{
@@ -52,6 +52,14 @@ case "$words[1]" in
         '--message=[closing message]:message text: ' \
         '--amend[amend previous stop entry]'
     ;;
+(switch)
+    _arguments '--help[show help message and exit]' \
+        '--from-dir[use directory name as task]' \
+        '--new[start a new task]' \
+        '--message=[closing message for current task]:message text: ' \
+        ':select task:__list_tasks'
+    ;;
+(
 (report)
     _arguments '--help[show help message and exit]' \
         '--duration[filter events for specified time period]:select time period:(day week month year all)' \

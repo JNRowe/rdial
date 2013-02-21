@@ -167,6 +167,23 @@ def stop(directory, message, amend):
         os.unlink('%s/.current' % directory)
 
 
+@APP.cmd(help=_("switch to another task"), parents=[task_parser])
+@APP.cmd_arg('-n', '--new', action='store_true', help=_('start a new task'))
+@APP.cmd_arg('-m', '--message', metavar='message',
+             help=_('closing message for current task'))
+def switch(directory, task, new, message):
+    """Complete last task and start new one.
+
+    :param str directory: Directory to read events from
+    :param str task: Task name to operate on
+    :param bool new: Create a new task
+    :param str message: Message to assign to event
+
+    """
+    stop(directory, message, amend=False)
+    start(directory, task, new, time='')
+
+
 # pylint: disable-msg=C0103
 output_parser = argparse.ArgumentParser(add_help=False)
 output_group = output_parser.add_mutually_exclusive_group()
