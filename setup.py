@@ -30,7 +30,7 @@ setup(
     author="James Rowe",
     author_email="jnrowe@gmail.com",
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 5 - Production/Stable',
         'Environment :: Console',
         'Intended Audience :: Developers',
         'Intended Audience :: End Users/Desktop',
