@@ -59,7 +59,6 @@ case "$words[1]" in
         '--message=[closing message for current task]:message text: ' \
         ':select task:__list_tasks'
     ;;
-(
 (report)
     _arguments '--help[show help message and exit]' \
         '--duration[filter events for specified time period]:select time period:(day week month year all)' \
