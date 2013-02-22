@@ -291,6 +291,9 @@ def ledger(directory, task, duration, rate):
     :param str rate: Rate to assign hours in report
 
     """
+    if task == 'default':
+        # Lazy way to remove duplicate argument definitions
+        task = None
     events = filter_events(directory, task, duration)
     if events.running():
         print(_(';; Running event not included in output!'))
