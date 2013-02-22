@@ -180,8 +180,10 @@ def switch(directory, task, new, message):
     :param str message: Message to assign to event
 
     """
-    stop(directory, message, amend=False)
-    start(directory, task, new, time='')
+    with Events.context(directory) as events:
+        events.stop(message)
+        events.start(task, new)
+    open('%s/.current' % directory, 'w').write(task)
 
 
 # pylint: disable-msg=C0103
