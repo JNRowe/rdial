@@ -58,7 +58,7 @@ def task_name_typecheck(string):
     :raises argparse.ArgparseTypeError: If task name is invalid
 
     """
-    if '/' in string or '\000' in string:
+    if string.startswith('.') or '/' in string or '\000' in string:
         raise argparse.ArgumentTypeError(_('%r is not a valid task name')
                                          % string)
     return string
