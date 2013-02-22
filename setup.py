@@ -36,7 +36,7 @@ setup(
         'Intended Audience :: End Users/Desktop',
         'Intended Audience :: Other Audience',
         'Intended Audience :: System Administrators',
-        'License :: OSI Approved :: GNU General Public License (GPL)',
+        'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
         'Natural Language :: English',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
