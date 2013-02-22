@@ -181,7 +181,10 @@ def switch(directory, task, new, message):
 
     """
     with Events.context(directory) as events:
-        events.stop(message)
+        if new or task in events.tasks():
+            # This is dirty, but we kick on to Events.start() to save
+            # duplication of error handling for task names
+            events.stop(message)
         events.start(task, new)
     open('%s/.current' % directory, 'w').write(task)
 
