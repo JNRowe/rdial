@@ -24,7 +24,7 @@
 (( $+functions[__list_tasks] )) ||
 __list_tasks() {
     local tmp
-    tmp=(~/.xdg/local/rdial/*(:t:s/.csv/))
+    tmp=(~/.xdg/local/rdial/*~*~(:t:s/.csv/))
     if [ -z "${tmp}" ]; then
         _message "No rdial tasks found!"
     else
