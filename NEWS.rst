@@ -3,6 +3,13 @@ User-visible changes
 
 .. contents::
 
+0.10.0 - 2013-02-22
+-------------------
+
+* The interface is becoming stable, and 1.0.0 release is likely imminent
+* Added new ``switch`` command as shortcut for ``stop`` then ``start``
+* Tasks **must** not begin with a ``.``
+
 0.9.0 - 2013-02-18
 ------------------
 
