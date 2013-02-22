@@ -63,9 +63,9 @@ Interface
 
 ::
 
-    $ rdial.py start <task_name>
-    $ rdial.py stop
-    $ rdial.py report
+    $ rdial start <task_name>
+    $ rdial stop
+    $ rdial report
     +-------+-------------+
     | task  |     time    |
     +-------+-------------+

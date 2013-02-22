@@ -32,7 +32,7 @@ Commands
 
 ::
 
-    rdial.py start [-h] [-t time] <task>
+    rdial start [-h] [-t time] <task>
 
 .. cmdoption:: -n, --new
 
@@ -70,7 +70,7 @@ Commands
 
 ::
 
-    rdial.py switch [-h] [-x] [-n] [-m <message>] [task]
+    rdial switch [-h] [-x] [-n] [-m <message>] [task]
 
 .. cmdoption:: -x, --from-dir
 
