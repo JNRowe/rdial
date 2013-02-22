@@ -66,12 +66,12 @@ Interface
     $ rdial start <task_name>
     $ rdial stop
     $ rdial report
-    +-------+-------------+
-    | task  |     time    |
-    +-------+-------------+
-    | task  | PT01H00M00S |
-    | task2 | PT00H15M00S |
-    +-------+-------------+
+    +-------+----------------+
+    | task  | time           |
+    +-------+----------------+
+    | task  |        1:00:00 |
+    | task2 | 1 day, 0:15:00 |
+    +-------+----------------+
 
 Contributors
 ------------
