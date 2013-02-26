@@ -59,18 +59,26 @@ class Event(object):
 
     """Base object for handling database event."""
 
-    def __init__(self, task, start="", delta="", message=""):
+    def __init__(self, task, start=None, delta=None, message=""):
         """Initialise a new ``Event`` object.
 
         :param str task: Task name to tracking
-        :param str start: ISO-8601 start time for event
-        :param str delta: ISO-8601 duration for event
+        :param datetime.datetime start: Start time for event
+        :param datetime.timedelta delta: Duration for event
         :param str message: Message to attach to event
 
         """
         self.task = task
-        self.start = utils.parse_datetime(start)
-        self.delta = utils.parse_delta(delta)
+        if isinstance(start, datetime.datetime):
+            if not start.tzinfo:
+                raise ValueError('Must not be a naive datetime %r' % start)
+            self.start = start
+        else:
+            self.start = utils.parse_datetime(start)
+        if isinstance(delta, datetime.timedelta):
+            self.delta = delta
+        else:
+            self.delta = utils.parse_delta(delta)
         self.message = message
 
     def __repr__(self):

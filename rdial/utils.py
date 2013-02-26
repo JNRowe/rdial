@@ -120,7 +120,7 @@ def parse_datetime(string):
     :return: Parsed datetime object
 
     """
-    if string == "":
+    if not string:
         datetime_ = utcnow()
     else:
         datetime_ = isodate.parse_datetime(string)

@@ -26,7 +26,35 @@ from expecter import expect
 import isodate
 from nose2.tools import params
 
-from rdial.events import Events
+from rdial.events import (Event, Events)
+from rdial.utils import (parse_datetime, parse_delta)
+
+
+@params(
+    ('test', None, None, None),
+    ('test', '2013-02-26T19:45:14Z', None, None),
+    ('test', datetime(2013, 2, 26, 19, 45, 14, tzinfo=isodate.UTC), None,
+     None),
+    ('test', '2013-02-26T19:45:14Z', 'PT8M19.770869S', None),
+    ('test', '2013-02-26T19:45:14Z', timedelta(minutes=8, seconds=19.770869),
+     None),
+    ('test', '2013-02-26T19:45:14Z', 'PT8M19.770869S', 'stopped'),
+)
+def test_event_creation(task, start, delta, message):
+    e = Event(task, start, delta, message)
+    expect(e.task) == task
+    if isinstance(start, datetime):
+        expect(e.start) == start
+    elif start:
+        expect(e.start) == parse_datetime(start)
+    else:
+        # Special case to ignore comparison against utcnow()
+        pass
+    if isinstance(delta, timedelta):
+        expect(e.delta) == delta
+    else:
+        expect(e.delta) == parse_delta(delta)
+    expect(e.message) == message
 
 
 def test_read_datebase():
