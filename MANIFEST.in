@@ -4,6 +4,7 @@ include *.rst
 include doc/conf.py
 include doc/wordlist.txt
 include extra/_rdial
+include extra/rdial.png
 include extra/requirements*.txt
 include nose2.cfg
 include rdial.py
