@@ -336,8 +336,11 @@ def main():
 
     APP.arg('--version', action='version',
             version="%%(prog)s %s" % _version.dotted)
-    APP.arg('-d', '--directory', default=utils.xdg_data_location(),
-            metavar='dir', help=_('directory to read/write to'))
+    APP.arg('-d', '--directory', metavar='dir',
+            help=_('directory to read/write to'))
+    APP.defaults(directory=cfg.get('rdial', 'directory',
+                                   vars={'xdg_data_location':
+                                         utils.xdg_data_location()}))
     try:
         APP.run()
     except utils.RdialError as error:
