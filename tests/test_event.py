@@ -56,8 +56,13 @@ def test_event_creation(task, start, delta, message):
     expect(e.message) == message
 
 
-def test_read_datebase():
-    expect(len(Events.read('tests/data/test'))) == 3
+@params(
+    ('test', 3),
+    ('date_filtering', 3),
+    ('test_not_running', 3),
+)
+def test_read_datebase(database, events):
+    expect(len(Events.read('tests/data/' + database))) == events
 
 
 @params(
