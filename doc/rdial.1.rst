@@ -58,6 +58,9 @@ Stop task
 -m <message>, --message=<message>
    closing message
 
+-F <file>, --file <file>
+   read closing message from file
+
 --amend
    amend previous stop entry
 
@@ -74,6 +77,9 @@ Switch to another task
 
 -m <message>, --message <message>
    closing message for current task
+
+-F <file>, --file <file>
+   read closing message for current task from file
 
 ``report``
 ''''''''''

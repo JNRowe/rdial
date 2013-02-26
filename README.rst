@@ -81,7 +81,7 @@ I'd like to thank the following people who have contributed to ``rdial``.
 Patches
 '''''''
 
-* <your name here?>
+* Nathan McGregor
 
 Bug reports
 '''''''''''

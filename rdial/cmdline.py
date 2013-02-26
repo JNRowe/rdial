@@ -145,16 +145,21 @@ def start(directory, task, new, time):
 
 @APP.cmd(help=_("stop task"))
 @APP.cmd_arg('-m', '--message', metavar='message', help=_('closing message'))
+@APP.cmd_arg('-F', '--file', metavar='file', type=argparse.FileType(),
+             help=_('read closing message from file'))
 @APP.cmd_arg('--amend', action='store_true',
              help=_('amend previous stop entry'))
-def stop(directory, message, amend):
+def stop(directory, message, file, amend):
     """Stop task.
 
     :param str directory: Directory to read events from
     :param str message: Message to assign to event
+    :param str file: Filename to read message from
     :param bool amend: Amend a previously stopped event
 
     """
+    if file:
+        message = file.read()
     with Events.context(directory) as events:
         if amend and not message:
             event = events.last()
@@ -171,15 +176,20 @@ def stop(directory, message, amend):
 @APP.cmd_arg('-n', '--new', action='store_true', help=_('start a new task'))
 @APP.cmd_arg('-m', '--message', metavar='message',
              help=_('closing message for current task'))
-def switch(directory, task, new, message):
+@APP.cmd_arg('-F', '--file', metavar='file', type=argparse.FileType(),
+             help=_('read closing message for current task from file'))
+def switch(directory, task, new, message, file):
     """Complete last task and start new one.
 
     :param str directory: Directory to read events from
     :param str task: Task name to operate on
     :param bool new: Create a new task
     :param str message: Message to assign to event
+    :param str file: Filename to read message from
 
     """
+    if file:
+        message = file.read()
     with Events.context(directory) as events:
         if new or task in events.tasks():
             # This is dirty, but we kick on to Events.start() to save
