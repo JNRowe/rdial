@@ -50,6 +50,7 @@ case "$words[1]" in
 (stop)
     _arguments '--help[show help message and exit]' \
         '--message=[closing message]:message text: ' \
+        '--file=[read closing message from file]:select file:_files' \
         '--amend[amend previous stop entry]'
     ;;
 (switch)
@@ -57,6 +58,7 @@ case "$words[1]" in
         '--from-dir[use directory name as task]' \
         '--new[start a new task]' \
         '--message=[closing message for current task]:message text: ' \
+        '--file=[read closing message for current task from file]:select file:_files' \
         ':select task:__list_tasks'
     ;;
 (
