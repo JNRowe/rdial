@@ -59,6 +59,10 @@ Commands
 
    closing message
 
+.. cmdoption:: -F <file>, --file <file>
+
+   read closing message from file
+
 .. cmdoption:: --amend
 
    amend previous stop entry
@@ -83,6 +87,10 @@ Commands
 .. cmdoption:: -m <message>, --message <message>
 
    closing message for current task
+
+.. cmdoption:: -F <file>, --file <file>
+
+   read closing message for current task from file
 
 ``report`` - Report time tracking data
 ''''''''''''''''''''''''''''''''''''''

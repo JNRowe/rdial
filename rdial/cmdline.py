@@ -154,6 +154,7 @@ def stop(directory, message, file, amend):
 
     :param str directory: Directory to read events from
     :param str message: Message to assign to event
+    :param str file: Filename to read message from
     :param bool amend: Amend a previously stopped event
 
     """
@@ -184,6 +185,7 @@ def switch(directory, task, new, message, file):
     :param str task: Task name to operate on
     :param bool new: Create a new task
     :param str message: Message to assign to event
+    :param str file: Filename to read message from
 
     """
     if file:
