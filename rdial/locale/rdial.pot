@@ -47,7 +47,7 @@ msgstr ""
 msgid "start task"
 msgstr ""
 
-#: rdial/cmdline.py:134 rdial/cmdline.py:181
+#: rdial/cmdline.py:134 rdial/cmdline.py:183
 msgid "start a new task"
 msgstr ""
 
@@ -55,129 +55,133 @@ msgstr ""
 msgid "set start time"
 msgstr ""
 
-#: rdial/cmdline.py:151
+#: rdial/cmdline.py:152
 msgid "stop task"
 msgstr ""
 
-#: rdial/cmdline.py:152
+#: rdial/cmdline.py:153
 msgid "closing message"
 msgstr ""
 
-#: rdial/cmdline.py:154
+#: rdial/cmdline.py:155
 msgid "read closing message from file"
 msgstr ""
 
-#: rdial/cmdline.py:156
+#: rdial/cmdline.py:157
 msgid "amend previous stop entry"
 msgstr ""
 
-#: rdial/cmdline.py:174
+#: rdial/cmdline.py:176
 #, python-format
 msgid "Task %s running for %s"
 msgstr ""
 
-#: rdial/cmdline.py:180
+#: rdial/cmdline.py:182
 msgid "switch to another task"
 msgstr ""
 
-#: rdial/cmdline.py:183
+#: rdial/cmdline.py:185
 msgid "closing message for current task"
 msgstr ""
 
-#: rdial/cmdline.py:185
+#: rdial/cmdline.py:187
 msgid "read closing message for current task from file"
 msgstr ""
 
-#: rdial/cmdline.py:211
+#: rdial/cmdline.py:214
 msgid "produce HTML output"
 msgstr ""
 
-#: rdial/cmdline.py:213
+#: rdial/cmdline.py:216
 msgid "produce human-readable output"
 msgstr ""
 
-#: rdial/cmdline.py:217
+#: rdial/cmdline.py:220
 msgid "report time tracking data"
 msgstr ""
 
-#: rdial/cmdline.py:220
+#: rdial/cmdline.py:223
 msgid "field to sort by"
 msgstr ""
 
-#: rdial/cmdline.py:222
+#: rdial/cmdline.py:225
 msgid "reverse sort order"
-msgstr ""
-
-#: rdial/cmdline.py:240
-#, python-format
-msgid "%d event in query"
-msgstr ""
-
-#: rdial/cmdline.py:242
-#, python-format
-msgid "Duration of events %s"
-msgstr ""
-
-#: rdial/cmdline.py:243
-#, python-format
-msgid "First entry started at %s"
 msgstr ""
 
 #: rdial/cmdline.py:244
 #, python-format
-msgid "Last entry started at %s"
+msgid "%d event in query"
 msgstr ""
 
 #: rdial/cmdline.py:246
 #, python-format
+msgid "Duration of events %s"
+msgstr ""
+
+#: rdial/cmdline.py:247
+#, python-format
+msgid "First entry started at %s"
+msgstr ""
+
+#: rdial/cmdline.py:248
+#, python-format
+msgid "Last entry started at %s"
+msgstr ""
+
+#: rdial/cmdline.py:250
+#, python-format
 msgid "Events exist on %d dates"
 msgstr ""
 
-#: rdial/cmdline.py:260
+#: rdial/cmdline.py:264
 #, python-format
 msgid "Running `%s' since %s"
 msgstr ""
 
-#: rdial/cmdline.py:264
+#: rdial/cmdline.py:268
 msgid "display running task, if any"
 msgstr ""
 
-#: rdial/cmdline.py:274
+#: rdial/cmdline.py:279
 #, python-format
 msgid "Task %s has been running for %s"
 msgstr ""
 
-#: rdial/cmdline.py:278
+#: rdial/cmdline.py:283
 msgid "No task is running!"
 msgstr ""
 
-#: rdial/cmdline.py:281
+#: rdial/cmdline.py:286
 msgid "display last event, if any"
 msgstr ""
 
-#: rdial/cmdline.py:291
+#: rdial/cmdline.py:297
 #, python-format
 msgid "Last task %s, ran for %s"
 msgstr ""
 
-#: rdial/cmdline.py:293
+#: rdial/cmdline.py:299
 #, python-format
 msgid "Task %s is still running"
 msgstr ""
 
-#: rdial/cmdline.py:296
+#: rdial/cmdline.py:302
 msgid "generate ledger compatible data file"
 msgstr ""
 
-#: rdial/cmdline.py:299
+#: rdial/cmdline.py:305
 msgid "hourly rate for task output"
 msgstr ""
 
-#: rdial/cmdline.py:314 rdial/cmdline.py:327
+#: rdial/cmdline.py:321 rdial/cmdline.py:334
 msgid ";; Running event not included in output!"
 msgstr ""
 
-#: rdial/cmdline.py:342
+#: rdial/cmdline.py:349
 msgid "directory to read/write to"
+msgstr ""
+
+#: rdial/cmdline.py:352
+msgid "do not write data file backups"
 msgstr ""
 

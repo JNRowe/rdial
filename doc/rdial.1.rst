@@ -33,6 +33,9 @@ OPTIONS
 -d <directory>, --directory=<directory>
     database location, defaults to ``${XDG_DATA_HOME:-/.local}/rdial``
 
+--no-backup
+    do not write data file backups
+
 COMMANDS
 --------
 
