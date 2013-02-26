@@ -23,6 +23,11 @@ import argparse
 import datetime
 import os
 
+try:
+    import configparser
+except ImportError:  # Python 3
+    import ConfigParser as configparser  # NOQA
+
 import aaargh
 import isodate
 import prettytable
@@ -324,6 +329,11 @@ def ledger(directory, task, duration, rate):
 
 def main():
     """Main script."""
+    base_config = os.path.dirname(__file__) + '/defaults.cfg'
+    user_config = utils.xdg_config_location() + '/config'
+    cfg = configparser.SafeConfigParser()
+    cfg.read([base_config, user_config])
+
     APP.arg('--version', action='version',
             version="%%(prog)s %s" % _version.dotted)
     APP.arg('-d', '--directory', default=utils.xdg_data_location(),
