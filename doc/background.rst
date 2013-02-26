@@ -21,8 +21,8 @@ Philosophy
 
 There are few interface choices in :program:`rdial` that may be need a little
 explanation.  They may well be enough to deter you from using :program:`rdial`
-at all, but that is fine there are :doc:`plenty more options <alternatives>` out
-there!
+at all, but that is fine as there are :doc:`plenty more options <alternatives>`
+out there!
 
 Explicit new tasks
 ''''''''''''''''''

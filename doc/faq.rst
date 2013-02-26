@@ -16,7 +16,8 @@ me -- problem.
 The :command:`rdial switch` command is of related design.  You can not use it
 when no task is running, and attempting to do so is probably a sign you've lost
 track of your state.  I consider this to be a massive problem, and would rather
-not sidestep it by allowing :command:`rdial start` to stop running tasks.
+not sidestep it by allowing :command:`rdial start` to stop running tasks or
+:command:`rdial switch` to work without a running task.
 
 Where does the name :program:`rdial` come from?
 '''''''''''''''''''''''''''''''''''''''''''''''

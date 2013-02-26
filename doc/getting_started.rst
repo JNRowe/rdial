@@ -23,7 +23,7 @@ Current task
 
 The current task name is written to the database directory in the
 :file:`.current` file.  You can use its contents to populate notifiers in task
-bars for examples.
+bars.
 
 .. image:: images/dwm-taskbar.png
    :alt: Current task display example
