@@ -141,6 +141,17 @@ def utcnow():
     return datetime.datetime.utcnow().replace(tzinfo=isodate.UTC)
 
 
+def xdg_config_location():
+    """Return a config location honouring $XDG_CONFIG_HOME.
+
+    :rtype: :obj:`str`
+
+    """
+    user_dir = os.getenv('XDG_CONFIG_HOME',
+                         os.path.join(os.getenv('HOME', '/'), '.config'))
+    return os.path.join(user_dir, 'rdial')
+
+
 def xdg_data_location():
     """Return a data location honouring $XDG_DATA_HOME.
 

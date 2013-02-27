@@ -23,6 +23,11 @@ import argparse
 import datetime
 import os
 
+try:
+    import configparser
+except ImportError:  # Python 3
+    import ConfigParser as configparser  # NOQA
+
 import aaargh
 import isodate
 import prettytable
@@ -129,16 +134,17 @@ def start_time_typecheck(string):
 @APP.cmd_arg('-n', '--new', action='store_true', help=_('start a new task'))
 @APP.cmd_arg('-t', '--time', metavar='time', default='',
              help=_('set start time'), type=start_time_typecheck)
-def start(directory, task, new, time):
+def start(directory, backup, task, new, time):
     """Start task.
 
     :param str directory: Directory to read events from
+    :param bool backup: Whether to create backup files
     :param str task: Task name to operate on
     :param bool new: Create a new task
     :param datetime.datetime time: Task start time
 
     """
-    with Events.context(directory) as events:
+    with Events.context(directory, backup) as events:
         events.start(task, new, time)
     open('%s/.current' % directory, 'w').write(task)
 
@@ -149,10 +155,11 @@ def start(directory, task, new, time):
              help=_('read closing message from file'))
 @APP.cmd_arg('--amend', action='store_true',
              help=_('amend previous stop entry'))
-def stop(directory, message, file, amend):
+def stop(directory, backup, message, file, amend):
     """Stop task.
 
     :param str directory: Directory to read events from
+    :param bool backup: Whether to create backup files
     :param str message: Message to assign to event
     :param str file: Filename to read message from
     :param bool amend: Amend a previously stopped event
@@ -160,7 +167,7 @@ def stop(directory, message, file, amend):
     """
     if file:
         message = file.read()
-    with Events.context(directory) as events:
+    with Events.context(directory, backup) as events:
         if amend and not message:
             event = events.last()
             message = event.message
@@ -178,10 +185,11 @@ def stop(directory, message, file, amend):
              help=_('closing message for current task'))
 @APP.cmd_arg('-F', '--file', metavar='file', type=argparse.FileType(),
              help=_('read closing message for current task from file'))
-def switch(directory, task, new, message, file):
+def switch(directory, backup, task, new, message, file):
     """Complete last task and start new one.
 
     :param str directory: Directory to read events from
+    :param bool backup: Whether to create backup files
     :param str task: Task name to operate on
     :param bool new: Create a new task
     :param str message: Message to assign to event
@@ -190,7 +198,7 @@ def switch(directory, task, new, message, file):
     """
     if file:
         message = file.read()
-    with Events.context(directory) as events:
+    with Events.context(directory, backup) as events:
         if new or task in events.tasks():
             # This is dirty, but we kick on to Events.start() to save
             # duplication of error handling for task names
@@ -215,10 +223,11 @@ output_group.add_argument('--human', action='store_true',
              help=_('field to sort by'))
 @APP.cmd_arg('-r', '--reverse', action='store_true',
              help=_('reverse sort order'))
-def report(directory, task, duration, sort, reverse, html, human):
+def report(directory, backup, task, duration, sort, reverse, html, human):
     """Report time tracking data.
 
     :param str directory: Directory to read events from
+    :param bool backup: Whether to create backup files
     :param str task: Task name to operate on
     :param str duration: Time window to filter on
     :param str sort: Key to sort events on
@@ -257,10 +266,11 @@ def report(directory, task, duration, sort, reverse, html, human):
 
 
 @APP.cmd(help=_("display running task, if any"))
-def running(directory):
+def running(directory, backup):
     """Display running task, if any.
 
     :param str directory: Directory to read events from
+    :param bool backup: Whether to create backup files
 
     """
     events = Events.read(directory)
@@ -274,10 +284,11 @@ def running(directory):
 
 
 @APP.cmd(help=_("display last event, if any"))
-def last(directory):
+def last(directory, backup):
     """Display last event, if any.
 
     :param str directory: Directory to read events from
+    :param bool backup: Whether to create backup files
 
     """
     events = Events.read(directory)
@@ -292,10 +303,11 @@ def last(directory):
          parents=[duration_parser, task_parser])
 @APP.cmd_arg('-r', '--rate', metavar='rate',
              help=_('hourly rate for task output'))
-def ledger(directory, task, duration, rate):
+def ledger(directory, backup, task, duration, rate):
     """Generate ledger compatible data file.
 
     :param str directory: Directory to read events from
+    :param bool backup: Whether to create backup files
     :param str task: Task name to operate on
     :param str duration: Time window to filter on
     :param str rate: Rate to assign hours in report
@@ -324,10 +336,39 @@ def ledger(directory, task, duration, rate):
 
 def main():
     """Main script."""
+    configs = [os.path.dirname(__file__) + '/config', ]
+    for s in os.getenv('XDG_CONFIG_DIRS', '/etc/xdg').split(':'):
+        p = s + '/rdial/config'
+        if os.path.isfile(p):
+            configs.append(p)
+    configs.append(utils.xdg_config_location() + '/config')
+    configs.append(os.path.abspath('.rdialrc'))
+    cfg = configparser.SafeConfigParser()
+    cfg.read(configs)
+
+    if not cfg.getboolean('rdial', 'colour'):
+        utils._colourise = lambda s, colour: s
+
+    for name, parser in APP._subparsers.choices.items():
+        if cfg.has_section(name):
+            d = {}
+            for k in cfg.options(name):
+                try:
+                    d[k] = cfg.getboolean(name, k)
+                except ValueError:
+                    d[k] = cfg.get(name, k)
+            parser.set_defaults(**d)
+
     APP.arg('--version', action='version',
             version="%%(prog)s %s" % _version.dotted)
-    APP.arg('-d', '--directory', default=utils.xdg_data_location(),
-            metavar='dir', help=_('directory to read/write to'))
+    APP.arg('-d', '--directory', metavar='dir',
+            help=_('directory to read/write to'))
+    APP.arg('--no-backup', dest='backup', action='store_true',
+            help=_('do not write data file backups'))
+    APP.defaults(backup=not cfg.getboolean('rdial', 'backup'),
+                 directory=cfg.get('rdial', 'directory',
+                                   vars={'xdg_data_location':
+                                         utils.xdg_data_location()}))
     try:
         APP.run()
     except utils.RdialError as error:
