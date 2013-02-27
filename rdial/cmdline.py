@@ -336,11 +336,15 @@ def ledger(directory, backup, task, duration, rate):
 
 def main():
     """Main script."""
-    base_config = os.path.dirname(__file__) + '/defaults.cfg'
-    user_config = utils.xdg_config_location() + '/config'
-    dir_config = os.path.abspath('.rdialrc')
+    configs = [os.path.dirname(__file__) + '/config', ]
+    for s in os.getenv('XDG_CONFIG_DIRS', '/etc/xdg').split(':'):
+        p = s + '/rdial/config'
+        if os.path.isfile(p):
+            configs.append(p)
+    configs.append(utils.xdg_config_location() + '/config')
+    configs.append(os.path.abspath('.rdialrc'))
     cfg = configparser.SafeConfigParser()
-    cfg.read([base_config, user_config, dir_config])
+    cfg.read(configs)
 
     if not cfg.getboolean('rdial', 'colour'):
         utils._colourise = lambda s, colour: s
