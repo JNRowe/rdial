@@ -341,6 +341,16 @@ def main():
     cfg = configparser.SafeConfigParser()
     cfg.read([base_config, user_config])
 
+    for name, parser in APP._subparsers.choices.items():
+        if cfg.has_section(name):
+            d = {}
+            for k in cfg.options(name):
+                try:
+                    d[k] = cfg.getboolean(name, k)
+                except ValueError:
+                    d[k] = cfg.get(name, k)
+            parser.set_defaults(**d)
+
     APP.arg('--version', action='version',
             version="%%(prog)s %s" % _version.dotted)
     APP.arg('-d', '--directory', metavar='dir',
