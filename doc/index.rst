@@ -21,6 +21,7 @@ Contents
    usage
    getting_started
    rdial manpage <rdial.1>
+   config
    faq
    alternatives
    release
