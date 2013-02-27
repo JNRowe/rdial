@@ -54,9 +54,20 @@ setup(
         'Topic :: Text Processing :: Filters',
         'Topic :: Utilities',
     ],
-    packages=['rdial', ],
+    packages=['rdial', 'rdial.cli', ],
     include_package_data=False,
-    entry_points={'console_scripts': ['rdial = rdial.cmdline:main', ]},
+    entry_points={
+        'console_scripts': ['rdial = rdial.cmdline:main', ],
+        'rdial.cli': [
+            'last = rdial.cli.last:Last',
+            'ledger = rdial.cli.ledger:Ledger',
+            'report = rdial.cli.report:Report',
+            'running = rdial.cli.running:Running',
+            'start = rdial.cli.start:Start',
+            'stop = rdial.cli.stop:Stop',
+            'switch = rdial.cli.switch:Switch',
+        ]
+    },
     zip_safe=False,
     install_requires=install_requires,
 )
