@@ -135,13 +135,15 @@ class Events(list):
 
     """Container for database events."""
 
-    def __init__(self, iterable=None):
+    def __init__(self, iterable=None, backup=True):
         """Initialise a new ``Events`` object.
 
         :param list iterable: Objects to add to container
+        :param bool backup: Whether to create backup files
 
         """
         super(Events, self).__init__(iterable if iterable else [])
+        self.backup = backup
         self._dirty = []
 
     def __repr__(self):
@@ -174,19 +176,20 @@ class Events(list):
         self._dirty = []
 
     @staticmethod
-    def read(directory):
+    def read(directory, backup=True):
         """Read and parse database.
 
         Assume a new :obj:`Events` object should be created if the file is
         missing
 
         :param str directory: Location to read database files from
+        :param bool backup: Whether to create backup files
         :rtype: :obj:`Events`
         :returns: Parsed events database
 
         """
         if not os.path.exists(directory):
-            return Events()
+            return Events(backup=backup)
         events = []
         for file in glob.glob('%s/*.csv' % directory):
             task = os.path.basename(file)[:-4]
@@ -219,7 +222,7 @@ class Events(list):
             writer.writerow(dict(zip(FIELDS, FIELDS)))
             for event in events:
                 writer.writerow(event.writer())
-            if os.path.exists(task_file):
+            if self.backup and os.path.exists(task_file):
                 os.rename(task_file, "%s~" % task_file)
             os.rename(temp.name, task_file)
         del self.dirty
@@ -356,13 +359,14 @@ class Events(list):
 
     @staticmethod
     @contextlib.contextmanager
-    def context(directory):
+    def context(directory, backup=True):
         """Convenience context handler to manage reading and writing database.
 
         :param str directory: Database location
+        :param bool backup: Whether to create backup files
 
         """
-        events = Events.read(directory)
+        events = Events.read(directory, backup)
         yield events
         if events.dirty:
             events.write(directory)

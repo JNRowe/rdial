@@ -22,6 +22,10 @@ Options
 
    database location, defaults to ``${XDG_DATA_HOME:-/.local}/rdial``
 
+.. cmdoption:: --no-backup
+
+   do not write data file backups
+
 Commands
 --------
 
