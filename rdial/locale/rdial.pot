@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: rdial 0.10.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-02-26 22:39+0000\n"
+"POT-Creation-Date: 2013-02-27 13:22+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -177,11 +177,11 @@ msgstr ""
 msgid ";; Running event not included in output!"
 msgstr ""
 
-#: rdial/cmdline.py:349
+#: rdial/cmdline.py:360
 msgid "directory to read/write to"
 msgstr ""
 
-#: rdial/cmdline.py:352
+#: rdial/cmdline.py:362
 msgid "do not write data file backups"
 msgstr ""
 
