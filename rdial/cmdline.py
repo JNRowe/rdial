@@ -346,7 +346,7 @@ def main():
     cfg = configparser.SafeConfigParser()
     cfg.read(configs)
 
-    if not cfg.getboolean('rdial', 'colour'):
+    if not cfg.getboolean('rdial', 'colour') or os.getenv('NO_COLOUR'):
         utils._colourise = lambda s, colour: s
 
     for name, parser in APP._subparsers.choices.items():
