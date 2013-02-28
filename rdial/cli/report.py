@@ -23,11 +23,9 @@ import logging
 import isodate
 import prettytable
 
-from cliff.command import Command
-
 from rdial.i18n import (N_, _)
 
-from .base import (duration_parser, filter_events, task_parser)
+from .base import (Command, duration_parser, filter_events, task_parser)
 
 
 class Report(Command):

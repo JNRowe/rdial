@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: rdial 0.10.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-02-27 19:38+0000\n"
+"POT-Creation-Date: 2013-02-28 21:01+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,20 +29,20 @@ msgstr ""
 msgid "do not write data file backups"
 msgstr ""
 
-#: rdial/cli/base.py:50
+#: rdial/cli/base.py:64
 #, python-format
 msgid "%r is not a valid task name"
 msgstr ""
 
-#: rdial/cli/base.py:59
+#: rdial/cli/base.py:73
 msgid "use directory name as task"
 msgstr ""
 
-#: rdial/cli/base.py:61
+#: rdial/cli/base.py:75
 msgid "task name"
 msgstr ""
 
-#: rdial/cli/base.py:67
+#: rdial/cli/base.py:81
 msgid "filter events for specified time period"
 msgstr ""
 
@@ -56,79 +56,79 @@ msgstr ""
 msgid "Task %s is still running"
 msgstr ""
 
-#: rdial/cli/ledger.py:44
+#: rdial/cli/ledger.py:42
 msgid "hourly rate for task output"
 msgstr ""
 
-#: rdial/cli/ledger.py:57 rdial/cli/ledger.py:71
+#: rdial/cli/ledger.py:55 rdial/cli/ledger.py:69
 msgid ";; Running event not included in output!"
 msgstr ""
 
-#: rdial/cli/report.py:48
+#: rdial/cli/report.py:46
 msgid "produce HTML output"
 msgstr ""
 
-#: rdial/cli/report.py:50
+#: rdial/cli/report.py:48
 msgid "produce human-readable output"
 msgstr ""
 
-#: rdial/cli/report.py:54
+#: rdial/cli/report.py:52
 msgid "field to sort by"
 msgstr ""
 
-#: rdial/cli/report.py:56
+#: rdial/cli/report.py:54
 msgid "reverse sort order"
 msgstr ""
 
-#: rdial/cli/report.py:68
+#: rdial/cli/report.py:66
 #, python-format
 msgid "%d event in query"
 msgstr ""
 
-#: rdial/cli/report.py:70
+#: rdial/cli/report.py:68
 #, python-format
 msgid "Duration of events %s"
 msgstr ""
 
-#: rdial/cli/report.py:71
+#: rdial/cli/report.py:69
 #, python-format
 msgid "First entry started at %s"
 msgstr ""
 
-#: rdial/cli/report.py:72
+#: rdial/cli/report.py:70
 #, python-format
 msgid "Last entry started at %s"
 msgstr ""
 
-#: rdial/cli/report.py:74
+#: rdial/cli/report.py:72
 #, python-format
 msgid "Events exist on %d dates"
 msgstr ""
 
-#: rdial/cli/report.py:89
+#: rdial/cli/report.py:87
 #, python-format
 msgid "Running `%s' since %s"
 msgstr ""
 
-#: rdial/cli/running.py:43
+#: rdial/cli/running.py:42
 #, python-format
 msgid "Task %s has been running for %s"
 msgstr ""
 
-#: rdial/cli/running.py:47
+#: rdial/cli/running.py:46
 msgid "No task is running!"
 msgstr ""
 
-#: rdial/cli/start.py:43
+#: rdial/cli/start.py:41
 #, python-format
 msgid "%r is not a valid ISO-8601 time string"
 msgstr ""
 
-#: rdial/cli/start.py:62 rdial/cli/switch.py:44
+#: rdial/cli/start.py:60 rdial/cli/switch.py:42
 msgid "start a new task"
 msgstr ""
 
-#: rdial/cli/start.py:64
+#: rdial/cli/start.py:62
 msgid "set start time"
 msgstr ""
 
@@ -149,11 +149,11 @@ msgstr ""
 msgid "Task %s running for %s"
 msgstr ""
 
-#: rdial/cli/switch.py:46
+#: rdial/cli/switch.py:44
 msgid "closing message for current task"
 msgstr ""
 
-#: rdial/cli/switch.py:48
+#: rdial/cli/switch.py:46
 msgid "read closing message for current task from file"
 msgstr ""
 

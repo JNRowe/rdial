@@ -20,11 +20,9 @@
 import argparse
 import logging
 
-from cliff.command import Command
-
 from rdial.i18n import _
 
-from .base import task_parser
+from .base import (Command, task_parser)
 
 
 class Switch(Command):

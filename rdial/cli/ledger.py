@@ -20,11 +20,9 @@
 import argparse
 import logging
 
-from cliff.command import Command
-
 from rdial.i18n import _
 
-from .base import (duration_parser, filter_events, task_parser)
+from .base import (Command, duration_parser, filter_events, task_parser)
 
 
 class Ledger(Command):

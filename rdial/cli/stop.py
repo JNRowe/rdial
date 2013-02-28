@@ -21,9 +21,9 @@ import argparse
 import logging
 import os
 
-from cliff.command import Command
-
 from rdial.i18n import _
+
+from .base import Command
 
 
 class Stop(Command):

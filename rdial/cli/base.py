@@ -21,7 +21,21 @@ import argparse
 import datetime
 import os
 
+from cliff.command import Command as CliffCommand
+
 from rdial.i18n import _
+
+
+class Command(CliffCommand):
+
+    def get_description(self):
+        """Return the command description."""
+        try:
+            doc = super(Command, self).get_description().splitlines()[0]
+            doc = doc[0].lower() + doc[1:].strip('.')
+        except ValueError:
+            doc = ''
+        return doc
 
 
 # pylint: disable-msg=R0903

@@ -19,11 +19,10 @@
 
 import logging
 
-from cliff.command import Command
-
 from rdial import utils
 from rdial.i18n import _
 
+from .base import Command
 
 class Running(Command):
     """Display running task, if any.
