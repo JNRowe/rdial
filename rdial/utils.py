@@ -86,6 +86,25 @@ class RdialError(ValueError):
             return self.args[0]
 
 
+class UTC(datetime.tzinfo):
+    """UTC timezone object"""
+    def __repr__(self):
+        return 'UTC()'
+
+    # pylint: disable-msg=W0613
+    def utcoffset(self, datetime_):
+        return datetime.timedelta(0)
+
+    def dst(self, datetime_):
+        return datetime.timedelta(0)
+
+    def tzname(self, datetime_):
+        return 'UTC'
+    # pylint: enable-msg=W0613
+
+utc = UTC()
+
+
 def parse_delta(string):
     """Parse ISO-8601 duration string.
 
@@ -125,9 +144,9 @@ def parse_datetime(string):
     else:
         datetime_ = isodate.parse_datetime(string)
         if datetime_.tzinfo:
-            datetime_ = datetime_.astimezone(isodate.UTC)
+            datetime_ = datetime_.astimezone(utc)
         else:
-            datetime_ = datetime_.replace(tzinfo=isodate.UTC)
+            datetime_ = datetime_.replace(tzinfo=utc)
     return datetime_
 
 
@@ -138,7 +157,7 @@ def utcnow():
     :return: Current date and time, in UTC
 
     """
-    return datetime.datetime.utcnow().replace(tzinfo=isodate.UTC)
+    return datetime.datetime.utcnow().replace(tzinfo=utc)
 
 
 def xdg_config_location():
