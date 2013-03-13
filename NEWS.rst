@@ -3,6 +3,16 @@ User-visible changes
 
 .. contents::
 
+0.11.0 - 2013-03-13
+-------------------
+
+* Support specifying defaults in config file, see ``doc/config.rst`` for details
+* Support reading message text from a file with ``--file`` option
+* *Massive* speed increase for users with large datastores
+* Support for disabling data backups with the ``--no-backup`` option
+* Pretty-ish icon for use in taskbars.  Better contributions welcome!
+* isodate_ is no longer required
+
 0.10.0 - 2013-02-22
 -------------------
 
