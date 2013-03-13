@@ -21,10 +21,10 @@
 
 import datetime
 import os
+import re
 import sys
 
 import blessings
-import isodate
 
 T = blessings.Terminal()
 
@@ -115,7 +115,17 @@ def parse_delta(string):
     """
     if not string:
         return datetime.timedelta(0)
-    return isodate.parse_duration(string)
+    match = re.match("""
+        P
+        ((?P<days>\d+)D)?
+        T?
+        ((?P<hours>\d{1,2})H)?
+        ((?P<minutes>\d{1,2})M)?
+        ((?P<seconds>\d{1,2})?(\.(?P<microseconds>\d+)S)?)
+    """, string, re.VERBOSE)
+    match_dict = dict((k, int(v) if v else 0)
+                      for k, v in match.groupdict().items())
+    return datetime.timedelta(**match_dict)  # pylint: disable-msg=W0142
 
 
 def format_delta(timedelta_):
@@ -128,7 +138,14 @@ def format_delta(timedelta_):
     """
     if timedelta_ == datetime.timedelta(0):
         return ""
-    return isodate.duration_isoformat(timedelta_)
+    days = "%dD" % timedelta_.days if timedelta_.days else ""
+    hours, minutes = divmod(timedelta_.seconds, 3600)
+    minutes, seconds = divmod(minutes, 60)
+    hours = "%02dH" % hours if hours else ""
+    minutes = "%02dM" % minutes if minutes else ""
+    seconds = "%02dS" % seconds if seconds else ""
+    return 'P%s%s%s%s%s' % (days, "T" if hours or minutes or seconds else "",
+                            hours, minutes, seconds)
 
 
 def parse_datetime(string):
