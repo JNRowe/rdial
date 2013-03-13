@@ -29,7 +29,6 @@ except ImportError:  # Python 3
     import ConfigParser as configparser  # NOQA
 
 import aaargh
-import isodate
 import prettytable
 
 from .events import Events
@@ -262,7 +261,7 @@ def report(directory, backup, task, duration, sort, reverse, html, human):
     if events.running() and not html:
         current = events.last()
         print(_("Running `%s' since %s")
-              % (current.task, isodate.datetime_isoformat(current.start)))
+              % (current.task, utils.format_datetime(current.start)))
 
 
 @APP.cmd(help=_("display running task, if any"))

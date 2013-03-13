@@ -29,8 +29,6 @@ import os
 import sys
 import tempfile
 
-import isodate
-
 from . import utils
 
 
@@ -89,7 +87,7 @@ class Event(object):
 
         """
         return 'Event(%r, %r, %r, %r)' \
-            % (self.task, isodate.datetime_isoformat(self.start),
+            % (self.task, utils.format_datetime(self.start),
                utils.format_delta(self.delta), self.message)
 
     def writer(self):
@@ -100,7 +98,7 @@ class Event(object):
 
         """
         return {
-            'start': isodate.datetime_isoformat(self.start),
+            'start': utils.format_datetime(self.start),
             'delta': utils.format_delta(self.delta),
             'message': self.message,
         }

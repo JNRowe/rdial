@@ -21,10 +21,10 @@
 
 import datetime
 import os
+import re
 import sys
 
 import blessings
-import isodate
 
 T = blessings.Terminal()
 
@@ -86,6 +86,25 @@ class RdialError(ValueError):
             return self.args[0]
 
 
+class UTC(datetime.tzinfo):
+    """UTC timezone object"""
+    def __repr__(self):
+        return 'UTC()'
+
+    # pylint: disable-msg=W0613
+    def utcoffset(self, datetime_):
+        return datetime.timedelta(0)
+
+    def dst(self, datetime_):
+        return datetime.timedelta(0)
+
+    def tzname(self, datetime_):
+        return 'UTC'
+    # pylint: enable-msg=W0613
+
+utc = UTC()
+
+
 def parse_delta(string):
     """Parse ISO-8601 duration string.
 
@@ -96,7 +115,17 @@ def parse_delta(string):
     """
     if not string:
         return datetime.timedelta(0)
-    return isodate.parse_duration(string)
+    match = re.match("""
+        P
+        ((?P<days>\d+)D)?
+        T?
+        ((?P<hours>\d{1,2})H)?
+        ((?P<minutes>\d{1,2})M)?
+        ((?P<seconds>\d{1,2})?(\.(?P<microseconds>\d+)S)?)
+    """, string, re.VERBOSE)
+    match_dict = dict((k, int(v) if v else 0)
+                      for k, v in match.groupdict().items())
+    return datetime.timedelta(**match_dict)  # pylint: disable-msg=W0142
 
 
 def format_delta(timedelta_):
@@ -109,7 +138,14 @@ def format_delta(timedelta_):
     """
     if timedelta_ == datetime.timedelta(0):
         return ""
-    return isodate.duration_isoformat(timedelta_)
+    days = "%dD" % timedelta_.days if timedelta_.days else ""
+    hours, minutes = divmod(timedelta_.seconds, 3600)
+    minutes, seconds = divmod(minutes, 60)
+    hours = "%02dH" % hours if hours else ""
+    minutes = "%02dM" % minutes if minutes else ""
+    seconds = "%02dS" % seconds if seconds else ""
+    return 'P%s%s%s%s%s' % (days, "T" if hours or minutes or seconds else "",
+                            hours, minutes, seconds)
 
 
 def parse_datetime(string):
@@ -123,12 +159,19 @@ def parse_datetime(string):
     if not string:
         datetime_ = utcnow()
     else:
-        datetime_ = isodate.parse_datetime(string)
-        if datetime_.tzinfo:
-            datetime_ = datetime_.astimezone(isodate.UTC)
-        else:
-            datetime_ = datetime_.replace(tzinfo=isodate.UTC)
+        datetime_ = datetime.datetime.strptime(string, '%Y-%m-%dT%H:%M:%SZ')
+        datetime_ = datetime_.replace(tzinfo=utc)
     return datetime_
+
+
+def format_datetime(datetime_):
+    """Format ISO-8601 datetime string
+
+    :param datetime.datetime datetime_: Datetime to process
+    :rtype: str
+    """
+    # Can't call isoformat method as it uses the +00:00 form
+    return datetime_.strftime('%Y-%m-%dT%H:%M:%SZ')
 
 
 def utcnow():
@@ -138,7 +181,7 @@ def utcnow():
     :return: Current date and time, in UTC
 
     """
-    return datetime.datetime.utcnow().replace(tzinfo=isodate.UTC)
+    return datetime.datetime.utcnow().replace(tzinfo=utc)
 
 
 def xdg_config_location():

@@ -34,8 +34,8 @@ def test_parse_duration(string, expected):
 
 
 @params(
-    (timedelta(hours=4, minutes=30, seconds=21), 'PT4H30M21S'),
-    (timedelta(minutes=12, seconds=1), 'PT12M1S'),
+    (timedelta(hours=4, minutes=30, seconds=21), 'PT04H30M21S'),
+    (timedelta(minutes=12, seconds=1), 'PT12M01S'),
 )
 def test_format_duration(delta, expected):
     expect(format_delta(delta)) == expected
@@ -69,7 +69,7 @@ def test_parse_durations_with_days(string, expected):
 
 
 @params(
-    (timedelta(days=3, hours=4), 'P3DT4H'),
+    (timedelta(days=3, hours=4), 'P3DT04H'),
     (timedelta(days=3), 'P3D'),
     (timedelta(days=2, hours=22), 'P2DT22H'),
 )
@@ -78,10 +78,10 @@ def test_format_durations_with_days(delta, expected):
 
 
 @params(
-    (timedelta(hours=4), 'PT4H'),
-    (timedelta(hours=4, minutes=30), 'PT4H30M'),
+    (timedelta(hours=4), 'PT04H'),
+    (timedelta(hours=4, minutes=30), 'PT04H30M'),
     (timedelta(minutes=30), 'PT30M'),
-    (timedelta(hours=4, seconds=21), 'PT4H21S'),
+    (timedelta(hours=4, seconds=21), 'PT04H21S'),
 )
 def test_format_partially_defined_durations(delta, expected):
     expect(format_delta(delta)) == expected
