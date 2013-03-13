@@ -62,4 +62,5 @@ If this key is set to ``False`` then no coloured output will be produced by
 ``directory`` (default: :file:`${XDG_DATA_HOME}/rdial`)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This key sets the location of your data files.
+This key sets the location of your data files.  Some users use this, combined
+with the per-directory config file, to keep per-project task databases.
