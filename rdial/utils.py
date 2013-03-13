@@ -142,12 +142,19 @@ def parse_datetime(string):
     if not string:
         datetime_ = utcnow()
     else:
-        datetime_ = isodate.parse_datetime(string)
-        if datetime_.tzinfo:
-            datetime_ = datetime_.astimezone(utc)
-        else:
-            datetime_ = datetime_.replace(tzinfo=utc)
+        datetime_ = datetime.datetime.strptime(string, '%Y-%m-%dT%H:%M:%SZ')
+        datetime_ = datetime_.replace(tzinfo=utc)
     return datetime_
+
+
+def format_datetime(datetime_):
+    """Format ISO-8601 datetime string
+
+    :param datetime.datetime datetime_: Datetime to process
+    :rtype: str
+    """
+    # Can't call isoformat method as it uses the +00:00 form
+    return datetime_.strftime('%Y-%m-%dT%H:%M:%SZ')
 
 
 def utcnow():

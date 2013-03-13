@@ -22,7 +22,7 @@ from datetime import datetime
 from expecter import expect
 from nose2.tools import params
 
-from rdial.utils import (isodate, parse_datetime, utc)
+from rdial.utils import (format_datetime, parse_datetime, utc)
 
 
 @params(
@@ -38,4 +38,4 @@ def test_parse_datetime(string, expected):
     (datetime(2011, 5, 4, 9, 15, tzinfo=utc), '2011-05-04T09:15:00Z'),
 )
 def test_format_datetime(dt, expected):
-    expect(isodate.datetime_isoformat(dt)) == expected
+    expect(format_datetime(dt)) == expected
