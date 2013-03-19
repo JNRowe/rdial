@@ -78,7 +78,7 @@ def test_check_events(n, task, start, delta):
 
 def test_write_database():
     events = Events.read('tests/data/test')
-    events._dirty = [e.task for e in events]
+    events._dirty = events.tasks()
     try:
         events.write('tests/data/test_write')
 
