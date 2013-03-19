@@ -202,7 +202,10 @@ def switch(directory, backup, task, new, message, file):
             # This is dirty, but we kick on to Events.start() to save
             # duplication of error handling for task names
             events.stop(message)
+        event = events.last()
         events.start(task, new)
+    print(_('Task %s running for %s') % (event.task,
+                                         str(event.delta).split('.')[0]))
     open('%s/.current' % directory, 'w').write(task)
 
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: rdial 0.11.2\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-03-13 19:26+0000\n"
+"POT-Creation-Date: 2013-03-19 19:21+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -71,7 +71,7 @@ msgstr ""
 msgid "amend previous stop entry"
 msgstr ""
 
-#: rdial/cmdline.py:175
+#: rdial/cmdline.py:175 rdial/cmdline.py:207
 #, python-format
 msgid "Task %s running for %s"
 msgstr ""
@@ -88,100 +88,100 @@ msgstr ""
 msgid "read closing message for current task from file"
 msgstr ""
 
-#: rdial/cmdline.py:213
+#: rdial/cmdline.py:216
 msgid "produce HTML output"
 msgstr ""
 
-#: rdial/cmdline.py:215
+#: rdial/cmdline.py:218
 msgid "produce human-readable output"
 msgstr ""
 
-#: rdial/cmdline.py:219
+#: rdial/cmdline.py:222
 msgid "report time tracking data"
 msgstr ""
 
-#: rdial/cmdline.py:222
+#: rdial/cmdline.py:225
 msgid "field to sort by"
 msgstr ""
 
-#: rdial/cmdline.py:224
+#: rdial/cmdline.py:227
 msgid "reverse sort order"
-msgstr ""
-
-#: rdial/cmdline.py:243
-#, python-format
-msgid "%d event in query"
-msgstr ""
-
-#: rdial/cmdline.py:245
-#, python-format
-msgid "Duration of events %s"
 msgstr ""
 
 #: rdial/cmdline.py:246
 #, python-format
-msgid "First entry started at %s"
+msgid "%d event in query"
 msgstr ""
 
-#: rdial/cmdline.py:247
+#: rdial/cmdline.py:248
 #, python-format
-msgid "Last entry started at %s"
+msgid "Duration of events %s"
 msgstr ""
 
 #: rdial/cmdline.py:249
 #, python-format
+msgid "First entry started at %s"
+msgstr ""
+
+#: rdial/cmdline.py:250
+#, python-format
+msgid "Last entry started at %s"
+msgstr ""
+
+#: rdial/cmdline.py:252
+#, python-format
 msgid "Events exist on %d dates"
 msgstr ""
 
-#: rdial/cmdline.py:263
+#: rdial/cmdline.py:266
 #, python-format
 msgid "Running `%s' since %s"
 msgstr ""
 
-#: rdial/cmdline.py:267
+#: rdial/cmdline.py:270
 msgid "display running task, if any"
 msgstr ""
 
-#: rdial/cmdline.py:278
+#: rdial/cmdline.py:281
 #, python-format
 msgid "Task %s has been running for %s"
 msgstr ""
 
-#: rdial/cmdline.py:282
+#: rdial/cmdline.py:285
 msgid "No task is running!"
 msgstr ""
 
-#: rdial/cmdline.py:285
+#: rdial/cmdline.py:288
 msgid "display last event, if any"
 msgstr ""
 
-#: rdial/cmdline.py:296
+#: rdial/cmdline.py:299
 #, python-format
 msgid "Last task %s, ran for %s"
 msgstr ""
 
-#: rdial/cmdline.py:298
+#: rdial/cmdline.py:301
 #, python-format
 msgid "Task %s is still running"
 msgstr ""
 
-#: rdial/cmdline.py:301
+#: rdial/cmdline.py:304
 msgid "generate ledger compatible data file"
 msgstr ""
 
-#: rdial/cmdline.py:304
+#: rdial/cmdline.py:307
 msgid "hourly rate for task output"
 msgstr ""
 
-#: rdial/cmdline.py:320 rdial/cmdline.py:333
+#: rdial/cmdline.py:323 rdial/cmdline.py:336
 msgid ";; Running event not included in output!"
 msgstr ""
 
-#: rdial/cmdline.py:364
+#: rdial/cmdline.py:367
 msgid "directory to read/write to"
 msgstr ""
 
-#: rdial/cmdline.py:366
+#: rdial/cmdline.py:369
 msgid "do not write data file backups"
 msgstr ""
 
