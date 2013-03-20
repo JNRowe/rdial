@@ -23,6 +23,7 @@ Contents
    rdial manpage <rdial.1>
    config
    faq
+   taskbars
    alternatives
    release
    api/index

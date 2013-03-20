@@ -30,3 +30,6 @@ bars.
 
 As the file is created when the user executes :command:`rdial start` you can
 also use its modification time to quickly calculate a running time for the task.
+
+See the :doc:`taskbars` document for some guidance on using ``rdial`` in various
+environments.
