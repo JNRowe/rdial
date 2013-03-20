@@ -6,9 +6,10 @@ User-visible changes
 0.11.0 - 2013-03-13
 -------------------
 
-* Support specifying defaults in config file, see ``doc/config.rst`` for details
+* Support specifying command defaults in config file, see ``doc/config.rst`` for
+  details [#5]
 * Support reading message text from a file with ``--file`` option
-* *Massive* speed increase for users with large datastores
+* *Massive* speed increase for users with large datastores [#8]
 * Support for disabling data backups with the ``--no-backup`` option
 * Pretty-ish icon for use in taskbars.  Better contributions welcome!
 * isodate_ is no longer required
@@ -17,7 +18,7 @@ User-visible changes
 -------------------
 
 * The interface is becoming stable, and 1.0.0 release is likely imminent
-* Added new ``switch`` command as shortcut for ``stop`` then ``start``
+* Added new ``switch`` command as shortcut for ``stop`` then ``start`` [#4]
 * Tasks **must** not begin with a ``.``
 
 0.9.0 - 2013-02-18
@@ -34,7 +35,7 @@ User-visible changes
 * blessings_ is now required
 * ``--from-dir`` option has been added to ``report`` and ``ledger`` subcommands
 * ``gettext`` support, submit your translations!
-* Python 3.3 compatible
+* Python 3.3 compatible [#3]
 
 .. _blessings: http://pypi.python.org/pypi/blessings/
 
@@ -56,7 +57,7 @@ User-visible changes
 ------------------
 
 * Python 3 is now supported, and support for 2.5 has been dropped
-* aaargh_ is now required
+* aaargh_ is now required [#1]
 * zsh_ completion script in ``extra``
 * pip_ requirements files in ``extra``
 
