@@ -86,7 +86,8 @@ snippet:
 .. note::
    The above example is compact but very naïve, and will be incorrect in the
    time between state changes and updates.  If you're implementing your own
-   widget you'll be better served by using GFileMonitor_ to track state changes.
+   status tool you'll be better served by using GFileMonitor_ to track state
+   changes.
 
 You could also implement a simple task manager using dmenu_, the following
 zsh_ snippet shows how to build a selector for an existing task:
