@@ -73,7 +73,6 @@ snippet:
         text : string
 
         while true
-            text = taskname()
             if GLib.FileUtils.test(file, GLib.FileTest.IS_REGULAR)
                 GLib.FileUtils.get_contents(file, out text)
             else
