@@ -31,7 +31,7 @@ except ImportError:  # Python 3
 import aaargh
 import prettytable
 
-from .events import Events
+from .events import (Events, TaskRunningError)
 from .i18n import (_, N_)
 from . import _version
 from . import utils
@@ -167,6 +167,10 @@ def stop(directory, backup, message, file, amend):
     if file:
         message = file.read()
     with Events.context(directory, backup) as events:
+        last = events.last()
+        if amend and last.running:
+            raise TaskRunningError(_("Can't amend running task %s!")
+                                   % last.task)
         if amend and not message:
             event = events.last()
             message = event.message
