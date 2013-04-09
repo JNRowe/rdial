@@ -30,3 +30,17 @@ forgot how it came about.
 Since then I haven't even managed to come up with a clever backronym for it.
 
 .. Perhaps, Reducing Dedication In Actual Labour?
+
+How do I process files using ``go``
+'''''''''''''''''''''''''''''''''''
+
+If you keep receiving ``ErrTrailingComma`` errors when reading files using
+golang it is because you are processing files with empty message fields.  The
+default behaviour of the ``encoding/csv`` is to raise an error when it
+encounters an empty final field.  You can tell ``go`` to accept empty final
+fields by setting the ``TrailingComma`` attribute on your CSV reader.
+
+.. sourcecode:: go
+
+    reader := csv.NewReader(file)
+    reader.TrailingComma = true

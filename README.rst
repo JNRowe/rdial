@@ -85,7 +85,7 @@ Patches
 Bug reports
 '''''''''''
 
-* <your name here?>
+* James Gaffney
 
 Ideas
 '''''
