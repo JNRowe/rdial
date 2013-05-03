@@ -23,25 +23,21 @@ from mock import patch
 from rdial.utils import (xdg_config_location, xdg_data_location)
 
 
-@patch('rdial.utils.os.getenv')
-def test_config_no_args(getenv):
-    getenv.return_value = '~/.xdg/config'
-    expect(xdg_config_location()) == '~/.xdg/config/rdial'
+def test_config_no_args():
+    with patch.dict('os.environ', {'XDG_CONFIG_HOME': '~/.xdg/config'}):
+        expect(xdg_config_location()) == '~/.xdg/config/rdial'
 
 
-@patch('rdial.utils.os.getenv')
-def test_config_no_home(getenv):
-    getenv.side_effect = lambda k, v: v
-    expect(xdg_config_location()) == '/.config/rdial'
+def test_config_no_home():
+    with patch.dict('os.environ', clear=True):
+        expect(xdg_config_location()) == '/.config/rdial'
 
 
-@patch('rdial.utils.os.getenv')
-def test_data_no_args(getenv):
-    getenv.return_value = '~/.xdg/local'
-    expect(xdg_data_location()) == '~/.xdg/local/rdial'
+def test_data_no_args():
+    with patch.dict('os.environ', {'XDG_DATA_HOME': '~/.xdg/local'}):
+        expect(xdg_data_location()) == '~/.xdg/local/rdial'
 
 
-@patch('rdial.utils.os.getenv')
-def test_data_no_home(getenv):
-    getenv.side_effect = lambda k, v: v
-    expect(xdg_data_location()) == '/.local/share/rdial'
+def test_data_no_home():
+    with patch.dict('os.environ', clear=True):
+        expect(xdg_data_location()) == '/.local/share/rdial'
