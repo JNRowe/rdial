@@ -202,7 +202,7 @@ class Events(list):
 
         """
         if not os.path.isdir(directory):
-            os.mkdir(directory)
+            os.makedirs(directory)
 
         for task in self.dirty:
             task_file = "%s/%s.csv" % (directory, task)
