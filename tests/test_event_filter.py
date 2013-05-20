@@ -32,7 +32,7 @@ def test_fetch_events_for_task():
     ({'year': 2011, }, 2),
     ({'year': 2011, 'month': 1}, 1),
     ({'year': 2011, 'month': 3, 'day': 1}, 1),
-
+    ({'year': 2011, 'month': 3, 'day': 31}, 0),
 )
 def test_fetch_events_for_date(date, expected):
     events = Events.read('tests/data/date_filtering')
