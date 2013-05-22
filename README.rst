@@ -5,10 +5,10 @@ rdial - Simple time tracking for simple people
    :target: http://travis-ci.org/JNRowe/rdial
 
 .. image:: https://pypip.in/v/rdial/badge.png
-   :target: http://pypi.python.org/pypi/rdial/
+   :target: https://crate.io/packages/rdial/
 
 .. image:: https://pypip.in/d/rdial/badge.png
-   :target: http://pypi.python.org/pypi/rdial/
+   :target: https://crate.io/packages/rdial/
 
 ``rdial`` is a simple way to track the time you spend on tasks.  It tracks the
 name of a task, its start time and its duration… nothing more.
@@ -112,10 +112,10 @@ If you've found a bug please attempt to include a minimal testcase so I can
 reproduce the problem, or even better a patch!
 
 .. _GPL v3: http://www.gnu.org/licenses/
-.. _aaargh: http://pypi.python.org/pypi/aaargh/
-.. _blessings: http://pypi.python.org/pypi/blessings/
+.. _aaargh: https://crate.io/packages/aaargh/
+.. _blessings: https://crate.io/packages/blessings/
 .. _prettytable: http://code.google.com/p/prettytable/
 .. _Python: http://www.python.org/
 .. _issue: https://github.com/JNRowe/rdial/issues
-.. _nose2: http://pypi.python.org/pypi/nose2/
+.. _nose2: https://crate.io/packages/nose2/
 .. _mail: jnrowe@gmail.com

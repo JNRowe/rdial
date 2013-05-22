@@ -45,7 +45,7 @@ data, should anyone be interested in working on it.
 I still happily recommend it to people who are simply trying to log the time
 they spend working on small projects.
 
-.. _hammertime: http://pypi.python.org/pypi/Hammertime/
+.. _hammertime: https://crate.io/packages/Hammertime/
 
 ``ktimetracker``
 ----------------

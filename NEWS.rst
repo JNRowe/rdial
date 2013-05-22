@@ -37,7 +37,7 @@ User-visible changes
 * ``gettext`` support, submit your translations!
 * Python 3.3 compatible [#3]
 
-.. _blessings: http://pypi.python.org/pypi/blessings/
+.. _blessings: https://crate.io/packages/blessings/
 
 0.7.0 - 2012-10-17
 ------------------
@@ -61,9 +61,9 @@ User-visible changes
 * zsh_ completion script in ``extra``
 * pip_ requirements files in ``extra``
 
-.. _aaargh: http://pypi.python.org/pypi/aaargh/
+.. _aaargh: https://crate.io/packages/aaargh/
 .. _zsh: http://www.zsh.org/
-.. _pip: http://pypi.python.org/pypi/pip/
+.. _pip: https://crate.io/packages/pip/
 
 0.4.0 - 2012-07-03
 ------------------
@@ -75,8 +75,8 @@ User-visible changes
 
 .. _ledger: http://ledger-cli.org/
 .. _Sphinx: http://sphinx.pocoo.org/
-.. _nose2: http://pypi.python.org/pypi/nose2/
-.. _expecter: http://pypi.python.org/pypi/expecter/
+.. _nose2: https://crate.io/packages/nose2/
+.. _expecter: https://crate.io/packages/expecter/
 
 0.3.0 - 2012-02-16
 ------------------
@@ -86,8 +86,8 @@ User-visible changes
 * ``report`` can now filter tasks by week
 * Tests now require behave_, and ``lettuce`` is no longer required
 
-.. _setuptools: http://pypi.python.org/pypi/distribute
-.. _behave: http://pypi.python.org/pypi/behave/
+.. _setuptools: https://crate.io/packages/distribute
+.. _behave: https://crate.io/packages/behave/
 
 0.2.0 - 2011-08-06
 ------------------
@@ -96,7 +96,7 @@ User-visible changes
 * isodate_ is now required for date parsing, replacing the custom parser
 * prettytable_ is now required for ``report`` output
 
-.. _isodate: http://pypi.python.org/pypi/isodate/
+.. _isodate: https://crate.io/packages/isodate/
 .. _prettytable: http://code.google.com/p/prettytable/
 
 0.1.0 - 2010-11-02
