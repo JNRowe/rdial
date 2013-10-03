@@ -28,9 +28,9 @@ sys.path.insert(0, root_dir)
 import rdial
 
 extensions = \
-    ["sphinx.ext.%s" % ext for ext in ['autodoc', 'coverage', 'doctest',
+    ['sphinx.ext.%s' % ext for ext in ['autodoc', 'coverage', 'doctest',
                                        'intersphinx', 'viewcode']] \
-    + ["sphinxcontrib.%s" % ext for ext in ['cheeseshop']]
+    + ['sphinxcontrib.%s' % ext for ext in ['cheeseshop']]
 
 # Only activate spelling, if it is installed.  It is not required in the
 # general case and we don't have the granularity to describe this in a clean
@@ -48,12 +48,12 @@ source_suffix = '.rst'
 project = u'rdial'
 copyright = rdial.__copyright__
 
-version = ".".join(map(str, rdial._version.tuple[:2]))
+version = '.'.join(map(str, rdial._version.tuple[:2]))
 release = rdial._version.dotted
 
 pygments_style = 'sphinx'
 html_theme_options = {
-    "externalrefs": True,
+    'externalrefs': True,
 }
 try:
     html_last_updated_fmt = check_output(['git', 'log',
@@ -67,7 +67,7 @@ man_pages = [
 ]
 
 # Autodoc extension settings
-autoclass_content = "init"
+autoclass_content = 'init'
 autodoc_default_flags = ['members', ]
 
 intersphinx_mapping = {

@@ -36,19 +36,19 @@ class ReprTest(unittest.TestCase):
     """repr() should return self-documenting string"""
 
     def test_event(self):
-        ev = Event("task", "2011-05-05T11:23:48Z", "PT01H00M00S")
+        ev = Event('task', '2011-05-05T11:23:48Z', 'PT01H00M00S')
         expect(repr(ev)) == eval_repr(ev)
 
     def test_event_no_delta(self):
-        ev = Event("task", "2011-05-05T11:23:48Z", "")
+        ev = Event('task', '2011-05-05T11:23:48Z', '')
         expect(repr(ev)) == eval_repr(ev)
 
     def test_event_with_message(self):
-        ev = Event("task", "2011-05-05T11:23:48Z", "PT01H00M00S", "message")
+        ev = Event('task', '2011-05-05T11:23:48Z', 'PT01H00M00S', 'message')
         expect(repr(ev)) == eval_repr(ev)
 
     def test_events(self):
-        ev1 = Event("task", "2011-05-05T11:23:48Z", "PT01H00M00S")
-        ev2 = Event("task", "2011-05-05T12:23:48Z", "PT00H30M00S")
+        ev1 = Event('task', '2011-05-05T11:23:48Z', 'PT01H00M00S')
+        ev2 = Event('task', '2011-05-05T12:23:48Z', 'PT00H30M00S')
         events = Events([ev1, ev2])
         expect(repr(events)) == eval_repr(events)

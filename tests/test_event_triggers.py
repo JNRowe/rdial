@@ -34,7 +34,7 @@ def test_fail_start_when_task_typo():
     events = Events.read('tests/data/test_not_running')
     with expect.raises(TaskNotExistError,
                        "Task non_existant does not exist!  Use `--new' to "
-                       "create it"):
+                       'create it'):
         events.start(task='non_existant')
 
 

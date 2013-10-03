@@ -36,8 +36,8 @@ from .i18n import (_, N_)
 from . import _version
 from . import utils
 
-APP = aaargh.App(description=__doc__.splitlines()[0].split("-", 1)[1],
-                 epilog=_("Please report bugs to jnrowe@gmail.com"))
+APP = aaargh.App(description=__doc__.splitlines()[0].split('-', 1)[1],
+                 epilog=_('Please report bugs to jnrowe@gmail.com'))
 
 
 # pylint: disable-msg=R0903
@@ -80,7 +80,7 @@ names_group.add_argument('task', default='default', nargs='?',
 duration_parser = argparse.ArgumentParser(add_help=False)
 duration_parser.add_argument('-d', '--duration', default='all',
                              choices=['day', 'week', 'month', 'year', 'all'],
-                             help=_("filter events for specified time period"))
+                             help=_('filter events for specified time period'))
 # pylint: enable-msg=C0103
 
 
@@ -97,15 +97,15 @@ def filter_events(directory, task=None, duration=None):
     events = Events.read(directory)
     if task:
         events = events.for_task(task)
-    if not duration == "all":
-        if duration == "week":
+    if not duration == 'all':
+        if duration == 'week':
             today = datetime.date.today()
             events = events.for_week(*today.isocalendar()[:2])
         else:
             year, month, day = datetime.date.today().timetuple()[:3]
-            if duration == "month":
+            if duration == 'month':
                 day = None
-            elif duration == "year":
+            elif duration == 'year':
                 month = None
                 day = None
             events = events.for_date(year, month, day)
@@ -129,7 +129,7 @@ def start_time_typecheck(string):
     return string
 
 
-@APP.cmd(help=_("start task"), parents=[task_parser])
+@APP.cmd(help=_('start task'), parents=[task_parser])
 @APP.cmd_arg('-n', '--new', action='store_true', help=_('start a new task'))
 @APP.cmd_arg('-t', '--time', metavar='time', default='',
              help=_('set start time'), type=start_time_typecheck)
@@ -148,7 +148,7 @@ def start(directory, backup, task, new, time):
     open('%s/.current' % directory, 'w').write(task)
 
 
-@APP.cmd(help=_("stop task"))
+@APP.cmd(help=_('stop task'))
 @APP.cmd_arg('-m', '--message', metavar='message', help=_('closing message'))
 @APP.cmd_arg('-F', '--file', metavar='file', type=argparse.FileType(),
              help=_('read closing message from file'))
@@ -182,7 +182,7 @@ def stop(directory, backup, message, file, amend):
         os.unlink('%s/.current' % directory)
 
 
-@APP.cmd(help=_("switch to another task"), parents=[task_parser])
+@APP.cmd(help=_('switch to another task'), parents=[task_parser])
 @APP.cmd_arg('-n', '--new', action='store_true', help=_('start a new task'))
 @APP.cmd_arg('-m', '--message', metavar='message',
              help=_('closing message for current task'))
@@ -223,7 +223,7 @@ output_group.add_argument('--human', action='store_true',
 # pylint: enable-msg=C0103
 
 
-@APP.cmd(help=_("report time tracking data"),
+@APP.cmd(help=_('report time tracking data'),
          parents=[duration_parser, task_parser, output_parser])
 @APP.cmd_arg('-s', '--sort', default='task', choices=['task', 'time'],
              help=_('field to sort by'))
@@ -271,7 +271,7 @@ def report(directory, backup, task, duration, sort, reverse, html, human):
               % (current.task, utils.format_datetime(current.start)))
 
 
-@APP.cmd(help=_("display running task, if any"))
+@APP.cmd(help=_('display running task, if any'))
 def running(directory, backup):
     """Display running task, if any.
 
@@ -289,7 +289,7 @@ def running(directory, backup):
         print(utils.warn(_('No task is running!')))
 
 
-@APP.cmd(help=_("display last event, if any"))
+@APP.cmd(help=_('display last event, if any'))
 def last(directory, backup):
     """Display last event, if any.
 
@@ -305,7 +305,7 @@ def last(directory, backup):
         print(utils.warn(_('Task %s is still running') % event.task))
 
 
-@APP.cmd(help=_("generate ledger compatible data file"),
+@APP.cmd(help=_('generate ledger compatible data file'),
          parents=[duration_parser, task_parser])
 @APP.cmd_arg('-r', '--rate', metavar='rate',
              help=_('hourly rate for task output'))
@@ -366,7 +366,7 @@ def main():
             parser.set_defaults(**d)
 
     APP.arg('--version', action='version',
-            version="%%(prog)s %s" % _version.dotted)
+            version='%%(prog)s %s' % _version.dotted)
     APP.arg('-d', '--directory', metavar='dir',
             help=_('directory to read/write to'))
     APP.arg('--no-backup', dest='backup', action='store_true',

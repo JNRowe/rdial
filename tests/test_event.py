@@ -98,4 +98,4 @@ def test_store_messages_with_events():
 
 
 def test_non_existing_database():
-    expect(Events()) == Events.read("I_NEVER_EXIST")
+    expect(Events()) == Events.read('I_NEVER_EXIST')

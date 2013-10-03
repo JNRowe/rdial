@@ -22,11 +22,11 @@ from . import _version
 
 __version__ = _version.dotted
 __date__ = _version.date
-__author__ = "James Rowe <jnrowe@gmail.com>"
-__copyright__ = "Copyright (C) 2011, 2012, 2013  James Rowe <jnrowe@gmail.com>"
-__license__ = "GNU General Public License Version 3"
-__credits__ = ""
-__history__ = "See git repository"
+__author__ = 'James Rowe <jnrowe@gmail.com>'
+__copyright__ = 'Copyright (C) 2011, 2012, 2013  James Rowe <jnrowe@gmail.com>'
+__license__ = 'GNU General Public License Version 3'
+__credits__ = ''
+__history__ = 'See git repository'
 
 from email.utils import parseaddr
 

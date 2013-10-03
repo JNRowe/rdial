@@ -57,7 +57,7 @@ class Event(object):
 
     """Base object for handling database event."""
 
-    def __init__(self, task, start=None, delta=None, message=""):
+    def __init__(self, task, start=None, delta=None, message=''):
         """Initialise a new ``Event`` object.
 
         :param str task: Task name to tracking
@@ -205,7 +205,7 @@ class Events(list):
             os.makedirs(directory)
 
         for task in self.dirty:
-            task_file = "%s/%s.csv" % (directory, task)
+            task_file = '%s/%s.csv' % (directory, task)
             events = self.for_task(task)
             if sys.version_info[0] == 3:
                 temp = tempfile.NamedTemporaryFile(mode='w', newline='',
@@ -221,7 +221,7 @@ class Events(list):
             for event in events:
                 writer.writerow(event.writer())
             if self.backup and os.path.exists(task_file):
-                os.rename(task_file, "%s~" % task_file)
+                os.rename(task_file, '%s~' % task_file)
             os.rename(temp.name, task_file)
         del self.dirty
 
@@ -273,7 +273,7 @@ class Events(list):
             raise TaskRunningError('Running task %s!' % running)
         if not new and task not in self.tasks():
             raise TaskNotExistError("Task %s does not exist!  Use `--new' to "
-                                    "create it" % task)
+                                    'create it' % task)
         self.append(Event(task, start))
         self.dirty = task
 
