@@ -96,6 +96,39 @@ Commands
 
    read closing message for current task from file
 
+``run`` - Run command with timer
+''''''''''''''''''''''''''''''''
+
+.. program:: rdial run
+
+::
+
+    rdial run [-h] [-x] [-n] [-t time] [-m message] [-F file] [-c command] <task>
+
+.. cmdoption:: -x, --from-dir
+
+   use directory name as task
+
+.. cmdoption:: -n, --new
+
+   start a new task
+
+.. cmdoption:: -t <time>, --time <time>
+
+   manually set start time for task
+
+.. cmdoption:: -m <message>, --message <message>
+
+   closing message for current task
+
+.. cmdoption:: -F <file>, --file <file>
+
+   read closing message for current task from file
+
+.. cmdoption:: -c <command>, --command <command>
+
+   command to run
+
 ``report`` - Report time tracking data
 ''''''''''''''''''''''''''''''''''''''
 

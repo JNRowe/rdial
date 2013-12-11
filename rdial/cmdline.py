@@ -22,6 +22,7 @@
 import argparse
 import datetime
 import os
+import subprocess
 
 try:
     import configparser
@@ -211,6 +212,48 @@ def switch(directory, backup, task, new, message, file):
     print(_('Task %s running for %s') % (event.task,
                                          str(event.delta).split('.')[0]))
     open('%s/.current' % directory, 'w').write(task)
+
+
+@APP.cmd(help=_('run command with timer'), parents=[task_parser])
+@APP.cmd_arg('-n', '--new', action='store_true', help=_('start a new task'))
+@APP.cmd_arg('-t', '--time', metavar='time', default='',
+             help=_('set start time'), type=start_time_typecheck)
+@APP.cmd_arg('-m', '--message', metavar='message', help=_('closing message'))
+@APP.cmd_arg('-F', '--file', metavar='file', type=argparse.FileType(),
+             help=_('read closing message from file'))
+@APP.cmd_arg('-c', '--command', metavar='command', help=_('command to run'))
+def run(directory, backup, task, new, time, message, file, command):
+    """Run timed command.
+
+    :param str directory: Directory to read events from
+    :param bool backup: Whether to create backup files
+    :param str task: Task name to operate on
+    :param bool new: Create a new task
+    :param datetime.datetime time: Task start time
+    :param str message: Message to assign to event
+    :param str file: Filename to read message from
+    :param str command: Command to run
+
+    """
+    try:
+        p = subprocess.Popen(command, shell=True)
+    except OSError as e:
+        raise utils.RdialError(e.strerror)
+
+    with Events.context(directory, backup) as events:
+        events.start(task, new, time)
+    open('%s/.current' % directory, 'w').write(task)
+
+    p.wait()
+
+    if file:
+        message = file.read()
+    with Events.context(directory, backup) as events:
+        events.stop(message)
+    event = events.last()
+    print(_('Task %s running for %s') % (event.task,
+                                         str(event.delta).split('.')[0]))
+    os.unlink('%s/.current' % directory)
 
 
 # pylint: disable-msg=C0103

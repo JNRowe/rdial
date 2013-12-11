@@ -84,6 +84,29 @@ Switch to another task
 -F <file>, --file <file>
    read closing message for current task from file
 
+``run``
+'''''''
+
+Run command with timer
+
+-x, --from-dir
+   use directory name as task
+
+-n, --new
+   start a new task
+
+-t <time>, --time <time>
+   manually set start time for task
+
+-m <message>, --message <message>
+   closing message for current task
+
+-F <file>, --file <file>
+   read closing message for current task from file
+
+-c <command>, --command <command>
+   command to run
+
 ``report``
 ''''''''''
 

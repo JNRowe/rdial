@@ -12,6 +12,7 @@ Command line
 .. autofunction:: start
 .. autofunction:: stop
 .. autofunction:: switch
+.. autofunction:: run
 .. autofunction:: report
 .. autofunction:: running
 .. autofunction:: last
