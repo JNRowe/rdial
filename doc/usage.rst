@@ -36,7 +36,11 @@ Commands
 
 ::
 
-    rdial start [-h] [-t time] <task>
+    rdial start [-h] [-x] [-n] [-t time] <task>
+
+.. cmdoption:: -x, --from-dir
+
+   use directory name as task
 
 .. cmdoption:: -n, --new
 
@@ -45,10 +49,6 @@ Commands
 .. cmdoption:: -t <time>, --time <time>
 
    manually set start time for task
-
-.. cmdoption:: -x, --from-dir
-
-   use directory name as task
 
 ``stop`` - Stop task
 ''''''''''''''''''''

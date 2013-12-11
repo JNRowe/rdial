@@ -44,14 +44,14 @@ COMMANDS
 
 Start task
 
+-x, --from-dir
+   use directory name as task
+
 -n, --new
    start a new task
 
 -t <start time>, --time=<start time>
    manually set start time for task
-
--x, --from-dir
-   use directory name as task
 
 ``stop``
 ''''''''
