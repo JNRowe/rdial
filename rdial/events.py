@@ -328,21 +328,15 @@ class Events(list):
         return events
 
     def for_week(self, year, week):
-        """Filter events for a specific ISO-2015 week.
-
-        ISO-2015 defines a week as Monday to Sunday, with the first week of
-        a year being the first week containing a Thursday.
+        """Filter events for a specific ISO-8601 week.
 
         :param int year: Year to filter events on
-        :param int week: ISO-2015 month number to filter events on
+        :param int week: ISO-8601 month number to filter events on
         :rtype: :obj:`Events`
-        :return: Events occurring in given ISO-2015 week
+        :return: Events occurring in given ISO-8601 week
 
         """
-        bound = datetime.date(year, 1, 4)
-        iso_start = bound - datetime.timedelta(days=bound.isocalendar()[1])
-        start = iso_start + datetime.timedelta(weeks=week - 1)
-        end = start + datetime.timedelta(days=7)
+        start, end = utils.iso_week_to_date(year, week)
         return self.filter(lambda x: start <= x.start.date() < end)
 
     def sum(self):

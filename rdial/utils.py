@@ -174,6 +174,24 @@ def format_datetime(datetime_):
     return datetime_.strftime('%Y-%m-%dT%H:%M:%SZ')
 
 
+def iso_week_to_date(year, week):
+    """Generate date range for a given ISO-8601 week
+
+    ISO-8601 defines a week as Monday to Sunday, with the first week of a year
+    being the first week containing a Thursday.
+
+    :param int year: Year to process
+    :param int week: Week number to process
+    :rtype: :obj:`tuple` of :obj:`datetime.date`
+
+    """
+    bound = datetime.date(year, 1, 4)
+    iso_start = bound - datetime.timedelta(days=bound.isocalendar()[2] - 1)
+    start = iso_start + datetime.timedelta(weeks=week - 1)
+    end = start + datetime.timedelta(weeks=1)
+    return start, end
+
+
 def utcnow():
     """Wrapper for producing timezone aware current timestamp.
 
