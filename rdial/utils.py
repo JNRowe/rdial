@@ -87,7 +87,9 @@ class RdialError(ValueError):
 
 
 class UTC(datetime.tzinfo):
-    """UTC timezone object"""
+
+    """UTC timezone object."""
+
     def __repr__(self):
         return 'UTC()'
 
@@ -165,17 +167,19 @@ def parse_datetime(string):
 
 
 def format_datetime(datetime_):
-    """Format ISO-8601 datetime string
+    """Format ISO-8601 datetime string.
 
     :param datetime.datetime datetime_: Datetime to process
     :rtype: str
+    :return: ISO-8601 compatible string
+
     """
     # Can't call isoformat method as it uses the +00:00 form
     return datetime_.strftime('%Y-%m-%dT%H:%M:%SZ')
 
 
 def iso_week_to_date(year, week):
-    """Generate date range for a given ISO-8601 week
+    """Generate date range for a given ISO-8601 week.
 
     ISO-8601 defines a week as Monday to Sunday, with the first week of a year
     being the first week containing a Thursday.
@@ -183,6 +187,7 @@ def iso_week_to_date(year, week):
     :param int year: Year to process
     :param int week: Week number to process
     :rtype: :obj:`tuple` of :obj:`datetime.date`
+    :return: Date range objects for given week
 
     """
     bound = datetime.date(year, 1, 4)
