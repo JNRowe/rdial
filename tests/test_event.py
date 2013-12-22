@@ -20,7 +20,7 @@
 import os
 
 from datetime import (datetime, timedelta)
-from glob import glob
+from filecmp import dircmp
 
 from expecter import expect
 from nose2.tools import params
@@ -82,10 +82,11 @@ def test_write_database():
     try:
         events.write('tests/data/test_write')
 
-        old_files = sorted(glob('tests/data/test/*.csv'))
-        new_files = sorted(glob('tests/data/test_write/*.csv'))
-        for old, new in zip(old_files, new_files):
-            expect(open(old).read()) == open(new).read()
+        comp = dircmp('tests/data/test', 'tests/data/test_write')
+        expect(comp.diff_files) == []
+        expect(comp.left_only) == []
+        expect(comp.right_only) == []
+        expect(comp.funny_files) == []
     finally:
         for i in os.listdir('tests/data/test_write'):
             os.unlink('tests/data/test_write/%s' % i)
