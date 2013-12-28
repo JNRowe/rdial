@@ -3,6 +3,12 @@ User-visible changes
 
 .. contents::
 
+0.12.0 - 2013-12-28
+-------------------
+
+* Add simple consistency checking subcommand ``fsck``
+* Add subcommand to execute external command with timer ``run``
+
 0.11.0 - 2013-03-13
 -------------------
 
