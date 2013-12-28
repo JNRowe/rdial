@@ -9,6 +9,7 @@ Command line
   :mod:`rdial`, and can be skipped if you are simply using the tool from the
   command line.
 
+.. autofunction:: fsck
 .. autofunction:: start
 .. autofunction:: stop
 .. autofunction:: switch

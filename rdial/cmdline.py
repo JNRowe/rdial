@@ -130,6 +130,24 @@ def start_time_typecheck(string):
     return string
 
 
+@APP.cmd(help=_('check storage consistency'))
+def fsck(directory, backup):
+    """Check storage consistency.
+
+    :param str directory: Directory to read events from
+    :param bool backup: Whether to create backup files
+
+    """
+    with Events.context(directory, backup) as events:
+        last = events[0]
+        for event in events[1:]:
+            if not last.start + last.delta <= event.start:
+                print(utils.fail(_('Overlap:')))
+                print('  %r' % last)
+                print('  %r' % event)
+            last = event
+
+
 @APP.cmd(help=_('start task'), parents=[task_parser])
 @APP.cmd_arg('-n', '--new', action='store_true', help=_('start a new task'))
 @APP.cmd_arg('-t', '--time', metavar='time', default='',

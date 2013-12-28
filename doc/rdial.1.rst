@@ -39,6 +39,11 @@ OPTIONS
 COMMANDS
 --------
 
+``fsck``
+''''''''
+
+Check storage consistency
+
 ``start``
 '''''''''
 

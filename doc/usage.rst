@@ -29,6 +29,15 @@ Options
 Commands
 --------
 
+``fsck`` - Check storage consistency
+''''''''''''''''''''''''''''''''''''
+
+.. program:: rdial fsck
+
+::
+
+    rdial fsck [-h]
+
 ``start`` - Start task
 ''''''''''''''''''''''
 
