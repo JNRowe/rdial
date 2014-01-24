@@ -28,7 +28,7 @@ Examples
     Traceback (most recent call last):
       ...
     TaskNotRunningError: No task running!
-    >>> events_running.start('rdial')
+    >>> events_running.start('rdial', new=True)
     Traceback (most recent call last):
       ...
     TaskRunningError: Running task test!

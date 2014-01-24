@@ -268,12 +268,12 @@ class Events(list):
         :raise TaskRunningError: An event is already running
 
         """
-        running = self.running()
-        if running:
-            raise TaskRunningError('Running task %s!' % running)
         if not new and task not in self.tasks():
             raise TaskNotExistError("Task %s does not exist!  Use `--new' to "
                                     'create it' % task)
+        running = self.running()
+        if running:
+            raise TaskRunningError('Running task %s!' % running)
         self.append(Event(task, start))
         self.dirty = task
 
