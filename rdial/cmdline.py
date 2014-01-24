@@ -253,20 +253,23 @@ def run(directory, backup, task, new, time, message, file, command):
     :param str command: Command to run
 
     """
-    try:
-        p = subprocess.Popen(command, shell=True)
-    except OSError as e:
-        raise utils.RdialError(e.strerror)
-
     with Events.context(directory, backup) as events:
+        if events.running():
+            raise TaskRunningError(_('Task %s is already started!'
+                                     % events.last().task))
+
+        try:
+            p = subprocess.Popen(command, shell=True)
+        except OSError as e:
+            raise utils.RdialError(e.strerror)
+
         events.start(task, new, time)
-    open('%s/.current' % directory, 'w').write(task)
+        open('%s/.current' % directory, 'w').write(task)
 
-    p.wait()
+        p.wait()
 
-    if file:
-        message = file.read()
-    with Events.context(directory, backup) as events:
+        if file:
+            message = file.read()
         events.stop(message)
     event = events.last()
     print(_('Task %s running for %s') % (event.task,
