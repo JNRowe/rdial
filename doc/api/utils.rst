@@ -22,8 +22,6 @@ Time handling
 .. autofunction:: format_delta
 .. autofunction:: parse_datetime
 
-.. autofunction:: utcnow
-
 XDG Base Directory support
 ''''''''''''''''''''''''''
 
