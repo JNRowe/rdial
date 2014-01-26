@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from datetime import date
+import arrow
 
 from expecter import expect
 from nose2.tools import params
@@ -26,9 +26,9 @@ from rdial.utils import iso_week_to_date
 
 
 @params(
-    (2007, 1, (date(2007, 1, 1), date(2007, 1, 8))),  # Year starts same day
-    (2009, 53, (date(2009, 12, 28), date(2010, 1, 4))),  # ISO year spans 2010
-    (2013, 52, (date(2013, 12, 23), date(2013, 12, 30))),
+    (2007, 1, (arrow.get(2007, 1, 1), arrow.get(2007, 1, 8))),  # Year starts same day
+    (2009, 53, (arrow.get(2009, 12, 28), arrow.get(2010, 1, 4))),  # ISO year spans 2010
+    (2013, 52, (arrow.get(2013, 12, 23), arrow.get(2013, 12, 30))),
 )
 def test_iso_week_to_date(year, week, expected):
     expect(iso_week_to_date(year, week)) == expected

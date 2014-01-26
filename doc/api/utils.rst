@@ -61,7 +61,7 @@ Time handling
     >>> format_delta(datetime.timedelta(minutes=30))
     'PT30M'
     >>> parse_datetime('2012-02-15T18:59:18Z')
-    datetime.datetime(2012, 2, 15, 18, 59, 18, tzinfo=UTC())
+    <Arrow [2012-02-15T18:59:18+00:00]>
 
 XDG Base Directory support
 ''''''''''''''''''''''''''
