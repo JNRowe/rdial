@@ -391,7 +391,7 @@ def ledger(directory, backup, task, duration, rate):
         print(_(';; Running event not included in output!'))
     for event in events:
         if not event.delta:
-            break
+            continue
         end = event.start + event.delta
         # Can't use timedelta.total_seconds() as it was only added in 2.7
         seconds = event.delta.days * 86400 + event.delta.seconds
