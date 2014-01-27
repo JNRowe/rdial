@@ -187,7 +187,7 @@ def stop(directory, backup, message, file, amend):
         message = file.read()
     with Events.context(directory, backup) as events:
         last = events.last()
-        if amend and last.running:
+        if amend and last.running():
             raise TaskRunningError(_("Can't amend running task %s!")
                                    % last.task)
         if amend and not message:
