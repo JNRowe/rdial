@@ -20,6 +20,7 @@
 # pylint: disable-msg=C0121
 
 import datetime
+import functools
 import os
 import re
 import sys
@@ -205,6 +206,37 @@ def utcnow():
 
     """
     return datetime.datetime.utcnow().replace(tzinfo=utc)
+
+
+def write_current(f):
+    """Decorator to write ``current`` file on function exit.
+
+    :seealso: :doc:`/taskbars`
+
+    :rtype: obj:`function`
+
+    """
+    @functools.wraps(f)
+    def wrapper(*args, **kwargs):
+        f(*args, **kwargs)
+        open('%s/.current' % kwargs['directory'], 'w').write(kwargs['task'])
+    return wrapper
+
+
+def remove_current(f):
+    """Decorator to remove ``current`` file on function exit.
+
+    :seealso: :doc:`/taskbars`
+
+    :rtype: obj:`function`
+
+    """
+    @functools.wraps(f)
+    def wrapper(*args, **kwargs):
+        f(*args, **kwargs)
+        if os.path.isfile('%s/.current' % kwargs['directory']):
+            os.unlink('%s/.current' % kwargs['directory'])
+    return wrapper
 
 
 def xdg_config_location():

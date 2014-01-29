@@ -152,6 +152,7 @@ def fsck(directory, backup):
 @APP.cmd_arg('-n', '--new', action='store_true', help=_('start a new task'))
 @APP.cmd_arg('-t', '--time', metavar='time', default='',
              help=_('set start time'), type=start_time_typecheck)
+@utils.write_current
 def start(directory, backup, task, new, time):
     """Start task.
 
@@ -164,7 +165,6 @@ def start(directory, backup, task, new, time):
     """
     with Events.context(directory, backup) as events:
         events.start(task, new, time)
-    open('%s/.current' % directory, 'w').write(task)
 
 
 @APP.cmd(help=_('stop task'))
@@ -173,6 +173,7 @@ def start(directory, backup, task, new, time):
              help=_('read closing message from file'))
 @APP.cmd_arg('--amend', action='store_true',
              help=_('amend previous stop entry'))
+@utils.remove_current
 def stop(directory, backup, message, file, amend):
     """Stop task.
 
@@ -197,8 +198,6 @@ def stop(directory, backup, message, file, amend):
     event = events.last()
     print(_('Task %s running for %s') % (event.task,
                                          str(event.delta).split('.')[0]))
-    if os.path.isfile('%s/.current' % directory):
-        os.unlink('%s/.current' % directory)
 
 
 @APP.cmd(help=_('switch to another task'), parents=[task_parser])
@@ -207,6 +206,7 @@ def stop(directory, backup, message, file, amend):
              help=_('closing message for current task'))
 @APP.cmd_arg('-F', '--file', metavar='file', type=argparse.FileType(),
              help=_('read closing message for current task from file'))
+@utils.write_current
 def switch(directory, backup, task, new, message, file):
     """Complete last task and start new one.
 
@@ -229,7 +229,6 @@ def switch(directory, backup, task, new, message, file):
         events.start(task, new)
     print(_('Task %s running for %s') % (event.task,
                                          str(event.delta).split('.')[0]))
-    open('%s/.current' % directory, 'w').write(task)
 
 
 @APP.cmd(help=_('run command with timer'), parents=[task_parser])
