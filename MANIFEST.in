@@ -15,5 +15,5 @@ include rdial/locale/*/LC_MESSAGES/*.po
 
 include tests/*.py
 
-recursive-include doc/ *.rst
+recursive-include doc *.rst
 recursive-include tests/data *.csv
