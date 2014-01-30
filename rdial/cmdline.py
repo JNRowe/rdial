@@ -143,7 +143,7 @@ def fsck(directory, backup):
         for event in events[1:]:
             if not last.start + last.delta <= event.start:
                 print(utils.fail(_('Overlap:')))
-                print('  %r' % last)
+                print(utils.warn('  %r' % last))
                 print('  %r' % event)
             last = event
 
