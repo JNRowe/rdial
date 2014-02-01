@@ -24,10 +24,10 @@ import datetime
 import os
 import subprocess
 
-try:
-    import configparser
-except ImportError:  # Python 3
-    import ConfigParser as configparser  # NOQA
+try:  # For Python 3
+    from configparser import ConfigParser
+except ImportError:
+    from ConfigParser import SafeConfigParser as ConfigParser  # NOQA
 
 import aaargh
 import prettytable
@@ -412,7 +412,7 @@ def main():
             configs.append(p)
     configs.append(utils.xdg_config_location() + '/config')
     configs.append(os.path.abspath('.rdialrc'))
-    cfg = configparser.SafeConfigParser()
+    cfg = ConfigParser()
     cfg.read(configs)
 
     if not cfg.getboolean('rdial', 'colour') or os.getenv('NO_COLOUR'):
