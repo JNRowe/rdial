@@ -26,9 +26,9 @@ import glob
 import inspect
 import operator
 import os
-import sys
 import tempfile
 
+from . import compat
 from . import utils
 
 
@@ -207,15 +207,15 @@ class Events(list):
         for task in self.dirty:
             task_file = '%s/%s.csv' % (directory, task)
             events = self.for_task(task)
-            if sys.version_info[0] == 3:
+            if compat.PY2:
+                temp = tempfile.NamedTemporaryFile(prefix='.', dir=directory,
+                                                   delete=False)
+                writer = csv.DictWriter(temp, FIELDS, lineterminator='\n')
+            else:
                 temp = tempfile.NamedTemporaryFile(mode='w', prefix='.',
                                                    dir=directory, delete=False)
                 writer = csv.DictWriter(temp, FIELDS, dialect=csv.unix_dialect,
                                         quoting=csv.QUOTE_MINIMAL)
-            else:
-                temp = tempfile.NamedTemporaryFile(prefix='.', dir=directory,
-                                                   delete=False)
-                writer = csv.DictWriter(temp, FIELDS, lineterminator='\n')
             # Can't use writeheader, it wasn't added until 2.7.
             writer.writerow(dict(zip(FIELDS, FIELDS)))
             for event in events:

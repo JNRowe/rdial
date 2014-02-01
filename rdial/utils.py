@@ -23,9 +23,11 @@ import datetime
 import functools
 import os
 import re
-import sys
 
 import blessings
+
+from . import compat
+
 
 T = blessings.Terminal()
 
@@ -80,7 +82,7 @@ class RdialError(ValueError):
 
     """Generic exception for rdial."""
 
-    if sys.version_info[0] == 3:
+    if not compat.PY2:
         @property
         def message(self):
             """Compatibility hack for Python 3."""
