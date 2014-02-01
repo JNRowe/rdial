@@ -208,10 +208,10 @@ class Events(list):
             task_file = '%s/%s.csv' % (directory, task)
             events = self.for_task(task)
             if sys.version_info[0] == 3:
-                temp = tempfile.NamedTemporaryFile(mode='w', newline='',
-                                                   prefix='.', dir=directory,
-                                                   delete=False)
-                writer = csv.DictWriter(temp, FIELDS)
+                temp = tempfile.NamedTemporaryFile(mode='w', prefix='.',
+                                                   dir=directory, delete=False)
+                writer = csv.DictWriter(temp, FIELDS, dialect=csv.unix_dialect,
+                                        quoting=csv.QUOTE_MINIMAL)
             else:
                 temp = tempfile.NamedTemporaryFile(prefix='.', dir=directory,
                                                    delete=False)

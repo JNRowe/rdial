@@ -35,6 +35,7 @@ import prettytable
 from .events import (Events, TaskRunningError)
 from .i18n import (_, N_)
 from . import _version
+from . import compat
 from . import utils
 
 APP = aaargh.App(description=__doc__.splitlines()[0].split('-', 1)[1],
@@ -413,7 +414,9 @@ def main():
     configs.append(utils.xdg_config_location() + '/config')
     configs.append(os.path.abspath('.rdialrc'))
     cfg = ConfigParser()
-    cfg.read(configs)
+    for file in configs:
+        if os.path.isfile(file):
+            cfg.readfp(compat.open(file, encoding='utf-8'))
 
     if not cfg.getboolean('rdial', 'colour') or os.getenv('NO_COLOUR'):
         utils._colourise = lambda s, colour: s
