@@ -32,6 +32,21 @@ __list_tasks() {
     fi
 }
 
+(( $+functions[__list_wrappers] )) ||
+__list_wrappers() {
+    local tmp
+    tmp=($(sed -n '/^\[run wrappers\]/,/^$/s,^\(.*\) *=.*$,\1,p' \
+        ${XDG_CONFIG_HOME:-~/.config}/rdial/config \
+        .rdialrc 2>/dev/null
+    ))
+    tmp=(${XDG_DATA_HOME:-~/.local}/rdial/*~*~(:t:s/.csv/))
+    if [ -z "${tmp}" ]; then
+        _message "No rdial tasks found!"
+    else
+        compadd ${tmp[@]}
+    fi
+}
+
 _arguments '--help[show help message and exit]' \
     "--version[show program's version number and exit]" \
     "--directory=[directory to read/write to]:select directory:_files -W ${XDG_DATA_HOME:-~/.local}" \
@@ -79,7 +94,7 @@ case "$words[1]" in
         '--time[set start time]:' \
         '--message=[closing message for current task]:message text: ' \
         '--file=[read closing message for current task from file]:select file:_files' \
-        ':select wrapper:'
+        ':select wrapper:__list_wrappers'
     ;;
 (report)
     _arguments '--help[show help message and exit]' \
