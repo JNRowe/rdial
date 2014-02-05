@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: rdial 0.12.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-02-05 19:52+0000\n"
+"POT-Creation-Date: 2014-02-05 20:14+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -176,63 +176,58 @@ msgstr ""
 msgid "Events exist on %d dates"
 msgstr ""
 
-#: rdial/cmdline.py:373
+#: rdial/cmdline.py:373 rdial/cmdline.py:388
 #, python-format
-msgid "Running `%s' since %s"
+msgid "Task `%s' started %s"
 msgstr ""
 
 #: rdial/cmdline.py:377
 msgid "display running task, if any"
 msgstr ""
 
-#: rdial/cmdline.py:388
-#, python-format
-msgid "Task %s has been running for %s"
-msgstr ""
-
-#: rdial/cmdline.py:392
+#: rdial/cmdline.py:391
 msgid "No task is running!"
 msgstr ""
 
-#: rdial/cmdline.py:395
+#: rdial/cmdline.py:394
 msgid "display last event, if any"
 msgstr ""
 
-#: rdial/cmdline.py:406
+#: rdial/cmdline.py:405
 #, python-format
 msgid "Last task %s, ran for %s"
 msgstr ""
 
-#: rdial/cmdline.py:408
+#: rdial/cmdline.py:407
 #, python-format
 msgid "Task %s is still running"
 msgstr ""
 
-#: rdial/cmdline.py:411
+#: rdial/cmdline.py:410
 msgid "generate ledger compatible data file"
 msgstr ""
 
-#: rdial/cmdline.py:414
+#: rdial/cmdline.py:413
 msgid "hourly rate for task output"
 msgstr ""
 
-#: rdial/cmdline.py:431 rdial/cmdline.py:444
+#: rdial/cmdline.py:430 rdial/cmdline.py:443
 msgid ";; Running event not included in output!"
 msgstr ""
 
-#: rdial/cmdline.py:470
+#: rdial/cmdline.py:469
 msgid "directory to read/write to"
 msgstr ""
 
-#: rdial/cmdline.py:472
+#: rdial/cmdline.py:471
 msgid "do not write data file backups"
 msgstr ""
 
-#: rdial/cmdline.py:474
+#: rdial/cmdline.py:473
 msgid "file to read configuration data from"
 msgstr ""
 
-#: rdial/utils.py:229
+#: rdial/utils.py:198
 #, python-format
 msgid "Config file %r doesn't exist!"
 msgstr ""

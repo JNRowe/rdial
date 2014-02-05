@@ -20,7 +20,6 @@
 # pylint: disable-msg=C0121
 
 import argparse
-import datetime
 import os
 import shlex
 import subprocess
@@ -31,6 +30,7 @@ except ImportError:
     from ConfigParser import NoOptionError  # NOQA
 
 import aaargh
+import arrow
 import prettytable
 
 from .events import (Events, TaskRunningError)
@@ -102,11 +102,11 @@ def filter_events(directory, task=None, duration=None):
     if task:
         events = events.for_task(task)
     if not duration == 'all':
+        today = arrow.now().date()
         if duration == 'week':
-            today = datetime.date.today()
             events = events.for_week(*today.isocalendar()[:2])
         else:
-            year, month, day = datetime.date.today().timetuple()[:3]
+            year, month, day = today.year, today.month, today.day
             if duration == 'month':
                 day = None
             elif duration == 'year':
@@ -127,7 +127,7 @@ def start_time_typecheck(string):
     """
     try:
         utils.parse_datetime(string)
-    except ValueError:
+    except arrow.parser.ParserError:
         raise argparse.ArgumentTypeError(_('%r is not a valid ISO-8601 time '
                                            'string') % string)
     return string
@@ -165,7 +165,7 @@ def start(directory, backup, config, task, new, time):
     :param ConfigParser config: Configuration data
     :param str task: Task name to operate on
     :param bool new: Create a new task
-    :param datetime.datetime time: Task start time
+    :param arrow.Arrow time: Task start time
 
     """
     with Events.context(directory, backup) as events:
@@ -254,7 +254,7 @@ def run(directory, backup, config, task, new, time, message, file, command):
     :param ConfigParser config: Configuration data
     :param str task: Task name to operate on
     :param bool new: Create a new task
-    :param datetime.datetime time: Task start time
+    :param arrow.Arrow time: Task start time
     :param str message: Message to assign to event
     :param str file: Filename to read message from
     :param str command: Command to run
@@ -370,8 +370,8 @@ def report(directory, backup, config, task, duration, sort, reverse, html,
         print(formatter(sortby=sort, reversesort=reverse))
     if events.running() and not html:
         current = events.last()
-        print(_("Running `%s' since %s")
-              % (current.task, utils.format_datetime(current.start)))
+        print(_("Task `%s' started %s")
+              % (current.task, current.start.humanize()))
 
 
 @APP.cmd(help=_('display running task, if any'))
@@ -385,9 +385,8 @@ def running(directory, backup):
     events = Events.read(directory)
     if events.running():
         current = events.last()
-        print(_('Task %s has been running for %s')
-              % (current.task,
-                 str(utils.utcnow() - current.start).split('.')[0]))
+        print(_("Task `%s' started %s") % (current.task,
+                                           current.start.humanize()))
     else:
         print(utils.warn(_('No task is running!')))
 
@@ -436,8 +435,8 @@ def ledger(directory, backup, config, task, duration, rate):
         # Can't use timedelta.total_seconds() as it was only added in 2.7
         seconds = event.delta.days * 86400 + event.delta.seconds
         hours = seconds / 3600.0
-        print('%s-%s' % (event.start.strftime('%Y-%m-%d * %H:%M'),
-                         end.strftime('%H:%M')))
+        print('%s-%s' % (event.start.format('YYYY-MM-DD * HH:mm'),
+                         end.format('HH:mm')))
         print('    (task:%s)  %.2fh%s'
               % (event.task, hours, ' @ %s' % rate if rate else ''))
     if events.running():
