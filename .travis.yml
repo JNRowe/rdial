@@ -5,6 +5,9 @@ python:
   - 3.2
   - 3.3
 install:
+  - if [[ $TRAVIS_PYTHON_VERSION == '3.2' ]]; then
+      pip install --use-mirrors -r extra/requirements-py32.txt
+    fi
   - pip install --use-mirrors -r extra/requirements-test.txt
   - pip install --use-mirrors .
 script:
