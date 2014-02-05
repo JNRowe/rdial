@@ -38,7 +38,7 @@ from . import _version
 from . import utils
 
 APP = aaargh.App(
-    description=__doc__.splitlines()[0].split('-', 1)[1],
+    description=_('Simple time tracking for simple people'),
     epilog=_('Please report bugs to https://github.com/JNRowe/issues')
 )
 
