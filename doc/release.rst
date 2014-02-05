@@ -29,6 +29,7 @@ With the tests passing, perform the following steps
 * Commit the release notes and version changes
 * Create a signed tag for the release
 * Push the changes, including the new tag, to the GitHub repository
+* Create new release on GitHub
 
 Update PyPI
 -----------
