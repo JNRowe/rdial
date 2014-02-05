@@ -1,6 +1,7 @@
 include .travis.yml
 include COPYING
 include *.rst
+include doc/images/dwm-taskbar.png
 include doc/conf.py
 include doc/wordlist.txt
 include extra/_rdial
