@@ -24,9 +24,15 @@ import functools
 import os
 import re
 
+try:  # For Python 3
+    from configparser import ConfigParser
+except ImportError:
+    from ConfigParser import SafeConfigParser as ConfigParser  # NOQA
+
 import blessings
 
 from . import compat
+from .i18n import _
 
 
 T = blessings.Terminal()
@@ -208,6 +214,35 @@ def utcnow():
 
     """
     return datetime.datetime.utcnow().replace(tzinfo=utc)
+
+
+def read_config(parser, user_config=None):
+    """Read configuration data.
+
+    :type argparse.ArgumentParser parser: Command line parser
+    :type str user_config: User defined config file
+    :rtype: ConfigParser
+    :return: Parsed configuration data
+
+    """
+    if user_config and not os.path.exists(user_config):
+        raise parser.error(_("Config file %r doesn't exist!" % user_config))
+
+    configs = [os.path.dirname(__file__) + '/config', ]
+    for s in os.getenv('XDG_CONFIG_DIRS', '/etc/xdg').split(':'):
+        p = s + '/rdial/config'
+        if os.path.isfile(p):
+            configs.append(p)
+    configs.append(xdg_config_location() + '/config')
+    configs.append(os.path.abspath('.rdialrc'))
+    if user_config:
+        configs.append(user_config)
+    cfg = ConfigParser()
+    for file in configs:
+        if os.path.isfile(file):
+            cfg.readfp(compat.open(file, encoding='utf-8'))
+
+    return cfg
 
 
 def write_current(f):
