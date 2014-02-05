@@ -64,3 +64,23 @@ If this key is set to ``False`` then no coloured output will be produced by
 
 This key sets the location of your data files.  Some users use this, combined
 with the per-directory config file, to keep per-project task databases.
+
+.. _run-wrappers-label:
+
+``run wrappers`` section
+------------------------
+
+This section is used to configure pre-defined arguments for the :ref:`rdial run
+<run-subcommand-label>` subcommand.  It consists of a series of string keys to
+use as the wrapper title, and arguments to the :program:`rdial run` subcommand
+as values.  For example:
+
+.. code-block:: ini
+
+    [run wrappers]
+    feeds = -c 'mutt -f ~/Mail/RSS2email/' procast
+    calendar = -c 'wyrd ~/.reminders/events' calendar
+
+The above configuration entry ``feeds`` allows us to use ``rdial wrapper feeds``
+to open ``mutt`` in a specific mailbox and time our usage under the ``procast``
+task.

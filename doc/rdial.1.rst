@@ -112,6 +112,20 @@ Run command with timer
 -c <command>, --command <command>
    command to run
 
+``wrapper``
+'''''''''''
+
+Run predefined command with timer
+
+-t <time>, --time <time>
+   manually set start time for task
+
+-m <message>, --message <message>
+   closing message for current task
+
+-F <file>, --file <file>
+   read closing message for current task from file
+
 ``report``
 ''''''''''
 
