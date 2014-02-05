@@ -3,6 +3,11 @@ User-visible changes
 
 .. contents::
 
+0.13.0 - 2014-02-05
+-------------------
+
+* Added new ``wrapper`` command for custom ``run`` shortcuts
+
 0.12.0 - 2013-12-28
 -------------------
 
