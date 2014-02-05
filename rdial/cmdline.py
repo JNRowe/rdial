@@ -37,8 +37,10 @@ from .i18n import (_, N_)
 from . import _version
 from . import utils
 
-APP = aaargh.App(description=__doc__.splitlines()[0].split('-', 1)[1],
-                 epilog=_('Please report bugs to jnrowe@gmail.com'))
+APP = aaargh.App(
+    description=__doc__.splitlines()[0].split('-', 1)[1],
+    epilog=_('Please report bugs to https://github.com/JNRowe/issues')
+)
 
 
 # pylint: disable-msg=R0903
