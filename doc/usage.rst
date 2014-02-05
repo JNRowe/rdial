@@ -105,6 +105,8 @@ Commands
 
    read closing message for current task from file
 
+.. _run-subcommand-label:
+
 ``run`` - Run command with timer
 ''''''''''''''''''''''''''''''''
 
@@ -137,6 +139,29 @@ Commands
 .. cmdoption:: -c <command>, --command <command>
 
    command to run
+
+``wrapper`` - Run predefined command with timer
+'''''''''''''''''''''''''''''''''''''''''''''''
+
+.. program:: rdial wrapper
+
+::
+
+    rdial wrapper [-h] [-t time] [-m message] [-F file] <wrapper>
+
+See :ref:`run wrappers configuration <run-wrappers-label>`.
+
+.. cmdoption:: -t <time>, --time <time>
+
+   manually set start time for task
+
+.. cmdoption:: -m <message>, --message <message>
+
+   closing message for current task
+
+.. cmdoption:: -F <file>, --file <file>
+
+   read closing message for current task from file
 
 ``report`` - Report time tracking data
 ''''''''''''''''''''''''''''''''''''''

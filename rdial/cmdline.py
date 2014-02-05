@@ -22,7 +22,13 @@
 import argparse
 import datetime
 import os
+import shlex
 import subprocess
+
+try:  # For Python 3
+    from configparser import NoOptionError
+except ImportError:
+    from ConfigParser import NoOptionError  # NOQA
 
 import aaargh
 import prettytable
@@ -274,6 +280,36 @@ def run(directory, backup, config, task, new, time, message, file, command):
     print(_('Task %s running for %s') % (event.task,
                                          str(event.delta).split('.')[0]))
     os.unlink('%s/.current' % directory)
+
+
+@APP.cmd(help=_('run predefined command with timer'))
+@APP.cmd_arg('-t', '--time', metavar='time', default='',
+             help=_('set start time'), type=start_time_typecheck)
+@APP.cmd_arg('-m', '--message', metavar='message', help=_('closing message'))
+@APP.cmd_arg('-F', '--file', metavar='file', type=argparse.FileType(),
+             help=_('read closing message from file'))
+@APP.cmd_arg('wrapper', default='default', help=_('wrapper name'))
+def wrapper(directory, backup, config, time, message, file, wrapper):
+    """Run predefined timed command.
+
+    :param str directory: Directory to read events from
+    :param bool backup: Whether to create backup files
+    :param ConfigParser config: Configuration data
+    :param datetime.datetime time: Task start time
+    :param str message: Message to assign to event
+    :param str file: Filename to read message from
+    :param str wrapper: Run wrapper to execute
+
+    """
+    try:
+        command = config.get('run wrappers', wrapper)
+    except NoOptionError:
+        raise ValueError(_('No such wrapper %r') % wrapper)
+    parser = argparse.ArgumentParser(parents=[task_parser, ])
+    parser.add_argument('-c', '--command')
+    args = parser.parse_args(shlex.split(command))
+    run(directory, backup, config, args.task, False, time, message, file,
+        args.command)
 
 
 # pylint: disable-msg=C0103
