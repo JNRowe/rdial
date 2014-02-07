@@ -375,11 +375,12 @@ def report(directory, backup, config, task, duration, sort, reverse, html,
 
 
 @APP.cmd(help=_('display running task, if any'))
-def running(directory, backup):
+def running(directory, backup, config):
     """Display running task, if any.
 
     :param str directory: Directory to read events from
     :param bool backup: Whether to create backup files
+    :param ConfigParser config: Configuration data
 
     """
     events = Events.read(directory)
@@ -393,11 +394,12 @@ def running(directory, backup):
 
 
 @APP.cmd(help=_('display last event, if any'))
-def last(directory, backup):
+def last(directory, backup, config):
     """Display last event, if any.
 
     :param str directory: Directory to read events from
     :param bool backup: Whether to create backup files
+    :param ConfigParser config: Configuration data
 
     """
     events = Events.read(directory)
