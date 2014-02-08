@@ -17,11 +17,17 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+import imp
+
 from sys import version_info
 
 from setuptools import setup
 
-from rdial import _version
+# Hack to import _version file without importing rdial/__init__.py, its
+# purpose is to allow import without requiring dependencies at this point.
+ver_file = open('rdial/_version.py')
+_version = imp.load_module('_version', ver_file, ver_file.name,
+                           ('.py', ver_file.mode, imp.PY_SOURCE))
 
 
 def parse_requires(file):
