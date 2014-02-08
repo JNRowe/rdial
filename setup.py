@@ -33,8 +33,11 @@ _version = imp.load_module('_version', ver_file, ver_file.name,
 def parse_requires(file):
     deps = []
     req_file = open('extra/%s' % file)
-    entries = map(str.strip, req_file.readlines())
+    entries = map(lambda s: s.split('#')[0].strip(), req_file.readlines())
     for dep in entries:
+        if not dep or dep.startswith('#'):
+            continue
+        dep = dep
         if dep.startswith('-r '):
             deps.extend(parse_requires(dep.split()[1]))
         else:
