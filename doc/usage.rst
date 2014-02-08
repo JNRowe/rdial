@@ -10,19 +10,19 @@ Options
 
 .. program:: rdial
 
-.. cmdoption:: --version
+.. option:: --version
 
    show program's version number and exit
 
-.. cmdoption:: -h, --help
+.. option:: -h, --help
 
    show program's help message and exit
 
-.. cmdoption:: -d <directory>, --directory=<directory>
+.. option:: -d <directory>, --directory=<directory>
 
    database location, defaults to ``${XDG_DATA_HOME:-/.local}/rdial``
 
-.. cmdoption:: --no-backup
+.. option:: --no-backup
 
    do not write data file backups
 
@@ -47,15 +47,15 @@ Commands
 
     rdial start [-h] [-x] [-n] [-t time] <task>
 
-.. cmdoption:: -x, --from-dir
+.. option:: -x, --from-dir
 
    use directory name as task
 
-.. cmdoption:: -n, --new
+.. option:: -n, --new
 
    start a new task
 
-.. cmdoption:: -t <time>, --time <time>
+.. option:: -t <time>, --time <time>
 
    manually set start time for task
 
@@ -68,15 +68,15 @@ Commands
 
     rdial stop [-h] [-m <message>] [--amend]
 
-.. cmdoption:: -m <message>, --message=<message>
+.. option:: -m <message>, --message=<message>
 
    closing message
 
-.. cmdoption:: -F <file>, --file <file>
+.. option:: -F <file>, --file <file>
 
    read closing message from file
 
-.. cmdoption:: --amend
+.. option:: --amend
 
    amend previous stop entry
 
@@ -89,19 +89,19 @@ Commands
 
     rdial switch [-h] [-x] [-n] [-m <message>] [task]
 
-.. cmdoption:: -x, --from-dir
+.. option:: -x, --from-dir
 
    use directory name as task
 
-.. cmdoption:: -n, --new
+.. option:: -n, --new
 
    start a new task
 
-.. cmdoption:: -m <message>, --message <message>
+.. option:: -m <message>, --message <message>
 
    closing message for current task
 
-.. cmdoption:: -F <file>, --file <file>
+.. option:: -F <file>, --file <file>
 
    read closing message for current task from file
 
@@ -116,27 +116,27 @@ Commands
 
     rdial run [-h] [-x] [-n] [-t time] [-m message] [-F file] [-c command] <task>
 
-.. cmdoption:: -x, --from-dir
+.. option:: -x, --from-dir
 
    use directory name as task
 
-.. cmdoption:: -n, --new
+.. option:: -n, --new
 
    start a new task
 
-.. cmdoption:: -t <time>, --time <time>
+.. option:: -t <time>, --time <time>
 
    manually set start time for task
 
-.. cmdoption:: -m <message>, --message <message>
+.. option:: -m <message>, --message <message>
 
    closing message for current task
 
-.. cmdoption:: -F <file>, --file <file>
+.. option:: -F <file>, --file <file>
 
    read closing message for current task from file
 
-.. cmdoption:: -c <command>, --command <command>
+.. option:: -c <command>, --command <command>
 
    command to run
 
@@ -151,15 +151,15 @@ Commands
 
 See :ref:`run wrappers configuration <run-wrappers-label>`.
 
-.. cmdoption:: -t <time>, --time <time>
+.. option:: -t <time>, --time <time>
 
    manually set start time for task
 
-.. cmdoption:: -m <message>, --message <message>
+.. option:: -m <message>, --message <message>
 
    closing message for current task
 
-.. cmdoption:: -F <file>, --file <file>
+.. option:: -F <file>, --file <file>
 
    read closing message for current task from file
 
@@ -172,27 +172,27 @@ See :ref:`run wrappers configuration <run-wrappers-label>`.
 
     rdial report [-h] [-d <duration>] [-s <order] [-r] [--html] [--human] <task>
 
-.. cmdoption:: -d <duration>, --duration=<duration>
+.. option:: -d <duration>, --duration=<duration>
 
    filter events for specified time period {day,week,month,year,all}
 
-.. cmdoption:: -s <order>, --sort=<order>
+.. option:: -s <order>, --sort=<order>
 
    field to sort by {task,time}
 
-.. cmdoption:: -r, --reverse
+.. option:: -r, --reverse
 
    reverse sort order
 
-.. cmdoption:: --html
+.. option:: --html
 
    produce HTML output
 
-.. cmdoption:: --human
+.. option:: --human
 
    produce human-readable output
 
-.. cmdoption:: -x, --from-dir
+.. option:: -x, --from-dir
 
    use directory name as task
 
@@ -223,14 +223,14 @@ See :ref:`run wrappers configuration <run-wrappers-label>`.
 
     rdial ledger [-h] [-d <duration>] [-r RATE] [task]
 
-.. cmdoption:: -d <duration>, --duration=<duration>
+.. option:: -d <duration>, --duration=<duration>
 
    filter events for specified time period {day,week,month,year,all}
 
-.. cmdoption:: -r <rate>, --rate <rate>
+.. option:: -r <rate>, --rate <rate>
 
    hourly rate for task output
 
-.. cmdoption:: -x, --from-dir
+.. option:: -x, --from-dir
 
    use directory name as task
