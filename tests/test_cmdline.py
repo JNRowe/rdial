@@ -22,7 +22,7 @@ from argparse import ArgumentTypeError
 from expecter import expect
 from nose2.tools import params
 
-from rdial.cmdline import task_name_typecheck
+from rdial.cmdline import (start_time_typecheck, task_name_typecheck)
 
 
 @params(
@@ -38,3 +38,16 @@ def test_task_name_validity(string, expected):
     else:
         with expect.raises(expected):
             task_name_typecheck(string)
+
+@params(
+    ('yesterday', ArgumentTypeError),
+    ('', True),
+    ('2011-05-04T09:15:00Z', True),
+    ('2011-05-04', ArgumentTypeError),
+)
+def test_start_time_validity(string, expected):
+    if expected is True:
+        start_time_typecheck(string) == string
+    else:
+        with expect.raises(expected):
+            start_time_typecheck(string)
