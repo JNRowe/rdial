@@ -122,7 +122,7 @@ def start_time_typecheck(string):
     :param str string: Timestamps to check
     :rtype: :obj:`str`
     :returns: Timestamp, if valid
-    :raises argparse.ArgparseTypeError: If timestamp is invalid
+    :raises argparse.ArgumentTypeError: If timestamp is invalid
 
     """
     try:
