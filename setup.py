@@ -20,6 +20,7 @@
 import imp
 
 from sys import version_info
+from warnings import warn
 
 from setuptools import setup
 
@@ -44,7 +45,13 @@ def parse_requires(file):
             deps.append(dep)
     return deps
 
-install_requires = parse_requires('requirements-py%s%s.txt' % version_info[:2])
+try:
+    install_requires = parse_requires('requirements-py%s%s.txt'
+                                      % version_info[:2])
+except IOError:
+    warn('Unsupported Python version please open an issue!', RuntimeWarning)
+    install_requires = parse_requires('requirements.txt')
+
 
 setup(
     name='rdial',
