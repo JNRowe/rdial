@@ -35,7 +35,9 @@ The module has been tested on many UNIX-like systems, including Linux and OS X,
 but it should work fine on other systems too.
 
 To run the tests you'll need nose2_.  Once you have nose2_ installed you can run
-the tests with the following commands::
+the tests with the following commands:
+
+.. code-block:: console
 
     $ nose2 -v tests
 
@@ -69,7 +71,7 @@ currently running.
 Interface
 ---------
 
-::
+.. code-block:: console
 
     $ rdial start <task_name>
     $ rdial stop
