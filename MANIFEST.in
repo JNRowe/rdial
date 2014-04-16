@@ -5,6 +5,7 @@ include doc/images/dwm-taskbar.png
 include doc/conf.py
 include doc/wordlist.txt
 include extra/_rdial
+include extra/doap.rdf
 include extra/rdial.png
 include extra/requirements*.txt
 include nose2.cfg

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:foaf="http://xmlns.com/foaf/0.1/"
+    xmlns="http://usefulinc.com/ns/doap#">
+    <name>rdial</name>
+    <shortname>rdial</shortname>
+
+    <shortdesc xml:lang="en">
+        Simple time tracking for simple people
+    </shortdesc>
+    <description xml:lang="en">
+        rdial is a simple way to track the time you spend on tasks.  It tracks
+        the name of a task, its start time and its duration… nothing more.
+    </description>
+ 
+    <homepage rdf:resource="https://github.com/JNRowe/rdial" />
+    <download-page rdf:resource="https://pypi.python.org/pypi/rdial/" />
+    <bug-database rdf:resource="http://github.com/JNRowe/rdial/issues" />
+    <repository>
+        <GitRepository>
+            <location rdf:resource="git://github.com/JNRowe/rdial.git" />
+            <browse rdf:resource="https://github.com/JNRowe/rdial" />
+        </GitRepository>
+    </repository>
+    <created>2014-02-07</created>
+    <license rdf:resource="http://spdx.org/licenses/GPL-3.0+" />
+    <programming-language>Python</programming-language>
+   
+    <maintainer>
+        <foaf:Person>
+            <foaf:name>James Rowe</foaf:name>
+            <mbox rdf:resource="mailto:jnrowe@gmail.com" />
+            <rdfs:homepage rdf:resource="http://jnrowe.github.io" />
+        </foaf:Person>
+    </maintainer>
+</Project>
