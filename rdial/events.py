@@ -64,7 +64,6 @@ class Event(object):
         :param datetime.datetime start: Start time for event
         :param datetime.timedelta delta: Duration for event
         :param str message: Message to attach to event
-
         """
         self.task = task
         if isinstance(start, datetime.datetime):
@@ -84,7 +83,6 @@ class Event(object):
 
         :rtype: :obj:`str`
         :return: Event representation suitable for :func:`eval`
-
         """
         return 'Event(%r, %r, %r, %r)' \
             % (self.task, utils.format_datetime(self.start),
@@ -95,7 +93,6 @@ class Event(object):
 
         :rtype: :obj:`dict`
         :return: Event data for object storage
-
         """
         return {
             'start': utils.format_datetime(self.start),
@@ -108,7 +105,6 @@ class Event(object):
 
         :rtype: :obj:`str`
         :return: Event name, if running
-
         """
         if self.delta == datetime.timedelta(0):
             return self.task
@@ -120,7 +116,6 @@ class Event(object):
         :param str message: Message to attach to event
         :param bool force: Re-stop a previously stopped event
         :raise TaskNotRunningError: Event not running
-
         """
         if not force and self.delta:
             raise TaskNotRunningError('No task running!')
@@ -138,7 +133,6 @@ class Events(list):
 
         :param list iterable: Objects to add to container
         :param bool backup: Whether to create backup files
-
         """
         super(Events, self).__init__(iterable if iterable else [])
         self.backup = backup
@@ -149,7 +143,6 @@ class Events(list):
 
         :rtype: :obj:`str`
         :return: Events representation suitable for :func:`eval`
-
         """
         return 'Events(%s)' % super(self.__class__, self).__repr__()
 
@@ -163,7 +156,6 @@ class Events(list):
         """Mark task as needing sync.
 
         :param str value: Task to mark as dirty
-
         """
         if not value in self._dirty:
             self._dirty.append(value)
@@ -184,7 +176,6 @@ class Events(list):
         :param bool backup: Whether to create backup files
         :rtype: :obj:`Events`
         :returns: Parsed events database
-
         """
         if not os.path.exists(directory):
             return Events(backup=backup)
@@ -199,7 +190,6 @@ class Events(list):
         """Write database file.
 
         :param str directory: Location to write database files to
-
         """
         if not os.path.isdir(directory):
             os.makedirs(directory)
@@ -230,7 +220,6 @@ class Events(list):
 
         :rtype: :obj:`list` of :obj:`str`
         :return: Names of tasks in database
-
         """
         return sorted(set(event.task for event in self))
 
@@ -241,7 +230,6 @@ class Events(list):
 
         :rtype: `Event`
         :return: Last recorded event
-
         """
         if len(self) > 0:
             return self[-1]
@@ -255,7 +243,6 @@ class Events(list):
 
         :rtype: `Event`
         :return: Running event, if an event running
-
         """
         last = self.last()
         return last.running() if last else False
@@ -266,7 +253,6 @@ class Events(list):
         :param str task: Task name to tracking
         :param str start: ISO-8601 start time for event
         :raise TaskRunningError: An event is already running
-
         """
         if not new and task not in self.tasks():
             raise TaskNotExistError("Task %s does not exist!  Use `--new' to "
@@ -283,7 +269,6 @@ class Events(list):
         :param str message: Message to attach to event
         :param bool force: Re-stop a previously stopped event
         :raise TaskNotRunningError: No task running!
-
         """
         if not force and not self.running():
             raise TaskNotRunningError('No task running!')
@@ -296,7 +281,6 @@ class Events(list):
         :param func filt: Function to filter with
         :rtype: :obj:`Events`
         :return: Events matching given filter function
-
         """
         return Events(filter(filt, self))
 
@@ -306,7 +290,6 @@ class Events(list):
         :param str task: Task name to filter on
         :rtype: :obj:`Events`
         :return: Events marked with given task name
-
         """
         return self.filter(lambda x: x.task == task)
 
@@ -318,7 +301,6 @@ class Events(list):
         :param int day: Day to filter on, or :obj:`None`
         :rtype: :obj:`Events`
         :return: Events occurring within specified date
-
         """
         events = self.filter(lambda x: x.start.year == year)
         if month:
@@ -334,7 +316,6 @@ class Events(list):
         :param int week: ISO-8601 month number to filter events on
         :rtype: :obj:`Events`
         :return: Events occurring in given ISO-8601 week
-
         """
         start, end = utils.iso_week_to_date(year, week)
         return self.filter(lambda x: start <= x.start.date() < end)
@@ -344,7 +325,6 @@ class Events(list):
 
         :rtype: :obj:`datetime.timedelta`
         :return: Sum of all event deltas
-
         """
         return sum(map(operator.attrgetter('delta'), self),
                    datetime.timedelta(0))
@@ -356,7 +336,6 @@ class Events(list):
 
         :param str directory: Database location
         :param bool backup: Whether to create backup files
-
         """
         events = Events.read(directory, backup)
         yield events

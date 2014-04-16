@@ -64,7 +64,6 @@ def task_name_typecheck(string):
     :rtype: :obj:`str`
     :returns: Task name, if valid
     :raises argparse.ArgparseTypeError: If task name is invalid
-
     """
     if string.startswith('.') or '/' in string or '\000' in string:
         raise argparse.ArgumentTypeError(_('%r is not a valid task name')
@@ -96,7 +95,6 @@ def filter_events(directory, task=None, duration=None):
     :param str duration: Time window to filter on
     :rtype: :obj:`rdial.events.Events`
     :return: Events matching specified criteria
-
     """
     events = Events.read(directory)
     if task:
@@ -123,7 +121,6 @@ def start_time_typecheck(string):
     :rtype: :obj:`str`
     :returns: Timestamp, if valid
     :raises argparse.ArgumentTypeError: If timestamp is invalid
-
     """
     try:
         utils.parse_datetime(string)
@@ -140,7 +137,6 @@ def fsck(directory, backup, config):
     :param str directory: Directory to read events from
     :param bool backup: Whether to create backup files
     :param ConfigParser config: Configuration data
-
     """
     with Events.context(directory, backup) as events:
         last = events[0]
@@ -166,7 +162,6 @@ def start(directory, backup, config, task, new, time):
     :param str task: Task name to operate on
     :param bool new: Create a new task
     :param datetime.datetime time: Task start time
-
     """
     with Events.context(directory, backup) as events:
         events.start(task, new, time)
@@ -188,7 +183,6 @@ def stop(directory, backup, config, message, file, amend):
     :param str message: Message to assign to event
     :param str file: Filename to read message from
     :param bool amend: Amend a previously stopped event
-
     """
     if file:
         message = file.read()
@@ -223,7 +217,6 @@ def switch(directory, backup, config, task, new, message, file):
     :param bool new: Create a new task
     :param str message: Message to assign to event
     :param str file: Filename to read message from
-
     """
     if file:
         message = file.read()
@@ -258,7 +251,6 @@ def run(directory, backup, config, task, new, time, message, file, command):
     :param str message: Message to assign to event
     :param str file: Filename to read message from
     :param str command: Command to run
-
     """
     with Events.context(directory, backup) as events:
         if events.running():
@@ -301,7 +293,6 @@ def wrapper(directory, backup, config, time, message, file, wrapper):
     :param str message: Message to assign to event
     :param str file: Filename to read message from
     :param str wrapper: Run wrapper to execute
-
     """
     try:
         command = config.get('run wrappers', wrapper)
@@ -343,7 +334,6 @@ def report(directory, backup, config, task, duration, sort, reverse, html,
     :param bool reverse: Reverse sort order
     :param bool html: Produce HTML output
     :param bool human: Produce human-readble output
-
     """
     if task == 'default':
         # Lazy way to remove duplicate argument definitions
@@ -381,7 +371,6 @@ def running(directory, backup, config):
     :param str directory: Directory to read events from
     :param bool backup: Whether to create backup files
     :param ConfigParser config: Configuration data
-
     """
     events = Events.read(directory)
     if events.running():
@@ -400,7 +389,6 @@ def last(directory, backup, config):
     :param str directory: Directory to read events from
     :param bool backup: Whether to create backup files
     :param ConfigParser config: Configuration data
-
     """
     events = Events.read(directory)
     event = events.last()
@@ -423,7 +411,6 @@ def ledger(directory, backup, config, task, duration, rate):
     :param str task: Task name to operate on
     :param str duration: Time window to filter on
     :param str rate: Rate to assign hours in report
-
     """
     if task == 'default':
         # Lazy way to remove duplicate argument definitions

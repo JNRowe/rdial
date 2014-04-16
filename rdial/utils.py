@@ -46,7 +46,6 @@ def _colourise(text, colour):
     :param str colour: Colour to display text in
     :rtype: :obj:`str`
     :return str: Colourised text, if possible
-
     """
     return getattr(T, colour.replace(' ', '_'))(text)
 
@@ -57,7 +56,6 @@ def success(text):
     :param str text: Text to format
     :rtype: :obj:`str`
     :return: Bright green text, if possible
-
     """
     return _colourise(text, 'bright green')
 
@@ -68,7 +66,6 @@ def fail(text):
     :param str text: Text to format
     :rtype: :obj:`str`
     :return: Bright red text, if possible
-
     """
     return _colourise(text, 'bright red')
 
@@ -79,7 +76,6 @@ def warn(text):
     :param str text: Text to format
     :rtype: ``str``
     :return: Bright yellow text, if possible
-
     """
     return _colourise(text, 'bright yellow')
 
@@ -122,7 +118,6 @@ def parse_delta(string):
     :param str string: Duration string to parse
     :rtype: :obj:`datetime.timedelta`
     :return: Parsed delta object
-
     """
     if not string:
         return datetime.timedelta(0)
@@ -145,7 +140,6 @@ def format_delta(timedelta_):
     :param datetime.timedelta timedelta_: Duration to process
     :rtype: :obj:`str`
     :return: ISO-8601 representation of duration
-
     """
     if timedelta_ == datetime.timedelta(0):
         return ''
@@ -165,7 +159,6 @@ def parse_datetime(string):
     :param str string: Datetime string to parse
     :rtype: :obj:`datetime.datetime`
     :return: Parsed datetime object
-
     """
     if not string:
         datetime_ = utcnow()
@@ -181,7 +174,6 @@ def format_datetime(datetime_):
     :param datetime.datetime datetime_: Datetime to process
     :rtype: str
     :return: ISO-8601 compatible string
-
     """
     # Can't call isoformat method as it uses the +00:00 form
     return datetime_.strftime('%Y-%m-%dT%H:%M:%SZ')
@@ -197,7 +189,6 @@ def iso_week_to_date(year, week):
     :param int week: Week number to process
     :rtype: :obj:`tuple` of :obj:`datetime.date`
     :return: Date range objects for given week
-
     """
     bound = datetime.date(year, 1, 4)
     iso_start = bound - datetime.timedelta(days=bound.isocalendar()[2] - 1)
@@ -211,7 +202,6 @@ def utcnow():
 
     :rtype: obj:`datetime.datetime`
     :return: Current date and time, in UTC
-
     """
     return datetime.datetime.utcnow().replace(tzinfo=utc)
 
@@ -223,7 +213,6 @@ def read_config(parser, user_config=None):
     :type str user_config: User defined config file
     :rtype: ConfigParser
     :return: Parsed configuration data
-
     """
     if user_config and not os.path.exists(user_config):
         raise parser.error(_("Config file %r doesn't exist!" % user_config))
@@ -251,7 +240,6 @@ def write_current(f):
     :seealso: :doc:`/taskbars`
 
     :rtype: obj:`function`
-
     """
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
@@ -266,7 +254,6 @@ def remove_current(f):
     :seealso: :doc:`/taskbars`
 
     :rtype: obj:`function`
-
     """
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
@@ -280,7 +267,6 @@ def xdg_config_location():
     """Return a config location honouring $XDG_CONFIG_HOME.
 
     :rtype: :obj:`str`
-
     """
     user_dir = os.getenv('XDG_CONFIG_HOME',
                          os.path.join(os.getenv('HOME', '/'), '.config'))
@@ -291,7 +277,6 @@ def xdg_data_location():
     """Return a data location honouring $XDG_DATA_HOME.
 
     :rtype: :obj:`str`
-
     """
     user_dir = os.getenv('XDG_DATA_HOME', os.path.join(os.getenv('HOME', '/'),
                          '.local/share'))
