@@ -1,9 +1,9 @@
 *.html
 *.pyc
 
-build/
-dist/
-rdial.egg-info/
+/build/
+/dist/
+/rdial.egg-info/
 
-.coverage
-.noseids
+/.coverage
+/.noseids
