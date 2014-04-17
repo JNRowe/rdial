@@ -25,6 +25,7 @@ Requirements
 
 * aaargh_
 * blessings_
+* configobj_
 * prettytable_
 
 It should work with any version of Python_ 2.6 or newer.  If ``rdial`` doesn't
@@ -119,6 +120,7 @@ reproduce the problem, or even better a patch!
 .. _GPL v3: http://www.gnu.org/licenses/
 .. _aaargh: https://crate.io/packages/aaargh/
 .. _blessings: https://crate.io/packages/blessings/
+.. _configobj: https://crate.io/packages/configobj/
 .. _prettytable: http://code.google.com/p/prettytable/
 .. _Python: http://www.python.org/
 .. _issue: https://github.com/JNRowe/rdial/issues

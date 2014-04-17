@@ -25,11 +25,6 @@ import os
 import shlex
 import subprocess
 
-try:  # For Python 3
-    from configparser import NoOptionError
-except ImportError:
-    from ConfigParser import NoOptionError  # NOQA
-
 import aaargh
 import prettytable
 
@@ -136,7 +131,7 @@ def fsck(directory, backup, config):
 
     :param str directory: Directory to read events from
     :param bool backup: Whether to create backup files
-    :param ConfigParser config: Configuration data
+    :param configobj config: Configuration data
     """
     with Events.context(directory, backup) as events:
         last = events[0]
@@ -158,7 +153,7 @@ def start(directory, backup, config, task, new, time):
 
     :param str directory: Directory to read events from
     :param bool backup: Whether to create backup files
-    :param ConfigParser config: Configuration data
+    :param configobj config: Configuration data
     :param str task: Task name to operate on
     :param bool new: Create a new task
     :param datetime.datetime time: Task start time
@@ -179,7 +174,7 @@ def stop(directory, backup, config, message, file, amend):
 
     :param str directory: Directory to read events from
     :param bool backup: Whether to create backup files
-    :param ConfigParser config: Configuration data
+    :param configobj config: Configuration data
     :param str message: Message to assign to event
     :param str file: Filename to read message from
     :param bool amend: Amend a previously stopped event
@@ -212,7 +207,7 @@ def switch(directory, backup, config, task, new, message, file):
 
     :param str directory: Directory to read events from
     :param bool backup: Whether to create backup files
-    :param ConfigParser config: Configuration data
+    :param configobj config: Configuration data
     :param str task: Task name to operate on
     :param bool new: Create a new task
     :param str message: Message to assign to event
@@ -244,7 +239,7 @@ def run(directory, backup, config, task, new, time, message, file, command):
 
     :param str directory: Directory to read events from
     :param bool backup: Whether to create backup files
-    :param ConfigParser config: Configuration data
+    :param configobj config: Configuration data
     :param str task: Task name to operate on
     :param bool new: Create a new task
     :param datetime.datetime time: Task start time
@@ -288,15 +283,17 @@ def wrapper(directory, backup, config, time, message, file, wrapper):
 
     :param str directory: Directory to read events from
     :param bool backup: Whether to create backup files
-    :param ConfigParser config: Configuration data
+    :param configobj.ConfigObj config: Configuration data
     :param datetime.datetime time: Task start time
     :param str message: Message to assign to event
     :param str file: Filename to read message from
     :param str wrapper: Run wrapper to execute
     """
+    if not 'run wrappers' in config:
+        raise ValueError(_('No %r section in config') % 'run wrappers')
     try:
-        command = config.get('run wrappers', wrapper)
-    except NoOptionError:
+        command = config['run wrappers'][wrapper]
+    except KeyError:
         raise ValueError(_('No such wrapper %r') % wrapper)
     parser = argparse.ArgumentParser(parents=[task_parser, ])
     parser.add_argument('-c', '--command')
@@ -327,7 +324,7 @@ def report(directory, backup, config, task, duration, sort, reverse, html,
 
     :param str directory: Directory to read events from
     :param bool backup: Whether to create backup files
-    :param ConfigParser config: Configuration data
+    :param configobj config: Configuration data
     :param str task: Task name to operate on
     :param str duration: Time window to filter on
     :param str sort: Key to sort events on
@@ -370,7 +367,7 @@ def running(directory, backup, config):
 
     :param str directory: Directory to read events from
     :param bool backup: Whether to create backup files
-    :param ConfigParser config: Configuration data
+    :param configobj config: Configuration data
     """
     events = Events.read(directory)
     if events.running():
@@ -388,7 +385,7 @@ def last(directory, backup, config):
 
     :param str directory: Directory to read events from
     :param bool backup: Whether to create backup files
-    :param ConfigParser config: Configuration data
+    :param configobj config: Configuration data
     """
     events = Events.read(directory)
     event = events.last()
@@ -407,7 +404,7 @@ def ledger(directory, backup, config, task, duration, rate):
 
     :param str directory: Directory to read events from
     :param bool backup: Whether to create backup files
-    :param ConfigParser config: Configuration data
+    :param configobj config: Configuration data
     :param str task: Task name to operate on
     :param str duration: Time window to filter on
     :param str rate: Rate to assign hours in report
@@ -440,17 +437,17 @@ def main():
     args, remaining = parser.parse_known_args()
     cfg = utils.read_config(parser, args.config)
 
-    if not cfg.getboolean('rdial', 'colour') or os.getenv('NO_COLOUR'):
+    if not cfg['rdial'].as_bool('colour') or os.getenv('NO_COLOUR'):
         utils._colourise = lambda s, colour: s
 
     for name, parser in APP._subparsers.choices.items():
-        if cfg.has_section(name):
+        if name in cfg.sections:
             d = {}
             for k in cfg.options(name):
                 try:
-                    d[k] = cfg.getboolean(name, k)
+                    d[k] = cfg[name].as_bool(k)
                 except ValueError:
-                    d[k] = cfg.get(name, k)
+                    d[k] = cfg[name][k]
             parser.set_defaults(**d)
 
     APP.arg('--version', action='version',
@@ -461,11 +458,9 @@ def main():
             help=_('do not write data file backups'))
     APP.arg('--config', metavar='file',
             help=_('file to read configuration data from'))
-    APP.defaults(backup=not cfg.getboolean('rdial', 'backup'),
-                 directory=cfg.get('rdial', 'directory',
-                                   vars={'xdg_data_location':
-                                         utils.xdg_data_location()}),
-                 config=cfg)
+
+    APP.defaults(backup=not cfg['rdial'].as_bool('backup'),
+                 directory=cfg['rdial']['directory'], config=cfg)
     try:
         APP.run(remaining)
     except utils.RdialError as error:

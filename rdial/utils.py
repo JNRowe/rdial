@@ -24,12 +24,8 @@ import functools
 import os
 import re
 
-try:  # For Python 3
-    from configparser import ConfigParser
-except ImportError:
-    from ConfigParser import SafeConfigParser as ConfigParser  # NOQA
-
 import blessings
+import configobj
 
 from . import compat
 from .i18n import _
@@ -211,7 +207,7 @@ def read_config(parser, user_config=None):
 
     :type argparse.ArgumentParser parser: Command line parser
     :type str user_config: User defined config file
-    :rtype: ConfigParser
+    :rtype: configobj.ConfigObj
     :return: Parsed configuration data
     """
     if user_config and not os.path.exists(user_config):
@@ -226,12 +222,12 @@ def read_config(parser, user_config=None):
     configs.append(os.path.abspath('.rdialrc'))
     if user_config:
         configs.append(user_config)
-    cfg = ConfigParser()
+    # Prime config with dynamic key
+    lines = ['xdg_data_location = %r' % xdg_data_location(), ]
     for file in configs:
         if os.path.isfile(file):
-            cfg.readfp(compat.open(file, encoding='utf-8'))
-
-    return cfg
+            lines.extend(compat.open(file, encoding='utf-8').readlines())
+    return configobj.ConfigObj(lines)
 
 
 def write_current(f):

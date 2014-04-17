@@ -34,9 +34,10 @@ An example configuration file is below:
     sort = time
     reverse = True
 
-The configuration files are processed using Python's built-in
-:mod:`~ConfigParser.SafeConfigParser`, and you can make use of all the features
-it provides(such as interpolation).
+The configuration files are processed using configobj_, and you can make use
+of all the features it provides(such as interpolation).
+
+.. _configobj: http://www.voidspace.org.uk/python/configobj.html
 
 ``rdial`` section
 -----------------
