@@ -53,12 +53,14 @@ suffix.
    You are strongly urged to keep this set to ``True``, as it helps to protect
    you from bugs in :mod:`rdial`.
 
-``color`` (default: ``True``)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+``colour`` (default: ``True``)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If this key is set to ``False`` then no coloured output will be produced by
 ``rdial``.  You can also specify this for individual runs by setting the
 :envvar:`NO_COLOUR` environment variable.
+
+The key ``color`` is also accepted.
 
 ``directory`` (default: :file:`${XDG_DATA_HOME}/rdial`)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

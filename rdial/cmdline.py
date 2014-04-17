@@ -437,7 +437,10 @@ def main():
     args, remaining = parser.parse_known_args()
     cfg = utils.read_config(parser, args.config)
 
-    if not cfg['rdial'].as_bool('colour') or os.getenv('NO_COLOUR'):
+    if 'color' in cfg['rdial']:
+        cfg['rdial']['colour'] = cfg['rdial']['color']
+    if not cfg['rdial'].as_bool('colour') or os.getenv('NO_COLOUR') \
+            or os.getenv('NO_COLOR'):
         utils._colourise = lambda s, colour: s
 
     for name, parser in APP._subparsers.choices.items():
