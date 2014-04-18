@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: rdial 0.13.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-04-18 17:32+0100\n"
+"POT-Creation-Date: 2014-04-18 18:14+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -203,32 +203,32 @@ msgstr ""
 msgid "Last task %s, ran for %s"
 msgstr ""
 
-#: rdial/cmdline.py:394
+#: rdial/cmdline.py:396
 #, python-format
 msgid "Task %s is still running"
 msgstr ""
 
-#: rdial/cmdline.py:397
+#: rdial/cmdline.py:399
 msgid "generate ledger compatible data file"
 msgstr ""
 
-#: rdial/cmdline.py:400
+#: rdial/cmdline.py:402
 msgid "hourly rate for task output"
 msgstr ""
 
-#: rdial/cmdline.py:416 rdial/cmdline.py:429
+#: rdial/cmdline.py:418 rdial/cmdline.py:431
 msgid ";; Running event not included in output!"
 msgstr ""
 
-#: rdial/cmdline.py:458
+#: rdial/cmdline.py:460
 msgid "directory to read/write to"
 msgstr ""
 
-#: rdial/cmdline.py:460
+#: rdial/cmdline.py:462
 msgid "do not write data file backups"
 msgstr ""
 
-#: rdial/cmdline.py:462
+#: rdial/cmdline.py:464
 msgid "file to read configuration data from"
 msgstr ""
 

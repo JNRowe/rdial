@@ -390,6 +390,8 @@ def last(directory, backup, config):
     event = events.last()
     if not events.running():
         print(_('Last task %s, ran for %s') % (event.task, event.delta))
+        if event.message:
+            print(repr(event.message))
     else:
         print(utils.warn(_('Task %s is still running') % event.task))
 
