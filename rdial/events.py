@@ -78,6 +78,7 @@ class Event(object):
             self.delta = utils.parse_delta(delta)
         self.message = message
 
+    @compat.mangle_repr_type
     def __repr__(self):
         """Self-documenting string representation.
 
@@ -138,6 +139,7 @@ class Events(list):
         self.backup = backup
         self._dirty = []
 
+    @compat.mangle_repr_type
     def __repr__(self):
         """Self-documenting string representation.
 

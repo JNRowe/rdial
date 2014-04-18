@@ -27,3 +27,14 @@ if PY2:
     open = codecs.open
 else:
     open = open
+
+if PY2:
+    def mangle_repr_type(klass):
+        klass.__repr_unicode__ = klass.__repr__
+
+        def wrapper(self):
+            return self.__repr_unicode__().encode('utf-8')
+        klass.__repr__ = wrapper
+        return klass
+else:
+    mangle_repr_type = lambda x: x
