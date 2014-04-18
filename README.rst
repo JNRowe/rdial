@@ -24,6 +24,7 @@ Requirements
 ``rdial``'s dependencies outside of the standard library are:
 
 * aaargh_
+* arrow_
 * blessings_
 * configobj_
 * prettytable_
@@ -119,6 +120,7 @@ reproduce the problem, or even better a patch!
 
 .. _GPL v3: http://www.gnu.org/licenses/
 .. _aaargh: https://crate.io/packages/aaargh/
+.. _arrow: https://crate.io/packages/arrow/
 .. _blessings: https://crate.io/packages/blessings/
 .. _configobj: https://crate.io/packages/configobj/
 .. _prettytable: http://code.google.com/p/prettytable/

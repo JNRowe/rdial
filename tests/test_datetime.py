@@ -17,25 +17,25 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from datetime import datetime
+import arrow
 
 from expecter import expect
 from nose2.tools import params
 
-from rdial.utils import (format_datetime, parse_datetime, utc)
+from rdial.utils import (format_datetime, parse_datetime)
 
 
 @params(
-    ('2011-05-04T08:00:00Z', datetime(2011, 5, 4, 8, 0, tzinfo=utc)),
-    ('2011-05-04T09:15:00Z', datetime(2011, 5, 4, 9, 15, tzinfo=utc)),
+    ('2011-05-04T08:00:00Z', arrow.get(2011, 5, 4, 8, 0)),
+    ('2011-05-04T09:15:00Z', arrow.get(2011, 5, 4, 9, 15)),
 )
 def test_parse_datetime(string, expected):
     expect(parse_datetime(string)) == expected
 
 
 @params(
-    (datetime(2011, 5, 4, 8, 0, tzinfo=utc), '2011-05-04T08:00:00Z'),
-    (datetime(2011, 5, 4, 9, 15, tzinfo=utc), '2011-05-04T09:15:00Z'),
+    (arrow.get(2011, 5, 4, 8, 0), '2011-05-04T08:00:00Z'),
+    (arrow.get(2011, 5, 4, 9, 15), '2011-05-04T09:15:00Z'),
 )
 def test_format_datetime(dt, expected):
     expect(format_datetime(dt)) == expected

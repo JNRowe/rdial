@@ -39,11 +39,12 @@ def test_task_name_validity(string, expected):
         with expect.raises(expected):
             task_name_typecheck(string)
 
+
 @params(
     ('yesterday', ArgumentTypeError),
     ('', True),
     ('2011-05-04T09:15:00Z', True),
-    ('2011-05-04', ArgumentTypeError),
+    ('2011-05-04', True),
 )
 def test_start_time_validity(string, expected):
     if expected is True:
