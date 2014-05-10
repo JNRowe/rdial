@@ -37,7 +37,7 @@ An example configuration file is below:
 The configuration files are processed using configobj_, and you can make use
 of all the features it provides(such as interpolation).
 
-.. _configobj: http://www.voidspace.org.uk/python/configobj.html
+.. _configobj: http://configobj.readthedocs.org/
 
 ``rdial`` section
 -----------------
