@@ -99,11 +99,11 @@ def print_version(ctx, value):
 @click.option('--version', is_flag=True, callback=print_version,
               expose_value=False, is_eager=True,
               help=_('Show version string and exit.'))
-@click.option('-d', '--directory', metavar='DIR',
+@click.option('-d', '--directory', envvar='RDIAL_DIRECTORY', metavar='DIR',
               help=_('Directory to read/write to.'))
-@click.option('--backup/--no-backup',
+@click.option('--backup/--no-backup', envvar='RDIAL_BACKUP',
               help=_('Do not write data file backups.'))
-@click.option('--config', type=click.File(),
+@click.option('--config', envvar='RDIAL_CONFIG', type=click.File(),
               help=_('File to read configuration data from.'))
 @click.pass_context
 def cli(ctx, directory, backup, config):
@@ -188,8 +188,8 @@ def fsck(globs):
 @click.option('-x', '--from-dir', is_flag=True, expose_value=False,
               is_eager=True, callback=task_from_dir,
               help=_('Use directory name as task name.'))
-@click.argument('task', default='default', required=False,
-                type=TaskNameParamType())
+@click.argument('task', default='default', envvar='RDIAL_TASK',
+                required=False, type=TaskNameParamType())
 @click.option('-n', '--new', is_flag=True, help=_('Start a new task.'))
 @click.option('-t', '--time', default='', help=_('Set start time.'),
               type=StartTimeParamType())
@@ -242,8 +242,8 @@ def stop(globs, message, file, amend):
 @click.option('-x', '--from-dir', is_flag=True, expose_value=False,
               is_eager=True, callback=task_from_dir,
               help=_('Use directory name as task name.'))
-@click.argument('task', default='default', required=False,
-                type=TaskNameParamType())
+@click.argument('task', default='default', envvar='RDIAL_TASK',
+                required=False, type=TaskNameParamType())
 @click.option('-n', '--new', is_flag=True, help=_('Start a new task.'))
 @click.option('-m', '--message',
               help=_('Closing message for current task.'))
@@ -277,8 +277,8 @@ def switch(globs, task, new, message, file):
 @click.option('-x', '--from-dir', is_flag=True, expose_value=False,
               is_eager=True, callback=task_from_dir,
               help=_('Use directory name as task name.'))
-@click.argument('task', default='default', required=False,
-                type=TaskNameParamType())
+@click.argument('task', default='default', envvar='RDIAL_TASK',
+                required=False, type=TaskNameParamType())
 @click.option('-n', '--new', is_flag=True, help=_('Start a new task.'))
 @click.option('-t', '--time', default='', help=_('Set start time.'),
               type=StartTimeParamType())
@@ -359,8 +359,8 @@ def wrapper(ctx, globs, time, message, file, wrapper):
 @click.option('-x', '--from-dir', is_flag=True, expose_value=False,
               is_eager=True, callback=task_from_dir,
               help=_('Use directory name as task name.'))
-@click.argument('task', default='default', required=False,
-                type=TaskNameParamType())
+@click.argument('task', default='default', envvar='RDIAL_TASK',
+                required=False, type=TaskNameParamType())
 @click.option('--html', 'output', flag_value='html',
               help=_('Produce HTML output.'))
 @click.option('--human', 'output', flag_value='human',
@@ -368,9 +368,10 @@ def wrapper(ctx, globs, time, message, file, wrapper):
 @click.option('-d', '--duration', default='all',
               type=click.Choice(['day', 'week', 'month', 'year', 'all']),
               help=_('Filter events for specified time period.'))
-@click.option('-s', '--sort', default='task',
+@click.option('-s', '--sort', default='task', envvar='RDIAL_SORT',
               type=click.Choice(['task', 'time']), help=_('Field to sort by.'))
-@click.option('-r', '--reverse/--no-reverse', help=_('Reverse sort order.'))
+@click.option('-r', '--reverse/--no-reverse', default=False,
+              envvar='RDIAL_REVERSE', help=_('Reverse sort order.'))
 @click.pass_obj
 def report(globs, task, output, duration, sort, reverse):
     """Report time tracking data.
@@ -451,12 +452,12 @@ def last(globs):
 @click.option('-x', '--from-dir', is_flag=True, expose_value=False,
               is_eager=True, callback=task_from_dir,
               help=_('Use directory name as task name.'))
-@click.argument('task', default='default', required=False,
-                type=TaskNameParamType())
+@click.argument('task', default='default', envvar='RDIAL_TASK',
+                required=False, type=TaskNameParamType())
 @click.option('-d', '--duration', default='all',
               type=click.Choice(['day', 'week', 'month', 'year', 'all']),
               help=_('Filter events for specified time period.'))
-@click.option('-r', '--rate', type=click.FLOAT,
+@click.option('-r', '--rate', envvar='RDIAL_RATE', type=click.FLOAT,
               help=_('Hourly rate for task output.'))
 @click.pass_obj
 def ledger(globs, task, duration, rate):
