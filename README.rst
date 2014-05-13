@@ -23,7 +23,6 @@ Requirements
 
 ``rdial``'s dependencies outside of the standard library are:
 
-* arrow_
 * blessings_
 * click_
 * configobj_
@@ -119,7 +118,6 @@ If you've found a bug please attempt to include a minimal testcase so I can
 reproduce the problem, or even better a patch!
 
 .. _GPL v3: http://www.gnu.org/licenses/
-.. _arrow: https://crate.io/packages/arrow/
 .. _blessings: https://crate.io/packages/blessings/
 .. _click: https://crate.io/packages/click/
 .. _configobj: https://crate.io/packages/configobj/

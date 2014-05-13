@@ -24,7 +24,6 @@ import functools
 import os
 import re
 
-import arrow
 import click
 import configobj
 
@@ -84,6 +83,27 @@ class RdialError(ValueError):
             return self.args[0]
 
 
+class UTC(datetime.tzinfo):
+
+    """UTC timezone object."""
+
+    def __repr__(self):
+        return 'UTC()'
+
+    # pylint: disable-msg=W0613
+    def utcoffset(self, datetime_):
+        return datetime.timedelta(0)
+
+    def dst(self, datetime_):
+        return datetime.timedelta(0)
+
+    def tzname(self, datetime_):
+        return 'UTC'
+    # pylint: enable-msg=W0613
+
+utc = UTC()
+
+
 def parse_delta(string):
     """Parse ISO-8601 duration string.
 
@@ -129,26 +149,26 @@ def parse_datetime(string):
     """Parse ISO-8601 datetime string.
 
     :param str string: Datetime string to parse
-    :rtype: :obj:`arrow.Arrow`
+    :rtype: :obj:`datetime.datetime`
     :return: Parsed datetime object
     """
     if not string:
-        datetime_ = arrow.now()
+        datetime_ = utcnow()
     else:
-        datetime_ = arrow.get(string)
+        datetime_ = datetime.datetime.strptime(string, '%Y-%m-%dT%H:%M:%SZ')
+        datetime_ = datetime_.replace(tzinfo=utc)
     return datetime_
 
 
 def format_datetime(datetime_):
     """Format ISO-8601 datetime string.
 
-    :param arrow.Arrow datetime_: Datetime to process
+    :param datetime.datetime datetime_: Datetime to process
     :rtype: str
     :return: ISO-8601 compatible string
     """
-    # Can't call str method as it uses the verbose microsecond form, and
-    # doesn't collapse UTC timezone in the manner I like
-    return datetime_.to('utc').format('YYYY-MM-DDTHH:mm:ss') + 'Z'
+    # Can't call isoformat method as it uses the +00:00 form
+    return datetime_.strftime('%Y-%m-%dT%H:%M:%SZ')
 
 
 def iso_week_to_date(year, week):
@@ -159,12 +179,13 @@ def iso_week_to_date(year, week):
 
     :param int year: Year to process
     :param int week: Week number to process
-    :rtype: :obj:`tuple` of :obj:`arrow.Arrow`
+    :rtype: :obj:`tuple` of :obj:`datetime.date`
     :return: Date range objects for given week
     """
-    iso_start = arrow.get(year, 1, 4).floor('week')
-    start = iso_start.replace(weeks=week - 1)
-    end = start.replace(weeks=1)
+    bound = datetime.date(year, 1, 4)
+    iso_start = bound - datetime.timedelta(days=bound.isocalendar()[2] - 1)
+    start = iso_start + datetime.timedelta(weeks=week - 1)
+    end = start + datetime.timedelta(weeks=1)
     return start, end
 
 
