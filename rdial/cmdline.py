@@ -98,13 +98,13 @@ def print_version(ctx, value):
                       'https://github.com/JNRowe/rdial/issues'))
 @click.option('--version', is_flag=True, callback=print_version,
               expose_value=False, is_eager=True,
-              help=_('show version string and exit'))
+              help=_('Show version string and exit.'))
 @click.option('-d', '--directory', metavar='DIR',
-              help=_('directory to read/write to'))
+              help=_('Directory to read/write to.'))
 @click.option('--backup/--no-backup',
-              help=_('do not write data file backups'))
+              help=_('Do not write data file backups.'))
 @click.option('--config', type=click.File(),
-              help=_('file to read configuration data from'))
+              help=_('File to read configuration data from.'))
 @click.pass_context
 def cli(ctx, directory, backup, config):
     """Main command entry point.
@@ -167,7 +167,7 @@ def filter_events(directory, task=None, duration=None):
     return events
 
 
-@cli.command(help=_('check storage consistency'))
+@cli.command(help=_('Check storage consistency.'))
 @click.pass_obj
 def fsck(globs):
     """Check storage consistency.
@@ -184,14 +184,14 @@ def fsck(globs):
             last = event
 
 
-@cli.command(help=_('start task'))
+@cli.command(help=_('Start task.'))
 @click.option('-x', '--from-dir', is_flag=True, expose_value=False,
               is_eager=True, callback=task_from_dir,
-              help=_('use directory name as task name'))
+              help=_('Use directory name as task name.'))
 @click.argument('task', default='default', required=False,
                 type=TaskNameParamType())
-@click.option('-n', '--new', is_flag=True, help=_('start a new task'))
-@click.option('-t', '--time', default='', help=_('set start time'),
+@click.option('-n', '--new', is_flag=True, help=_('Start a new task.'))
+@click.option('-t', '--time', default='', help=_('Set start time.'),
               type=StartTimeParamType())
 @click.pass_obj
 @utils.write_current
@@ -207,11 +207,11 @@ def start(globs, task, new, time):
         events.start(task, new, time)
 
 
-@cli.command(help=_('stop task'))
-@click.option('-m', '--message', help=_('closing message'))
+@cli.command(help=_('Stop task.'))
+@click.option('-m', '--message', help=_('Closing message.'))
 @click.option('-F', '--file', type=click.File(),
-              help=_('read closing message from file'))
-@click.option('--amend', is_flag=True, help=_('amend previous stop entry'))
+              help=_('Read closing message from file.'))
+@click.option('--amend', is_flag=True, help=_('Amend previous stop entry.'))
 @click.pass_obj
 @utils.remove_current
 def stop(globs, message, file, amend):
@@ -238,17 +238,17 @@ def stop(globs, message, file, amend):
                                               str(event.delta).split('.')[0]))
 
 
-@cli.command(help=_('switch to another task'))
+@cli.command(help=_('Switch to another task.'))
 @click.option('-x', '--from-dir', is_flag=True, expose_value=False,
               is_eager=True, callback=task_from_dir,
-              help=_('use directory name as task name'))
+              help=_('Use directory name as task name.'))
 @click.argument('task', default='default', required=False,
                 type=TaskNameParamType())
-@click.option('-n', '--new', is_flag=True, help=_('start a new task'))
+@click.option('-n', '--new', is_flag=True, help=_('Start a new task.'))
 @click.option('-m', '--message',
-              help=_('closing message for current task'))
+              help=_('Closing message for current task.'))
 @click.option('-F', '--file', type=click.File(),
-              help=_('read closing message for current task from file'))
+              help=_('Read closing message for current task from file.'))
 @click.pass_obj
 @utils.write_current
 def switch(globs, task, new, message, file):
@@ -273,19 +273,19 @@ def switch(globs, task, new, message, file):
                                               str(event.delta).split('.')[0]))
 
 
-@cli.command(help=_('run command with timer'))
+@cli.command(help=_('Run command with timer.'))
 @click.option('-x', '--from-dir', is_flag=True, expose_value=False,
               is_eager=True, callback=task_from_dir,
-              help=_('use directory name as task name'))
+              help=_('Use directory name as task name.'))
 @click.argument('task', default='default', required=False,
                 type=TaskNameParamType())
-@click.option('-n', '--new', is_flag=True, help=_('start a new task'))
-@click.option('-t', '--time', default='', help=_('set start time'),
+@click.option('-n', '--new', is_flag=True, help=_('Start a new task.'))
+@click.option('-t', '--time', default='', help=_('Set start time.'),
               type=StartTimeParamType())
-@click.option('-m', '--message', help=_('closing message'))
+@click.option('-m', '--message', help=_('Closing message.'))
 @click.option('-F', '--file', type=click.File(),
-              help=_('read closing message from file'))
-@click.option('-c', '--command', help=_('command to run'))
+              help=_('Read closing message from file.'))
+@click.option('-c', '--command', help=_('Command to run.'))
 @click.pass_obj
 def run(globs, task, new, time, message, file, command):
     """Run timed command.
@@ -324,12 +324,12 @@ def run(globs, task, new, time, message, file, command):
         raise OSError(p.returncode, _('Command failed'))
 
 
-@cli.command(help=_('run predefined command with timer'))
-@click.option('-t', '--time', default='', help=_('set start time'),
+@cli.command(help=_('Run predefined command with timer.'))
+@click.option('-t', '--time', default='', help=_('Set start time.'),
               type=StartTimeParamType())
-@click.option('-m', '--message', help=_('closing message'))
+@click.option('-m', '--message', help=_('Closing message.'))
 @click.option('-F', '--file', type=click.File(),
-              help=_('read closing message from file'))
+              help=_('Read closing message from file.'))
 @click.argument('wrapper', default='default')
 @click.pass_obj
 @click.pass_context
@@ -355,22 +355,22 @@ def wrapper(ctx, globs, time, message, file, wrapper):
     ctx.invoke(run, **args)
 
 
-@cli.command(help=_('report time tracking data'))
+@cli.command(help=_('Report time tracking data.'))
 @click.option('-x', '--from-dir', is_flag=True, expose_value=False,
               is_eager=True, callback=task_from_dir,
-              help=_('use directory name as task name'))
+              help=_('Use directory name as task name.'))
 @click.argument('task', default='default', required=False,
                 type=TaskNameParamType())
 @click.option('--html', 'output', flag_value='html',
-              help=_('produce HTML output'))
+              help=_('Produce HTML output.'))
 @click.option('--human', 'output', flag_value='human',
-              help=_('produce human-readable output'))
+              help=_('Produce human-readable output.'))
 @click.option('-d', '--duration', default='all',
               type=click.Choice(['day', 'week', 'month', 'year', 'all']),
-              help=_('filter events for specified time period'))
+              help=_('Filter events for specified time period.'))
 @click.option('-s', '--sort', default='task',
-              type=click.Choice(['task', 'time']), help=_('field to sort by'))
-@click.option('-r', '--reverse/--no-reverse', help=_('reverse sort order'))
+              type=click.Choice(['task', 'time']), help=_('Field to sort by.'))
+@click.option('-r', '--reverse/--no-reverse', help=_('Reverse sort order.'))
 @click.pass_obj
 def report(globs, task, output, duration, sort, reverse):
     """Report time tracking data.
@@ -414,7 +414,7 @@ def report(globs, task, output, duration, sort, reverse):
                    % (current.task, current.start.humanize()))
 
 
-@cli.command(help=_('display running task, if any'))
+@cli.command(help=_('Display running task, if any.'))
 @click.pass_obj
 def running(globs):
     """Display running task, if any.
@@ -430,7 +430,7 @@ def running(globs):
         click.echo(utils.warn(_('No task is running!')))
 
 
-@cli.command(help=_('display last event, if any'))
+@cli.command(help=_('Display last event, if any.'))
 @click.pass_obj
 def last(globs):
     """Display last event, if any.
@@ -447,17 +447,17 @@ def last(globs):
         click.echo(utils.warn(_('Task %s is still running') % event.task))
 
 
-@cli.command(help=_('generate ledger compatible data file'))
+@cli.command(help=_('Generate ledger compatible data file.'))
 @click.option('-x', '--from-dir', is_flag=True, expose_value=False,
               is_eager=True, callback=task_from_dir,
-              help=_('use directory name as task name'))
+              help=_('Use directory name as task name.'))
 @click.argument('task', default='default', required=False,
                 type=TaskNameParamType())
 @click.option('-d', '--duration', default='all',
               type=click.Choice(['day', 'week', 'month', 'year', 'all']),
-              help=_('filter events for specified time period'))
+              help=_('Filter events for specified time period.'))
 @click.option('-r', '--rate', type=click.FLOAT,
-              help=_('hourly rate for task output'))
+              help=_('Hourly rate for task output.'))
 @click.pass_obj
 def ledger(globs, task, duration, rate):
     """Generate ledger compatible data file.
