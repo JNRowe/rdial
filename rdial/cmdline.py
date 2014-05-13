@@ -89,7 +89,7 @@ def print_version(ctx, value):
     :param bool value: True if flag given
     """
     if value:
-        print('rdial %s' % _version.dotted)
+        click.echo('rdial %s' % _version.dotted)
         ctx.exit()
 
 
@@ -178,9 +178,9 @@ def fsck(globs):
         last = events[0]
         for event in events[1:]:
             if not last.start + last.delta <= event.start:
-                print(utils.fail(_('Overlap:')))
-                print(utils.warn('  %r' % last))
-                print('  %r' % event)
+                click.echo(utils.fail(_('Overlap:')))
+                click.echo(utils.warn('  %r' % last))
+                click.echo('  %r' % event)
             last = event
 
 
@@ -234,8 +234,8 @@ def stop(globs, message, file, amend):
             message = event.message
         events.stop(message, force=amend)
     event = events.last()
-    print(_('Task %s running for %s') % (event.task,
-                                         str(event.delta).split('.')[0]))
+    click.echo(_('Task %s running for %s') % (event.task,
+                                              str(event.delta).split('.')[0]))
 
 
 @cli.command(help=_('switch to another task'))
@@ -269,8 +269,8 @@ def switch(globs, task, new, message, file):
             events.stop(message)
         event = events.last()
         events.start(task, new)
-    print(_('Task %s running for %s') % (event.task,
-                                         str(event.delta).split('.')[0]))
+    click.echo(_('Task %s running for %s') % (event.task,
+                                              str(event.delta).split('.')[0]))
 
 
 @cli.command(help=_('run command with timer'))
@@ -317,8 +317,8 @@ def run(globs, task, new, time, message, file, command):
             message = file.read()
         events.stop(message)
     event = events.last()
-    print(_('Task %s running for %s') % (event.task,
-                                         str(event.delta).split('.')[0]))
+    click.echo(_('Task %s running for %s') % (event.task,
+                                              str(event.delta).split('.')[0]))
     os.unlink('%s/.current' % globs['directory'])
     if p.returncode != 0:
         raise OSError(p.returncode, _('Command failed'))
@@ -387,13 +387,13 @@ def report(globs, task, output, duration, sort, reverse):
         task = None
     events = filter_events(globs['directory'], task, duration)
     if output == 'human':
-        print(N_('%d event in query', '%d events in query', len(events))
-              % len(events))
-        print(_('Duration of events %s') % events.sum())
-        print(_('First entry started at %s') % events[0].start)
-        print(_('Last entry started at %s') % events[-1].start)
+        click.echo(N_('%d event in query', '%d events in query', len(events))
+                   % len(events))
+        click.echo(_('Duration of events %s') % events.sum())
+        click.echo(_('First entry started at %s') % events[0].start)
+        click.echo(_('Last entry started at %s') % events[-1].start)
         dates = set(e.start.date() for e in events)
-        print(_('Events exist on %d dates') % len(dates))
+        click.echo(_('Events exist on %d dates') % len(dates))
     else:
         table = prettytable.PrettyTable(['task', 'time'])
         if output == 'html':
@@ -407,11 +407,11 @@ def report(globs, task, output, duration, sort, reverse):
         for task in events.tasks():
             table.add_row([task, events.for_task(task).sum()])
 
-        print(formatter(sortby=sort, reversesort=reverse))
+        click.echo(formatter(sortby=sort, reversesort=reverse))
     if events.running() and not output == 'html':
         current = events.last()
-        print(_("Task `%s' started %s")
-              % (current.task, current.start.humanize()))
+        click.echo(_("Task `%s' started %s")
+                   % (current.task, current.start.humanize()))
 
 
 @cli.command(help=_('display running task, if any'))
@@ -424,10 +424,10 @@ def running(globs):
     events = Events.read(globs['directory'])
     if events.running():
         current = events.last()
-        print(_("Task `%s' started %s") % (current.task,
-                                           current.start.humanize()))
+        click.echo(_("Task `%s' started %s") % (current.task,
+                                                current.start.humanize()))
     else:
-        print(utils.warn(_('No task is running!')))
+        click.echo(utils.warn(_('No task is running!')))
 
 
 @cli.command(help=_('display last event, if any'))
@@ -440,11 +440,11 @@ def last(globs):
     events = Events.read(globs['directory'])
     event = events.last()
     if not events.running():
-        print(_('Last task %s, ran for %s') % (event.task, event.delta))
+        click.echo(_('Last task %s, ran for %s') % (event.task, event.delta))
         if event.message:
-            print(repr(event.message))
+            click.echo(repr(event.message))
     else:
-        print(utils.warn(_('Task %s is still running') % event.task))
+        click.echo(utils.warn(_('Task %s is still running') % event.task))
 
 
 @cli.command(help=_('generate ledger compatible data file'))
@@ -472,7 +472,7 @@ def ledger(globs, task, duration, rate):
         task = None
     events = filter_events(globs['directory'], task, duration)
     if events.running():
-        print(_(';; Running event not included in output!'))
+        click.echo(_(';; Running event not included in output!'))
     for event in events:
         if not event.delta:
             continue
@@ -480,12 +480,12 @@ def ledger(globs, task, duration, rate):
         # Can't use timedelta.total_seconds() as it was only added in 2.7
         seconds = event.delta.days * 86400 + event.delta.seconds
         hours = seconds / 3600.0
-        print('%s-%s' % (event.start.format('YYYY-MM-DD * HH:mm'),
-                         end.format('HH:mm')))
-        print('    (task:%s)  %.2fh%s'
-              % (event.task, hours, ' @ %s' % rate if rate else ''))
+        click.echo('%s-%s' % (event.start.format('YYYY-MM-DD * HH:mm'),
+                              end.format('HH:mm')))
+        click.echo('    (task:%s)  %.2fh%s'
+                   % (event.task, hours, ' @ %s' % rate if rate else ''))
     if events.running():
-        print(_(';; Running event not included in output!'))
+        click.echo(_(';; Running event not included in output!'))
 
 
 def main():
@@ -498,7 +498,7 @@ def main():
         cli()
         return 0
     except (ValueError, utils.RdialError) as error:
-        print(utils.fail(error.message))
+        click.echo(utils.fail(error.message))
         return 2
     except OSError as error:
         return error.errno
