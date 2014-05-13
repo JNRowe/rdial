@@ -19,13 +19,12 @@
 
 # pylint: disable-msg=C0121
 
-import argparse
 import os
 import shlex
 import subprocess
 
-import aaargh
 import arrow
+import click
 import prettytable
 
 from .events import (Events, TaskRunningError)
@@ -33,53 +32,112 @@ from .i18n import (_, N_)
 from . import _version
 from . import utils
 
-APP = aaargh.App(
-    description=_('Simple time tracking for simple people'),
-    epilog=_('Please report bugs to https://github.com/JNRowe/rdial/issues')
-)
+
+class TaskNameParamType(click.ParamType):
+    """Task name parameter handler."""
+    name = 'taskname'
+
+    def convert(self, value, param, ctx):
+        """Check given task name is valid.
+
+        :param str value: Value given to flag
+        :param click.Argument param: Parameter being processed
+        :param click.Context ctx: Current command context
+        :rtype: :obj:`str`
+        :return: Valid task name
+        """
+        if value.startswith('.') or '/' in value or '\000' in value:
+            self.fail(_('%r is not a valid task name') % value)
+        return value
 
 
-# pylint: disable-msg=R0903
-class TaskAction(argparse.Action):
+class StartTimeParamType(click.ParamType):
+    """Start time parameter handler."""
+    name = 'time'
 
-    """Define task name, handling --from-dir option."""
+    def convert(self, value, param, ctx):
+        """Check given start time is valid.
 
-    def __call__(self, parser, namespace, values, option_string=None):
-        if namespace.task is True:
-            namespace.task = os.path.basename(os.path.abspath(os.curdir))
-        else:
-            namespace.task = values
-# pylint: enable-msg=R0903
+        :param str value: Value given to flag
+        :param click.Argument param: Parameter being processed
+        :param click.Context ctx: Current command context
+        :rtype: :obj:`arrow.Arrow`
+        :return: Valid start time
+        """
+        try:
+            utils.parse_datetime(value)
+        except arrow.parser.ParserError:
+            self.fail(_('%r is not a valid ISO-8601 time string') % value)
+        return value
 
 
-def task_name_typecheck(string):
-    """Check given task name is valid.
+def task_from_dir(ctx, value):
+    """Override task name default using name of current directory.
 
-    :param str string: Task name to check
-    :rtype: :obj:`str`
-    :returns: Task name, if valid
-    :raises argparse.ArgparseTypeError: If task name is invalid
+    :param click.Context ctx: Current command context
+    :param bool value: True if flag given
     """
-    if string.startswith('.') or '/' in string or '\000' in string:
-        raise argparse.ArgumentTypeError(_('%r is not a valid task name')
-                                         % string)
-    return string
+    if value:
+        param = [p for p in ctx.command.params if p.name == 'task'][0]
+        param.default = os.path.basename(os.path.abspath(os.curdir))
 
 
-# pylint: disable-msg=C0103
-task_parser = argparse.ArgumentParser(add_help=False)
-names_group = task_parser.add_mutually_exclusive_group()
-names_group.add_argument('-x', '--from-dir', action='store_true', dest='task',
-                         help=_('use directory name as task'))
-names_group.add_argument('task', default='default', nargs='?',
-                         action=TaskAction, help=_('task name'),
-                         type=task_name_typecheck)
+def print_version(ctx, value):
+    """Display rdial version.
 
-duration_parser = argparse.ArgumentParser(add_help=False)
-duration_parser.add_argument('-d', '--duration', default='all',
-                             choices=['day', 'week', 'month', 'year', 'all'],
-                             help=_('filter events for specified time period'))
-# pylint: enable-msg=C0103
+    :param click.Context ctx: Current command context
+    :param bool value: True if flag given
+    """
+    if value:
+        print('rdial %s' % _version.dotted)
+        ctx.exit()
+
+
+@click.group(help=_('Simple time tracking for simple people.'),
+             epilog=_('Please report bugs to '
+                      'https://github.com/JNRowe/rdial/issues'))
+@click.option('--version', is_flag=True, callback=print_version,
+              expose_value=False, is_eager=True,
+              help=_('show version string and exit'))
+@click.option('-d', '--directory', metavar='DIR',
+              help=_('directory to read/write to'))
+@click.option('--backup/--no-backup',
+              help=_('do not write data file backups'))
+@click.option('--config', type=click.File(),
+              help=_('file to read configuration data from'))
+@click.pass_context
+def cli(ctx, directory, backup, config):
+    """Main command entry point.
+
+    :param click.Context ctx: Current command context
+    :param str directory: Location to store event data
+    :param bool backup: Whether to create backup files
+    :param str config: Location of config file
+    """
+    cfg = utils.read_config(config)
+
+    if 'color' in cfg['rdial']:
+        cfg['rdial']['colour'] = cfg['rdial']['color']
+    if not cfg['rdial'].as_bool('colour') or os.getenv('NO_COLOUR') \
+            or os.getenv('NO_COLOR'):
+        utils._colourise = lambda s, colour: s
+
+    ctx.default_map = {}
+    for name in ctx.command.commands:
+        if name in cfg.sections:
+            d = {}
+            for k in cfg[name]:
+                try:
+                    d[k] = cfg[name].as_bool(k)
+                except ValueError:
+                    d[k] = cfg[name][k]
+            ctx.default_map[name] = d
+
+    ctx.obj = {
+        'backup': backup if backup else cfg['rdial'].as_bool('backup'),
+        'directory': directory if directory else cfg['rdial']['directory'],
+        'config': cfg,
+    }
 
 
 def filter_events(directory, task=None, duration=None):
@@ -109,31 +167,14 @@ def filter_events(directory, task=None, duration=None):
     return events
 
 
-def start_time_typecheck(string):
-    """Check given start time is valid.
-
-    :param str string: Timestamps to check
-    :rtype: :obj:`str`
-    :returns: Timestamp, if valid
-    :raises argparse.ArgumentTypeError: If timestamp is invalid
-    """
-    try:
-        utils.parse_datetime(string)
-    except arrow.parser.ParserError:
-        raise argparse.ArgumentTypeError(_('%r is not a valid ISO-8601 time '
-                                           'string') % string)
-    return string
-
-
-@APP.cmd(help=_('check storage consistency'))
-def fsck(directory, backup, config):
+@cli.command(help=_('check storage consistency'))
+@click.pass_obj
+def fsck(globs):
     """Check storage consistency.
 
-    :param str directory: Directory to read events from
-    :param bool backup: Whether to create backup files
-    :param configobj config: Configuration data
+    :param dict globs: Global options object
     """
-    with Events.context(directory, backup) as events:
+    with Events.context(globs['directory'], globs['backup']) as events:
         last = events[0]
         for event in events[1:]:
             if not last.start + last.delta <= event.start:
@@ -143,45 +184,47 @@ def fsck(directory, backup, config):
             last = event
 
 
-@APP.cmd(help=_('start task'), parents=[task_parser])
-@APP.cmd_arg('-n', '--new', action='store_true', help=_('start a new task'))
-@APP.cmd_arg('-t', '--time', metavar='time', default='',
-             help=_('set start time'), type=start_time_typecheck)
+@cli.command(help=_('start task'))
+@click.option('-x', '--from-dir', is_flag=True, expose_value=False,
+              is_eager=True, callback=task_from_dir,
+              help=_('use directory name as task name'))
+@click.argument('task', default='default', required=False,
+                type=TaskNameParamType())
+@click.option('-n', '--new', is_flag=True, help=_('start a new task'))
+@click.option('-t', '--time', default='', help=_('set start time'),
+              type=StartTimeParamType())
+@click.pass_obj
 @utils.write_current
-def start(directory, backup, config, task, new, time):
+def start(globs, task, new, time):
     """Start task.
 
-    :param str directory: Directory to read events from
-    :param bool backup: Whether to create backup files
-    :param configobj config: Configuration data
+    :param dict globs: Global options object
     :param str task: Task name to operate on
     :param bool new: Create a new task
     :param arrow.Arrow time: Task start time
     """
-    with Events.context(directory, backup) as events:
+    with Events.context(globs['directory'], globs['backup']) as events:
         events.start(task, new, time)
 
 
-@APP.cmd(help=_('stop task'))
-@APP.cmd_arg('-m', '--message', metavar='message', help=_('closing message'))
-@APP.cmd_arg('-F', '--file', metavar='file', type=argparse.FileType(),
-             help=_('read closing message from file'))
-@APP.cmd_arg('--amend', action='store_true',
-             help=_('amend previous stop entry'))
+@cli.command(help=_('stop task'))
+@click.option('-m', '--message', help=_('closing message'))
+@click.option('-F', '--file', type=click.File(),
+              help=_('read closing message from file'))
+@click.option('--amend', is_flag=True, help=_('amend previous stop entry'))
+@click.pass_obj
 @utils.remove_current
-def stop(directory, backup, config, message, file, amend):
+def stop(globs, message, file, amend):
     """Stop task.
 
-    :param str directory: Directory to read events from
-    :param bool backup: Whether to create backup files
-    :param configobj config: Configuration data
+    :param dict globs: Global options object
     :param str message: Message to assign to event
     :param str file: Filename to read message from
     :param bool amend: Amend a previously stopped event
     """
     if file:
         message = file.read()
-    with Events.context(directory, backup) as events:
+    with Events.context(globs['directory'], globs['backup']) as events:
         last = events.last()
         if amend and last.running():
             raise TaskRunningError(_("Can't amend running task %s!")
@@ -195,19 +238,23 @@ def stop(directory, backup, config, message, file, amend):
                                          str(event.delta).split('.')[0]))
 
 
-@APP.cmd(help=_('switch to another task'), parents=[task_parser])
-@APP.cmd_arg('-n', '--new', action='store_true', help=_('start a new task'))
-@APP.cmd_arg('-m', '--message', metavar='message',
-             help=_('closing message for current task'))
-@APP.cmd_arg('-F', '--file', metavar='file', type=argparse.FileType(),
-             help=_('read closing message for current task from file'))
+@cli.command(help=_('switch to another task'))
+@click.option('-x', '--from-dir', is_flag=True, expose_value=False,
+              is_eager=True, callback=task_from_dir,
+              help=_('use directory name as task name'))
+@click.argument('task', default='default', required=False,
+                type=TaskNameParamType())
+@click.option('-n', '--new', is_flag=True, help=_('start a new task'))
+@click.option('-m', '--message',
+              help=_('closing message for current task'))
+@click.option('-F', '--file', type=click.File(),
+              help=_('read closing message for current task from file'))
+@click.pass_obj
 @utils.write_current
-def switch(directory, backup, config, task, new, message, file):
+def switch(globs, task, new, message, file):
     """Complete last task and start new one.
 
-    :param str directory: Directory to read events from
-    :param bool backup: Whether to create backup files
-    :param configobj config: Configuration data
+    :param dict globs: Global options object
     :param str task: Task name to operate on
     :param bool new: Create a new task
     :param str message: Message to assign to event
@@ -215,7 +262,7 @@ def switch(directory, backup, config, task, new, message, file):
     """
     if file:
         message = file.read()
-    with Events.context(directory, backup) as events:
+    with Events.context(globs['directory'], globs['backup']) as events:
         if new or task in events.tasks():
             # This is dirty, but we kick on to Events.start() to save
             # duplication of error handling for task names
@@ -226,20 +273,24 @@ def switch(directory, backup, config, task, new, message, file):
                                          str(event.delta).split('.')[0]))
 
 
-@APP.cmd(help=_('run command with timer'), parents=[task_parser])
-@APP.cmd_arg('-n', '--new', action='store_true', help=_('start a new task'))
-@APP.cmd_arg('-t', '--time', metavar='time', default='',
-             help=_('set start time'), type=start_time_typecheck)
-@APP.cmd_arg('-m', '--message', metavar='message', help=_('closing message'))
-@APP.cmd_arg('-F', '--file', metavar='file', type=argparse.FileType(),
-             help=_('read closing message from file'))
-@APP.cmd_arg('-c', '--command', metavar='command', help=_('command to run'))
-def run(directory, backup, config, task, new, time, message, file, command):
+@cli.command(help=_('run command with timer'))
+@click.option('-x', '--from-dir', is_flag=True, expose_value=False,
+              is_eager=True, callback=task_from_dir,
+              help=_('use directory name as task name'))
+@click.argument('task', default='default', required=False,
+                type=TaskNameParamType())
+@click.option('-n', '--new', is_flag=True, help=_('start a new task'))
+@click.option('-t', '--time', default='', help=_('set start time'),
+              type=StartTimeParamType())
+@click.option('-m', '--message', help=_('closing message'))
+@click.option('-F', '--file', type=click.File(),
+              help=_('read closing message from file'))
+@click.option('-c', '--command', help=_('command to run'))
+@click.pass_obj
+def run(globs, task, new, time, message, file, command):
     """Run timed command.
 
-    :param str directory: Directory to read events from
-    :param bool backup: Whether to create backup files
-    :param configobj config: Configuration data
+    :param dict globs: Global options object
     :param str task: Task name to operate on
     :param bool new: Create a new task
     :param arrow.Arrow time: Task start time
@@ -247,7 +298,7 @@ def run(directory, backup, config, task, new, time, message, file, command):
     :param str file: Filename to read message from
     :param str command: Command to run
     """
-    with Events.context(directory, backup) as events:
+    with Events.context(globs['directory'], globs['backup']) as events:
         if events.running():
             raise TaskRunningError(_('Task %s is already started!'
                                      % events.last().task))
@@ -258,7 +309,7 @@ def run(directory, backup, config, task, new, time, message, file, command):
             raise utils.RdialError(e.strerror)
 
         events.start(task, new, time)
-        open('%s/.current' % directory, 'w').write(task)
+        open('%s/.current' % globs['directory'], 'w').write(task)
 
         p.wait()
 
@@ -268,77 +319,74 @@ def run(directory, backup, config, task, new, time, message, file, command):
     event = events.last()
     print(_('Task %s running for %s') % (event.task,
                                          str(event.delta).split('.')[0]))
-    os.unlink('%s/.current' % directory)
+    os.unlink('%s/.current' % globs['directory'])
     if p.returncode != 0:
         raise OSError(p.returncode, _('Command failed'))
 
 
-@APP.cmd(help=_('run predefined command with timer'))
-@APP.cmd_arg('-t', '--time', metavar='time', default='',
-             help=_('set start time'), type=start_time_typecheck)
-@APP.cmd_arg('-m', '--message', metavar='message', help=_('closing message'))
-@APP.cmd_arg('-F', '--file', metavar='file', type=argparse.FileType(),
-             help=_('read closing message from file'))
-@APP.cmd_arg('wrapper', default='default', help=_('wrapper name'))
-def wrapper(directory, backup, config, time, message, file, wrapper):
+@cli.command(help=_('run predefined command with timer'))
+@click.option('-t', '--time', default='', help=_('set start time'),
+              type=StartTimeParamType())
+@click.option('-m', '--message', help=_('closing message'))
+@click.option('-F', '--file', type=click.File(),
+              help=_('read closing message from file'))
+@click.argument('wrapper', default='default')
+@click.pass_obj
+@click.pass_context
+def wrapper(ctx, globs, time, message, file, wrapper):
     """Run predefined timed command.
 
-    :param str directory: Directory to read events from
-    :param bool backup: Whether to create backup files
-    :param configobj.ConfigObj config: Configuration data
+    :param click.Context ctx: Click context object
+    :param dict globs: Global options object
     :param datetime.datetime time: Task start time
     :param str message: Message to assign to event
     :param str file: Filename to read message from
     :param str wrapper: Run wrapper to execute
     """
-    if not 'run wrappers' in config:
+    if not 'run wrappers' in globs['config']:
         raise ValueError(_('No %r section in config') % 'run wrappers')
     try:
-        command = config['run wrappers'][wrapper]
+        command = globs['config']['run wrappers'][wrapper]
     except KeyError:
         raise ValueError(_('No such wrapper %r') % wrapper)
-    parser = argparse.ArgumentParser(parents=[task_parser, ])
-    parser.add_argument('-c', '--command')
-    args = parser.parse_args(shlex.split(command))
-    run(directory, backup, config, args.task, False, time, message, file,
-        args.command)
+    parser = ctx.parent.command.commands['run'].make_parser(ctx)
+    args = {'time': time, 'message': message, 'file': file, 'new': False}
+    args.update(parser.parse_args(shlex.split(command))[0])
+    ctx.invoke(run, **args)
 
 
-# pylint: disable-msg=C0103
-output_parser = argparse.ArgumentParser(add_help=False)
-output_group = output_parser.add_mutually_exclusive_group()
-output_group.add_argument('--html', action='store_true',
-                          help=_('produce HTML output'))
-output_group.add_argument('--human', action='store_true',
-                          help=_('produce human-readable output'))
-# pylint: enable-msg=C0103
-
-
-@APP.cmd(help=_('report time tracking data'),
-         parents=[duration_parser, task_parser, output_parser])
-@APP.cmd_arg('-s', '--sort', default='task', choices=['task', 'time'],
-             help=_('field to sort by'))
-@APP.cmd_arg('-r', '--reverse', action='store_true',
-             help=_('reverse sort order'))
-def report(directory, backup, config, task, duration, sort, reverse, html,
-           human):
+@cli.command(help=_('report time tracking data'))
+@click.option('-x', '--from-dir', is_flag=True, expose_value=False,
+              is_eager=True, callback=task_from_dir,
+              help=_('use directory name as task name'))
+@click.argument('task', default='default', required=False,
+                type=TaskNameParamType())
+@click.option('--html', 'output', flag_value='html',
+              help=_('produce HTML output'))
+@click.option('--human', 'output', flag_value='human',
+              help=_('produce human-readable output'))
+@click.option('-d', '--duration', default='all',
+              type=click.Choice(['day', 'week', 'month', 'year', 'all']),
+              help=_('filter events for specified time period'))
+@click.option('-s', '--sort', default='task',
+              type=click.Choice(['task', 'time']), help=_('field to sort by'))
+@click.option('-r', '--reverse/--no-reverse', help=_('reverse sort order'))
+@click.pass_obj
+def report(globs, task, output, duration, sort, reverse):
     """Report time tracking data.
 
-    :param str directory: Directory to read events from
-    :param bool backup: Whether to create backup files
-    :param configobj config: Configuration data
+    :param dict globs: Global options object
     :param str task: Task name to operate on
+    :param str output: Type of output to produce
     :param str duration: Time window to filter on
     :param str sort: Key to sort events on
     :param bool reverse: Reverse sort order
-    :param bool html: Produce HTML output
-    :param bool human: Produce human-readble output
     """
     if task == 'default':
         # Lazy way to remove duplicate argument definitions
         task = None
-    events = filter_events(directory, task, duration)
-    if human:
+    events = filter_events(globs['directory'], task, duration)
+    if output == 'human':
         print(N_('%d event in query', '%d events in query', len(events))
               % len(events))
         print(_('Duration of events %s') % events.sum())
@@ -348,7 +396,10 @@ def report(directory, backup, config, task, duration, sort, reverse, html,
         print(_('Events exist on %d dates') % len(dates))
     else:
         table = prettytable.PrettyTable(['task', 'time'])
-        formatter = table.get_html_string if html else table.get_string
+        if output == 'html':
+            formatter = table.get_html_string
+        else:
+            formatter = table.get_string
         try:
             table.align['task'] = 'l'
         except AttributeError:  # prettytable 0.5 compatibility
@@ -357,21 +408,20 @@ def report(directory, backup, config, task, duration, sort, reverse, html,
             table.add_row([task, events.for_task(task).sum()])
 
         print(formatter(sortby=sort, reversesort=reverse))
-    if events.running() and not html:
+    if events.running() and not output == 'html':
         current = events.last()
         print(_("Task `%s' started %s")
               % (current.task, current.start.humanize()))
 
 
-@APP.cmd(help=_('display running task, if any'))
-def running(directory, backup, config):
+@cli.command(help=_('display running task, if any'))
+@click.pass_obj
+def running(globs):
     """Display running task, if any.
 
-    :param str directory: Directory to read events from
-    :param bool backup: Whether to create backup files
-    :param configobj config: Configuration data
+    :param dict globs: Global options object
     """
-    events = Events.read(directory)
+    events = Events.read(globs['directory'])
     if events.running():
         current = events.last()
         print(_("Task `%s' started %s") % (current.task,
@@ -380,15 +430,14 @@ def running(directory, backup, config):
         print(utils.warn(_('No task is running!')))
 
 
-@APP.cmd(help=_('display last event, if any'))
-def last(directory, backup, config):
+@cli.command(help=_('display last event, if any'))
+@click.pass_obj
+def last(globs):
     """Display last event, if any.
 
-    :param str directory: Directory to read events from
-    :param bool backup: Whether to create backup files
-    :param configobj config: Configuration data
+    :param dict globs: Global options object
     """
-    events = Events.read(directory)
+    events = Events.read(globs['directory'])
     event = events.last()
     if not events.running():
         print(_('Last task %s, ran for %s') % (event.task, event.delta))
@@ -398,16 +447,22 @@ def last(directory, backup, config):
         print(utils.warn(_('Task %s is still running') % event.task))
 
 
-@APP.cmd(help=_('generate ledger compatible data file'),
-         parents=[duration_parser, task_parser])
-@APP.cmd_arg('-r', '--rate', metavar='rate',
-             help=_('hourly rate for task output'))
-def ledger(directory, backup, config, task, duration, rate):
+@cli.command(help=_('generate ledger compatible data file'))
+@click.option('-x', '--from-dir', is_flag=True, expose_value=False,
+              is_eager=True, callback=task_from_dir,
+              help=_('use directory name as task name'))
+@click.argument('task', default='default', required=False,
+                type=TaskNameParamType())
+@click.option('-d', '--duration', default='all',
+              type=click.Choice(['day', 'week', 'month', 'year', 'all']),
+              help=_('filter events for specified time period'))
+@click.option('-r', '--rate', type=click.FLOAT,
+              help=_('hourly rate for task output'))
+@click.pass_obj
+def ledger(globs, task, duration, rate):
     """Generate ledger compatible data file.
 
-    :param str directory: Directory to read events from
-    :param bool backup: Whether to create backup files
-    :param configobj config: Configuration data
+    :param dict globs: Global options object
     :param str task: Task name to operate on
     :param str duration: Time window to filter on
     :param str rate: Rate to assign hours in report
@@ -415,7 +470,7 @@ def ledger(directory, backup, config, task, duration, rate):
     if task == 'default':
         # Lazy way to remove duplicate argument definitions
         task = None
-    events = filter_events(directory, task, duration)
+    events = filter_events(globs['directory'], task, duration)
     if events.running():
         print(_(';; Running event not included in output!'))
     for event in events:
@@ -434,42 +489,15 @@ def ledger(directory, backup, config, task, duration, rate):
 
 
 def main():
-    """Main script."""
-    parser = argparse.ArgumentParser(add_help=False)
-    parser.add_argument('--config')
-    args, remaining = parser.parse_known_args()
-    cfg = utils.read_config(parser, args.config)
+    """Command entry point to handle errors.
 
-    if 'color' in cfg['rdial']:
-        cfg['rdial']['colour'] = cfg['rdial']['color']
-    if not cfg['rdial'].as_bool('colour') or os.getenv('NO_COLOUR') \
-            or os.getenv('NO_COLOR'):
-        utils._colourise = lambda s, colour: s
-
-    for name, parser in APP._subparsers.choices.items():
-        if name in cfg.sections:
-            d = {}
-            for k in cfg.options(name):
-                try:
-                    d[k] = cfg[name].as_bool(k)
-                except ValueError:
-                    d[k] = cfg[name][k]
-            parser.set_defaults(**d)
-
-    APP.arg('--version', action='version',
-            version='%%(prog)s %s' % _version.dotted)
-    APP.arg('-d', '--directory', metavar='dir',
-            help=_('directory to read/write to'))
-    APP.arg('--no-backup', dest='backup', action='store_true',
-            help=_('do not write data file backups'))
-    APP.arg('--config', metavar='file',
-            help=_('file to read configuration data from'))
-
-    APP.defaults(backup=not cfg['rdial'].as_bool('backup'),
-                 directory=cfg['rdial']['directory'], config=cfg)
+    :rtype: :obj:`int`
+    :return: Final exit code
+    """
     try:
-        APP.run(remaining)
-    except utils.RdialError as error:
+        cli()
+        return 0
+    except (ValueError, utils.RdialError) as error:
         print(utils.fail(error.message))
         return 2
     except OSError as error:

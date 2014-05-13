@@ -29,7 +29,6 @@ import blessings
 import configobj
 
 from . import compat
-from .i18n import _
 
 
 T = blessings.Terminal()
@@ -172,17 +171,13 @@ def iso_week_to_date(year, week):
     return start, end
 
 
-def read_config(parser, user_config=None):
+def read_config(user_config=None):
     """Read configuration data.
 
-    :type argparse.ArgumentParser parser: Command line parser
     :type str user_config: User defined config file
     :rtype: configobj.ConfigObj
     :return: Parsed configuration data
     """
-    if user_config and not os.path.exists(user_config):
-        raise parser.error(_("Config file %r doesn't exist!" % user_config))
-
     configs = [os.path.dirname(__file__) + '/config', ]
     for s in os.getenv('XDG_CONFIG_DIRS', '/etc/xdg').split(':'):
         p = s + '/rdial/config'
@@ -209,8 +204,9 @@ def write_current(f):
     """
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
+        globs = args[0]
         f(*args, **kwargs)
-        open('%s/.current' % kwargs['directory'], 'w').write(kwargs['task'])
+        open('%s/.current' % globs['directory'], 'w').write(kwargs['task'])
     return wrapper
 
 
@@ -223,9 +219,10 @@ def remove_current(f):
     """
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
+        globs = args[0]
         f(*args, **kwargs)
-        if os.path.isfile('%s/.current' % kwargs['directory']):
-            os.unlink('%s/.current' % kwargs['directory'])
+        if os.path.isfile('%s/.current' % globs['directory']):
+            os.unlink('%s/.current' % globs['directory'])
     return wrapper
 
 

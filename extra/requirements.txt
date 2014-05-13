@@ -1,5 +1,5 @@
-aaargh>=0.7
 arrow>=0.4.2
 blessings
+click
 configobj>=5.0.0
 prettytable

@@ -20,6 +20,6 @@ Command line
 .. autofunction:: last
 .. autofunction:: ledger
 
-.. autofunction:: main
+.. autofunction:: cli
 
 .. autofunction:: filter_events

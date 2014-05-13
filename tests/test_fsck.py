@@ -25,11 +25,12 @@ except ImportError:
 from expecter import expect
 from mock import patch
 
-from rdial.cmdline import fsck
+from rdial.cmdline import cli
 
 
 @patch('sys.stdout', new_callable=StringIO)
+@patch('sys.exit', new=lambda x: True)
 def test_fsck_overlap(stdout):
-    fsck('tests/data/test_fsck', False, None)
+    cli.main(args=['--directory=tests/data/test_fsck', 'fsck'])
     expect(stdout.getvalue()).contains('Overlap')
     expect(stdout.getvalue()).contains("'2011-05-04T09:15:00Z', 'PT35M'")

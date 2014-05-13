@@ -17,38 +17,39 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from argparse import ArgumentTypeError
-
+from click import UsageError
 from expecter import expect
 from nose2.tools import params
 
-from rdial.cmdline import (start_time_typecheck, task_name_typecheck)
+from rdial.cmdline import (StartTimeParamType, TaskNameParamType)
 
 
 @params(
     ('valid_name', True),
     ('also-valid-name', True),
-    ('.invalid_name', ArgumentTypeError),
+    ('.invalid_name', UsageError),
     ('valid.name', True),
-    ('invalid/name', ArgumentTypeError),
+    ('invalid/name', UsageError),
 )
 def test_task_name_validity(string, expected):
+    p = TaskNameParamType()
     if expected is True:
-        task_name_typecheck(string) == string
+        p.convert(string, None, None) == string
     else:
         with expect.raises(expected):
-            task_name_typecheck(string)
+            p.convert(string, None, None)
 
 
 @params(
-    ('yesterday', ArgumentTypeError),
+    ('yesterday', UsageError),
     ('', True),
     ('2011-05-04T09:15:00Z', True),
     ('2011-05-04', True),
 )
 def test_start_time_validity(string, expected):
+    p = StartTimeParamType()
     if expected is True:
-        start_time_typecheck(string) == string
+        p.convert(string, None, None) == string
     else:
         with expect.raises(expected):
-            start_time_typecheck(string)
+            p.convert(string, None, None)
