@@ -168,6 +168,16 @@ def iso_week_to_date(year, week):
     return start, end
 
 
+def utcnow():
+    """Wrapper for producing timezone aware current timestamp.
+
+    :rtype: obj:`datetime.datetime`
+    :return: Current date and time, in UTC
+
+    """
+    return datetime.datetime.utcnow().replace(tzinfo=utc)
+
+
 def read_config(user_config=None):
     """Read configuration data.
 
