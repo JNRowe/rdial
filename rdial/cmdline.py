@@ -269,6 +269,8 @@ def run(directory, backup, config, task, new, time, message, file, command):
     print(_('Task %s running for %s') % (event.task,
                                          str(event.delta).split('.')[0]))
     os.unlink('%s/.current' % directory)
+    if p.returncode != 0:
+        raise OSError(p.returncode, _('Command failed'))
 
 
 @APP.cmd(help=_('run predefined command with timer'))
@@ -470,3 +472,5 @@ def main():
     except utils.RdialError as error:
         print(utils.fail(error.message))
         return 2
+    except OSError as error:
+        return error.errno
