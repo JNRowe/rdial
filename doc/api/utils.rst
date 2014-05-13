@@ -63,6 +63,12 @@ Time handling
     >>> parse_datetime('2012-02-15T18:59:18Z')
     datetime.datetime(2012, 2, 15, 18, 59, 18, tzinfo=UTC())
 
+.. doctest::
+   :options: +SKIP
+
+    >>> parse_datetime('40 minutes ago')
+    datetime.datetime(2012, 2, 15, 18, 59, 18, tzinfo=UTC())
+
 XDG Base Directory support
 ''''''''''''''''''''''''''
 

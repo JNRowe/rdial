@@ -23,6 +23,7 @@ import datetime
 import functools
 import os
 import re
+import subprocess
 
 import click
 import configobj
@@ -146,7 +147,7 @@ def format_delta(timedelta_):
 
 
 def parse_datetime(string):
-    """Parse ISO-8601 datetime string.
+    """Parse datetime string.
 
     :param str string: Datetime string to parse
     :rtype: :obj:`datetime.datetime`
@@ -155,7 +156,17 @@ def parse_datetime(string):
     if not string:
         datetime_ = utcnow()
     else:
-        datetime_ = datetime.datetime.strptime(string, '%Y-%m-%dT%H:%M:%SZ')
+        base = '%Y-%m-%dT%H:%M:%S'
+        try:
+            datetime_ = datetime.datetime.strptime(string, base + 'Z')
+        except ValueError:
+            try:
+                output = check_output(['date', '--utc', '--iso-8601=seconds',
+                                       '-d', string])
+                datetime_ = datetime.datetime.strptime(output.strip(),
+                                                       base + '+0000')
+            except subprocess.CalledProcessError:
+                raise ValueError(_('Unable to parse timestamp %r') % string)
         datetime_ = datetime_.replace(tzinfo=utc)
     return datetime_
 
@@ -197,6 +208,31 @@ def utcnow():
 
     """
     return datetime.datetime.utcnow().replace(tzinfo=utc)
+
+
+def check_output(args, **kwargs):
+    """Simple check_output implementation for Python 2.6 compatibility.
+
+    ..note:: This hides stderr, unlike the normal check_output function.
+
+    :param list args: Command and arguments to call
+    :rtype: ``str``
+    :return: Command output
+    :raise subprocess.CalledProcessError: If command execution fails
+    """
+    try:
+        output = subprocess.check_output(args, stderr=subprocess.PIPE,
+                                         **kwargs)
+    except AttributeError:
+        process = subprocess.Popen(args, stdout=subprocess.PIPE,
+                                   stderr=subprocess.PIPE, **kwargs)
+        output, unused_err = process.communicate()
+        retcode = process.poll()
+        if retcode:
+            raise subprocess.CalledProcessError(retcode, args[0])
+    if not compat.PY2:
+        output = output.decode()
+    return output
 
 
 def read_config(user_config=None):

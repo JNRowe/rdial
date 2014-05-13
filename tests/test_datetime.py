@@ -28,9 +28,15 @@ from rdial.utils import (format_datetime, parse_datetime, utc)
 @params(
     ('2011-05-04T08:00:00Z', datetime(2011, 5, 4, 8, 0, tzinfo=utc)),
     ('2011-05-04T09:15:00Z', datetime(2011, 5, 4, 9, 15, tzinfo=utc)),
+    ('2011-05-04T10:15:00+0100', datetime(2011, 5, 4, 9, 15, tzinfo=utc)),
 )
 def test_parse_datetime(string, expected):
     expect(parse_datetime(string)) == expected
+
+
+def test_parse_datetime_via_date_command(string, expected):
+    now = datetime.datetime.now() - datetime.timedelta(minutes=40)
+    expect(parse_datetime(now.isoformat())) == now
 
 
 @params(

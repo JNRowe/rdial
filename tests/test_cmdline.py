@@ -41,10 +41,10 @@ def test_task_name_validity(string, expected):
 
 
 @params(
-    ('yesterday', BadParameter),
+    ('yesterday', True),
     ('', True),
     ('2011-05-04T09:15:00Z', True),
-    ('2011-05-04', BadParameter),
+    ('AB1 time', BadParameter),
 )
 def test_start_time_validity(string, expected):
     p = StartTimeParamType()
