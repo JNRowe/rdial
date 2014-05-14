@@ -35,7 +35,7 @@ from . import utils
 
 APP = aaargh.App(
     description=_('Simple time tracking for simple people'),
-    epilog=_('Please report bugs to https://github.com/JNRowe/issues')
+    epilog=_('Please report bugs to https://github.com/JNRowe/rdial/issues')
 )
 
 
