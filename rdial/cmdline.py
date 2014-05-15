@@ -82,23 +82,10 @@ def task_from_dir(ctx, value):
         param.default = os.path.basename(os.path.abspath(os.curdir))
 
 
-def print_version(ctx, value):
-    """Display rdial version.
-
-    :param click.Context ctx: Current command context
-    :param bool value: True if flag given
-    """
-    if value:
-        click.echo('rdial %s' % _version.dotted)
-        ctx.exit()
-
-
 @click.group(help=_('Simple time tracking for simple people.'),
              epilog=_('Please report bugs to '
                       'https://github.com/JNRowe/rdial/issues'))
-@click.option('--version', is_flag=True, callback=print_version,
-              expose_value=False, is_eager=True,
-              help=_('Show version string and exit.'))
+@click.version_option(_version.dotted)
 @click.option('-d', '--directory', envvar='RDIAL_DIRECTORY', metavar='DIR',
               help=_('Directory to read/write to.'))
 @click.option('--backup/--no-backup', envvar='RDIAL_BACKUP',
