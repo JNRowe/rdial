@@ -17,20 +17,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-try:
-    from StringIO import StringIO
-except ImportError:
-    from io import StringIO  # NOQA
-
+from click.testing import CliRunner
 from expecter import expect
-from mock import patch
 
 from rdial.cmdline import cli
 
 
-@patch('sys.stdout', new_callable=StringIO)
-@patch('sys.exit', new=lambda x: True)
-def test_fsck_overlap(stdout):
-    cli.main(args=['--directory=tests/data/test_fsck', 'fsck'])
-    expect(stdout.getvalue()).contains('Overlap')
-    expect(stdout.getvalue()).contains("'2011-05-04T09:15:00Z', 'PT35M'")
+def test_fsck_overlap():
+    runner = CliRunner()
+    result = runner.invoke(cli, ['--directory=tests/data/test_fsck', 'fsck'])
+    expect(result.exit_code) == 0
+    expect(result.output).contains('Overlap')
+    expect(result.output).contains("'2011-05-04T09:15:00Z', 'PT35M'")
