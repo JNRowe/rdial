@@ -170,8 +170,8 @@ def fsck(ctx, globs):
         for event in events[1:]:
             if not last.start + last.delta <= event.start:
                 warnings += 1
-                click.echo(utils.fail(_('Overlap:')))
-                click.echo(utils.warn('  %r' % last))
+                utils.fail(_('Overlap:'))
+                utils.warn('  %r' % last)
                 click.echo('  %r' % event)
             last = event
     if warnings:
@@ -422,7 +422,7 @@ def running(globs):
         click.echo(_("Task `%s' started %s") % (current.task,
                                                 current.start.humanize()))
     else:
-        click.echo(utils.warn(_('No task is running!')))
+        utils.warn(_('No task is running!'))
 
 
 @cli.command(help=_('Display last event, if any.'))
@@ -439,7 +439,7 @@ def last(globs):
         if event.message:
             click.echo(repr(event.message))
     else:
-        click.echo(utils.warn(_('Task %s is still running') % event.task))
+        utils.warn(_('Task %s is still running') % event.task)
 
 
 @cli.command(help=_('Generate ledger compatible data file.'))
@@ -493,7 +493,7 @@ def main():
         cli()
         return 0
     except (ValueError, utils.RdialError) as error:
-        click.echo(utils.fail(error.message))
+        utils.fail(error.message)
         return 2
     except OSError as error:
         return error.errno

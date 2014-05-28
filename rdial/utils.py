@@ -25,13 +25,10 @@ import os
 import re
 
 import arrow
-import blessings
+import click
 import configobj
 
 from . import compat
-
-
-T = blessings.Terminal()
 
 
 # Set up informational message functions
@@ -41,9 +38,9 @@ def _colourise(text, colour):
     :param str text: Text to colourise
     :param str colour: Colour to display text in
     :rtype: :obj:`str`
-    :return str: Colourised text, if possible
+    :return str: Bright colourised text, if possible
     """
-    return getattr(T, colour.replace(' ', '_'))(text)
+    return click.termui.secho(text, fg=colour, bold=True)
 
 
 def success(text):
@@ -53,7 +50,7 @@ def success(text):
     :rtype: :obj:`str`
     :return: Bright green text, if possible
     """
-    return _colourise(text, 'bright green')
+    return _colourise(text, 'green')
 
 
 def fail(text):
@@ -63,7 +60,7 @@ def fail(text):
     :rtype: :obj:`str`
     :return: Bright red text, if possible
     """
-    return _colourise(text, 'bright red')
+    return _colourise(text, 'red')
 
 
 def warn(text):
@@ -73,7 +70,7 @@ def warn(text):
     :rtype: ``str``
     :return: Bright yellow text, if possible
     """
-    return _colourise(text, 'bright yellow')
+    return _colourise(text, 'yellow')
 
 
 class RdialError(ValueError):
