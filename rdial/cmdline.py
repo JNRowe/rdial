@@ -157,19 +157,25 @@ def filter_events(directory, task=None, duration=None):
 
 @cli.command(help=_('Check storage consistency.'))
 @click.pass_obj
-def fsck(globs):
+@click.pass_context
+def fsck(ctx, globs):
     """Check storage consistency.
 
+    :param click.Context ctx: Current command context
     :param dict globs: Global options object
     """
+    warnings = 0
     with Events.context(globs['directory'], globs['backup']) as events:
         last = events[0]
         for event in events[1:]:
             if not last.start + last.delta <= event.start:
+                warnings += 1
                 click.echo(utils.fail(_('Overlap:')))
                 click.echo(utils.warn('  %r' % last))
                 click.echo('  %r' % event)
             last = event
+    if warnings:
+        ctx.exit(warnings)
 
 
 @cli.command(help=_('Start task.'))

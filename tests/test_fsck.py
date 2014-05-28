@@ -26,6 +26,6 @@ from rdial.cmdline import cli
 def test_fsck_overlap():
     runner = CliRunner()
     result = runner.invoke(cli, ['--directory=tests/data/test_fsck', 'fsck'])
-    expect(result.exit_code) == 0
+    expect(result.exit_code) == 1
     expect(result.output).contains('Overlap')
     expect(result.output).contains("'2011-05-04T09:15:00Z', 'PT35M'")
