@@ -71,10 +71,11 @@ class StartTimeParamType(click.ParamType):
         return value
 
 
-def task_from_dir(ctx, value):
+def task_from_dir(ctx, param, value):
     """Override task name default using name of current directory.
 
     :param click.Context ctx: Current command context
+    :param click.Argument param: Parameter being processed
     :param bool value: True if flag given
     """
     if value:
