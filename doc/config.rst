@@ -21,7 +21,7 @@ File format
 
 The configuration file is a ``INI`` format file.  There is a section labelled
 ``rdial`` for global options, and a section for each subcommand.  Each section
-consists of a section of ``name=value`` option pairs.
+consists of a section of :samp:`name={value}` option pairs.
 
 An example configuration file is below:
 
@@ -84,6 +84,6 @@ as values.  For example:
     feeds = -c 'mutt -f ~/Mail/RSS2email/' procast
     calendar = -c 'wyrd ~/.reminders/events' calendar
 
-The above configuration entry ``feeds`` allows us to use ``rdial wrapper feeds``
-to open ``mutt`` in a specific mailbox and time our usage under the ``procast``
-task.
+The above configuration entry ``feeds`` allows us to use :samp:`rdial wrapper
+{feeds}` to open ``mutt`` in a specific mailbox, and time our usage under the
+``procast`` task.
