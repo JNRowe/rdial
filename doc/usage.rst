@@ -12,19 +12,24 @@ Options
 
 .. option:: --version
 
-   show program's version number and exit
-
-.. option:: -h, --help
-
-   show program's help message and exit
+   Show the version and exit.
 
 .. option:: -d <directory>, --directory=<directory>
 
-   database location, defaults to ``${XDG_DATA_HOME:-~/.local/share}/rdial``
+   Database location, defaults to ``${XDG_DATA_HOME:-~/.local/share}/rdial``.
 
-.. option:: --no-backup
+.. option:: --backup/--no-backup
 
-   do not write data file backups
+   Write data file backups.
+
+.. option:: --config <file>
+
+   File to read configuration data from, defaults to
+   ``${XDG_CONFIG_HOME:-~/.config}/rdial/config``.
+
+.. option:: --help
+
+   Show help message and exit.
 
 Commands
 --------
@@ -36,7 +41,11 @@ Commands
 
 ::
 
-    rdial fsck [-h]
+    rdial fsck [--help]
+
+.. option:: --help
+
+   Show help message and exit.
 
 ``start`` - Start task
 ''''''''''''''''''''''
@@ -45,19 +54,23 @@ Commands
 
 ::
 
-    rdial start [-h] [-x] [-n] [-t time] <task>
+    rdial start [--help] [-x] [-n] [-t time] <task>
 
 .. option:: -x, --from-dir
 
-   use directory name as task
+   Use directory name as task name.
 
 .. option:: -n, --new
 
-   start a new task
+   Start a new task.
 
 .. option:: -t <time>, --time <time>
 
-   manually set start time for task
+   Manually set start time for task.
+
+.. option:: --help
+
+   Show help message and exit.
 
 ``stop`` - Stop task
 ''''''''''''''''''''
@@ -66,19 +79,23 @@ Commands
 
 ::
 
-    rdial stop [-h] [-m <message>] [--amend]
+    rdial stop [--help] [-m <message>] [--amend]
 
 .. option:: -m <message>, --message=<message>
 
-   closing message
+   Closing message.
 
 .. option:: -F <file>, --file <file>
 
-   read closing message from file
+   Read closing message from file.
 
 .. option:: --amend
 
-   amend previous stop entry
+   Amend previous stop entry.
+
+.. option:: --help
+
+   Show help message and exit.
 
 ``switch`` - Switch to another task
 '''''''''''''''''''''''''''''''''''
@@ -87,23 +104,27 @@ Commands
 
 ::
 
-    rdial switch [-h] [-x] [-n] [-m <message>] [task]
+    rdial switch [--help] [-x] [-n] [-m <message>] [task]
 
 .. option:: -x, --from-dir
 
-   use directory name as task
+   Use directory name as task name.
 
 .. option:: -n, --new
 
-   start a new task
+   Start a new task.
 
 .. option:: -m <message>, --message <message>
 
-   closing message for current task
+   Closing message for current task.
 
 .. option:: -F <file>, --file <file>
 
-   read closing message for current task from file
+   Read closing message for current task from file.
+
+.. option:: --help
+
+   Show help message and exit.
 
 .. _run-subcommand-label:
 
@@ -114,31 +135,35 @@ Commands
 
 ::
 
-    rdial run [-h] [-x] [-n] [-t time] [-m message] [-F file] [-c command] <task>
+    rdial run [--help] [-x] [-n] [-t time] [-m message] [-F file] [-c command] <task>
 
 .. option:: -x, --from-dir
 
-   use directory name as task
+   Use directory name as task name.
 
 .. option:: -n, --new
 
-   start a new task
+   Start a new task.
 
 .. option:: -t <time>, --time <time>
 
-   manually set start time for task
+   Manually set start time for task.
 
 .. option:: -m <message>, --message <message>
 
-   closing message for current task
+   Closing message for current task.
 
 .. option:: -F <file>, --file <file>
 
-   read closing message for current task from file
+   Read closing message for current task from file.
 
 .. option:: -c <command>, --command <command>
 
-   command to run
+   Command to run.
+
+.. option:: --help
+
+   Show help message and exit.
 
 ``wrapper`` - Run predefined command with timer
 '''''''''''''''''''''''''''''''''''''''''''''''
@@ -147,21 +172,25 @@ Commands
 
 ::
 
-    rdial wrapper [-h] [-t time] [-m message] [-F file] <wrapper>
+    rdial wrapper [--help] [-t time] [-m message] [-F file] <wrapper>
 
 See :ref:`run wrappers configuration <run-wrappers-label>`.
 
 .. option:: -t <time>, --time <time>
 
-   manually set start time for task
+   Manually set start time for task.
 
 .. option:: -m <message>, --message <message>
 
-   closing message for current task
+   Closing message for current task.
 
 .. option:: -F <file>, --file <file>
 
-   read closing message for current task from file
+   Read closing message for current task from file.
+
+.. option:: --help
+
+   Show help message and exit.
 
 ``report`` - Report time tracking data
 ''''''''''''''''''''''''''''''''''''''
@@ -170,31 +199,35 @@ See :ref:`run wrappers configuration <run-wrappers-label>`.
 
 ::
 
-    rdial report [-h] [-d <duration>] [-s <order] [-r] [--html] [--human] <task>
+    rdial report [--help] [-d <duration>] [-s <order] [-r] [--html] [--human] <task>
 
 .. option:: -d <duration>, --duration=<duration>
 
-   filter events for specified time period {day,week,month,year,all}
+   Filter events for specified time period {day,week,month,year,all}.
 
 .. option:: -s <order>, --sort=<order>
 
-   field to sort by {task,time}
+   Field to sort by {task,time}.
 
 .. option:: -r, --reverse
 
-   reverse sort order
+   Reverse sort order.
 
 .. option:: --html
 
-   produce HTML output
+   Produce HTML output.
 
 .. option:: --human
 
-   produce human-readable output
+   Produce human-readable output.
 
 .. option:: -x, --from-dir
 
-   use directory name as task
+   Use directory name as task name.
+
+.. option:: --help
+
+   Show help message and exit.
 
 ``running`` - Display running task, if any
 ''''''''''''''''''''''''''''''''''''''''''
@@ -203,7 +236,11 @@ See :ref:`run wrappers configuration <run-wrappers-label>`.
 
 ::
 
-    rdial running [-h]
+    rdial running [--help]
+
+.. option:: --help
+
+   Show help message and exit.
 
 ``last`` - Display last task, if any
 ''''''''''''''''''''''''''''''''''''
@@ -212,7 +249,11 @@ See :ref:`run wrappers configuration <run-wrappers-label>`.
 
 ::
 
-    rdial last [-h]
+    rdial last [--help]
+
+.. option:: --help
+
+   Show help message and exit.
 
 ``ledger`` - Generate ``ledger`` compatible data file
 '''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -221,16 +262,20 @@ See :ref:`run wrappers configuration <run-wrappers-label>`.
 
 ::
 
-    rdial ledger [-h] [-d <duration>] [-r RATE] [task]
+    rdial ledger [--help] [-d <duration>] [-r RATE] [task]
 
 .. option:: -d <duration>, --duration=<duration>
 
-   filter events for specified time period {day,week,month,year,all}
+   Filter events for specified time period {day,week,month,year,all}.
 
 .. option:: -r <rate>, --rate <rate>
 
-   hourly rate for task output
+   Hourly rate for task output.
 
 .. option:: -x, --from-dir
 
-   use directory name as task
+   Use directory name as task name.
+
+.. option:: --help
+
+   Show help message and exit.
