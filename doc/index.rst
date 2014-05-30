@@ -22,6 +22,7 @@ Contents
    getting_started
    rdial manpage <rdial.1>
    config
+   envvars
    faq
    taskbars
    alternatives
