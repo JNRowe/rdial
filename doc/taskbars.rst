@@ -5,8 +5,8 @@ The following sections should give you some idea of how you can (ab)use the
 :file:`.current` file in your window manager of choice.
 
 .. note::
-   There are exactly two examples right now, because these are two environments
-   I use.  Feel free to submit your own!
+   There are exactly two examples right now, because these are the two
+   environments I use.  Feel free to submit your own!
 
 ..
    The idea here is show minimal examples, for the gist of the solution.  We
