@@ -18,23 +18,20 @@ The following sections should give you some idea of how you can (ab)use the
 For example, with awesome_, you could create a simple timer based widget that
 shows the currently running task:
 
-.. sourcecode:: lua
+.. sourcecode:: moon
 
-    local GLib = lgi.GLib
-    tasktext = wibox.widget.textbox()
-    tasktimer = timer({ timeout = 30 })
-    tasktimer:connect_signal("timeout", function()
-      local file = io.open(GLib.get_user_data_dir() .. "/rdial/.current", "rb")
-       if file then
-         tasktext:set_markup(file:read())
-         file:close()
-       else
-         tasktext:set_markup("none")
-       end
-    end)
-    -- fire timer for initial update
-    tasktimer:emit_signal("timeout")
-    tasktimer:start()
+    GLib = lgi.GLib
+    tasktext = wibox.widget.textbox!
+    tasktimer = with timer timeout: 30
+        \connect_signal "timeout", ->
+            if file = io.open GLib.get_user_data_dir! .. "/rdial/.current"
+                tasktext\set_markup file\read!
+                file\close!
+            else
+                tasktext\set_markup "none"
+        -- fire timer for initial update
+        \emit_signal "timeout"
+        \start!
 
 .. note::
    The above example is compact but very naïve, and will be incorrect in the
