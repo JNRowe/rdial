@@ -402,7 +402,7 @@ def report(globs, task, output, duration, sort, reverse):
         for task in events.tasks():
             table.add_row([task, events.for_task(task).sum()])
 
-        click.echo(formatter(sortby=sort, reversesort=reverse))
+        click.echo_via_pager(formatter(sortby=sort, reversesort=reverse))
     if events.running() and not output == 'html':
         current = events.last()
         click.echo(_("Task `%s' started %s")
@@ -466,8 +466,9 @@ def ledger(globs, task, duration, rate):
         # Lazy way to remove duplicate argument definitions
         task = None
     events = filter_events(globs['directory'], task, duration)
+    lines = []
     if events.running():
-        click.echo(_(';; Running event not included in output!'))
+        lines.append(_(';; Running event not included in output!'))
     for event in events:
         if not event.delta:
             continue
@@ -475,12 +476,13 @@ def ledger(globs, task, duration, rate):
         # Can't use timedelta.total_seconds() as it was only added in 2.7
         seconds = event.delta.days * 86400 + event.delta.seconds
         hours = seconds / 3600.0
-        click.echo('%s-%s' % (event.start.format('YYYY-MM-DD * HH:mm'),
-                              end.format('HH:mm')))
-        click.echo('    (task:%s)  %.2fh%s'
-                   % (event.task, hours, ' @ %s' % rate if rate else ''))
+        lines.append('%s-%s' % (event.start.format('YYYY-MM-DD * HH:mm'),
+                                end.format('HH:mm')))
+        lines.append('    (task:%s)  %.2fh%s'
+                     % (event.task, hours, ' @ %s' % rate if rate else ''))
     if events.running():
-        click.echo(_(';; Running event not included in output!'))
+        lines.append(_(';; Running event not included in output!'))
+    click.echo_via_pager('\n'.join(lines))
 
 
 def main():
