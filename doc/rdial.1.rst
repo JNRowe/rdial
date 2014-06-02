@@ -31,7 +31,7 @@ OPTIONS
     show program's help message and exit
 
 -d <directory>, --directory=<directory>
-    database location, defaults to ``${XDG_DATA_HOME:-/.local}/rdial``
+    database location, defaults to ``${XDG_DATA_HOME:-~/.local/share}/rdial``
 
 --no-backup
     do not write data file backups

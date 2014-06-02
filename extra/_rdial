@@ -24,7 +24,7 @@
 (( $+functions[__list_tasks] )) ||
 __list_tasks() {
     local tmp
-    tmp=(${XDG_DATA_HOME:-~/.local}/rdial/*~*~(:t:s/.csv/))
+    tmp=(${XDG_DATA_HOME:-~/.local/share}/rdial/*~*~(:t:s/.csv/))
     if [ -z "${tmp}" ]; then
         _message "No rdial tasks found!"
     else
@@ -39,7 +39,7 @@ __list_wrappers() {
         ${XDG_CONFIG_HOME:-~/.config}/rdial/config \
         .rdialrc 2>/dev/null
     ))
-    tmp=(${XDG_DATA_HOME:-~/.local}/rdial/*~*~(:t:s/.csv/))
+    tmp=(${XDG_DATA_HOME:-~/.local/share}/rdial/*~*~(:t:s/.csv/))
     if [ -z "${tmp}" ]; then
         _message "No rdial tasks found!"
     else
@@ -49,7 +49,7 @@ __list_wrappers() {
 
 _arguments '--help[show help message and exit]' \
     "--version[show program's version number and exit]" \
-    "--directory=[directory to read/write to]:select directory:_files -W ${XDG_DATA_HOME:-~/.local}" \
+    "--directory=[directory to read/write to]:select directory:_files -W ${XDG_DATA_HOME:-~/.local/share}" \
     ':rdial command:(fsck start stop switch run wrapper report running last ledger)' \
     '*::subcmd:->subcmd' && return 0
 

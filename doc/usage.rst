@@ -20,7 +20,7 @@ Options
 
 .. option:: -d <directory>, --directory=<directory>
 
-   database location, defaults to ``${XDG_DATA_HOME:-/.local}/rdial``
+   database location, defaults to ``${XDG_DATA_HOME:-~/.local/share}/rdial``
 
 .. option:: --no-backup
 

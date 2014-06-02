@@ -91,7 +91,7 @@ zsh_ snippet shows how to build a selector for an existing task:
 
 .. sourcecode:: sh
 
-    echo ${XDG_DATA_HOME:-~/.local}/rdial/*~*~(:t:s/.csv/) |
+    echo ${XDG_DATA_HOME:-~/.local/share}/rdial/*~*~(:t:s/.csv/) |
         tr ' ' '\n' |
         dmenu -p "task?"
 
