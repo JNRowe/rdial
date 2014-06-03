@@ -17,13 +17,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import os
-
 from datetime import timedelta
 from filecmp import dircmp
+from os.path import abspath
 
 import arrow
 
+from click.testing import CliRunner
 from expecter import expect
 from nose2.tools import params
 
@@ -84,22 +84,17 @@ def test_check_events(n, task, start, delta):
 
 
 def test_write_database():
-    events = Events.read('tests/data/test')
+    runner = CliRunner()
+    in_dir = abspath('tests/data/test')
+    events = Events.read(in_dir)
     events._dirty = events.tasks()
-    try:
-        events.write('tests/data/test_write')
-    except:
-        pass
-    else:
-        comp = dircmp('tests/data/test', 'tests/data/test_write')
+    with runner.isolated_filesystem() as tempdir:
+        events.write(tempdir)
+        comp = dircmp(in_dir, tempdir)
         expect(comp.diff_files) == []
         expect(comp.left_only) == []
         expect(comp.right_only) == []
         expect(comp.funny_files) == []
-    finally:
-        for i in os.listdir('tests/data/test_write'):
-            os.unlink('tests/data/test_write/%s' % i)
-        os.rmdir('tests/data/test_write')
 
 
 def test_store_messages_with_events():

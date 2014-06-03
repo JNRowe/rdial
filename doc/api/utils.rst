@@ -83,14 +83,13 @@ Text formatting
 
 .. testsetup::
 
-    from rdial.utils import (T, fail, success, warn)
-    T._does_styling = False
+    from rdial.utils import (fail, success, warn)
 
 .. doctest::
 
     >>> fail('Error!')
-    'Error!'
+    Error!
     >>> success('Excellent')
-    'Excellent'
+    Excellent
     >>> warn('Ick')
-    'Ick'
+    Ick

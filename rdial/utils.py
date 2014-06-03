@@ -25,14 +25,10 @@ import os
 import re
 
 import arrow
-import blessings
+import click
 import configobj
 
 from . import compat
-from .i18n import _
-
-
-T = blessings.Terminal()
 
 
 # Set up informational message functions
@@ -42,9 +38,9 @@ def _colourise(text, colour):
     :param str text: Text to colourise
     :param str colour: Colour to display text in
     :rtype: :obj:`str`
-    :return str: Colourised text, if possible
+    :return str: Bright colourised text, if possible
     """
-    return getattr(T, colour.replace(' ', '_'))(text)
+    return click.termui.secho(text, fg=colour, bold=True)
 
 
 def success(text):
@@ -54,7 +50,7 @@ def success(text):
     :rtype: :obj:`str`
     :return: Bright green text, if possible
     """
-    return _colourise(text, 'bright green')
+    return _colourise(text, 'green')
 
 
 def fail(text):
@@ -64,7 +60,7 @@ def fail(text):
     :rtype: :obj:`str`
     :return: Bright red text, if possible
     """
-    return _colourise(text, 'bright red')
+    return _colourise(text, 'red')
 
 
 def warn(text):
@@ -74,7 +70,7 @@ def warn(text):
     :rtype: ``str``
     :return: Bright yellow text, if possible
     """
-    return _colourise(text, 'bright yellow')
+    return _colourise(text, 'yellow')
 
 
 class RdialError(ValueError):
@@ -172,17 +168,13 @@ def iso_week_to_date(year, week):
     return start, end
 
 
-def read_config(parser, user_config=None):
+def read_config(user_config=None):
     """Read configuration data.
 
-    :type argparse.ArgumentParser parser: Command line parser
     :type str user_config: User defined config file
     :rtype: configobj.ConfigObj
     :return: Parsed configuration data
     """
-    if user_config and not os.path.exists(user_config):
-        raise parser.error(_("Config file %r doesn't exist!" % user_config))
-
     configs = [os.path.dirname(__file__) + '/config', ]
     for s in os.getenv('XDG_CONFIG_DIRS', '/etc/xdg').split(':'):
         p = s + '/rdial/config'
@@ -209,8 +201,9 @@ def write_current(f):
     """
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
+        globs = args[0]
         f(*args, **kwargs)
-        open('%s/.current' % kwargs['directory'], 'w').write(kwargs['task'])
+        open('%s/.current' % globs['directory'], 'w').write(kwargs['task'])
     return wrapper
 
 
@@ -223,9 +216,10 @@ def remove_current(f):
     """
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
+        globs = args[0]
         f(*args, **kwargs)
-        if os.path.isfile('%s/.current' % kwargs['directory']):
-            os.unlink('%s/.current' % kwargs['directory'])
+        if os.path.isfile('%s/.current' % globs['directory']):
+            os.unlink('%s/.current' % globs['directory'])
     return wrapper
 
 

@@ -26,9 +26,9 @@ import glob
 import inspect
 import operator
 import os
-import tempfile
 
 import arrow
+import click
 
 from . import compat
 from . import utils
@@ -199,22 +199,19 @@ class Events(list):
         for task in self.dirty:
             task_file = '%s/%s.csv' % (directory, task)
             events = self.for_task(task)
-            if compat.PY2:
-                temp = tempfile.NamedTemporaryFile(prefix='.', dir=directory,
-                                                   delete=False)
-                writer = csv.DictWriter(temp, FIELDS, lineterminator='\n')
-            else:
-                temp = tempfile.NamedTemporaryFile(mode='w', prefix='.',
-                                                   dir=directory, delete=False)
-                writer = csv.DictWriter(temp, FIELDS, dialect=csv.unix_dialect,
-                                        quoting=csv.QUOTE_MINIMAL)
-            # Can't use writeheader, it wasn't added until 2.7.
-            writer.writerow(dict(zip(FIELDS, FIELDS)))
-            for event in events:
-                writer.writerow(event.writer())
-            if self.backup and os.path.exists(task_file):
-                os.rename(task_file, '%s~' % task_file)
-            os.rename(temp.name, task_file)
+            with click.utils.LazyFile(task_file, 'w', atomic=True) as temp:
+                if compat.PY2:
+                    writer = csv.DictWriter(temp, FIELDS, lineterminator='\n')
+                else:
+                    writer = csv.DictWriter(temp, FIELDS,
+                                            dialect=csv.unix_dialect,
+                                            quoting=csv.QUOTE_MINIMAL)
+                # Can't use writeheader, it wasn't added until 2.7.
+                writer.writerow(dict(zip(FIELDS, FIELDS)))
+                for event in events:
+                    writer.writerow(event.writer())
+                if self.backup and os.path.exists(task_file):
+                    os.rename(task_file, '%s~' % task_file)
         del self.dirty
 
     def tasks(self):
