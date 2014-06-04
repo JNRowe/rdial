@@ -197,7 +197,7 @@ def write_current(f):
 
     :seealso: :doc:`/taskbars`
 
-    :rtype: obj:`function`
+    :rtype: :obj:`function`
     """
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
@@ -212,7 +212,7 @@ def remove_current(f):
 
     :seealso: :doc:`/taskbars`
 
-    :rtype: obj:`function`
+    :rtype: :obj:`function`
     """
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
