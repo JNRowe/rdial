@@ -15,6 +15,8 @@ Convenience functions
 .. autofunction:: write_current
 .. autofunction:: remove_current
 
+.. autofunction:: newer
+
 Time handling
 '''''''''''''
 
@@ -25,6 +27,7 @@ Time handling
 XDG Base Directory support
 ''''''''''''''''''''''''''
 
+.. autofunction:: xdg_cache_location
 .. autofunction:: xdg_data_location
 
 Text formatting

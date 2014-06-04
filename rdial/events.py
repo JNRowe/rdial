@@ -27,6 +27,11 @@ import inspect
 import operator
 import os
 
+try:
+    import cPickle as pickle
+except ImportError:  # Python 3, and 2.x without speedy helper
+    import pickle  # NOQA
+
 import arrow
 import click
 
@@ -168,7 +173,7 @@ class Events(list):
         self._dirty = []
 
     @staticmethod
-    def read(directory, backup=True):
+    def read(directory, backup=True, write_cache=True):
         """Read and parse database.
 
         Assume a new :obj:`Events` object should be created if the file is
@@ -176,16 +181,28 @@ class Events(list):
 
         :param str directory: Location to read database files from
         :param bool backup: Whether to create backup files
+        :param bool write_cache: Whether to write cache files
         :rtype: :obj:`Events`
         :returns: Parsed events database
         """
         if not os.path.exists(directory):
             return Events(backup=backup)
         events = []
+        cache_dir = os.path.join(utils.xdg_cache_location(),
+                                 directory.replace('/', '_'))
+        if write_cache and not os.path.isdir(cache_dir):
+            os.makedirs(cache_dir)
         for file in glob.glob('%s/*.csv' % directory):
             task = os.path.basename(file)[:-4]
-            events.extend(Event(task, **d)
-                          for d in list(csv.DictReader(open(file))))
+            cache_file = os.path.join(cache_dir, task) + '.pkl'
+            if os.path.exists(cache_file) and utils.newer(cache_file, file):
+                evs = pickle.load(open(cache_file))
+            else:
+                evs = [Event(task, **d)
+                       for d in list(csv.DictReader(open(file)))]
+                if write_cache:
+                    pickle.dump(evs, open(cache_file, 'w'), -1)
+            events.extend(evs)
         return Events(sorted(events, key=operator.attrgetter('start')))
 
     def write(self, directory):
@@ -330,13 +347,14 @@ class Events(list):
 
     @staticmethod
     @contextlib.contextmanager
-    def context(directory, backup=True):
+    def context(directory, backup=True, write_cache=True):
         """Convenience context handler to manage reading and writing database.
 
         :param str directory: Database location
         :param bool backup: Whether to create backup files
+        :param bool write_cache: Whether to write cache files
         """
-        events = Events.read(directory, backup)
+        events = Events.read(directory, backup, write_cache)
         yield events
         if events.dirty:
             events.write(directory)
