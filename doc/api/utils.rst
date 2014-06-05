@@ -15,6 +15,8 @@ Convenience functions
 .. autofunction:: write_current
 .. autofunction:: remove_current
 
+.. autofunction:: get_stop_message
+
 Time handling
 '''''''''''''
 

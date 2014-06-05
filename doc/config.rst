@@ -68,6 +68,12 @@ The key ``color`` is also accepted.
 This key sets the location of your data files.  Some users use this, combined
 with the per-directory config file, to keep per-project task databases.
 
+``interactive`` (default: ``False``)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If this key is set to ``True`` then ``rdial`` will interactively ask the user
+for for messages if they're not supplied as arguments.
+
 .. _run-wrappers-label:
 
 ``run wrappers`` section

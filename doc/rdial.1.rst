@@ -37,6 +37,9 @@ OPTIONS
     File to read configuration data from, defaults to
     ``${XDG_CONFIG_HOME:-~/.config}/rdial/config``.
 
+-i, --interactive/--no-interactive
+    Support interactive message editing.
+
 --help
     Show help message and exit.
 

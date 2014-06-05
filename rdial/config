@@ -2,3 +2,4 @@
 backup = True
 colour = True
 directory = %(xdg_data_location)s
+interactive = False
