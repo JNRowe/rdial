@@ -98,6 +98,22 @@ def task_option(f):
     return f
 
 
+def duration_option(f):
+    """Add duration selection option.
+
+    .. note:: This is only here to reduce duplication in command setup.
+
+    :param function f: Function to add options to
+    :rtype: :obj:`func`
+    :return: Function with additional options
+    """
+    f = click.option('-d', '--duration', default='all',
+                     type=click.Choice(['day', 'week', 'month', 'year',
+                                        'all']),
+                     help=_('Filter events for specified time period.'))(f)
+    return f
+
+
 @click.group(help=_('Simple time tracking for simple people.'),
              epilog=_('Please report bugs to '
                       'https://github.com/JNRowe/rdial/issues'))
@@ -358,9 +374,7 @@ def wrapper(ctx, globs, time, message, file, wrapper):
               help=_('Produce HTML output.'))
 @click.option('--human', 'output', flag_value='human',
               help=_('Produce human-readable output.'))
-@click.option('-d', '--duration', default='all',
-              type=click.Choice(['day', 'week', 'month', 'year', 'all']),
-              help=_('Filter events for specified time period.'))
+@duration_option
 @click.option('-s', '--sort', default='task', envvar='RDIAL_SORT',
               type=click.Choice(['task', 'time']), help=_('Field to sort by.'))
 @click.option('-r', '--reverse/--no-reverse', default=False,
@@ -443,9 +457,7 @@ def last(globs):
 
 @cli.command(help=_('Generate ledger compatible data file.'))
 @task_option
-@click.option('-d', '--duration', default='all',
-              type=click.Choice(['day', 'week', 'month', 'year', 'all']),
-              help=_('Filter events for specified time period.'))
+@duration_option
 @click.option('-r', '--rate', envvar='RDIAL_RATE', type=click.FLOAT,
               help=_('Hourly rate for task output.'))
 @click.pass_obj
