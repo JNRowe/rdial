@@ -83,6 +83,21 @@ def task_from_dir(ctx, param, value):
         param.default = os.path.basename(os.path.abspath(os.curdir))
 
 
+def task_option(f):
+    """Add task selection options.
+
+    :param function f: Function to add options to
+    :rtype: :obj:`func`
+    :return: Function with additional options
+    """
+    f = click.option('-x', '--from-dir', is_flag=True, expose_value=False,
+                     is_eager=True, callback=task_from_dir,
+                     help=_('Use directory name as task name.'))(f)
+    f = click.argument('task', default='default', envvar='RDIAL_TASK',
+                       required=False, type=TaskNameParamType())(f)
+    return f
+
+
 @click.group(help=_('Simple time tracking for simple people.'),
              epilog=_('Please report bugs to '
                       'https://github.com/JNRowe/rdial/issues'))
@@ -179,11 +194,7 @@ def fsck(ctx, globs):
 
 
 @cli.command(help=_('Start task.'))
-@click.option('-x', '--from-dir', is_flag=True, expose_value=False,
-              is_eager=True, callback=task_from_dir,
-              help=_('Use directory name as task name.'))
-@click.argument('task', default='default', envvar='RDIAL_TASK',
-                required=False, type=TaskNameParamType())
+@task_option
 @click.option('-n', '--new', is_flag=True, help=_('Start a new task.'))
 @click.option('-t', '--time', default='', help=_('Set start time.'),
               type=StartTimeParamType())
@@ -233,11 +244,7 @@ def stop(globs, message, file, amend):
 
 
 @cli.command(help=_('Switch to another task.'))
-@click.option('-x', '--from-dir', is_flag=True, expose_value=False,
-              is_eager=True, callback=task_from_dir,
-              help=_('Use directory name as task name.'))
-@click.argument('task', default='default', envvar='RDIAL_TASK',
-                required=False, type=TaskNameParamType())
+@task_option
 @click.option('-n', '--new', is_flag=True, help=_('Start a new task.'))
 @click.option('-m', '--message',
               help=_('Closing message for current task.'))
@@ -268,11 +275,7 @@ def switch(globs, task, new, message, file):
 
 
 @cli.command(help=_('Run command with timer.'))
-@click.option('-x', '--from-dir', is_flag=True, expose_value=False,
-              is_eager=True, callback=task_from_dir,
-              help=_('Use directory name as task name.'))
-@click.argument('task', default='default', envvar='RDIAL_TASK',
-                required=False, type=TaskNameParamType())
+@task_option
 @click.option('-n', '--new', is_flag=True, help=_('Start a new task.'))
 @click.option('-t', '--time', default='', help=_('Set start time.'),
               type=StartTimeParamType())
@@ -350,11 +353,7 @@ def wrapper(ctx, globs, time, message, file, wrapper):
 
 
 @cli.command(help=_('Report time tracking data.'))
-@click.option('-x', '--from-dir', is_flag=True, expose_value=False,
-              is_eager=True, callback=task_from_dir,
-              help=_('Use directory name as task name.'))
-@click.argument('task', default='default', envvar='RDIAL_TASK',
-                required=False, type=TaskNameParamType())
+@task_option
 @click.option('--html', 'output', flag_value='html',
               help=_('Produce HTML output.'))
 @click.option('--human', 'output', flag_value='human',
@@ -443,11 +442,7 @@ def last(globs):
 
 
 @cli.command(help=_('Generate ledger compatible data file.'))
-@click.option('-x', '--from-dir', is_flag=True, expose_value=False,
-              is_eager=True, callback=task_from_dir,
-              help=_('Use directory name as task name.'))
-@click.argument('task', default='default', envvar='RDIAL_TASK',
-                required=False, type=TaskNameParamType())
+@task_option
 @click.option('-d', '--duration', default='all',
               type=click.Choice(['day', 'week', 'month', 'year', 'all']),
               help=_('Filter events for specified time period.'))
