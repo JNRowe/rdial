@@ -9,8 +9,10 @@ Utilities
   :mod:`rdial`, and can be skipped if you are simply using the tool from the
   command line.
 
-Convenience functions
-'''''''''''''''''''''
+Convenience functions and classes
+'''''''''''''''''''''''''''''''''
+
+.. autoclass:: AttrDict
 
 .. autofunction:: write_current
 .. autofunction:: remove_current

@@ -103,10 +103,11 @@ def cli(ctx, directory, backup, config):
     :param str config: Location of config file
     """
     cfg = utils.read_config(config)
+    base = cfg['rdial']
 
-    if 'color' in cfg['rdial']:
-        cfg['rdial']['colour'] = cfg['rdial']['color']
-    if not cfg['rdial'].as_bool('colour') or os.getenv('NO_COLOUR') \
+    if 'color' in base:
+        base['colour'] = base['color']
+    if not base.as_bool('colour') or os.getenv('NO_COLOUR') \
             or os.getenv('NO_COLOR'):
         utils._colourise = lambda s, colour: s
 
@@ -121,11 +122,11 @@ def cli(ctx, directory, backup, config):
                     d[k] = cfg[name][k]
             ctx.default_map[name] = d
 
-    ctx.obj = {
-        'backup': backup if backup else cfg['rdial'].as_bool('backup'),
-        'directory': directory if directory else cfg['rdial']['directory'],
-        'config': cfg,
-    }
+    ctx.obj = utils.AttrDict(
+        backup=backup or base.as_bool('backup'),
+        directory=directory or base['directory'],
+        config=cfg,
+    )
 
 
 def filter_events(directory, task=None, duration=None):
@@ -165,7 +166,7 @@ def fsck(ctx, globs):
     :param dict globs: Global options object
     """
     warnings = 0
-    with Events.context(globs['directory'], globs['backup']) as events:
+    with Events.context(globs.directory, globs.backup) as events:
         last = events[0]
         for event in events[1:]:
             if not last.start + last.delta <= event.start:
@@ -197,7 +198,7 @@ def start(globs, task, new, time):
     :param bool new: Create a new task
     :param arrow.Arrow time: Task start time
     """
-    with Events.context(globs['directory'], globs['backup']) as events:
+    with Events.context(globs.directory, globs.backup) as events:
         events.start(task, new, time)
 
 
@@ -218,7 +219,7 @@ def stop(globs, message, file, amend):
     """
     if file:
         message = file.read()
-    with Events.context(globs['directory'], globs['backup']) as events:
+    with Events.context(globs.directory, globs.backup) as events:
         last = events.last()
         if amend and last.running():
             raise TaskRunningError(_("Can't amend running task %s!")
@@ -256,7 +257,7 @@ def switch(globs, task, new, message, file):
     """
     if file:
         message = file.read()
-    with Events.context(globs['directory'], globs['backup']) as events:
+    with Events.context(globs.directory, globs.backup) as events:
         if new or task in events.tasks():
             # This is dirty, but we kick on to Events.start() to save
             # duplication of error handling for task names
@@ -292,7 +293,7 @@ def run(globs, task, new, time, message, file, command):
     :param str file: Filename to read message from
     :param str command: Command to run
     """
-    with Events.context(globs['directory'], globs['backup']) as events:
+    with Events.context(globs.directory, globs.backup) as events:
         if events.running():
             raise TaskRunningError(_('Task %s is already started!'
                                      % events.last().task))
@@ -303,7 +304,7 @@ def run(globs, task, new, time, message, file, command):
             raise utils.RdialError(e.strerror)
 
         events.start(task, new, time)
-        open('%s/.current' % globs['directory'], 'w').write(task)
+        open('%s/.current' % globs.directory, 'w').write(task)
 
         p.wait()
 
@@ -313,7 +314,7 @@ def run(globs, task, new, time, message, file, command):
     event = events.last()
     click.echo(_('Task %s running for %s') % (event.task,
                                               str(event.delta).split('.')[0]))
-    os.unlink('%s/.current' % globs['directory'])
+    os.unlink('%s/.current' % globs.directory)
     if p.returncode != 0:
         raise OSError(p.returncode, _('Command failed'))
 
@@ -337,10 +338,10 @@ def wrapper(ctx, globs, time, message, file, wrapper):
     :param str file: Filename to read message from
     :param str wrapper: Run wrapper to execute
     """
-    if not 'run wrappers' in globs['config']:
+    if not 'run wrappers' in globs.config:
         raise ValueError(_('No %r section in config') % 'run wrappers')
     try:
-        command = globs['config']['run wrappers'][wrapper]
+        command = globs.config['run wrappers'][wrapper]
     except KeyError:
         raise ValueError(_('No such wrapper %r') % wrapper)
     parser = ctx.parent.command.commands['run'].make_parser(ctx)
@@ -380,7 +381,7 @@ def report(globs, task, output, duration, sort, reverse):
     if task == 'default':
         # Lazy way to remove duplicate argument definitions
         task = None
-    events = filter_events(globs['directory'], task, duration)
+    events = filter_events(globs.directory, task, duration)
     if output == 'human':
         click.echo(N_('%d event in query', '%d events in query', len(events))
                    % len(events))
@@ -416,7 +417,7 @@ def running(globs):
 
     :param dict globs: Global options object
     """
-    events = Events.read(globs['directory'])
+    events = Events.read(globs.directory)
     if events.running():
         current = events.last()
         click.echo(_("Task `%s' started %s") % (current.task,
@@ -432,7 +433,7 @@ def last(globs):
 
     :param dict globs: Global options object
     """
-    events = Events.read(globs['directory'])
+    events = Events.read(globs.directory)
     event = events.last()
     if not events.running():
         click.echo(_('Last task %s, ran for %s') % (event.task, event.delta))
@@ -465,7 +466,7 @@ def ledger(globs, task, duration, rate):
     if task == 'default':
         # Lazy way to remove duplicate argument definitions
         task = None
-    events = filter_events(globs['directory'], task, duration)
+    events = filter_events(globs.directory, task, duration)
     lines = []
     if events.running():
         lines.append(_(';; Running event not included in output!'))
