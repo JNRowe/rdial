@@ -114,6 +114,19 @@ def duration_option(f):
     return f
 
 
+def message_option(f):
+    """Add message setting options.
+
+    :param function f: Function to add options to
+    :rtype: :obj:`func`
+    :return: Function with additional options
+    """
+    f = click.option('-m', '--message', help=_('Closing message.'))(f)
+    f = click.option('-F', '--file', type=click.File(),
+                     help=_('Read closing message from file.'))(f)
+    return f
+
+
 @click.group(help=_('Simple time tracking for simple people.'),
              epilog=_('Please report bugs to '
                       'https://github.com/JNRowe/rdial/issues'))
@@ -229,9 +242,7 @@ def start(globs, task, new, time):
 
 
 @cli.command(help=_('Stop task.'))
-@click.option('-m', '--message', help=_('Closing message.'))
-@click.option('-F', '--file', type=click.File(),
-              help=_('Read closing message from file.'))
+@message_option
 @click.option('--amend', is_flag=True, help=_('Amend previous stop entry.'))
 @click.pass_obj
 @utils.remove_current
@@ -262,10 +273,7 @@ def stop(globs, message, file, amend):
 @cli.command(help=_('Switch to another task.'))
 @task_option
 @click.option('-n', '--new', is_flag=True, help=_('Start a new task.'))
-@click.option('-m', '--message',
-              help=_('Closing message for current task.'))
-@click.option('-F', '--file', type=click.File(),
-              help=_('Read closing message for current task from file.'))
+@message_option
 @click.pass_obj
 @utils.write_current
 def switch(globs, task, new, message, file):
@@ -295,9 +303,7 @@ def switch(globs, task, new, message, file):
 @click.option('-n', '--new', is_flag=True, help=_('Start a new task.'))
 @click.option('-t', '--time', default='', help=_('Set start time.'),
               type=StartTimeParamType())
-@click.option('-m', '--message', help=_('Closing message.'))
-@click.option('-F', '--file', type=click.File(),
-              help=_('Read closing message from file.'))
+@message_option
 @click.option('-c', '--command', help=_('Command to run.'))
 @click.pass_obj
 def run(globs, task, new, time, message, file, command):
@@ -340,9 +346,7 @@ def run(globs, task, new, time, message, file, command):
 @cli.command(help=_('Run predefined command with timer.'))
 @click.option('-t', '--time', default='', help=_('Set start time.'),
               type=StartTimeParamType())
-@click.option('-m', '--message', help=_('Closing message.'))
-@click.option('-F', '--file', type=click.File(),
-              help=_('Read closing message from file.'))
+@message_option
 @click.argument('wrapper', default='default')
 @click.pass_obj
 @click.pass_context
