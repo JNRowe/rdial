@@ -132,6 +132,7 @@ def message_option(f):
                       'https://github.com/JNRowe/rdial/issues'))
 @click.version_option(_version.dotted)
 @click.option('-d', '--directory', envvar='RDIAL_DIRECTORY', metavar='DIR',
+              type=click.Path(file_okay=False),
               help=_('Directory to read/write to.'))
 @click.option('--backup/--no-backup', envvar='RDIAL_BACKUP',
               help=_('Do not write data file backups.'))
