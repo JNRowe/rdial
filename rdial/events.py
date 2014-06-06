@@ -195,9 +195,13 @@ class Events(list):
         for file in glob.glob('%s/*.csv' % directory):
             task = os.path.basename(file)[:-4]
             cache_file = os.path.join(cache_dir, task) + '.pkl'
+            evs = None
             if os.path.exists(cache_file) and utils.newer(cache_file, file):
-                evs = pickle.load(open(cache_file))
-            else:
+                try:
+                    evs = pickle.load(open(cache_file))
+                except pickle.UnpicklingError:
+                    pass
+            if evs is None:
                 evs = [Event(task, **d)
                        for d in list(csv.DictReader(open(file)))]
                 if write_cache:
