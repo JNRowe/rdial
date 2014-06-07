@@ -114,6 +114,10 @@ Commands
 
    Start a new task.
 
+.. option:: -t <time>, --time <time>
+
+   Manually set start time for task.
+
 .. option:: -m <message>, --message <message>
 
    Closing message for current task.

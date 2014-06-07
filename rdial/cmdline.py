@@ -27,7 +27,7 @@ import arrow
 import click
 import prettytable
 
-from .events import (Events, TaskRunningError)
+from .events import (Events, TaskNotRunningError, TaskRunningError)
 from .i18n import (_, N_)
 from . import _version
 from . import utils
@@ -65,7 +65,7 @@ class StartTimeParamType(click.ParamType):
         :return: Valid start time
         """
         try:
-            utils.parse_datetime(value)
+            value = utils.parse_datetime(value)
         except arrow.parser.ParserError:
             self.fail(_('%r is not a valid ISO-8601 time string') % value)
         return value
@@ -240,30 +240,37 @@ def stop(globs, message, file, amend):
 @click.argument('task', default='default', envvar='RDIAL_TASK',
                 required=False, type=TaskNameParamType())
 @click.option('-n', '--new', is_flag=True, help=_('Start a new task.'))
+@click.option('-t', '--time', default='', help=_('Set start time.'),
+              type=StartTimeParamType())
 @click.option('-m', '--message',
               help=_('Closing message for current task.'))
 @click.option('-F', '--file', type=click.File(),
               help=_('Read closing message for current task from file.'))
 @click.pass_obj
 @utils.write_current
-def switch(globs, task, new, message, file):
+def switch(globs, task, new, time, message, file):
     """Complete last task and start new one.
 
     :param dict globs: Global options object
     :param str task: Task name to operate on
     :param bool new: Create a new task
+    :param arrow.Arrow time: Task start time
     :param str message: Message to assign to event
     :param str file: Filename to read message from
     """
     if file:
         message = file.read()
     with Events.context(globs.directory, globs.backup) as events:
+        event = events.last()
+        if time and time < event.start:
+            raise TaskNotRunningError(_("Can't specify a start time before "
+                                        "current task started!"))
         if new or task in events.tasks():
             # This is dirty, but we kick on to Events.start() to save
             # duplication of error handling for task names
             events.stop(message)
-        event = events.last()
-        events.start(task, new)
+        events.last().delta = time - event.start
+        events.start(task, new, time)
     click.echo(_('Task %s running for %s') % (event.task,
                                               str(event.delta).split('.')[0]))
 

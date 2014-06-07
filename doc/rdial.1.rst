@@ -96,6 +96,9 @@ Switch to another task
 -n, --new
     Start a new task.
 
+-t <time>, --time <time>
+    Manually set start time for task.
+
 -m <message>, --message <message>
     Closing message for current task.
 
