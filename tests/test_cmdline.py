@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from click import UsageError
+from click import BadParameter
 from expecter import expect
 from nose2.tools import params
 
@@ -27,9 +27,9 @@ from rdial.cmdline import (StartTimeParamType, TaskNameParamType)
 @params(
     ('valid_name', True),
     ('also-valid-name', True),
-    ('.invalid_name', UsageError),
+    ('.invalid_name', BadParameter),
     ('valid.name', True),
-    ('invalid/name', UsageError),
+    ('invalid/name', BadParameter),
 )
 def test_task_name_validity(string, expected):
     p = TaskNameParamType()
@@ -41,7 +41,7 @@ def test_task_name_validity(string, expected):
 
 
 @params(
-    ('yesterday', UsageError),
+    ('yesterday', BadParameter),
     ('', True),
     ('2011-05-04T09:15:00Z', True),
     ('2011-05-04', True),
