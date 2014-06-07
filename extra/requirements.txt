@@ -1,4 +1,4 @@
 arrow>=0.4.2
-click
+click>=2.0
 configobj>=5.0.0
 prettytable
