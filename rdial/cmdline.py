@@ -61,7 +61,7 @@ class StartTimeParamType(click.ParamType):
         :param str value: Value given to flag
         :param click.Argument param: Parameter being processed
         :param click.Context ctx: Current command context
-        :rtype: :obj:`arrow.Arrow`
+        :rtype: :obj:`datetime.datetime`
         :return: Valid start time
         """
         try:
