@@ -25,6 +25,7 @@ import os
 import re
 import subprocess
 
+import ciso8601
 import click
 import configobj
 
@@ -156,18 +157,16 @@ def parse_datetime(string):
     if not string:
         datetime_ = utcnow()
     else:
-        base = '%Y-%m-%dT%H:%M:%S'
-        try:
-            datetime_ = datetime.datetime.strptime(string, base + 'Z')
-        except ValueError:
+        datetime_ = ciso8601.parse_datetime(string)
+        if not datetime_:
             try:
                 output = check_output(['date', '--utc', '--iso-8601=seconds',
                                        '-d', string])
-                datetime_ = datetime.datetime.strptime(output.strip(),
-                                                       base + '+0000')
+                datetime_ = ciso8601.parse_datetime(output.strip())
             except subprocess.CalledProcessError:
-                raise ValueError(_('Unable to parse timestamp %r') % string)
-        datetime_ = datetime_.replace(tzinfo=utc)
+                pass
+        if not datetime_:
+            raise ValueError('Unable to parse timestamp %r' % string)
     return datetime_
 
 
