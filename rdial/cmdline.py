@@ -91,15 +91,18 @@ def task_from_dir(ctx, param, value):
               help=_('Directory to read/write to.'))
 @click.option('--backup/--no-backup', envvar='RDIAL_BACKUP',
               help=_('Do not write data file backups.'))
+@click.option('--cache/--no-cache', envvar='RDIAL_CACHE',
+              help=_('Do not write cache files.'))
 @click.option('--config', envvar='RDIAL_CONFIG', type=click.File(),
               help=_('File to read configuration data from.'))
 @click.pass_context
-def cli(ctx, directory, backup, config):
+def cli(ctx, directory, backup, cache, config):
     """Main command entry point.
 
     :param click.Context ctx: Current command context
     :param str directory: Location to store event data
     :param bool backup: Whether to create backup files
+    :param bool cache: Whether to create cache files
     :param str config: Location of config file
     """
     cfg = utils.read_config(config)
@@ -123,21 +126,22 @@ def cli(ctx, directory, backup, config):
 
     ctx.obj = {
         'backup': backup if backup else cfg['rdial'].as_bool('backup'),
+        'cache': cache,
         'directory': directory if directory else cfg['rdial']['directory'],
         'config': cfg,
     }
 
 
-def filter_events(directory, task=None, duration=None):
+def filter_events(globs, task=None, duration=None):
     """Filter events for report processing.
 
-    :param str directory: Directory to read events from
+    :param dict globs: Global options object
     :param str task: Task name to filter on
     :param str duration: Time window to filter on
     :rtype: :obj:`rdial.events.Events`
     :return: Events matching specified criteria
     """
-    events = Events.read(directory)
+    events = Events.read(globs['directory'], write_cache=globs['cache'])
     if task:
         events = events.for_task(task)
     if not duration == 'all':
@@ -165,7 +169,8 @@ def fsck(ctx, globs):
     :param dict globs: Global options object
     """
     warnings = 0
-    with Events.context(globs['directory'], globs['backup']) as events:
+    with Events.context(globs['directory'], globs['backup'],
+                        globs['cache']) as events:
         last = events[0]
         for event in events[1:]:
             if not last.start + last.delta <= event.start:
@@ -197,7 +202,8 @@ def start(globs, task, new, time):
     :param bool new: Create a new task
     :param arrow.Arrow time: Task start time
     """
-    with Events.context(globs['directory'], globs['backup']) as events:
+    with Events.context(globs['directory'], globs['backup'],
+                        globs['cache']) as events:
         events.start(task, new, time)
 
 
@@ -218,7 +224,8 @@ def stop(globs, message, file, amend):
     """
     if file:
         message = file.read()
-    with Events.context(globs['directory'], globs['backup']) as events:
+    with Events.context(globs['directory'], globs['backup'],
+                        globs['cache']) as events:
         last = events.last()
         if amend and last.running():
             raise TaskRunningError(_("Can't amend running task %s!")
@@ -256,7 +263,8 @@ def switch(globs, task, new, message, file):
     """
     if file:
         message = file.read()
-    with Events.context(globs['directory'], globs['backup']) as events:
+    with Events.context(globs['directory'], globs['backup'],
+                        globs['cache']) as events:
         if new or task in events.tasks():
             # This is dirty, but we kick on to Events.start() to save
             # duplication of error handling for task names
@@ -292,7 +300,8 @@ def run(globs, task, new, time, message, file, command):
     :param str file: Filename to read message from
     :param str command: Command to run
     """
-    with Events.context(globs['directory'], globs['backup']) as events:
+    with Events.context(globs['directory'], globs['backup'],
+                        globs['cache']) as events:
         if events.running():
             raise TaskRunningError(_('Task %s is already started!'
                                      % events.last().task))
@@ -380,7 +389,7 @@ def report(globs, task, output, duration, sort, reverse):
     if task == 'default':
         # Lazy way to remove duplicate argument definitions
         task = None
-    events = filter_events(globs['directory'], task, duration)
+    events = filter_events(globs, task, duration)
     if output == 'human':
         click.echo(N_('%d event in query', '%d events in query', len(events))
                    % len(events))
@@ -416,7 +425,7 @@ def running(globs):
 
     :param dict globs: Global options object
     """
-    events = Events.read(globs['directory'])
+    events = Events.read(globs['directory'], write_cache=globs['cache'])
     if events.running():
         current = events.last()
         click.echo(_("Task `%s' started %s") % (current.task,
@@ -432,7 +441,7 @@ def last(globs):
 
     :param dict globs: Global options object
     """
-    events = Events.read(globs['directory'])
+    events = Events.read(globs['directory'], write_cache=globs['cache'])
     event = events.last()
     if not events.running():
         click.echo(_('Last task %s, ran for %s') % (event.task, event.delta))
@@ -465,7 +474,7 @@ def ledger(globs, task, duration, rate):
     if task == 'default':
         # Lazy way to remove duplicate argument definitions
         task = None
-    events = filter_events(globs['directory'], task, duration)
+    events = filter_events(globs, task, duration)
     lines = []
     if events.running():
         lines.append(_(';; Running event not included in output!'))

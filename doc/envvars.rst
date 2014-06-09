@@ -11,6 +11,12 @@ to make it easy for users to configure per-project defaults using shell hooks.
    must be a boolean setting that accepts ``false``/``true``, ``0``/``1`` or
    ``y``/``n`` as its value.
 
+.. envvar:: RDIAL_CACHE
+
+   This controls whether :program:`rdial` creates a cache for data files.  It
+   must be a boolean setting that accepts ``false``/``true``, ``0``/``1`` or
+   ``y``/``n`` as its value.
+
 .. envvar:: RDIAL_CONFIG
 
    The location of the :doc:`configuration <config>` file.  It must be a string

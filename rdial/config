@@ -1,4 +1,5 @@
 [rdial]
 backup = True
+cache = True
 colour = True
 directory = %(xdg_data_location)s
