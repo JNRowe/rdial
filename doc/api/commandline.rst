@@ -23,3 +23,5 @@ Command line
 .. autofunction:: cli
 
 .. autofunction:: filter_events
+
+.. autofunction:: get_stop_message

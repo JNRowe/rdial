@@ -84,6 +84,26 @@ def task_from_dir(ctx, param, value):
         param.default = os.path.basename(os.path.abspath(os.curdir))
 
 
+def get_stop_message(current, edit=False):
+    """Interactively fetch stop message.
+
+    :param events.Event current: Current task
+    :param bool edit: Whether to edit existing message
+    :rtype: :obj:`str`
+    :return: Message to use
+    """
+    marker = _('# Text below here ignored\n')
+    task_message = _("# Task `%s' started %s") % (current.task,
+                                                  current.start.humanize())
+    template = "%s\n%s%s" % (current.message, marker, task_message)
+    message = click.edit(template, require_save=not edit)
+    if message is None:
+        message = ''
+    else:
+        message = message.split(marker, 1)[0].rstrip('\n')
+    return message
+
+
 @click.group(help=_('Simple time tracking for simple people.'),
              epilog=_('Please report bugs to '
                       'https://github.com/JNRowe/rdial/issues'))
@@ -96,8 +116,11 @@ def task_from_dir(ctx, param, value):
               help=_('Do not write cache files.'))
 @click.option('--config', envvar='RDIAL_CONFIG', type=click.File(),
               help=_('File to read configuration data from.'))
+@click.option('-i', '--interactive/--no-interactive',
+              envvar='RDIAL_INTERACTIVE',
+              help=_('Support interactive message editing.'))
 @click.pass_context
-def cli(ctx, directory, backup, cache, config):
+def cli(ctx, directory, backup, cache, config, interactive):
     """Main command entry point.
 
     :param click.Context ctx: Current command context
@@ -105,6 +128,7 @@ def cli(ctx, directory, backup, cache, config):
     :param bool backup: Whether to create backup files
     :param bool cache: Whether to create cache files
     :param str config: Location of config file
+    :param bool interactive: Whether to support interactive message editing
     """
     cfg = utils.read_config(config)
     base = cfg['rdial']
@@ -131,6 +155,7 @@ def cli(ctx, directory, backup, cache, config):
         cache=cache or base.as_bool('cache'),
         config=cfg,
         directory=directory or base['directory'],
+        interactive=interactive or base.as_bool('interactive'),
     )
 
 
@@ -226,12 +251,16 @@ def stop(globs, message, file, amend):
         message = file.read()
     with Events.context(globs.directory, globs.backup, globs.cache) as events:
         last = events.last()
-        if amend and last.running():
+        running = last.running()
+        if amend and running:
             raise TaskRunningError(_("Can't amend running task %s!")
                                    % last.task)
+        elif not amend and not running:
+            raise TaskNotRunningError(_('No task running!'))
         if amend and not message:
-            event = events.last()
-            message = event.message
+            message = last.message
+        if globs.interactive and not message:
+            get_stop_message(last, edit=amend)
         events.stop(message, force=amend)
     event = events.last()
     click.echo(_('Task %s running for %s') % (event.task,
@@ -270,7 +299,11 @@ def switch(globs, task, new, time, message, file):
         if time and time < event.start:
             raise TaskNotRunningError(_("Can't specify a start time before "
                                         "current task started!"))
+        if not event.running():
+            raise TaskNotRunningError(_('No task running!'))
         if new or task in events.tasks():
+            if globs.interactive and not message:
+                get_stop_message(event)
             # This is dirty, but we kick on to Events.start() to save
             # duplication of error handling for task names
             events.stop(message)
@@ -322,6 +355,8 @@ def run(globs, task, new, time, message, file, command):
 
         if file:
             message = file.read()
+        if globs.interactive and not message:
+            get_stop_message(events.running())
         events.stop(message)
     event = events.last()
     click.echo(_('Task %s running for %s') % (event.task,
