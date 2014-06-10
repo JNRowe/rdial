@@ -27,7 +27,6 @@ import inspect
 import operator
 import os
 
-import arrow
 import click
 
 from . import compat
@@ -68,7 +67,9 @@ class Event(object):
         :param str message: Message to attach to event
         """
         self.task = task
-        if isinstance(start, arrow.Arrow):
+        if isinstance(start, datetime.datetime):
+            if not start.tzinfo:
+                raise ValueError('Must not be a naive datetime %r' % start)
             self.start = start
         else:
             self.start = utils.parse_datetime(start)
@@ -120,7 +121,7 @@ class Event(object):
         """
         if not force and self.delta:
             raise TaskNotRunningError('No task running!')
-        self.delta = arrow.now() - self.start
+        self.delta = utils.utcnow() - self.start
         self.message = message
 FIELDS = inspect.getargspec(Event.__init__)[0][2:]
 
@@ -317,7 +318,7 @@ class Events(list):
         :return: Events occurring in given ISO-8601 week
         """
         start, end = utils.iso_week_to_date(year, week)
-        return self.filter(lambda x: start <= x.start < end)
+        return self.filter(lambda x: start <= x.start.date() < end)
 
     def sum(self):
         """Sum duration of all events.

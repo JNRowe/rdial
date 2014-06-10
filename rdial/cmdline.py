@@ -19,11 +19,11 @@
 
 # pylint: disable-msg=C0121
 
+import datetime
 import os
 import shlex
 import subprocess
 
-import arrow
 import click
 import prettytable
 
@@ -61,12 +61,12 @@ class StartTimeParamType(click.ParamType):
         :param str value: Value given to flag
         :param click.Argument param: Parameter being processed
         :param click.Context ctx: Current command context
-        :rtype: :obj:`arrow.Arrow`
+        :rtype: :obj:`datetime.datetime`
         :return: Valid start time
         """
         try:
             value = utils.parse_datetime(value)
-        except arrow.parser.ParserError:
+        except ValueError:
             self.fail(_('%r is not a valid ISO-8601 time string') % value)
         return value
 
@@ -142,11 +142,11 @@ def filter_events(directory, task=None, duration=None):
     if task:
         events = events.for_task(task)
     if not duration == 'all':
-        today = arrow.now().date()
         if duration == 'week':
+            today = datetime.date.today()
             events = events.for_week(*today.isocalendar()[:2])
         else:
-            year, month, day = today.year, today.month, today.day
+            year, month, day = datetime.date.today().timetuple()[:3]
             if duration == 'month':
                 day = None
             elif duration == 'year':
@@ -196,7 +196,7 @@ def start(globs, task, new, time):
     :param dict globs: Global options object
     :param str task: Task name to operate on
     :param bool new: Create a new task
-    :param arrow.Arrow time: Task start time
+    :param datetime.datetime time: Task start time
     """
     with Events.context(globs.directory, globs.backup) as events:
         events.start(task, new, time)
@@ -254,7 +254,7 @@ def switch(globs, task, new, time, message, file):
     :param dict globs: Global options object
     :param str task: Task name to operate on
     :param bool new: Create a new task
-    :param arrow.Arrow time: Task start time
+    :param datetime.datetime time: Task start time
     :param str message: Message to assign to event
     :param str file: Filename to read message from
     """
@@ -295,7 +295,7 @@ def run(globs, task, new, time, message, file, command):
     :param dict globs: Global options object
     :param str task: Task name to operate on
     :param bool new: Create a new task
-    :param arrow.Arrow time: Task start time
+    :param datetime.datetime time: Task start time
     :param str message: Message to assign to event
     :param str file: Filename to read message from
     :param str command: Command to run
@@ -414,7 +414,7 @@ def report(globs, task, output, duration, sort, reverse):
     if events.running() and not output == 'html':
         current = events.last()
         click.echo(_("Task `%s' started %s")
-                   % (current.task, current.start.humanize()))
+                   % (current.task, utils.format_datetime(current.start)))
 
 
 @cli.command(help=_('Display running task, if any.'))
@@ -427,8 +427,9 @@ def running(globs):
     events = Events.read(globs.directory)
     if events.running():
         current = events.last()
-        click.echo(_("Task `%s' started %s") % (current.task,
-                                                current.start.humanize()))
+        click.echo(_("Task `%s' started %s")
+                   % (current.task,
+                      str(utils.utcnow() - current.start).split('.')[0]))
     else:
         utils.warn(_('No task is running!'))
 
@@ -484,8 +485,8 @@ def ledger(globs, task, duration, rate):
         # Can't use timedelta.total_seconds() as it was only added in 2.7
         seconds = event.delta.days * 86400 + event.delta.seconds
         hours = seconds / 3600.0
-        lines.append('%s-%s' % (event.start.format('YYYY-MM-DD * HH:mm'),
-                                end.format('HH:mm')))
+        lines.append('%s-%s' % (event.start.strftime('%Y-%m-%d * %H:%M'),
+                                end.strftime('%H:%M')))
         lines.append('    (task:%s)  %.2fh%s'
                      % (event.task, hours, ' @ %s' % rate if rate else ''))
     if events.running():
