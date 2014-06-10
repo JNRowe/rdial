@@ -165,8 +165,8 @@ Report time tracking data
 -r, --reverse
     Reverse sort order.
 
---html
-    Produce HTML output.
+--style
+    Table output style {grid,latex,mediawiki,orgtbl,pipe,plain,rst,simple,tsv}.
 
 --human
     Produce human-readable output.

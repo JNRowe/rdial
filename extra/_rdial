@@ -21,6 +21,17 @@
 # customise it!  If you make improvements, open a pull request against
 # `JNRowe/rdial' with your super changes attached.
 
+(( $+functions[__list_styles] )) ||
+__list_styles() {
+    local tmp
+    tmp=($(python -c 'import tabulate; print(" ".join(tabulate._table_formats.keys()))' 2>/dev/null))
+    if [ -z "${tmp}" ]; then
+        _message "No styles found!"
+    else
+        compadd ${tmp[@]}
+    fi
+}
+
 (( $+functions[__list_tasks] )) ||
 __list_tasks() {
     local tmp
@@ -99,8 +110,8 @@ case "$words[1]" in
     _arguments '--help[show help message and exit]' \
         '--duration[filter events for specified time period]:select time period:(day week month year all)' \
         '--sort[field to sort by]:select sort field:(task time)' \
+        '--style[table output style]:__list_styles' \
         '--reverse[reverse sort order]' \
-        '--html[produce HTML output]' \
         '--human[produce human-readable output]' \
         '--from-dir[use directory name as task]' \
         ':select task:__list_tasks'

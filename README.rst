@@ -26,7 +26,7 @@ Requirements
 * blessings_
 * click_
 * configobj_
-* prettytable_
+* tabulate_
 
 It should work with any version of Python_ 2.6 or newer.  If ``rdial`` doesn't
 work with the version of Python you have installed, file an issue_ and I'll
@@ -121,7 +121,7 @@ reproduce the problem, or even better a patch!
 .. _blessings: https://crate.io/packages/blessings/
 .. _click: https://crate.io/packages/click/
 .. _configobj: https://crate.io/packages/configobj/
-.. _prettytable: http://code.google.com/p/prettytable/
+.. _tabulate: https://crate.io/packages/tabulate/
 .. _Python: http://www.python.org/
 .. _issue: https://github.com/JNRowe/rdial/issues
 .. _nose2: https://crate.io/packages/nose2/

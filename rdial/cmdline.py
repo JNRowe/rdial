@@ -20,12 +20,13 @@
 # pylint: disable-msg=C0121
 
 import datetime
+import operator
 import os
 import shlex
 import subprocess
 
 import click
-import prettytable
+import tabulate
 
 from .events import (Events, TaskNotRunningError, TaskRunningError)
 from .i18n import (_, N_)
@@ -363,10 +364,7 @@ def wrapper(ctx, globs, time, message, file, wrapper):
               help=_('Use directory name as task name.'))
 @click.argument('task', default='default', envvar='RDIAL_TASK',
                 required=False, type=TaskNameParamType())
-@click.option('--html', 'output', flag_value='html',
-              help=_('Produce HTML output.'))
-@click.option('--human', 'output', flag_value='human',
-              help=_('Produce human-readable output.'))
+@click.option('--human', help=_('Produce human-readable output.'))
 @click.option('-d', '--duration', default='all',
               type=click.Choice(['day', 'week', 'month', 'year', 'all']),
               help=_('Filter events for specified time period.'))
@@ -374,22 +372,26 @@ def wrapper(ctx, globs, time, message, file, wrapper):
               type=click.Choice(['task', 'time']), help=_('Field to sort by.'))
 @click.option('-r', '--reverse/--no-reverse', default=False,
               envvar='RDIAL_REVERSE', help=_('Reverse sort order.'))
+@click.option('--style', default='simple', envvar='RDIAL_TABLE_STYLE',
+              type=click.Choice(tabulate._table_formats.keys()),
+              help=_('Table output style.'))
 @click.pass_obj
-def report(globs, task, output, duration, sort, reverse):
+def report(globs, task, human, duration, sort, reverse, style):
     """Report time tracking data.
 
     :param dict globs: Global options object
     :param str task: Task name to operate on
-    :param str output: Type of output to produce
+    :param bool human: Display short overview of data
     :param str duration: Time window to filter on
     :param str sort: Key to sort events on
     :param bool reverse: Reverse sort order
+    :param str style: Table formatting style
     """
     if task == 'default':
         # Lazy way to remove duplicate argument definitions
         task = None
     events = filter_events(globs.directory, task, duration)
-    if output == 'human':
+    if human:
         click.echo(N_('%d event in query', '%d events in query', len(events))
                    % len(events))
         click.echo(_('Duration of events %s') % events.sum())
@@ -398,20 +400,13 @@ def report(globs, task, output, duration, sort, reverse):
         dates = set(e.start.date() for e in events)
         click.echo(_('Events exist on %d dates') % len(dates))
     else:
-        table = prettytable.PrettyTable(['task', 'time'])
-        if output == 'html':
-            formatter = table.get_html_string
-        else:
-            formatter = table.get_string
-        try:
-            table.align['task'] = 'l'
-        except AttributeError:  # prettytable 0.5 compatibility
-            table.set_field_align('task', 'l')
-        for task in events.tasks():
-            table.add_row([task, events.for_task(task).sum()])
-
-        click.echo_via_pager(formatter(sortby=sort, reversesort=reverse))
-    if events.running() and not output == 'html':
+        data = sorted(([t, str(events.for_task(t).sum())]
+                       for t in events.tasks()),
+                      key=operator.itemgetter(['task', 'time'].index(sort)),
+                      reverse=reverse)
+        click.echo_via_pager(tabulate.tabulate(data, ['task', 'time'],
+                                               tablefmt=style))
+    if events.running():
         current = events.last()
         click.echo(_("Task `%s' started %s")
                    % (current.task, utils.format_datetime(current.start)))

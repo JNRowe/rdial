@@ -203,7 +203,7 @@ See :ref:`run wrappers configuration <run-wrappers-label>`.
 
 ::
 
-    rdial report [--help] [-d <duration>] [-s <order] [-r] [--html] [--human] <task>
+    rdial report [--help] [-d <duration>] [-s <order] [-r] [--style] [--human] <task>
 
 .. option:: -d <duration>, --duration=<duration>
 
@@ -217,9 +217,9 @@ See :ref:`run wrappers configuration <run-wrappers-label>`.
 
    Reverse sort order.
 
-.. option:: --html
+.. option:: --style
 
-   Produce HTML output.
+   Table output style {grid,latex,mediawiki,orgtbl,pipe,plain,rst,simple,tsv}
 
 .. option:: --human
 
