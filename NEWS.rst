@@ -3,6 +3,27 @@ User-visible changes
 
 .. contents::
 
+0.14.0 - 2014-06-10
+-------------------
+
+* Interactive message editing support has been added
+* Many of the configuration options can now be set via envvars, for simple
+  per-project setup
+* Data caching has been added, and it significantly speeds up processing
+* Python 3.4 is now supported
+* Report generation now uses tabulate_, and supports many more output formats
+  through that.  The prettytable_ dependency has been dropped
+* ciso8601_ is now required, but does considerably speed up reading data files
+* click_ is now required for command line parsing, and aaargh_ is no longer
+  required
+* configobj_ is now required
+* blessings_ is no longer required
+
+.. _ciso8601: https://crate.io/packages/ciso8601/
+.. _click: https://crate.io/packages/click/
+.. _configobj: https://crate.io/packages/configobj/
+.. _tabulate: https://crate.io/packages/tabulate/
+
 0.13.0 - 2014-02-05
 -------------------
 
