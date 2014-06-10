@@ -336,6 +336,27 @@ def remove_current(f):
     return wrapper
 
 
+def newer(file, reference):
+    """Check whether given file is newer than reference file.
+
+    :param str file: File to check
+    :param str reference: file to test against
+    :rtype: :obj:`bool`
+    :return: True if ``reference`` is newer than ``reference``
+    """
+    return os.stat(file).st_mtime > os.stat(reference).st_mtime
+
+
+def xdg_cache_location():
+    """Return a cache location honouring $XDG_CACHE_HOME.
+
+    :rtype: :obj:`str`
+    """
+    user_dir = os.getenv('XDG_CACHE_HOME',
+                         os.path.join(os.getenv('HOME', '/'), '.cache'))
+    return os.path.join(user_dir, 'rdial')
+
+
 def xdg_config_location():
     """Return a config location honouring $XDG_CONFIG_HOME.
 

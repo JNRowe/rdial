@@ -33,6 +33,9 @@ OPTIONS
 --backup/--no-backup
     Write data file backups.
 
+--cache/--no-cache
+    Do not write cache files.
+
 --config <file>
     File to read configuration data from, defaults to
     ``${XDG_CONFIG_HOME:-~/.config}/rdial/config``.

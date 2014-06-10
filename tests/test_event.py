@@ -63,7 +63,8 @@ def test_event_creation(task, start, delta, message):
     ('test_not_running', 3),
 )
 def test_read_datebase(database, events):
-    expect(len(Events.read('tests/data/' + database))) == events
+    evs = Events.read('tests/data/' + database, write_cache=False)
+    expect(len(evs)) == events
 
 
 @params(
@@ -76,7 +77,7 @@ def test_read_datebase(database, events):
 def test_check_events(n, task, start, delta):
     # FIXME: Clean-ish way to perform check, with the caveat that it parses the
     # database on each entry.  Need a better solution.
-    events = Events.read('tests/data/test')
+    events = Events.read('tests/data/test', write_cache=False)
     expect(events[n].task) == task
     expect(events[n].start) == start
     expect(events[n].delta) == delta
@@ -85,7 +86,7 @@ def test_check_events(n, task, start, delta):
 def test_write_database():
     runner = CliRunner()
     in_dir = abspath('tests/data/test')
-    events = Events.read(in_dir)
+    events = Events.read(in_dir, write_cache=False)
     events._dirty = events.tasks()
     with runner.isolated_filesystem() as tempdir:
         events.write(tempdir)
@@ -97,9 +98,9 @@ def test_write_database():
 
 
 def test_store_messages_with_events():
-    events = Events.read('tests/data/test')
+    events = Events.read('tests/data/test', write_cache=False)
     expect(events.last().message) == 'finished'
 
 
 def test_non_existing_database():
-    expect(Events()) == Events.read('I_NEVER_EXIST')
+    expect(Events()) == Events.read('I_NEVER_EXIST', write_cache=False)

@@ -22,6 +22,10 @@ Options
 
    Write data file backups.
 
+.. option:: --cache/--no-cache
+
+   Do not write cache files.
+
 .. option:: --config <file>
 
    File to read configuration data from, defaults to
