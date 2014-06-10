@@ -403,7 +403,8 @@ def wrapper(ctx, globs, time, message, file, wrapper):
               help=_('Use directory name as task name.'))
 @click.argument('task', default='default', envvar='RDIAL_TASK',
                 required=False, type=TaskNameParamType())
-@click.option('--human', help=_('Produce human-readable output.'))
+@click.option('--human', is_flag=True,
+              help=_('Produce human-readable output.'))
 @click.option('-d', '--duration', default='all',
               type=click.Choice(['day', 'week', 'month', 'year', 'all']),
               help=_('Filter events for specified time period.'))
