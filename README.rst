@@ -24,6 +24,7 @@ Requirements
 ``rdial``'s dependencies outside of the standard library are:
 
 * blessings_
+* ciso8601_
 * click_
 * configobj_
 * tabulate_
@@ -119,6 +120,7 @@ reproduce the problem, or even better a patch!
 
 .. _GPL v3: http://www.gnu.org/licenses/
 .. _blessings: https://crate.io/packages/blessings/
+.. _ciso8601: https://crate.io/packages/ciso8601/
 .. _click: https://crate.io/packages/click/
 .. _configobj: https://crate.io/packages/configobj/
 .. _tabulate: https://crate.io/packages/tabulate/
