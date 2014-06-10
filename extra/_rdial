@@ -57,76 +57,95 @@ __list_wrappers() {
     fi
 }
 
-_arguments '--help[show help message and exit]' \
-    "--version[show program's version number and exit]" \
-    "--directory=[directory to read/write to]:select directory:_files -W ${XDG_DATA_HOME:-~/.local/share}" \
+_arguments \
+    '--version[Show the version and exit.]' \
+    "--directory=[Directory to read/write to.]:select directory:_files -W ${XDG_DATA_HOME:-~/.local/share}" \
+    '--backup[Write data file backups.]' \
+    '--no-backup[Do not write data file backups.]' \
+    '--cache[Write cache files.]' \
+    '--no-cache[Do not write cache files.]' \
+    '--config=[File to read configuration data from.]:select config:_files' \
+    '--interactive[Support interactive message editing.]' \
+    '--no-interactive[Do not support interactive message editing.]' \
+    '--help[Show this message and exit.]' \
     ':rdial command:(fsck start stop switch run wrapper report running last ledger)' \
     '*::subcmd:->subcmd' && return 0
 
 ### DGEN_TAG: Generated from rdial/__init__.py {{{
 case "$words[1]" in
 (fsck)
-    _arguments '--help[show help message and exit]'
+    _arguments \
+        '--help[Show this message and exit.]'
     ;;
 (start)
-    _arguments '--help[show help message and exit]' \
-        '--new[start a new task]' \
-        '--time[set start time]:' \
-        '--from-dir[use directory name as task]' \
+    _arguments \
+        '--help[Show this message and exit.]' \
+        '--from-dir[Use directory name as task name.]' \
+        '--new[Start a new task.]' \
+        '--time=[Set start time.]' \
         ':select task:__list_tasks'
     ;;
 (stop)
-    _arguments '--help[show help message and exit]' \
-        '--message=[closing message]:message text: ' \
-        '--file=[read closing message from file]:select file:_files' \
-        '--amend[amend previous stop entry]'
+    _arguments \
+        '--help[Show this message and exit.]' \
+        '--message=[Closing message.]:message text: ' \
+        '--file=[Read closing message from file.]:select file:_files' \
+        '--amend[Amend previous stop entry.]'
     ;;
 (switch)
-    _arguments '--help[show help message and exit]' \
-        '--from-dir[use directory name as task]' \
-        '--new[start a new task]' \
-        '--message=[closing message for current task]:message text: ' \
-        '--file=[read closing message for current task from file]:select file:_files' \
+    _arguments \
+        '--help[Show this message and exit.]' \
+        '--from-dir[Use directory name as task name.]' \
+        '--new[Start a new task.]' \
+        '--time=[Set start time.]' \
+        '--message=[Closing message.]:message text: ' \
+        '--file=[Read closing message from file.]:select file:_files' \
         ':select task:__list_tasks'
     ;;
 (run)
-    _arguments '--help[show help message and exit]' \
-        '--new[start a new task]' \
-        '--time[set start time]:' \
-        '--from-dir[use directory name as task]' \
-        '--message=[closing message for current task]:message text: ' \
-        '--file=[read closing message for current task from file]:select file:_files' \
-        '--command=[command to run]:select command:_path_commands' \
+    _arguments \
+        '--help[Show this message and exit.]' \
+        '--from-dir[Use directory name as task name.]' \
+        '--new[Start a new task.]' \
+        '--time=[Set start time.]' \
+        '--message=[Closing message.]:message text: ' \
+        '--file=[Read closing message from file.]:select file:_files' \
+        '--command=[Command to run.]:select command:_path_commands' \
         ':select task:__list_tasks'
     ;;
 (wrapper)
-    _arguments '--help[show help message and exit]' \
-        '--time[set start time]:' \
-        '--message=[closing message for current task]:message text: ' \
-        '--file=[read closing message for current task from file]:select file:_files' \
+    _arguments \
+        '--help[Show this message and exit.]' \
+        '--time=[Set start time.]' \
+        '--message=[Closing message.]:message text: ' \
+        '--file=[Read closing message from file.]:select file:_files' \
         ':select wrapper:__list_wrappers'
     ;;
 (report)
-    _arguments '--help[show help message and exit]' \
-        '--duration[filter events for specified time period]:select time period:(day week month year all)' \
-        '--sort[field to sort by]:select sort field:(task time)' \
-        '--style[table output style]:__list_styles' \
-        '--reverse[reverse sort order]' \
-        '--human[produce human-readable output]' \
-        '--from-dir[use directory name as task]' \
+    _arguments \
+        '--help[Show this message and exit.]' \
+        '--from-dir[Use directory name as task name.]' \
+        '--human[Produce human-readable output.]' \
+        '--duration[Filter events for specified time period.]:select time period:(day week month year all)' \
+        '--sort[Field to sort by.]:select sort field:(task time)' \
+        '--reverse[Reverse sort order.]' \
+        '--style[Table output style.]:__list_styles' \
         ':select task:__list_tasks'
     ;;
 (running)
-    _arguments '--help[show help message and exit]'
+    _arguments \
+        '--help[Show this message and exit.]' \
     ;;
 (last)
-    _arguments '--help[show help message and exit]'
+    _arguments \
+        '--help[Show this message and exit.]' \
     ;;
 (ledger)
-    _arguments '--help[show help message and exit]' \
-        '--duration[filter events for specified time period]:select time period:(day week month year all)' \
-        '--rate=[hourly rate for task output]:set hourly rate: ' \
-        '--from-dir[use directory name as task]' \
+    _arguments \
+        '--help[Show this message and exit.]' \
+        '--from-dir[Use directory name as task name.]' \
+        '--duration[Filter events for specified time period.]:select time period:(day week month year all)' \
+        '--rate=[Hourly rate for task output.]:set hourly rate: ' \
         ':select task:__list_tasks'
     ;;
 (*)
