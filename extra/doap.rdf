@@ -13,7 +13,7 @@
         rdial is a simple way to track the time you spend on tasks.  It tracks
         the name of a task, its start time and its duration… nothing more.
     </description>
- 
+
     <homepage rdf:resource="https://github.com/JNRowe/rdial" />
     <download-page rdf:resource="https://pypi.python.org/pypi/rdial/" />
     <bug-database rdf:resource="http://github.com/JNRowe/rdial/issues" />
@@ -26,7 +26,7 @@
     <created>2014-02-07</created>
     <license rdf:resource="http://spdx.org/licenses/GPL-3.0+" />
     <programming-language>Python</programming-language>
-   
+
     <maintainer>
         <foaf:Person>
             <foaf:name>James Rowe</foaf:name>
