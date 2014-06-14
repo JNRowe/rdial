@@ -1,4 +1,5 @@
 click
 ciso8601>=1.0.1
 configobj>=5.0.0
+pytz
 tabulate

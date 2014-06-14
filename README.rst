@@ -98,6 +98,7 @@ Bug reports
 '''''''''''
 
 * James Gaffney
+* Ryan Sutton
 
 Ideas
 '''''
