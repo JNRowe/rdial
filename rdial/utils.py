@@ -29,6 +29,8 @@ import ciso8601
 import click
 import configobj
 
+from pytz.reference import Local
+
 from . import compat
 
 
@@ -206,14 +208,33 @@ def parse_datetime(string):
     else:
         datetime_ = ciso8601.parse_datetime(string)
         if not datetime_:
-            try:
-                output = check_output(['date', '--utc', '--iso-8601=seconds',
-                                       '-d', string])
-                datetime_ = ciso8601.parse_datetime(output.strip())
-            except subprocess.CalledProcessError:
-                pass
-        if not datetime_:
             raise ValueError('Unable to parse timestamp %r' % string)
+    return datetime_
+
+
+def parse_datetime_user(string):
+    """Parse datetime string from user.
+
+    We accept the normal ISO-8601 formats, but kick through to the formats
+    supported by the system's date command if parsing fails.
+
+    :param str string: Datetime string to parse
+    :rtype: :obj:`datetime.datetime`
+    :return: Parsed datetime object
+    """
+    try:
+        datetime_ = parse_datetime(string)
+        if datetime_.tzinfo is None:
+            datetime.replace(tzinfo=Local)
+    except ValueError:
+        try:
+            output = check_output(['date', '--utc', '--iso-8601=seconds', '-d',
+                                   string])
+            datetime_ = ciso8601.parse_datetime(output.strip())
+        except subprocess.CalledProcessError:
+            datetime_ = None
+    if not datetime_:
+        raise ValueError('Unable to parse timestamp %r' % string)
     return datetime_
 
 

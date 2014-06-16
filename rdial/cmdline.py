@@ -66,7 +66,7 @@ class StartTimeParamType(click.ParamType):
         :return: Valid start time
         """
         try:
-            value = utils.parse_datetime(value)
+            value = utils.parse_datetime_user(value)
         except ValueError:
             self.fail(_('%r is not a valid ISO-8601 time string') % value)
         return value

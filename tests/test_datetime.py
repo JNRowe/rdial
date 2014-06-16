@@ -17,12 +17,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from datetime import datetime
+from datetime import (datetime, timedelta)
 
 from expecter import expect
 from nose2.tools import params
 
-from rdial.utils import (format_datetime, parse_datetime, utc)
+from rdial.utils import (format_datetime, parse_datetime, parse_datetime_user,
+                         utc)
 
 
 @params(
@@ -34,9 +35,13 @@ def test_parse_datetime(string, expected):
     expect(parse_datetime(string)) == expected
 
 
-def test_parse_datetime_via_date_command(string, expected):
-    now = datetime.datetime.now() - datetime.timedelta(minutes=40)
-    expect(parse_datetime(now.isoformat())) == now
+@params(
+    ('5 minutes ago', timedelta(minutes=5)),
+    ('1 hour ago -5 minutes', timedelta(hours=1, minutes=5)),
+)
+def test_parse_datetime_via_date_command(string, delta):
+    now = datetime.utcnow().replace(microsecond=0, tzinfo=utc)
+    expect(parse_datetime_user(string)) == now - delta
 
 
 @params(

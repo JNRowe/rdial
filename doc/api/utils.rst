@@ -25,6 +25,7 @@ Time handling
 .. autofunction:: parse_delta
 .. autofunction:: format_delta
 .. autofunction:: parse_datetime
+.. autofunction:: parse_datetime_user
 
 .. autofunction:: utcnow
 
