@@ -200,7 +200,7 @@ class Events(list):
             if os.path.exists(cache_file) and utils.newer(cache_file, file):
                 try:
                     evs = pickle.load(open(cache_file))
-                except pickle.UnpicklingError:
+                except (pickle.UnpicklingError, ImportError):
                     pass
             if evs is None:
                 evs = [Event(task, **d)
