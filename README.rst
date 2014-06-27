@@ -38,7 +38,7 @@ but it should work fine on other systems too.
 To run the tests you'll need nose2_.  Once you have nose2_ installed you can run
 the tests with the following commands:
 
-.. code-block:: console
+.. code:: console
 
     $ nose2 -v tests
 
@@ -72,7 +72,7 @@ currently running.
 Interface
 ---------
 
-.. code-block:: console
+.. code:: console
 
     $ rdial start <task_name>
     $ rdial stop
