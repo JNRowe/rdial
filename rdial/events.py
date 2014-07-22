@@ -281,6 +281,9 @@ class Events(list):
         running = self.running()
         if running:
             raise TaskRunningError('Running task %s!' % running)
+        last = self.last()
+        if last and start and last.start + last.delta > start:
+            raise TaskRunningError('Start date overlaps previous task!')
         self.append(Event(task, start))
         self.dirty = task
 
