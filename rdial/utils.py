@@ -40,40 +40,32 @@ def _colourise(text, colour):
 
     :param str text: Text to colourise
     :param str colour: Colour to display text in
-    :rtype: :obj:`str`
-    :return str: Bright colourised text, if possible
     """
-    return click.termui.secho(text, fg=colour, bold=True)
+    click.termui.secho(text, fg=colour, bold=True)
 
 
 def success(text):
     """Pretty print a success message.
 
     :param str text: Text to format
-    :rtype: :obj:`str`
-    :return: Bright green text, if possible
     """
-    return _colourise(text, 'green')
+    _colourise(text, 'green')
 
 
 def fail(text):
     """Pretty print a failure message.
 
     :param str text: Text to format
-    :rtype: :obj:`str`
-    :return: Bright red text, if possible
     """
-    return _colourise(text, 'red')
+    _colourise(text, 'red')
 
 
 def warn(text):
     """Pretty print a warning message.
 
     :param str text: Text to format
-    :rtype: ``str``
-    :return: Bright yellow text, if possible
     """
-    return _colourise(text, 'yellow')
+    _colourise(text, 'yellow')
 
 
 class RdialError(ValueError):
