@@ -329,7 +329,7 @@ def write_current(f):
     def wrapper(*args, **kwargs):
         globs = args[0]
         f(*args, **kwargs)
-        open('%s/.current' % globs['directory'], 'w').write(kwargs['task'])
+        open('%s/.current' % globs.directory, 'w').write(kwargs['task'])
     return wrapper
 
 
@@ -344,8 +344,8 @@ def remove_current(f):
     def wrapper(*args, **kwargs):
         globs = args[0]
         f(*args, **kwargs)
-        if os.path.isfile('%s/.current' % globs['directory']):
-            os.unlink('%s/.current' % globs['directory'])
+        if os.path.isfile('%s/.current' % globs.directory):
+            os.unlink('%s/.current' % globs.directory)
     return wrapper
 
 
