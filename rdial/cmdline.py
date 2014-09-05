@@ -196,17 +196,22 @@ def fsck(ctx, globs):
     :param dict globs: Global options object
     """
     warnings = 0
-    with Events.context(globs.directory, globs.backup, globs.cache) as events:
-        last = events[0]
-        for event in events[1:]:
+    events = Events.read(globs.directory, write_cache=globs.cache)
+    lines = []
+    with click.progressbar(events, label=_('Checking'),
+                           fill_char=click.style('#', 'green')) as bar:
+        last = bar.next()
+        for event in bar:
             if not last.start + last.delta <= event.start:
                 warnings += 1
-                utils.fail(_('Overlap:'))
-                utils.warn('  %r' % last)
-                click.echo('  %r' % event)
+                lines.append(click.style(_('Overlap:'), 'red'))
+                lines.append(click.style(_('   %r') % last, 'yellow'))
+                lines.append(_('   %r') % event)
             last = event
-    if warnings:
-        ctx.exit(warnings)
+    if lines:
+        click.echo_via_pager('\n'.join(lines))
+        if warnings:
+            ctx.exit(warnings)
 
 
 @cli.command(help=_('Start task.'))
