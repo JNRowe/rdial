@@ -314,7 +314,7 @@ def read_config(user_config=None):
     lines = ['xdg_data_location = %r' % xdg_data_location(), ]
     for file in configs:
         if os.path.isfile(file):
-            lines.extend(compat.open(file, encoding='utf-8').readlines())
+            lines.extend(click.open_file(file, encoding='utf-8').readlines())
     return configobj.ConfigObj(lines)
 
 
