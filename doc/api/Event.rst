@@ -11,6 +11,7 @@
 
 .. autoclass:: Event
 .. autoclass:: Events
+.. autoclass:: RdialDialect
 
 Examples
 --------

@@ -38,6 +38,14 @@ from . import compat
 from . import utils
 
 
+class RdialDialect(csv.excel):
+
+    """CSV dialect for rdial data files"""
+    lineterminator = '\n'
+    quoting = csv.QUOTE_MINIMAL
+    strict = True
+
+
 class TaskNotRunningError(utils.RdialError):
 
     """Exception for calling mutators when a task is not running."""
@@ -204,7 +212,8 @@ class Events(list):
                     pass
             if evs is None:
                 evs = [Event(task, **d)
-                       for d in list(csv.DictReader(open(file)))]
+                       for d in list(csv.DictReader(open(file),
+                                                    dialect=RdialDialect))]
                 if write_cache:
                     pickle.dump(evs, open(cache_file, 'w'), -1)
             events.extend(evs)
@@ -222,12 +231,7 @@ class Events(list):
             task_file = '%s/%s.csv' % (directory, task)
             events = self.for_task(task)
             with click.utils.LazyFile(task_file, 'w', atomic=True) as temp:
-                if compat.PY2:
-                    writer = csv.DictWriter(temp, FIELDS, lineterminator='\n')
-                else:
-                    writer = csv.DictWriter(temp, FIELDS,
-                                            dialect=csv.unix_dialect,
-                                            quoting=csv.QUOTE_MINIMAL)
+                writer = csv.DictWriter(temp, FIELDS, dialect=RdialDialect)
                 # Can't use writeheader, it wasn't added until 2.7.
                 writer.writerow(dict(zip(FIELDS, FIELDS)))
                 for event in events:
