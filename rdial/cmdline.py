@@ -206,7 +206,7 @@ def fsck(ctx, globs):
                 warnings += 1
                 lines.append(click.style(_('Overlap:'), 'red'))
                 lines.append(click.style(_('   %r') % last, 'yellow'))
-                lines.append(_('   %r') % event)
+                lines.append(click.style(_('   %r') % event, 'green'))
             last = event
     if lines:
         click.echo_via_pager('\n'.join(lines))
