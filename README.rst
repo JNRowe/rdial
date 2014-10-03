@@ -35,12 +35,12 @@ endeavour to fix it.
 The module has been tested on many UNIX-like systems, including Linux and OS X,
 but it should work fine on other systems too.
 
-To run the tests you'll need nose2_.  Once you have nose2_ installed you can run
-the tests with the following commands:
+To run the tests you'll need pytest_.  Once you have pytest_ installed you can
+run the tests with the following commands:
 
 .. code:: console
 
-    $ nose2 -v tests
+    $ py.test tests
 
 Database
 --------
@@ -125,5 +125,5 @@ reproduce the problem, or even better a patch!
 .. _tabulate: https://crate.io/packages/tabulate/
 .. _Python: http://www.python.org/
 .. _issue: https://github.com/JNRowe/rdial/issues
-.. _nose2: https://crate.io/packages/nose2/
+.. _pytest: http://pytest.org/
 .. _mail: jnrowe@gmail.com

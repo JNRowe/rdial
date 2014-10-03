@@ -24,13 +24,13 @@ from os.path import abspath
 
 from click.testing import CliRunner
 from expecter import expect
-from nose2.tools import params
+from pytest import mark
 
 from rdial.events import (Event, Events)
 from rdial.utils import (parse_datetime, parse_delta, utc)
 
 
-@params(
+@mark.parametrize('task,start,delta,message', [
     ('test', None, None, None),
     ('test', '2013-02-26T19:45:14Z', None, None),
     ('test', datetime(2013, 2, 26, 19, 45, 14, tzinfo=utc), None,
@@ -39,7 +39,7 @@ from rdial.utils import (parse_datetime, parse_delta, utc)
     ('test', '2013-02-26T19:45:14Z', timedelta(minutes=8, seconds=19.770869),
      None),
     ('test', '2013-02-26T19:45:14Z', 'PT8M19.770869S', 'stopped'),
-)
+])
 def test_event_creation(task, start, delta, message):
     e = Event(task, start, delta, message)
     expect(e.task) == task
@@ -57,23 +57,23 @@ def test_event_creation(task, start, delta, message):
     expect(e.message) == message
 
 
-@params(
+@mark.parametrize('database,events', [
     ('test', 3),
     ('date_filtering', 3),
     ('test_not_running', 3),
-)
+])
 def test_read_datebase(database, events):
     evs = Events.read('tests/data/' + database, write_cache=False)
     expect(len(evs)) == events
 
 
-@params(
+@mark.parametrize('n,task,start,delta', [
     (0, 'task', datetime(2011, 5, 4, 8, tzinfo=utc),
      timedelta(hours=1)),
     (1, 'task2', datetime(2011, 5, 4, 9, 15, tzinfo=utc),
      timedelta(minutes=15)),
     (2, 'task', datetime(2011, 5, 4, 9, 30, tzinfo=utc), timedelta()),
-)
+])
 def test_check_events(n, task, start, delta):
     # FIXME: Clean-ish way to perform check, with the caveat that it parses the
     # database on each entry.  Need a better solution.

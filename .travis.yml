@@ -9,7 +9,7 @@ install:
   - pip install -r extra/requirements-test.txt
   - pip install .
 script:
-  - nose2 tests
+  - py.test tests
 branches:
   except:
     - /^play\/.*$/

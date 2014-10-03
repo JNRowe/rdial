@@ -20,23 +20,23 @@
 from datetime import timedelta
 
 from expecter import expect
-from nose2.tools import params
+from pytest import mark
 
 from rdial.utils import (format_delta, parse_delta)
 
 
-@params(
+@mark.parametrize('string,expected', [
     ('PT04H30M21S', timedelta(hours=4, minutes=30, seconds=21)),
     ('PT00H12M01S', timedelta(minutes=12, seconds=1)),
-)
+])
 def test_parse_duration(string, expected):
     expect(parse_delta(string)) == expected
 
 
-@params(
+@mark.parametrize('delta,expected',  [
     (timedelta(hours=4, minutes=30, seconds=21), 'PT04H30M21S'),
     (timedelta(minutes=12, seconds=1), 'PT12M01S'),
-)
+])
 def test_format_duration(delta, expected):
     expect(format_delta(delta)) == expected
 
@@ -49,39 +49,39 @@ def test_format_zero_duration():
     expect(format_delta(timedelta())) == ''
 
 
-@params(
+@mark.parametrize('string,expected', [
     ('PT04H', timedelta(hours=4)),
     ('PT04H30M', timedelta(hours=4, minutes=30)),
     ('PT30M', timedelta(minutes=30)),
     ('PT04H21S', timedelta(hours=4, seconds=21)),
     ('PT4H', timedelta(hours=4)),
-)
+])
 def test_parse_partially_defined_durations(string, expected):
     expect(parse_delta(string)) == expected
 
 
-@params(
+@mark.parametrize('string,expected', [
     ('P3DT04H', timedelta(days=3, hours=4)),
     ('P3D', timedelta(days=3)),
-)
+])
 def test_parse_durations_with_days(string, expected):
     expect(parse_delta(string)) == expected
 
 
-@params(
+@mark.parametrize('delta,expected', [
     (timedelta(days=3, hours=4), 'P3DT04H'),
     (timedelta(days=3), 'P3D'),
     (timedelta(days=2, hours=22), 'P2DT22H'),
-)
+])
 def test_format_durations_with_days(delta, expected):
     expect(format_delta(delta)) == expected
 
 
-@params(
+@mark.parametrize('delta,expected', [
     (timedelta(hours=4), 'PT04H'),
     (timedelta(hours=4, minutes=30), 'PT04H30M'),
     (timedelta(minutes=30), 'PT30M'),
     (timedelta(hours=4, seconds=21), 'PT04H21S'),
-)
+])
 def test_format_partially_defined_durations(delta, expected):
     expect(format_delta(delta)) == expected
