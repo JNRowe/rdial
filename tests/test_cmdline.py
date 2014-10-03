@@ -18,8 +18,7 @@
 #
 
 from click import BadParameter
-from expecter import expect
-from pytest import mark
+from pytest import (mark, raises)
 
 from rdial.cmdline import (StartTimeParamType, TaskNameParamType)
 
@@ -34,9 +33,9 @@ from rdial.cmdline import (StartTimeParamType, TaskNameParamType)
 def test_task_name_validity(string, expected):
     p = TaskNameParamType()
     if expected is True:
-        p.convert(string, None, None) == string
+        assert p.convert(string, None, None) == string
     else:
-        with expect.raises(expected):
+        with raises(expected):
             p.convert(string, None, None)
 
 
@@ -49,7 +48,7 @@ def test_task_name_validity(string, expected):
 def test_start_time_validity(string, expected):
     p = StartTimeParamType()
     if expected is True:
-        p.convert(string, None, None) == string
+        assert p.convert(string, None, None)
     else:
-        with expect.raises(expected):
+        with raises(expected):
             p.convert(string, None, None)

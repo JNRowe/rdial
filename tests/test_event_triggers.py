@@ -17,8 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-
-from expecter import expect
+from pytest import raises
 
 from rdial.events import (Events, TaskNotExistError, TaskNotRunningError,
                           TaskRunningError)
@@ -27,37 +26,39 @@ from rdial.events import (Events, TaskNotExistError, TaskNotRunningError,
 def test_start_event():
     events = Events.read('tests/data/test_not_running', write_cache=False)
     events.start(task='task2')
-    expect(events.running()) == 'task2'
+    assert events.running() == 'task2'
 
 
 def test_fail_start_when_task_typo():
     events = Events.read('tests/data/test_not_running', write_cache=False)
-    with expect.raises(TaskNotExistError,
-                       "Task non_existant does not exist!  Use `--new' to "
-                       'create it'):
+    with raises(TaskNotExistError) as err:
         events.start(task='non_existant')
+    assert err.value.message \
+        == "Task non_existant does not exist!  Use `--new' to create it"
 
 
 def test_fail_start_when_running():
     events = Events.read('tests/data/test', write_cache=False)
-    with expect.raises(TaskRunningError, 'Running task task!'):
+    with raises(TaskRunningError) as err:
         events.start(task='task2')
+    assert err.value.message == 'Running task task!'
 
 
 def test_stop_event():
     events = Events.read('tests/data/test', write_cache=False)
     events.stop()
-    expect(events.running()) is False
+    assert events.running() is False
 
 
 def test_stop_event_with_message():
     events = Events.read('tests/data/test', write_cache=False)
     events.stop(message='test')
     last = events.last()
-    expect(last.message) == 'test'
+    assert last.message == 'test'
 
 
 def test_fail_stop_when_not_running():
     events = Events.read('tests/data/test_not_running', write_cache=False)
-    with expect.raises(TaskNotRunningError, 'No task running!'):
+    with raises(TaskNotRunningError) as err:
         events.stop()
+    assert err.value.message == 'No task running!'

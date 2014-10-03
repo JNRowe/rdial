@@ -19,8 +19,6 @@
 
 from unittest import TestCase
 
-from expecter import expect
-
 from rdial.utils import AttrDict
 
 
@@ -29,27 +27,27 @@ class AttrDictTest(TestCase):
         self.ad = AttrDict(carrots=3, snacks=0)
 
     def test_base(self):
-        expect(self.ad).isinstance(dict)
+        assert isinstance(self.ad, dict)
 
-        expect(self.ad['carrots']) == 3
-        expect(self.ad['snacks']) == 0
+        assert self.ad['carrots'] == 3
+        assert self.ad['snacks'] == 0
 
-        expect(sorted(self.ad.keys())) == ['carrots', 'snacks']
+        assert sorted(self.ad.keys()) == ['carrots', 'snacks']
 
     def test___contains__(self):
-        expect(self.ad).contains('carrots')
-        expect(self.ad).does_not_contain('prizes')
+        assert 'carrots' in self.ad
+        assert 'prizes' not in self.ad
 
     def test___getattr__(self):
-        expect(self.ad.carrots) == 3
-        expect(self.ad.snacks) == 0
+        assert self.ad.carrots == 3
+        assert self.ad.snacks == 0
 
     def test___setattr__(self):
         self.ad.carrots, self.ad.snacks = 0, 3
-        expect(self.ad.carrots) == 0
-        expect(self.ad.snacks) == 3
+        assert self.ad.carrots == 0
+        assert self.ad.snacks == 3
 
     def test___delattr__(self):
-        expect(self.ad).contains('carrots')
+        assert 'carrots' in self.ad
         del self.ad['carrots']
-        expect(self.ad).does_not_contain('carrots')
+        assert 'carrots' not in self.ad

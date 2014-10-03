@@ -19,7 +19,6 @@
 
 from datetime import (datetime, timedelta)
 
-from expecter import expect
 from pytest import mark
 
 from rdial.utils import (format_datetime, parse_datetime, parse_datetime_user,
@@ -32,7 +31,7 @@ from rdial.utils import (format_datetime, parse_datetime, parse_datetime_user,
     ('2011-05-04T10:15:00+0100', datetime(2011, 5, 4, 9, 15, tzinfo=utc)),
 ])
 def test_parse_datetime(string, expected):
-    expect(parse_datetime(string)) == expected
+    assert parse_datetime(string) == expected
 
 
 @mark.parametrize('string,delta', [
@@ -41,7 +40,7 @@ def test_parse_datetime(string, expected):
 ])
 def test_parse_datetime_via_date_command(string, delta):
     now = datetime.utcnow().replace(microsecond=0, tzinfo=utc)
-    expect(parse_datetime_user(string)) == now - delta
+    assert parse_datetime_user(string) == now - delta
 
 
 @mark.parametrize('dt,expected', [
@@ -49,4 +48,4 @@ def test_parse_datetime_via_date_command(string, delta):
     (datetime(2011, 5, 4, 9, 15, tzinfo=utc), '2011-05-04T09:15:00Z'),
 ])
 def test_format_datetime(dt, expected):
-    expect(format_datetime(dt)) == expected
+    assert format_datetime(dt) == expected

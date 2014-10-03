@@ -19,7 +19,6 @@
 
 from datetime import timedelta
 
-from expecter import expect
 from pytest import mark
 
 from rdial.utils import (format_delta, parse_delta)
@@ -30,7 +29,7 @@ from rdial.utils import (format_delta, parse_delta)
     ('PT00H12M01S', timedelta(minutes=12, seconds=1)),
 ])
 def test_parse_duration(string, expected):
-    expect(parse_delta(string)) == expected
+    assert parse_delta(string) == expected
 
 
 @mark.parametrize('delta,expected',  [
@@ -38,15 +37,15 @@ def test_parse_duration(string, expected):
     (timedelta(minutes=12, seconds=1), 'PT12M01S'),
 ])
 def test_format_duration(delta, expected):
-    expect(format_delta(delta)) == expected
+    assert format_delta(delta) == expected
 
 
 def test_parse_null_duration():
-    expect(parse_delta('')) == timedelta()
+    assert parse_delta('') == timedelta()
 
 
 def test_format_zero_duration():
-    expect(format_delta(timedelta())) == ''
+    assert format_delta(timedelta()) == ''
 
 
 @mark.parametrize('string,expected', [
@@ -57,7 +56,7 @@ def test_format_zero_duration():
     ('PT4H', timedelta(hours=4)),
 ])
 def test_parse_partially_defined_durations(string, expected):
-    expect(parse_delta(string)) == expected
+    assert parse_delta(string) == expected
 
 
 @mark.parametrize('string,expected', [
@@ -65,7 +64,7 @@ def test_parse_partially_defined_durations(string, expected):
     ('P3D', timedelta(days=3)),
 ])
 def test_parse_durations_with_days(string, expected):
-    expect(parse_delta(string)) == expected
+    assert parse_delta(string) == expected
 
 
 @mark.parametrize('delta,expected', [
@@ -74,7 +73,7 @@ def test_parse_durations_with_days(string, expected):
     (timedelta(days=2, hours=22), 'P2DT22H'),
 ])
 def test_format_durations_with_days(delta, expected):
-    expect(format_delta(delta)) == expected
+    assert format_delta(delta) == expected
 
 
 @mark.parametrize('delta,expected', [
@@ -84,4 +83,4 @@ def test_format_durations_with_days(delta, expected):
     (timedelta(hours=4, seconds=21), 'PT04H21S'),
 ])
 def test_format_partially_defined_durations(delta, expected):
-    expect(format_delta(delta)) == expected
+    assert format_delta(delta) == expected

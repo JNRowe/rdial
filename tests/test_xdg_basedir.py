@@ -17,7 +17,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from expecter import expect
 from mock import patch
 
 from rdial.utils import (xdg_config_location, xdg_data_location)
@@ -25,19 +24,19 @@ from rdial.utils import (xdg_config_location, xdg_data_location)
 
 def test_config_no_args():
     with patch.dict('os.environ', {'XDG_CONFIG_HOME': '~/.xdg/config'}):
-        expect(xdg_config_location()) == '~/.xdg/config/rdial'
+        assert xdg_config_location() == '~/.xdg/config/rdial'
 
 
 def test_config_no_home():
     with patch.dict('os.environ', clear=True):
-        expect(xdg_config_location()) == '/.config/rdial'
+        assert xdg_config_location() == '/.config/rdial'
 
 
 def test_data_no_args():
     with patch.dict('os.environ', {'XDG_DATA_HOME': '~/.xdg/local'}):
-        expect(xdg_data_location()) == '~/.xdg/local/rdial'
+        assert xdg_data_location() == '~/.xdg/local/rdial'
 
 
 def test_data_no_home():
     with patch.dict('os.environ', clear=True):
-        expect(xdg_data_location()) == '/.local/share/rdial'
+        assert xdg_data_location() == '/.local/share/rdial'
