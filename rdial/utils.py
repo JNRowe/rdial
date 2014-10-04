@@ -72,7 +72,7 @@ class RdialError(ValueError):
 
     """Generic exception for rdial."""
 
-    if not compat.PY2:
+    if not compat.PY2:  # pragma: Python 3
         @property
         def message(self):
             """Compatibility hack for Python 3."""
@@ -289,7 +289,7 @@ def check_output(args, **kwargs):
         retcode = process.poll()
         if retcode:
             raise subprocess.CalledProcessError(retcode, args[0])
-    if not compat.PY2:
+    if not compat.PY2:  # pragma: Python 3
         output = output.decode()
     return output
 
