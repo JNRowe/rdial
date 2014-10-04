@@ -31,7 +31,7 @@ import configobj
 
 from pytz.reference import Local
 
-from . import compat
+from jnrbase import compat
 
 
 # Set up informational message functions
