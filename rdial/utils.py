@@ -32,6 +32,7 @@ import configobj
 from pytz.reference import Local
 
 from jnrbase import compat
+from jnrbase.iso_8601 import utc
 
 
 # Set up informational message functions
@@ -77,27 +78,6 @@ class RdialError(ValueError):
         def message(self):
             """Compatibility hack for Python 3."""
             return self.args[0]
-
-
-class UTC(datetime.tzinfo):
-
-    """UTC timezone object."""
-
-    def __repr__(self):
-        return 'UTC()'
-
-    # pylint: disable-msg=W0613
-    def utcoffset(self, datetime_):
-        return datetime.timedelta(0)
-
-    def dst(self, datetime_):
-        return datetime.timedelta(0)
-
-    def tzname(self, datetime_):
-        return 'UTC'
-    # pylint: enable-msg=W0613
-
-utc = UTC()
 
 
 def parse_delta(string):

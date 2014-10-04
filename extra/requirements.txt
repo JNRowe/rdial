@@ -1,5 +1,5 @@
 click>=3.0
-jnrbase
+jnrbase[iso_8601]
 ciso8601>=1.0.1
 configobj>=5.0.0
 pytz
