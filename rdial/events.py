@@ -34,7 +34,8 @@ except ImportError:  # Python 3, and 2.x without speedy helper
 
 import click
 
-from . import compat
+from jnrbase import compat
+
 from . import utils
 
 if compat.PY2:

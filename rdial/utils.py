@@ -33,7 +33,7 @@ try:
 except ImportError:
     cduration = None
 
-from . import compat
+from jnrbase import compat
 
 
 # Set up informational message functions

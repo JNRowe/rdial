@@ -24,7 +24,7 @@ import locale
 
 from os import path
 
-from .compat import PY2
+from jnrbase.compat import PY2
 
 locale.setlocale(locale.LC_ALL, '')
 
