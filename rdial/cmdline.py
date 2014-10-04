@@ -29,6 +29,8 @@ import subprocess
 import click
 import tabulate
 
+from jnrbase.attrdict import AttrDict
+
 from .events import (Events, TaskNotRunningError, TaskRunningError)
 from .i18n import (_, N_)
 from . import _version
@@ -278,7 +280,7 @@ def cli(ctx, directory, backup, cache, config, interactive):
                     defs[k] = cfg[name][k]
             ctx.default_map[name] = defs
 
-    ctx.obj = utils.AttrDict(
+    ctx.obj = AttrDict(
         backup=base.as_bool('backup'),
         cache=base.as_bool('cache'),
         config=cfg,

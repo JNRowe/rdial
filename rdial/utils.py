@@ -108,65 +108,6 @@ class RdialError(ValueError):
     """Generic exception for rdial."""
 
 
-class AttrDict(dict):
-
-    """Dictionary with attribute access.
-
-    See also:
-        :obj:`dict`
-
-    """
-
-    def __contains__(self, key):
-        """Check for item membership.
-
-        Args:
-            key (object): Key to test for
-
-        Returns:
-            bool: True, if item in dictionary
-
-        """
-        return hasattr(self, key) or super(AttrDict, self).__contains__(key)
-
-    def __getattr__(self, key):
-        """Support item access via dot notation.
-
-        Args:
-            key (object): Key to fetch
-
-        """
-        try:
-            return self[key]
-        except KeyError:
-            raise AttributeError(safer_repr(key))
-
-    def __setattr__(self, key, value):
-        """Support item assignment via dot notation.
-
-        Args:
-            key (object): Key to set value for
-            value (object): Value to set key to
-
-        """
-        try:
-            self[key] = value
-        except:
-            raise AttributeError(safer_repr(key))
-
-    def __delattr__(self, key):
-        """Support item deletion via dot notation.
-
-        Args:
-            key (object): Key to delete
-
-        """
-        try:
-            del self[key]
-        except KeyError:
-            raise AttributeError(safer_repr(key))
-
-
 #: Map duration string keys to timedelta args
 _MAPPER = {'D': 'days', 'H': 'hours', 'M': 'minutes', 'S': 'seconds'}
 

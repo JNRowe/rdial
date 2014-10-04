@@ -12,8 +12,6 @@ Utilities
 Convenience functions and classes
 '''''''''''''''''''''''''''''''''
 
-.. autoclass:: AttrDict
-
 .. autofunction:: write_current
 .. autofunction:: remove_current
 
