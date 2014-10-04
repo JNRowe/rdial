@@ -79,53 +79,6 @@ class RdialError(ValueError):
             return self.args[0]
 
 
-class AttrDict(dict):
-
-    """Dictionary with attribute access.
-
-    .. seealso:: :obj:`dict`
-    """
-
-    def __contains__(self, key):
-        """Check for item membership
-
-        :param object key: Key to test for
-        :rtype: :obj:`bool`
-        """
-        return hasattr(self, key) or super(AttrDict, self).__contains__(key)
-
-    def __getattr__(self, key):
-        """Support item access via dot notation
-
-        :param object key: Key to fetch
-        """
-        try:
-            return self[key]
-        except KeyError:
-            raise AttributeError(key)
-
-    def __setattr__(self, key, value):
-        """Support item assignment via dot notation
-
-        :param object key: Key to set value for
-        :param object value: Value to set key to
-        """
-        try:
-            self[key] = value
-        except:
-            raise AttributeError(key)
-
-    def __delattr__(self, key):
-        """Support item deletion via dot notation
-
-        :param object key: Key to delete
-        """
-        try:
-            del self[key]
-        except KeyError:
-            raise AttributeError(key)
-
-
 class UTC(datetime.tzinfo):
 
     """UTC timezone object."""
