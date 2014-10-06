@@ -20,9 +20,6 @@ Convenience functions and classes
 Time handling
 '''''''''''''
 
-.. autofunction:: parse_delta
-.. autofunction:: format_delta
-.. autofunction:: parse_datetime
 .. autofunction:: parse_datetime_user
 
 XDG Base Directory support
@@ -40,29 +37,13 @@ Time handling
 
 .. testsetup::
 
-    import datetime
-
-    from rdial.utils import (format_delta, parse_datetime, parse_delta)
-
-.. doctest::
-   :options: +NORMALIZE_WHITESPACE
-
-    >>> parse_delta('PT36M10S')
-    datetime.timedelta(0, 2170)
-    >>> parse_delta('')
-    datetime.timedelta(0)
-    >>> format_delta(datetime.timedelta(0))
-    ''
-    >>> format_delta(datetime.timedelta(minutes=30))
-    'PT30M'
-    >>> parse_datetime('2012-02-15T18:59:18Z')
-    datetime.datetime(2012, 2, 15, 18, 59, 18)
+    from rdial.utils import parse_datetime_user
 
 .. doctest::
    :options: +SKIP
 
-    >>> parse_datetime('40 minutes ago')
-    datetime.datetime(2012, 2, 15, 18, 59, 18
+    >>> parse_datetime_user('40 minutes ago')
+    datetime.datetime(2012, 2, 15, 18, 59, 18)
 
 XDG Base Directory support
 ''''''''''''''''''''''''''

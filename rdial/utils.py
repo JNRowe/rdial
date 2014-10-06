@@ -34,6 +34,7 @@ except ImportError:
     cduration = None
 
 from jnrbase import compat
+from jnrbase.iso_8601 import parse_datetime
 
 
 def safer_repr(obj):
@@ -66,72 +67,6 @@ class RdialError(ValueError):
 _MAPPER = {'D': 'days', 'H': 'hours', 'M': 'minutes', 'S': 'seconds'}
 
 
-def parse_delta(string):
-    """Parse ISO-8601 duration string.
-
-    Args:
-        string (str): Duration string to parse
-
-    Returns:
-        datetime.timedelta: Parsed delta object
-    """
-    if not string:
-        return datetime.timedelta(0)
-    if cduration:
-        return cduration.parse_duration(string)
-    parsed = {}
-    block = []
-    for c in string[1:]:
-        if c.isalpha():
-            if block:
-                parsed[_MAPPER[c]] = int(''.join(block))
-            block = []
-        else:
-            block.append(c)
-    return datetime.timedelta(**parsed)  # pylint: disable=star-args
-
-
-def format_delta(timedelta_):
-    """Format ISO-8601 duration string.
-
-    Args:
-        timedelta_ (datetime.timedelta): Duration to process
-
-    Returns:
-        str: ISO-8601 representation of duration
-    """
-    if timedelta_ == datetime.timedelta(0):
-        return ''
-    days = '%dD' % timedelta_.days if timedelta_.days else ''
-    hours, minutes = divmod(timedelta_.seconds, 3600)
-    minutes, seconds = divmod(minutes, 60)
-    hours = '%02dH' % hours if hours else ''
-    minutes = '%02dM' % minutes if minutes else ''
-    seconds = '%02dS' % seconds if seconds else ''
-    return 'P%s%s%s%s%s' % (days, 'T' if hours or minutes or seconds else '',
-                            hours, minutes, seconds)
-
-
-def parse_datetime(string):
-    """Parse datetime string.
-
-    Args:
-        string (str): Datetime string to parse
-
-    Returns:
-        datetime.datetime: Parsed datetime object
-
-    """
-    if not string:
-        datetime_ = datetime.datetime.utcnow()
-    else:
-        datetime_ = ciso8601.parse_datetime(string[:19])
-        if not datetime_:
-            raise ValueError('Unable to parse timestamp %r'
-                             % (safer_repr(string), ))
-    return datetime_
-
-
 def parse_datetime_user(string):
     """Parse datetime string from user.
 
@@ -146,7 +81,7 @@ def parse_datetime_user(string):
 
     """
     try:
-        datetime_ = parse_datetime(string)
+        datetime_ = parse_datetime(string).replace(tzinfo=None)
     except ValueError:
         try:
             output = check_output(['date', '--utc', '--iso-8601=seconds', '-d',
@@ -158,18 +93,6 @@ def parse_datetime_user(string):
         raise ValueError('Unable to parse timestamp %r'
                          % (safer_repr(string), ))
     return datetime_
-
-
-def format_datetime(datetime_):
-    """Format ISO-8601 datetime string.
-
-    Args:
-        datetime_ (datetime.datetime): Datetime to process
-
-    Returns:
-        str: ISO-8601 compatible string
-    """
-    return datetime_.strftime('%Y-%m-%dT%H:%M:%SZ')
 
 
 def iso_week_to_date(year, week):
