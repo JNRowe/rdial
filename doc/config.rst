@@ -57,8 +57,7 @@ suffix.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If this key is set to ``False`` then no coloured output will be produced by
-``rdial``.  You can also specify this for individual runs by setting the
-:envvar:`NO_COLOUR` environment variable.
+``rdial``.
 
 The key ``color`` is also accepted.
 

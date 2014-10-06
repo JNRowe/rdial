@@ -167,8 +167,10 @@ def message_option(f):
 @click.option('-i', '--interactive/--no-interactive',
               envvar='RDIAL_INTERACTIVE',
               help=_('Support interactive message editing.'))
+@click.option('--colour/--no-colour', envvar='RDIAL_COLOUR', default=None,
+              help=_('Output colourised informational text.'))
 @click.pass_context
-def cli(ctx, directory, backup, cache, config, interactive):
+def cli(ctx, directory, backup, cache, config, interactive, colour):
     """Main command entry point.
 
     :param click.Context ctx: Current command context
@@ -181,11 +183,11 @@ def cli(ctx, directory, backup, cache, config, interactive):
     cfg = utils.read_config(config)
     base = cfg['rdial']
 
-    if 'color' in base:
-        base['colour'] = base['color']
-    if not base.as_bool('colour') or os.getenv('NO_COLOUR') \
-            or os.getenv('NO_COLOR'):
-        colourise.COLOUR = False
+    if colour is None:
+        if 'color' in base:
+            base['colour'] = base['color']
+        colour = base.as_bool('colour')
+    colourise.COLOUR = colour
 
     ctx.default_map = {}
     for name in ctx.command.commands:
