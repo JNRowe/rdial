@@ -25,9 +25,9 @@ from os.path import abspath
 from click.testing import CliRunner
 from expecter import expect
 from nose2.tools import params
+from jnrbase.iso_8601 import (parse_datetime, parse_delta, utc)
 
 from rdial.events import (Event, Events)
-from rdial.utils import (parse_datetime, parse_delta, utc)
 
 
 @params(

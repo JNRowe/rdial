@@ -20,19 +20,10 @@
 from datetime import (datetime, timedelta)
 
 from expecter import expect
+from jnrbase.iso_8601 import utc
 from nose2.tools import params
 
-from rdial.utils import (format_datetime, parse_datetime, parse_datetime_user,
-                         utc)
-
-
-@params(
-    ('2011-05-04T08:00:00Z', datetime(2011, 5, 4, 8, 0, tzinfo=utc)),
-    ('2011-05-04T09:15:00Z', datetime(2011, 5, 4, 9, 15, tzinfo=utc)),
-    ('2011-05-04T10:15:00+0100', datetime(2011, 5, 4, 9, 15, tzinfo=utc)),
-)
-def test_parse_datetime(string, expected):
-    expect(parse_datetime(string)) == expected
+from rdial.utils import parse_datetime_user
 
 
 @params(
@@ -42,11 +33,3 @@ def test_parse_datetime(string, expected):
 def test_parse_datetime_via_date_command(string, delta):
     now = datetime.utcnow().replace(microsecond=0, tzinfo=utc)
     expect(parse_datetime_user(string)) == now - delta
-
-
-@params(
-    (datetime(2011, 5, 4, 8, 0, tzinfo=utc), '2011-05-04T08:00:00Z'),
-    (datetime(2011, 5, 4, 9, 15, tzinfo=utc), '2011-05-04T09:15:00Z'),
-)
-def test_format_datetime(dt, expected):
-    expect(format_datetime(dt)) == expected
