@@ -29,13 +29,15 @@ import subprocess
 import click
 import tabulate
 
-from jnrbase import colourise
+from jnrbase import (colourise, i18n)
 from jnrbase.attrdict import AttrDict
 
 from .events import (Events, TaskNotRunningError, TaskRunningError)
-from .i18n import (_, N_)
 from . import _version
 from . import utils
+
+
+_, N_ = i18n.setup(_version)
 
 
 class HiddenGroup(click.Group):
