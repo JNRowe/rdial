@@ -33,7 +33,7 @@ try:
 except ImportError:
     cduration = None
 
-from jnrbase import compat
+from jnrbase import (compat, xdg_basedir)
 from jnrbase.iso_8601 import parse_datetime
 
 
@@ -159,10 +159,9 @@ def read_config(user_config=None, cli_options=None):
     # Only base *must* exist
     conf = configobj.ConfigObj(os.path.dirname(__file__) + '/config',
                                file_error=True)
-    conf['xdg_data_location'] = xdg_data_location()
-    for string in os.getenv('XDG_CONFIG_DIRS', '/etc/xdg').split(':'):
-        conf.merge(configobj.ConfigObj(string + '/rdial/config'))
-    conf.merge(configobj.ConfigObj(xdg_config_location() + '/config'))
+    conf['xdg_data_location'] = xdg_basedir.user_data('rdial')
+    for f in xdg_basedir.get_configs('rdial'):
+        conf.merge(configobj.ConfigObj(f))
     conf.merge(configobj.ConfigObj(os.path.abspath('.rdialrc')))
     conf.merge(configobj.ConfigObj(user_config))
 
@@ -237,61 +236,3 @@ def newer(fname, reference):
 
     """
     return os.stat(fname).st_mtime > os.stat(reference).st_mtime
-
-
-def _xdg_basedir_dir(dtype):
-    """Return a user directory honouring XDG basedir spec.
-
-    Args:
-        dtype (str): Directory type to find
-
-    Returns:
-        str: Location of directory
-
-    """
-    if dtype not in ['cache', 'config', 'data']:
-        return ValueError(_('Invalid directory type %r') % dtype)
-    user_dir = os.getenv('XDG_%s_HOME' % dtype.upper())
-    if not user_dir:
-        if dtype == 'data':
-            default = '.local/share'
-        else:
-            default = '.%s' % dtype
-        user_dir = os.path.join(os.getenv('HOME', '/'), default)
-    return os.path.join(user_dir, 'rdial')
-
-
-def xdg_cache_location():
-    """Return a cache location honouring $XDG_CACHE_HOME.
-
-    Returns:
-        str: Location of cache directory
-
-    """
-    return _xdg_basedir_dir('cache')
-
-
-def xdg_config_location():
-    """Return a config location honouring $XDG_CONFIG_HOME.
-
-    .. note::
-        :mod:`click` provides :func:`click.get_app_dir`, but it isn't quite XDG
-        basedir compliant.  It also has no support for cache or data storage
-        locations, so we need to implement these anyway.  It does however
-        support Windows, which this most definitely does not.
-
-    Returns:
-        str: Location of config directory
-
-    """
-    return _xdg_basedir_dir('config')
-
-
-def xdg_data_location():
-    """Return a data location honouring $XDG_DATA_HOME.
-
-    Returns:
-        str: Location of data directory
-
-    """
-    return _xdg_basedir_dir('data')
