@@ -34,8 +34,7 @@ except ImportError:  # Python 3, and 2.x without speedy helper
 
 import click
 
-from jnrbase import compat
-from jnrbase import iso_8601
+from jnrbase import (compat, iso_8601, xdg_basedir)
 
 from . import utils
 
@@ -199,7 +198,7 @@ class Events(list):
         if not os.path.exists(directory):
             return Events(backup=backup)
         events = []
-        cache_dir = os.path.join(utils.xdg_cache_location(),
+        cache_dir = os.path.join(xdg_basedir.user_cache('rdial'),
                                  directory.replace('/', '_'))
         if write_cache and not os.path.isdir(cache_dir):
             os.makedirs(cache_dir)

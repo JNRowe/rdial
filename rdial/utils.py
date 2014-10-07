@@ -30,7 +30,7 @@ import configobj
 
 from pytz.reference import Local
 
-from jnrbase import compat
+from jnrbase import (compat, xdg_basedir)
 from jnrbase.iso_8601 import parse_datetime
 
 
@@ -122,16 +122,12 @@ def read_config(user_config=None):
     :return: Parsed configuration data
     """
     configs = [os.path.dirname(__file__) + '/config', ]
-    for s in os.getenv('XDG_CONFIG_DIRS', '/etc/xdg').split(':'):
-        p = s + '/rdial/config'
-        if os.path.isfile(p):
-            configs.append(p)
-    configs.append(xdg_config_location() + '/config')
+    configs.extend(xdg_basedir.get_configs('rdial'))
     configs.append(os.path.abspath('.rdialrc'))
     if user_config:
         configs.append(user_config)
     # Prime config with dynamic key
-    lines = ['xdg_data_location = %r' % xdg_data_location(), ]
+    lines = ['xdg_data_location = %r' % xdg_basedir.user_data('rdial'), ]
     for file in configs:
         if os.path.isfile(file):
             lines.extend(click.open_file(file, encoding='utf-8').readlines())
@@ -178,33 +174,3 @@ def newer(file, reference):
     :return: True if ``reference`` is newer than ``reference``
     """
     return os.stat(file).st_mtime > os.stat(reference).st_mtime
-
-
-def xdg_cache_location():
-    """Return a cache location honouring $XDG_CACHE_HOME.
-
-    :rtype: :obj:`str`
-    """
-    user_dir = os.getenv('XDG_CACHE_HOME',
-                         os.path.join(os.getenv('HOME', '/'), '.cache'))
-    return os.path.join(user_dir, 'rdial')
-
-
-def xdg_config_location():
-    """Return a config location honouring $XDG_CONFIG_HOME.
-
-    :rtype: :obj:`str`
-    """
-    user_dir = os.getenv('XDG_CONFIG_HOME',
-                         os.path.join(os.getenv('HOME', '/'), '.config'))
-    return os.path.join(user_dir, 'rdial')
-
-
-def xdg_data_location():
-    """Return a data location honouring $XDG_DATA_HOME.
-
-    :rtype: :obj:`str`
-    """
-    user_dir = os.getenv('XDG_DATA_HOME', os.path.join(os.getenv('HOME', '/'),
-                         '.local/share'))
-    return os.path.join(user_dir, 'rdial')
