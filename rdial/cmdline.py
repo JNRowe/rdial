@@ -29,6 +29,7 @@ import subprocess
 import click
 import tabulate
 
+from jnrbase import colourise
 from jnrbase.attrdict import AttrDict
 
 from .events import (Events, TaskNotRunningError, TaskRunningError)
@@ -267,7 +268,7 @@ def cli(ctx, directory, backup, cache, config, interactive):
         base['colour'] = base['color']
     if not base.as_bool('colour') or os.getenv('NO_COLOUR') \
             or os.getenv('NO_COLOR'):
-        utils._colourise = lambda s, colour: s
+        colourise.COLOUR = False
 
     ctx.default_map = {}
     for name in ctx.command.commands:
@@ -364,17 +365,17 @@ def fsck(ctx, globs):
         for event in pbar:
             if not last_event.start + last_event.delta <= event.start:
                 warnings += 1
-                lines.append(click.style(_('Overlap:'), 'red'))
-                lines.append(click.style(_('   %r') % last_event, 'yellow'))
-                lines.append(click.style(_('   %r') % event, 'green'))
+                lines.append(colourise.fail(_('Overlap:')))
+                lines.append(colourise.warn(_('   %r' % last_event)))
+                lines.append(colourise.info(_('   %r' % event)))
             if event.start > now:
                 warnings += 1
-                lines.append(click.style(_('Future start:'), 'red'))
-                lines.append(click.style(_('   %r') % event, 'yellow'))
+                lines.append(colourise.fail(_('Future start:')))
+                lines.append(colourise.warn(_('   %r') % event))
             elif event.start + event.delta > now:
                 warnings += 1
-                lines.append(click.style(_('Future end:'), 'red'))
-                lines.append(click.style(_('   %r') % event, 'yellow'))
+                lines.append(colourise.fail(_('Future end:')))
+                lines.append(colourise.warn(_('   %r') % event))
             last_event = event
     if lines:
         click.echo_via_pager('\n'.join(lines))
@@ -630,7 +631,7 @@ def running(globs):
         click.echo(_("Task `%s' started %s")
                    % (current.task, str(now - current.start).split('.')[0]))
     else:
-        utils.warn(_('No task is running!'))
+        colourise.pwarn(_('No task is running!'))
 
 
 @cli.command(help=_('Display last event, if any.'))
@@ -649,7 +650,7 @@ def last(globs):
         if event.message:
             click.echo(event.message)
     else:
-        utils.warn(_('Task %s is still running') % event.task)
+        colourise.pwarn(_('Task %s is still running') % event.task)
 
 
 @cli.command(help=_('Generate ledger compatible data file.'))
@@ -706,7 +707,7 @@ def main():
         cli(auto_envvar_prefix='RDIAL')
         return 0
     except (ValueError, utils.RdialError) as error:
-        utils.fail(str(error))
+        colourise.pfail(str(error.message))
         return 2
     except OSError as error:
         return error.errno

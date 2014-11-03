@@ -1,5 +1,5 @@
 click>=5.1
-jnrbase
+jnrbase[colour]
 ciso8601>=1.0.1
 configobj>=5.0.0
 pytz

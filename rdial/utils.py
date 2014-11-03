@@ -36,52 +36,6 @@ except ImportError:
 from jnrbase import compat
 
 
-# Set up informational message functions
-def _colourise(text, colour, **kwargs):
-    """Colour text, if possible.
-
-    See also:
-        :func:`click.termui.secho`
-
-    Args:
-        text (str): Text to colourise
-        colour (str): Colour to display text in
-        kwargs (dict): Extra arguments for :func:`~secho`
-
-    """
-    click.termui.secho(text, fg=colour, bold=True, **kwargs)
-
-
-def success(text):
-    """Pretty print a success message.
-
-    Args:
-        text (str): Text to format
-
-    """
-    _colourise(text, 'green')
-
-
-def fail(text):
-    """Pretty print a failure message.
-
-    Args:
-        text (str): Text to format
-
-    """
-    _colourise(_('Error: %s') % (text, ), 'red', err=True)
-
-
-def warn(text):
-    """Pretty print a warning message.
-
-    Args:
-        text (str): Text to format
-
-    """
-    _colourise(_('Warning: %s') % (text, ), 'yellow', err=True)
-
-
 def safer_repr(obj):
     """Produce a repr string for an object.
 
