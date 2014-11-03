@@ -28,10 +28,15 @@ import subprocess
 import click
 import tabulate
 
+from jnrbase import (colourise, i18n)
+from jnrbase.attrdict import AttrDict
+
 from .events import (Events, TaskNotRunningError, TaskRunningError)
-from .i18n import (_, N_)
 from . import _version
 from . import utils
+
+
+_, N_ = i18n.setup(_version)
 
 
 class TaskNameParamType(click.ParamType):
@@ -164,8 +169,10 @@ def message_option(f):
 @click.option('-i', '--interactive/--no-interactive',
               envvar='RDIAL_INTERACTIVE',
               help=_('Support interactive message editing.'))
+@click.option('--colour/--no-colour', envvar='RDIAL_COLOUR', default=None,
+              help=_('Output colourised informational text.'))
 @click.pass_context
-def cli(ctx, directory, backup, cache, config, interactive):
+def cli(ctx, directory, backup, cache, config, interactive, colour):
     """Main command entry point.
 
     :param click.Context ctx: Current command context
@@ -178,11 +185,11 @@ def cli(ctx, directory, backup, cache, config, interactive):
     cfg = utils.read_config(config)
     base = cfg['rdial']
 
-    if 'color' in base:
-        base['colour'] = base['color']
-    if not base.as_bool('colour') or os.getenv('NO_COLOUR') \
-            or os.getenv('NO_COLOR'):
-        utils._colourise = lambda s, colour: s
+    if colour is None:
+        if 'color' in base:
+            base['colour'] = base['color']
+        colour = base.as_bool('colour')
+    colourise.COLOUR = colour
 
     ctx.default_map = {}
     for name in ctx.command.commands:
@@ -195,7 +202,7 @@ def cli(ctx, directory, backup, cache, config, interactive):
                     d[k] = cfg[name][k]
             ctx.default_map[name] = d
 
-    ctx.obj = utils.AttrDict(
+    ctx.obj = AttrDict(
         backup=backup or base.as_bool('backup'),
         cache=cache or base.as_bool('cache'),
         config=cfg,
@@ -249,9 +256,9 @@ def fsck(ctx, globs):
         for event in bar:
             if not last.start + last.delta <= event.start:
                 warnings += 1
-                lines.append(click.style(_('Overlap:'), 'red'))
-                lines.append(click.style(_('   %r') % last, 'yellow'))
-                lines.append(click.style(_('   %r') % event, 'green'))
+                lines.append(colourise.fail(_('Overlap:')))
+                lines.append(colourise.warn('   %r' % last))
+                lines.append(colourise.info('   %r' % event))
             last = event
     if lines:
         click.echo_via_pager('\n'.join(lines))
@@ -489,7 +496,7 @@ def running(globs):
                    % (current.task,
                       str(utils.utcnow() - current.start).split('.')[0]))
     else:
-        utils.warn(_('No task is running!'))
+        colourise.pwarn(_('No task is running!'))
 
 
 @cli.command(help=_('Display last event, if any.'))
@@ -506,7 +513,7 @@ def last(globs):
         if event.message:
             click.echo(repr(event.message))
     else:
-        utils.warn(_('Task %s is still running') % event.task)
+        colourise.pwarn(_('Task %s is still running') % event.task)
 
 
 @cli.command(help=_('Generate ledger compatible data file.'))
@@ -556,7 +563,7 @@ def main():
         cli()
         return 0
     except (ValueError, utils.RdialError) as error:
-        utils.fail(error.message)
+        colourise.pfail(error.message)
         return 2
     except OSError as error:
         return error.errno

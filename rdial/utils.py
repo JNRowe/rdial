@@ -22,7 +22,6 @@
 import datetime
 import functools
 import os
-import re
 import subprocess
 
 import ciso8601
@@ -31,41 +30,8 @@ import configobj
 
 from pytz.reference import Local
 
-from . import compat
-
-
-# Set up informational message functions
-def _colourise(text, colour):
-    """Colour text, if possible.
-
-    :param str text: Text to colourise
-    :param str colour: Colour to display text in
-    """
-    click.termui.secho(text, fg=colour, bold=True)
-
-
-def success(text):
-    """Pretty print a success message.
-
-    :param str text: Text to format
-    """
-    _colourise(text, 'green')
-
-
-def fail(text):
-    """Pretty print a failure message.
-
-    :param str text: Text to format
-    """
-    _colourise(text, 'red')
-
-
-def warn(text):
-    """Pretty print a warning message.
-
-    :param str text: Text to format
-    """
-    _colourise(text, 'yellow')
+from jnrbase import (compat, xdg_basedir)
+from jnrbase.iso_8601 import parse_datetime
 
 
 class RdialError(ValueError):
@@ -77,131 +43,6 @@ class RdialError(ValueError):
         def message(self):
             """Compatibility hack for Python 3."""
             return self.args[0]
-
-
-class AttrDict(dict):
-
-    """Dictionary with attribute access.
-
-    .. seealso:: :obj:`dict`
-    """
-
-    def __contains__(self, key):
-        """Check for item membership
-
-        :param object key: Key to test for
-        :rtype: :obj:`bool`
-        """
-        return hasattr(self, key) or super(AttrDict, self).__contains__(key)
-
-    def __getattr__(self, key):
-        """Support item access via dot notation
-
-        :param object key: Key to fetch
-        """
-        try:
-            return self[key]
-        except KeyError:
-            raise AttributeError(key)
-
-    def __setattr__(self, key, value):
-        """Support item assignment via dot notation
-
-        :param object key: Key to set value for
-        :param object value: Value to set key to
-        """
-        try:
-            self[key] = value
-        except:
-            raise AttributeError(key)
-
-    def __delattr__(self, key):
-        """Support item deletion via dot notation
-
-        :param object key: Key to delete
-        """
-        try:
-            del self[key]
-        except KeyError:
-            raise AttributeError(key)
-
-
-class UTC(datetime.tzinfo):
-
-    """UTC timezone object."""
-
-    def __repr__(self):
-        return 'UTC()'
-
-    # pylint: disable-msg=W0613
-    def utcoffset(self, datetime_):
-        return datetime.timedelta(0)
-
-    def dst(self, datetime_):
-        return datetime.timedelta(0)
-
-    def tzname(self, datetime_):
-        return 'UTC'
-    # pylint: enable-msg=W0613
-
-utc = UTC()
-
-
-def parse_delta(string):
-    """Parse ISO-8601 duration string.
-
-    :param str string: Duration string to parse
-    :rtype: :obj:`datetime.timedelta`
-    :return: Parsed delta object
-    """
-    if not string:
-        return datetime.timedelta(0)
-    match = re.match("""
-        P
-        ((?P<days>\d+)D)?
-        T?
-        ((?P<hours>\d{1,2})H)?
-        ((?P<minutes>\d{1,2})M)?
-        ((?P<seconds>\d{1,2})?(\.(?P<microseconds>\d+)S)?)
-    """, string, re.VERBOSE)
-    match_dict = dict((k, int(v) if v else 0)
-                      for k, v in match.groupdict().items())
-    return datetime.timedelta(**match_dict)  # pylint: disable-msg=W0142
-
-
-def format_delta(timedelta_):
-    """Format ISO-8601 duration string.
-
-    :param datetime.timedelta timedelta_: Duration to process
-    :rtype: :obj:`str`
-    :return: ISO-8601 representation of duration
-    """
-    if timedelta_ == datetime.timedelta(0):
-        return ''
-    days = '%dD' % timedelta_.days if timedelta_.days else ''
-    hours, minutes = divmod(timedelta_.seconds, 3600)
-    minutes, seconds = divmod(minutes, 60)
-    hours = '%02dH' % hours if hours else ''
-    minutes = '%02dM' % minutes if minutes else ''
-    seconds = '%02dS' % seconds if seconds else ''
-    return 'P%s%s%s%s%s' % (days, 'T' if hours or minutes or seconds else '',
-                            hours, minutes, seconds)
-
-
-def parse_datetime(string):
-    """Parse datetime string.
-
-    :param str string: Datetime string to parse
-    :rtype: :obj:`datetime.datetime`
-    :return: Parsed datetime object
-    """
-    if not string:
-        datetime_ = utcnow()
-    else:
-        datetime_ = ciso8601.parse_datetime(string)
-        if not datetime_:
-            raise ValueError('Unable to parse timestamp %r' % string)
-    return datetime_
 
 
 def parse_datetime_user(string):
@@ -230,17 +71,6 @@ def parse_datetime_user(string):
     return datetime_
 
 
-def format_datetime(datetime_):
-    """Format ISO-8601 datetime string.
-
-    :param datetime.datetime datetime_: Datetime to process
-    :rtype: str
-    :return: ISO-8601 compatible string
-    """
-    # Can't call isoformat method as it uses the +00:00 form
-    return datetime_.strftime('%Y-%m-%dT%H:%M:%SZ')
-
-
 def iso_week_to_date(year, week):
     """Generate date range for a given ISO-8601 week.
 
@@ -257,16 +87,6 @@ def iso_week_to_date(year, week):
     start = iso_start + datetime.timedelta(weeks=week - 1)
     end = start + datetime.timedelta(weeks=1)
     return start, end
-
-
-def utcnow():
-    """Wrapper for producing timezone aware current timestamp.
-
-    :rtype: obj:`datetime.datetime`
-    :return: Current date and time, in UTC
-
-    """
-    return datetime.datetime.utcnow().replace(tzinfo=utc)
 
 
 def check_output(args, **kwargs):
@@ -302,16 +122,12 @@ def read_config(user_config=None):
     :return: Parsed configuration data
     """
     configs = [os.path.dirname(__file__) + '/config', ]
-    for s in os.getenv('XDG_CONFIG_DIRS', '/etc/xdg').split(':'):
-        p = s + '/rdial/config'
-        if os.path.isfile(p):
-            configs.append(p)
-    configs.append(xdg_config_location() + '/config')
+    configs.extend(xdg_basedir.get_configs('rdial'))
     configs.append(os.path.abspath('.rdialrc'))
     if user_config:
         configs.append(user_config)
     # Prime config with dynamic key
-    lines = ['xdg_data_location = %r' % xdg_data_location(), ]
+    lines = ['xdg_data_location = %r' % xdg_basedir.user_data('rdial'), ]
     for file in configs:
         if os.path.isfile(file):
             lines.extend(click.open_file(file, encoding='utf-8').readlines())
@@ -358,33 +174,3 @@ def newer(file, reference):
     :return: True if ``reference`` is newer than ``reference``
     """
     return os.stat(file).st_mtime > os.stat(reference).st_mtime
-
-
-def xdg_cache_location():
-    """Return a cache location honouring $XDG_CACHE_HOME.
-
-    :rtype: :obj:`str`
-    """
-    user_dir = os.getenv('XDG_CACHE_HOME',
-                         os.path.join(os.getenv('HOME', '/'), '.cache'))
-    return os.path.join(user_dir, 'rdial')
-
-
-def xdg_config_location():
-    """Return a config location honouring $XDG_CONFIG_HOME.
-
-    :rtype: :obj:`str`
-    """
-    user_dir = os.getenv('XDG_CONFIG_HOME',
-                         os.path.join(os.getenv('HOME', '/'), '.config'))
-    return os.path.join(user_dir, 'rdial')
-
-
-def xdg_data_location():
-    """Return a data location honouring $XDG_DATA_HOME.
-
-    :rtype: :obj:`str`
-    """
-    user_dir = os.getenv('XDG_DATA_HOME', os.path.join(os.getenv('HOME', '/'),
-                         '.local/share'))
-    return os.path.join(user_dir, 'rdial')

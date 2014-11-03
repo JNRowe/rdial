@@ -34,7 +34,8 @@ except ImportError:  # Python 3, and 2.x without speedy helper
 
 import click
 
-from . import compat
+from jnrbase import (compat, iso_8601, xdg_basedir)
+
 from . import utils
 
 
@@ -85,11 +86,11 @@ class Event(object):
                 raise ValueError('Must not be a naive datetime %r' % start)
             self.start = start
         else:
-            self.start = utils.parse_datetime(start)
+            self.start = iso_8601.parse_datetime(start)
         if isinstance(delta, datetime.timedelta):
             self.delta = delta
         else:
-            self.delta = utils.parse_delta(delta)
+            self.delta = iso_8601.parse_delta(delta)
         self.message = message
 
     @compat.mangle_repr_type
@@ -100,8 +101,8 @@ class Event(object):
         :return: Event representation suitable for :func:`eval`
         """
         return 'Event(%r, %r, %r, %r)' \
-            % (self.task, utils.format_datetime(self.start),
-               utils.format_delta(self.delta), self.message)
+            % (self.task, iso_8601.format_datetime(self.start),
+               iso_8601.format_delta(self.delta), self.message)
 
     def writer(self):
         """Prepare object for export.
@@ -110,8 +111,8 @@ class Event(object):
         :return: Event data for object storage
         """
         return {
-            'start': utils.format_datetime(self.start),
-            'delta': utils.format_delta(self.delta),
+            'start': iso_8601.format_datetime(self.start),
+            'delta': iso_8601.format_delta(self.delta),
             'message': self.message,
         }
 
@@ -134,7 +135,7 @@ class Event(object):
         """
         if not force and self.delta:
             raise TaskNotRunningError('No task running!')
-        self.delta = utils.utcnow() - self.start
+        self.delta = iso_8601.parse_datetime(None) - self.start
         self.message = message
 FIELDS = inspect.getargspec(Event.__init__)[0][2:]
 
@@ -197,7 +198,7 @@ class Events(list):
         if not os.path.exists(directory):
             return Events(backup=backup)
         events = []
-        cache_dir = os.path.join(utils.xdg_cache_location(),
+        cache_dir = os.path.join(xdg_basedir.user_cache('rdial'),
                                  directory.replace('/', '_'))
         if write_cache and not os.path.isdir(cache_dir):
             os.makedirs(cache_dir)
