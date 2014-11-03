@@ -35,40 +35,6 @@ from jnrbase import compat
 from jnrbase.iso_8601 import utc
 
 
-# Set up informational message functions
-def _colourise(text, colour):
-    """Colour text, if possible.
-
-    :param str text: Text to colourise
-    :param str colour: Colour to display text in
-    """
-    click.termui.secho(text, fg=colour, bold=True)
-
-
-def success(text):
-    """Pretty print a success message.
-
-    :param str text: Text to format
-    """
-    _colourise(text, 'green')
-
-
-def fail(text):
-    """Pretty print a failure message.
-
-    :param str text: Text to format
-    """
-    _colourise(text, 'red')
-
-
-def warn(text):
-    """Pretty print a warning message.
-
-    :param str text: Text to format
-    """
-    _colourise(text, 'yellow')
-
-
 class RdialError(ValueError):
 
     """Generic exception for rdial."""

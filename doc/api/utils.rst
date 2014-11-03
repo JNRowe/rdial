@@ -33,14 +33,6 @@ XDG Base Directory support
 .. autofunction:: xdg_cache_location
 .. autofunction:: xdg_data_location
 
-Text formatting
-'''''''''''''''
-
-.. autofunction:: _colourise
-.. autofunction:: success
-.. autofunction:: fail
-.. autofunction:: warn
-
 Examples
 --------
 
@@ -87,21 +79,3 @@ XDG Base Directory support
 
     >>> xdg_data_location()
     '/home/jay/.xdg/local/rdial'
-
-Text formatting
-'''''''''''''''
-
-.. need to figure out way to expose colouring in a sane manner
-
-.. testsetup::
-
-    from rdial.utils import (fail, success, warn)
-
-.. doctest::
-
-    >>> fail('Error!')
-    Error!
-    >>> success('Excellent')
-    Excellent
-    >>> warn('Ick')
-    Ick

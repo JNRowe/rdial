@@ -28,6 +28,7 @@ import subprocess
 import click
 import tabulate
 
+from jnrbase import colourise
 from jnrbase.attrdict import AttrDict
 
 from .events import (Events, TaskNotRunningError, TaskRunningError)
@@ -184,7 +185,7 @@ def cli(ctx, directory, backup, cache, config, interactive):
         base['colour'] = base['color']
     if not base.as_bool('colour') or os.getenv('NO_COLOUR') \
             or os.getenv('NO_COLOR'):
-        utils._colourise = lambda s, colour: s
+        colourise.COLOUR = False
 
     ctx.default_map = {}
     for name in ctx.command.commands:
@@ -251,9 +252,9 @@ def fsck(ctx, globs):
         for event in bar:
             if not last.start + last.delta <= event.start:
                 warnings += 1
-                lines.append(click.style(_('Overlap:'), 'red'))
-                lines.append(click.style(_('   %r') % last, 'yellow'))
-                lines.append(click.style(_('   %r') % event, 'green'))
+                lines.append(colourise.fail(_('Overlap:')))
+                lines.append(colourise.warn('   %r' % last))
+                lines.append(colourise.info('   %r' % event))
             last = event
     if lines:
         click.echo_via_pager('\n'.join(lines))
@@ -491,7 +492,7 @@ def running(globs):
                    % (current.task,
                       str(utils.utcnow() - current.start).split('.')[0]))
     else:
-        utils.warn(_('No task is running!'))
+        colourise.pwarn(_('No task is running!'))
 
 
 @cli.command(help=_('Display last event, if any.'))
@@ -508,7 +509,7 @@ def last(globs):
         if event.message:
             click.echo(repr(event.message))
     else:
-        utils.warn(_('Task %s is still running') % event.task)
+        colourise.pwarn(_('Task %s is still running') % event.task)
 
 
 @cli.command(help=_('Generate ledger compatible data file.'))
@@ -558,7 +559,7 @@ def main():
         cli()
         return 0
     except (ValueError, utils.RdialError) as error:
-        utils.fail(error.message)
+        colourise.pfail(error.message)
         return 2
     except OSError as error:
         return error.errno
