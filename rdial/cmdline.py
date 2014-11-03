@@ -104,11 +104,56 @@ def get_stop_message(current, edit=False):
     return message
 
 
+def task_option(f):
+    """Add task selection options.
+
+    :param function f: Function to add options to
+    :rtype: :obj:`func`
+    :return: Function with additional options
+    """
+    f = click.option('-x', '--from-dir', is_flag=True, expose_value=False,
+                     is_eager=True, callback=task_from_dir,
+                     help=_('Use directory name as task name.'))(f)
+    f = click.argument('task', default='default', envvar='RDIAL_TASK',
+                       required=False, type=TaskNameParamType())(f)
+    return f
+
+
+def duration_option(f):
+    """Add duration selection option.
+
+    .. note:: This is only here to reduce duplication in command setup.
+
+    :param function f: Function to add options to
+    :rtype: :obj:`func`
+    :return: Function with additional options
+    """
+    f = click.option('-d', '--duration', default='all',
+                     type=click.Choice(['day', 'week', 'month', 'year',
+                                        'all']),
+                     help=_('Filter events for specified time period.'))(f)
+    return f
+
+
+def message_option(f):
+    """Add message setting options.
+
+    :param function f: Function to add options to
+    :rtype: :obj:`func`
+    :return: Function with additional options
+    """
+    f = click.option('-m', '--message', help=_('Closing message.'))(f)
+    f = click.option('-F', '--file', type=click.File(),
+                     help=_('Read closing message from file.'))(f)
+    return f
+
+
 @click.group(help=_('Simple time tracking for simple people.'),
              epilog=_('Please report bugs to '
                       'https://github.com/JNRowe/rdial/issues'))
 @click.version_option(_version.dotted)
 @click.option('-d', '--directory', envvar='RDIAL_DIRECTORY', metavar='DIR',
+              type=click.Path(file_okay=False),
               help=_('Directory to read/write to.'))
 @click.option('--backup/--no-backup', envvar='RDIAL_BACKUP',
               help=_('Do not write data file backups.'))
@@ -215,11 +260,7 @@ def fsck(ctx, globs):
 
 
 @cli.command(help=_('Start task.'))
-@click.option('-x', '--from-dir', is_flag=True, expose_value=False,
-              is_eager=True, callback=task_from_dir,
-              help=_('Use directory name as task name.'))
-@click.argument('task', default='default', envvar='RDIAL_TASK',
-                required=False, type=TaskNameParamType())
+@task_option
 @click.option('-n', '--new', is_flag=True, help=_('Start a new task.'))
 @click.option('-t', '--time', default='', help=_('Set start time.'),
               type=StartTimeParamType())
@@ -238,9 +279,7 @@ def start(globs, task, new, time):
 
 
 @cli.command(help=_('Stop task.'))
-@click.option('-m', '--message', help=_('Closing message.'))
-@click.option('-F', '--file', type=click.File(),
-              help=_('Read closing message from file.'))
+@message_option
 @click.option('--amend', is_flag=True, help=_('Amend previous stop entry.'))
 @click.pass_obj
 @utils.remove_current
@@ -273,18 +312,11 @@ def stop(globs, message, file, amend):
 
 
 @cli.command(help=_('Switch to another task.'))
-@click.option('-x', '--from-dir', is_flag=True, expose_value=False,
-              is_eager=True, callback=task_from_dir,
-              help=_('Use directory name as task name.'))
-@click.argument('task', default='default', envvar='RDIAL_TASK',
-                required=False, type=TaskNameParamType())
+@task_option
 @click.option('-n', '--new', is_flag=True, help=_('Start a new task.'))
 @click.option('-t', '--time', default='', help=_('Set start time.'),
               type=StartTimeParamType())
-@click.option('-m', '--message',
-              help=_('Closing message for current task.'))
-@click.option('-F', '--file', type=click.File(),
-              help=_('Read closing message for current task from file.'))
+@message_option
 @click.pass_obj
 @utils.write_current
 def switch(globs, task, new, time, message, file):
@@ -319,17 +351,11 @@ def switch(globs, task, new, time, message, file):
 
 
 @cli.command(help=_('Run command with timer.'))
-@click.option('-x', '--from-dir', is_flag=True, expose_value=False,
-              is_eager=True, callback=task_from_dir,
-              help=_('Use directory name as task name.'))
-@click.argument('task', default='default', envvar='RDIAL_TASK',
-                required=False, type=TaskNameParamType())
+@task_option
 @click.option('-n', '--new', is_flag=True, help=_('Start a new task.'))
 @click.option('-t', '--time', default='', help=_('Set start time.'),
               type=StartTimeParamType())
-@click.option('-m', '--message', help=_('Closing message.'))
-@click.option('-F', '--file', type=click.File(),
-              help=_('Read closing message from file.'))
+@message_option
 @click.option('-c', '--command', help=_('Command to run.'))
 @click.pass_obj
 def run(globs, task, new, time, message, file, command):
@@ -374,9 +400,7 @@ def run(globs, task, new, time, message, file, command):
 @cli.command(help=_('Run predefined command with timer.'))
 @click.option('-t', '--time', default='', help=_('Set start time.'),
               type=StartTimeParamType())
-@click.option('-m', '--message', help=_('Closing message.'))
-@click.option('-F', '--file', type=click.File(),
-              help=_('Read closing message from file.'))
+@message_option
 @click.argument('wrapper', default='default')
 @click.pass_obj
 @click.pass_context
@@ -403,16 +427,10 @@ def wrapper(ctx, globs, time, message, file, wrapper):
 
 
 @cli.command(help=_('Report time tracking data.'))
-@click.option('-x', '--from-dir', is_flag=True, expose_value=False,
-              is_eager=True, callback=task_from_dir,
-              help=_('Use directory name as task name.'))
-@click.argument('task', default='default', envvar='RDIAL_TASK',
-                required=False, type=TaskNameParamType())
+@task_option
 @click.option('--human', is_flag=True,
               help=_('Produce human-readable output.'))
-@click.option('-d', '--duration', default='all',
-              type=click.Choice(['day', 'week', 'month', 'year', 'all']),
-              help=_('Filter events for specified time period.'))
+@duration_option
 @click.option('-s', '--sort', default='task', envvar='RDIAL_SORT',
               type=click.Choice(['task', 'time']), help=_('Field to sort by.'))
 @click.option('-r', '--reverse/--no-reverse', default=False,
@@ -492,14 +510,8 @@ def last(globs):
 
 
 @cli.command(help=_('Generate ledger compatible data file.'))
-@click.option('-x', '--from-dir', is_flag=True, expose_value=False,
-              is_eager=True, callback=task_from_dir,
-              help=_('Use directory name as task name.'))
-@click.argument('task', default='default', envvar='RDIAL_TASK',
-                required=False, type=TaskNameParamType())
-@click.option('-d', '--duration', default='all',
-              type=click.Choice(['day', 'week', 'month', 'year', 'all']),
-              help=_('Filter events for specified time period.'))
+@task_option
+@duration_option
 @click.option('-r', '--rate', envvar='RDIAL_RATE', type=click.FLOAT,
               help=_('Hourly rate for task output.'))
 @click.pass_obj
