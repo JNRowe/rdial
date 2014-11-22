@@ -131,7 +131,7 @@ class UTC(datetime.tzinfo):
     """UTC timezone object."""
 
     def __repr__(self):
-        return 'UTC()'
+        return '%s()' % self.__class__.__name__
 
     # pylint: disable-msg=W0613
     def utcoffset(self, datetime_):
