@@ -1,6 +1,6 @@
 #
 # coding=utf-8
-"""i18n - Internationalisation support for rdial"""
+"""i18n - Internationalisation support for rdial."""
 # Copyright © 2011-2015  James Rowe <jnrowe@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify

@@ -1,6 +1,6 @@
 #
 # coding=utf-8
-"""cmdline - Command line functionality for rdial"""
+"""cmdline - Command line functionality for rdial."""
 # Copyright © 2011-2015  James Rowe <jnrowe@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -35,7 +35,9 @@ from . import utils
 
 
 class TaskNameParamType(click.ParamType):
+
     """Task name parameter handler."""
+
     name = 'taskname'
 
     def convert(self, value, param, ctx):
@@ -53,7 +55,9 @@ class TaskNameParamType(click.ParamType):
 
 
 class StartTimeParamType(click.ParamType):
+
     """Start time parameter handler."""
+
     name = 'time'
 
     def convert(self, value, param, ctx):

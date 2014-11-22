@@ -1,6 +1,6 @@
 #
 # coding=utf-8
-"""events - Event models for rdial"""
+"""events - Event models for rdial."""
 # Copyright © 2011-2015  James Rowe <jnrowe@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -44,7 +44,8 @@ else:
 
 class RdialDialect(csv.excel):
 
-    """CSV dialect for rdial data files"""
+    """CSV dialect for rdial data files."""
+
     lineterminator = '\n'
     quoting = csv.QUOTE_MINIMAL
     strict = True

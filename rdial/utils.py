@@ -1,6 +1,6 @@
 #
 # coding=utf-8
-"""utils - Utility functions for rdial"""
+"""utils - Utility functions for rdial."""
 # Copyright © 2011-2015  James Rowe <jnrowe@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -87,7 +87,7 @@ class AttrDict(dict):
     """
 
     def __contains__(self, key):
-        """Check for item membership
+        """Check for item membership.
 
         :param object key: Key to test for
         :rtype: :obj:`bool`
@@ -95,7 +95,7 @@ class AttrDict(dict):
         return hasattr(self, key) or super(AttrDict, self).__contains__(key)
 
     def __getattr__(self, key):
-        """Support item access via dot notation
+        """Support item access via dot notation.
 
         :param object key: Key to fetch
         """
@@ -105,7 +105,7 @@ class AttrDict(dict):
             raise AttributeError(key)
 
     def __setattr__(self, key, value):
-        """Support item assignment via dot notation
+        """Support item assignment via dot notation.
 
         :param object key: Key to set value for
         :param object value: Value to set key to
@@ -116,7 +116,7 @@ class AttrDict(dict):
             raise AttributeError(key)
 
     def __delattr__(self, key):
-        """Support item deletion via dot notation
+        """Support item deletion via dot notation.
 
         :param object key: Key to delete
         """
@@ -131,16 +131,25 @@ class UTC(datetime.tzinfo):
     """UTC timezone object."""
 
     def __repr__(self):
+        """Self-documenting string representation.
+
+        :rtype: :obj:`str`
+        :return: Timezone representation suitable for :func:`eval`
+        """
         return '%s()' % self.__class__.__name__
+        return 'UTC()'
 
     # pylint: disable=W0613
     def utcoffset(self, datetime_):
+        """Generate offset from UTC for ``datetime`` event."""
         return datetime.timedelta(0)
 
     def dst(self, datetime_):
+        """Generate daylight savings time for ``datetime`` event."""
         return datetime.timedelta(0)
 
     def tzname(self, datetime_):
+        """Generate timezone name for ``datetime`` event."""
         return 'UTC'
     # pylint: enable=W0613
 
@@ -327,6 +336,11 @@ def write_current(f):
     """
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
+        """Write value of ``task`` argument to ``current on exit.
+
+        :param tuple args: Positional arguments
+        :param dict kwargs: Keyword arguments
+        """
         globs = args[0]
         f(*args, **kwargs)
         open('%s/.current' % globs.directory, 'w').write(kwargs['task'])
@@ -342,6 +356,11 @@ def remove_current(f):
     """
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
+        """Remove ``current`` file on exit.
+
+        :param tuple args: Positional arguments
+        :param dict kwargs: Keyword arguments
+        """
         globs = args[0]
         f(*args, **kwargs)
         if os.path.isfile('%s/.current' % globs.directory):

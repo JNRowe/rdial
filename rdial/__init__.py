@@ -1,6 +1,6 @@
 #
 # coding=utf-8
-"""rdial - Simple time tracking for simple people"""
+"""rdial - Simple time tracking for simple people."""
 # Copyright © 2011-2015  James Rowe <jnrowe@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
