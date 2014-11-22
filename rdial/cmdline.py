@@ -428,8 +428,8 @@ def wrapper(ctx, globs, time, message, file, wrapper):
 
 @cli.command(help=_('Report time tracking data.'))
 @task_option
-@click.option('--human', is_flag=True,
-              help=_('Produce human-readable output.'))
+@click.option('--stats', is_flag=True,
+              help=_('Display database statistics.'))
 @duration_option
 @click.option('-s', '--sort', default='task', envvar='RDIAL_SORT',
               type=click.Choice(['task', 'time']), help=_('Field to sort by.'))
@@ -439,12 +439,12 @@ def wrapper(ctx, globs, time, message, file, wrapper):
               type=click.Choice(tabulate._table_formats.keys()),
               help=_('Table output style.'))
 @click.pass_obj
-def report(globs, task, human, duration, sort, reverse, style):
+def report(globs, task, stats, duration, sort, reverse, style):
     """Report time tracking data.
 
     :param dict globs: Global options object
     :param str task: Task name to operate on
-    :param bool human: Display short overview of data
+    :param bool stats: Display short overview of data
     :param str duration: Time window to filter on
     :param str sort: Key to sort events on
     :param bool reverse: Reverse sort order
@@ -454,7 +454,7 @@ def report(globs, task, human, duration, sort, reverse, style):
         # Lazy way to remove duplicate argument definitions
         task = None
     events = filter_events(globs, task, duration)
-    if human:
+    if stats:
         click.echo(N_('%d event in query', '%d events in query', len(events))
                    % len(events))
         click.echo(_('Duration of events %s') % events.sum())

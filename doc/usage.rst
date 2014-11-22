@@ -211,7 +211,7 @@ See :ref:`run wrappers configuration <run-wrappers-label>`.
 
 ::
 
-    rdial report [--help] [-d <duration>] [-s <order] [-r] [--style] [--human] <task>
+    rdial report [--help] [-d <duration>] [-s <order] [-r] [--style] [--stats] <task>
 
 .. option:: -d <duration>, --duration=<duration>
 
@@ -229,9 +229,9 @@ See :ref:`run wrappers configuration <run-wrappers-label>`.
 
    Table output style {grid,latex,mediawiki,orgtbl,pipe,plain,rst,simple,tsv}
 
-.. option:: --human
+.. option:: --stats
 
-   Produce human-readable output.
+    Display database statistics.
 
 .. option:: -x, --from-dir
 

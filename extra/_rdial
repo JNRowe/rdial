@@ -125,7 +125,7 @@ case "$words[1]" in
     _arguments \
         '--help[Show this message and exit.]' \
         '--from-dir[Use directory name as task name.]' \
-        '--human[Produce human-readable output.]' \
+        '--stats[Display database statistics.]' \
         '--duration[Filter events for specified time period.]:select time period:(day week month year all)' \
         '--sort[Field to sort by.]:select sort field:(task time)' \
         '--reverse[Reverse sort order.]' \

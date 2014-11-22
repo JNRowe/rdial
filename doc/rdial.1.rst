@@ -174,8 +174,8 @@ Report time tracking data
 --style
     Table output style {grid,latex,mediawiki,orgtbl,pipe,plain,rst,simple,tsv}.
 
---human
-    Produce human-readable output.
+--stats
+    Display database statistics.
 
 -x, --from-dir
     Use directory name as task name.
