@@ -106,49 +106,51 @@ def get_stop_message(current, edit=False):
     return message
 
 
-def task_option(f):
+def task_option(fun):
     """Add task selection options.
 
-    :param function f: Function to add options to
+    :param function fun: Function to add options to
     :rtype: :obj:`func`
     :return: Function with additional options
     """
-    f = click.option('-x', '--from-dir', is_flag=True, expose_value=False,
-                     is_eager=True, callback=task_from_dir,
-                     help=_('Use directory name as task name.'))(f)
-    f = click.argument('task', default='default', envvar='RDIAL_TASK',
-                       required=False, type=TaskNameParamType())(f)
-    return f
+    fun = click.option('-x', '--from-dir', is_flag=True, expose_value=False,
+                       is_eager=True, callback=task_from_dir,
+                       help=_('Use directory name as task name.'))(fun)
+    fun = click.argument('task', default='default', envvar='RDIAL_TASK',
+                         required=False, type=TaskNameParamType())(fun)
+    return fun
 
 
-def duration_option(f):
+def duration_option(fun):
     """Add duration selection option.
 
     .. note:: This is only here to reduce duplication in command setup.
 
-    :param function f: Function to add options to
+    :param function fun: Function to add options to
     :rtype: :obj:`func`
     :return: Function with additional options
     """
-    f = click.option('-d', '--duration', default='all',
-                     type=click.Choice(['day', 'week', 'month', 'year',
-                                        'all']),
-                     help=_('Filter events for specified time period.'))(f)
-    return f
+    fun = click.option('-d', '--duration', default='all',
+                       type=click.Choice(['day', 'week', 'month', 'year',
+                                          'all']),
+                       help=_('Filter events for specified time period.'))(fun)
+    return fun
 
 
-def message_option(f):
+def message_option(fun):
     """Add message setting options.
 
-    :param function f: Function to add options to
+    :param function fun: Function to add options to
     :rtype: :obj:`func`
     :return: Function with additional options
     """
-    f = click.option('-m', '--message', help=_('Closing message.'))(f)
-    f = click.option('-F', '--file', type=click.File(),
-                     help=_('Read closing message from file.'))(f)
-    return f
+    fun = click.option('-m', '--message', help=_('Closing message.'))(fun)
+    fun = click.option('-F', '--file', 'fname', type=click.File(),
+                       help=_('Read closing message from file.'))(fun)
+    return fun
 
+
+# pylint: disable=too-many-arguments
 
 @click.group(help=_('Simple time tracking for simple people.'),
              epilog=_('Please report bugs to '
@@ -189,13 +191,13 @@ def cli(ctx, directory, backup, cache, config, interactive):
     ctx.default_map = {}
     for name in ctx.command.commands:
         if name in cfg.sections:
-            d = {}
+            defs = {}
             for k in cfg[name]:
                 try:
-                    d[k] = cfg[name].as_bool(k)
+                    defs[k] = cfg[name].as_bool(k)
                 except ValueError:
-                    d[k] = cfg[name][k]
-            ctx.default_map[name] = d
+                    defs[k] = cfg[name][k]
+            ctx.default_map[name] = defs
 
     ctx.obj = utils.AttrDict(
         backup=backup or base.as_bool('backup'),
@@ -246,15 +248,15 @@ def fsck(ctx, globs):
     events = Events.read(globs.directory, write_cache=globs.cache)
     lines = []
     with click.progressbar(events, label=_('Checking'),
-                           fill_char=click.style('#', 'green')) as bar:
-        last = bar.next()
-        for event in bar:
-            if not last.start + last.delta <= event.start:
+                           fill_char=click.style('#', 'green')) as pbar:
+        last_event = pbar.next()
+        for event in pbar:
+            if not last_event.start + last_event.delta <= event.start:
                 warnings += 1
                 lines.append(click.style(_('Overlap:'), 'red'))
-                lines.append(click.style(_('   %r') % last, 'yellow'))
+                lines.append(click.style(_('   %r') % last_event, 'yellow'))
                 lines.append(click.style(_('   %r') % event, 'green'))
-            last = event
+            last_event = event
     if lines:
         click.echo_via_pager('\n'.join(lines))
         if warnings:
@@ -285,28 +287,29 @@ def start(globs, task, new, time):
 @click.option('--amend', is_flag=True, help=_('Amend previous stop entry.'))
 @click.pass_obj
 @utils.remove_current
-def stop(globs, message, file, amend):
+def stop(globs, message, fname, amend):
     """Stop task.
 
     :param dict globs: Global options object
     :param str message: Message to assign to event
-    :param str file: Filename to read message from
+    :param str fname: Filename to read message from
     :param bool amend: Amend a previously stopped event
     """
-    if file:
-        message = file.read()
+    if fname:
+        message = fname.read()
     with Events.context(globs.directory, globs.backup, globs.cache) as events:
-        last = events.last()
-        running = last.running()
-        if amend and running:
-            raise TaskRunningError(_("Can't amend running task %s!")
-                                   % last.task)
-        elif not amend and not running:
-            raise TaskNotRunningError(_('No task running!'))
+        last_event = events.last()
+        if last_event.running():
+            if amend:
+                raise TaskRunningError(_("Can't amend running task %s!")
+                                       % last_event.task)
+        else:
+            if not amend:
+                raise TaskNotRunningError(_('No task running!'))
         if amend and not message:
-            message = last.message
+            message = last_event.message
         if globs.interactive and not message:
-            get_stop_message(last, edit=amend)
+            get_stop_message(last_event, edit=amend)
         events.stop(message, force=amend)
     event = events.last()
     click.echo(_('Task %s running for %s') % (event.task,
@@ -321,7 +324,7 @@ def stop(globs, message, file, amend):
 @message_option
 @click.pass_obj
 @utils.write_current
-def switch(globs, task, new, time, message, file):
+def switch(globs, task, new, time, message, fname):
     """Complete last task and start new one.
 
     :param dict globs: Global options object
@@ -329,10 +332,10 @@ def switch(globs, task, new, time, message, file):
     :param bool new: Create a new task
     :param datetime.datetime time: Task start time
     :param str message: Message to assign to event
-    :param str file: Filename to read message from
+    :param str fname: Filename to read message from
     """
-    if file:
-        message = file.read()
+    if fname:
+        message = fname.read()
     with Events.context(globs.directory, globs.backup, globs.cache) as events:
         event = events.last()
         if time and time < event.start:
@@ -360,7 +363,7 @@ def switch(globs, task, new, time, message, file):
 @message_option
 @click.option('-c', '--command', help=_('Command to run.'))
 @click.pass_obj
-def run(globs, task, new, time, message, file, command):
+def run(globs, task, new, time, message, fname, command):
     """Run timed command.
 
     :param dict globs: Global options object
@@ -368,7 +371,7 @@ def run(globs, task, new, time, message, file, command):
     :param bool new: Create a new task
     :param datetime.datetime time: Task start time
     :param str message: Message to assign to event
-    :param str file: Filename to read message from
+    :param str fname: Filename to read message from
     :param str command: Command to run
     """
     with Events.context(globs.directory, globs.backup, globs.cache) as events:
@@ -377,17 +380,17 @@ def run(globs, task, new, time, message, file, command):
                                      % events.last().task))
 
         try:
-            p = subprocess.Popen(command, shell=True)
-        except OSError as e:
-            raise utils.RdialError(e.strerror)
+            proc = subprocess.Popen(command, shell=True)
+        except OSError as err:
+            raise utils.RdialError(err.strerror)
 
         events.start(task, new, time)
         open('%s/.current' % globs.directory, 'w').write(task)
 
-        p.wait()
+        proc.wait()
 
-        if file:
-            message = file.read()
+        if fname:
+            message = fname.read()
         if globs.interactive and not message:
             get_stop_message(events.running())
         events.stop(message)
@@ -395,8 +398,8 @@ def run(globs, task, new, time, message, file, command):
     click.echo(_('Task %s running for %s') % (event.task,
                                               str(event.delta).split('.')[0]))
     os.unlink('%s/.current' % globs.directory)
-    if p.returncode != 0:
-        raise OSError(p.returncode, _('Command failed'))
+    if proc.returncode != 0:
+        raise OSError(proc.returncode, _('Command failed'))
 
 
 @cli.command(help=_('Run predefined command with timer.'))
@@ -406,14 +409,14 @@ def run(globs, task, new, time, message, file, command):
 @click.argument('wrapper', default='default')
 @click.pass_obj
 @click.pass_context
-def wrapper(ctx, globs, time, message, file, wrapper):
+def wrapper(ctx, globs, time, message, fname, wrapper):
     """Run predefined timed command.
 
     :param click.Context ctx: Click context object
     :param dict globs: Global options object
     :param datetime.datetime time: Task start time
     :param str message: Message to assign to event
-    :param str file: Filename to read message from
+    :param str fname: Filename to read message from
     :param str wrapper: Run wrapper to execute
     """
     if 'run wrappers' not in globs.config:
@@ -423,9 +426,9 @@ def wrapper(ctx, globs, time, message, file, wrapper):
     except KeyError:
         raise ValueError(_('No such wrapper %r') % wrapper)
     parser = ctx.parent.command.commands['run'].make_parser(ctx)
-    args = {'time': time, 'message': message, 'file': file, 'new': False}
+    args = {'time': time, 'message': message, 'fname': fname, 'new': False}
     args.update(parser.parse_args(shlex.split(command))[0])
-    ctx.invoke(run, **args)
+    ctx.invoke(run, **args)  # pylint: disable=star-args
 
 
 @cli.command(help=_('Report time tracking data.'))
@@ -547,6 +550,8 @@ def ledger(globs, task, duration, rate):
         lines.append(_(';; Running event not included in output!'))
     click.echo_via_pager('\n'.join(lines))
 
+# pylint: enable=too-many-arguments
+
 
 def main():
     """Command entry point to handle errors.
@@ -555,7 +560,7 @@ def main():
     :return: Final exit code
     """
     try:
-        cli()
+        cli()  # pylint: disable=no-value-for-parameter
         return 0
     except (ValueError, utils.RdialError) as error:
         utils.fail(error.message)

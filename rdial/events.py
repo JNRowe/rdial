@@ -40,7 +40,7 @@ else:
     import csv
 
 
-class RdialDialect(csv.excel):
+class RdialDialect(csv.excel):  # pylint: disable=too-few-public-methods
 
     """CSV dialect for rdial data files."""
 
@@ -142,7 +142,7 @@ class Event(object):
 FIELDS = inspect.getargspec(Event.__init__)[0][2:]
 
 
-class Events(list):
+class Events(list):  # pylint: disable=too-many-public-methods
 
     """Container for database events."""
 
@@ -204,18 +204,18 @@ class Events(list):
                                  directory.replace('/', '_'))
         if write_cache and not os.path.isdir(cache_dir):
             os.makedirs(cache_dir)
-        for file in glob.glob('%s/*.csv' % directory):
-            task = os.path.basename(file)[:-4]
+        for fname in glob.glob('%s/*.csv' % directory):
+            task = os.path.basename(fname)[:-4]
             cache_file = os.path.join(cache_dir, task) + '.pkl'
             evs = None
-            if os.path.exists(cache_file) and utils.newer(cache_file, file):
+            if os.path.exists(cache_file) and utils.newer(cache_file, fname):
                 try:
                     evs = pickle.load(open(cache_file))
                 except (pickle.UnpicklingError, ImportError):
                     pass
             if evs is None:
-                evs = [Event(task, **d)
-                       for d in csv.DictReader(open(file),
+                evs = [Event(task, **d)  # pylint: disable=star-args
+                       for d in csv.DictReader(open(fname),
                                                dialect=RdialDialect)]
                 if write_cache:
                     pickle.dump(evs, open(cache_file, 'w'), -1)
@@ -313,7 +313,7 @@ class Events(list):
         :rtype: :obj:`Events`
         :return: Events matching given filter function
         """
-        return Events(filter(filt, self))
+        return Events(x for x in self if filt(x))
 
     def for_task(self, task):
         """Filter events for a specific task.
@@ -357,8 +357,7 @@ class Events(list):
         :rtype: :obj:`datetime.timedelta`
         :return: Sum of all event deltas
         """
-        return sum(map(operator.attrgetter('delta'), self),
-                   datetime.timedelta(0))
+        return sum((x.delta for x in self), datetime.timedelta(0))
 
     @staticmethod
     @contextlib.contextmanager

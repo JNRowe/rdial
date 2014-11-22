@@ -42,4 +42,4 @@ if PY2:  # pragma: Python 2
         klass.__repr__ = wrapper
         return klass
 else:  # pragma: Python 3
-    mangle_repr_type = lambda x: x
+    mangle_repr_type = lambda x: x  # pylint: disable=invalid-name
