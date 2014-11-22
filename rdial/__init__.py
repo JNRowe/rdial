@@ -30,7 +30,7 @@ __history__ = 'See git repository'
 
 from email.utils import parseaddr
 
-# pylint: disable=W0622
+# pylint: disable=redefined-builtin
 __doc__ += """.
 
 A simple time tracking tool, with no frills and no fizzy coating.

@@ -139,7 +139,7 @@ class UTC(datetime.tzinfo):
         return '%s()' % self.__class__.__name__
         return 'UTC()'
 
-    # pylint: disable=W0613
+    # pylint: disable=unused-argument
     def utcoffset(self, datetime_):
         """Generate offset from UTC for ``datetime`` event."""
         return datetime.timedelta(0)
@@ -151,7 +151,7 @@ class UTC(datetime.tzinfo):
     def tzname(self, datetime_):
         """Generate timezone name for ``datetime`` event."""
         return 'UTC'
-    # pylint: enable=W0613
+    # pylint: enable=unused-argument
 
 utc = UTC()
 
@@ -175,7 +175,7 @@ def parse_delta(string):
     """, string, re.VERBOSE)
     match_dict = dict((k, int(v) if v else 0)
                       for k, v in match.groupdict().items())
-    return datetime.timedelta(**match_dict)  # pylint: disable=W0142
+    return datetime.timedelta(**match_dict)  # pylint: disable=star-args
 
 
 def format_delta(timedelta_):
