@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-# pylint: disable-msg=C0121
+# pylint: disable=C0121
 
 import datetime
 import functools
@@ -133,7 +133,7 @@ class UTC(datetime.tzinfo):
     def __repr__(self):
         return '%s()' % self.__class__.__name__
 
-    # pylint: disable-msg=W0613
+    # pylint: disable=W0613
     def utcoffset(self, datetime_):
         return datetime.timedelta(0)
 
@@ -142,7 +142,7 @@ class UTC(datetime.tzinfo):
 
     def tzname(self, datetime_):
         return 'UTC'
-    # pylint: enable-msg=W0613
+    # pylint: enable=W0613
 
 utc = UTC()
 
@@ -166,7 +166,7 @@ def parse_delta(string):
     """, string, re.VERBOSE)
     match_dict = dict((k, int(v) if v else 0)
                       for k, v in match.groupdict().items())
-    return datetime.timedelta(**match_dict)  # pylint: disable-msg=W0142
+    return datetime.timedelta(**match_dict)  # pylint: disable=W0142
 
 
 def format_delta(timedelta_):

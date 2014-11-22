@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-# pylint: disable-msg=C0121
+# pylint: disable=C0121
 
 import contextlib
 import datetime
