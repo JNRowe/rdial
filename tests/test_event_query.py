@@ -36,7 +36,7 @@ def test_current_running_event():
 
 def test_no_currently_running_event():
     events = Events.read('tests/data/test_not_running', write_cache=False)
-    expect(events.running()) is False
+    expect(events.running()) == False
 
 
 def test_sum_durations_in_database():
