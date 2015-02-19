@@ -28,6 +28,10 @@ Requirements
 * configobj_
 * tabulate_
 
+The following are necessary for Python 2 users:
+
+* unicodecsv_
+
 It should work with any version of Python_ 2.6 or newer.  If ``rdial`` doesn't
 work with the version of Python you have installed, file an issue_ and I'll
 endeavour to fix it.
@@ -123,6 +127,7 @@ reproduce the problem, or even better a patch!
 .. _click: https://crate.io/packages/click/
 .. _configobj: https://crate.io/packages/configobj/
 .. _tabulate: https://crate.io/packages/tabulate/
+.. _unicodecsv: https://crate.io/packages/unicodecsv/
 .. _Python: http://www.python.org/
 .. _issue: https://github.com/JNRowe/rdial/issues
 .. _nose2: https://crate.io/packages/nose2/

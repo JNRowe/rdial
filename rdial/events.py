@@ -20,7 +20,6 @@
 # pylint: disable-msg=C0121
 
 import contextlib
-import csv
 import datetime
 import glob
 import inspect
@@ -36,6 +35,11 @@ import click
 
 from . import compat
 from . import utils
+
+if compat.PY2:
+    import unicodecsv as csv
+else:
+    import csv
 
 
 class RdialDialect(csv.excel):
@@ -212,8 +216,8 @@ class Events(list):
                     pass
             if evs is None:
                 evs = [Event(task, **d)
-                       for d in list(csv.DictReader(open(file),
-                                                    dialect=RdialDialect))]
+                       for d in csv.DictReader(open(file),
+                                               dialect=RdialDialect)]
                 if write_cache:
                     pickle.dump(evs, open(cache_file, 'w'), -1)
             events.extend(evs)

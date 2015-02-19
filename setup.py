@@ -19,6 +19,9 @@
 
 import imp
 
+from sys import version_info
+from warnings import warn
+
 from setuptools import setup
 
 # Hack to import _version file without importing rdial/__init__.py, its
@@ -42,7 +45,14 @@ def parse_requires(file):
             deps.append(dep)
     return deps
 
-install_requires = parse_requires('requirements.txt')
+try:
+    install_requires = parse_requires('requirements-py%s%s.txt'
+                                      % version_info[:2])
+except IOError:
+    warn('Unsupported Python version please open an issue!', RuntimeWarning)
+    install_requires = parse_requires('requirements-base.txt')
+
+test_requires = parse_requires('requirements-test.txt')
 
 
 setup(
