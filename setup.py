@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # coding=utf-8
 """setup.py - Setuptools tasks and config for rdial"""
-# Copyright © 2011-2014  James Rowe <jnrowe@gmail.com>
+# Copyright © 2011-2015  James Rowe <jnrowe@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
