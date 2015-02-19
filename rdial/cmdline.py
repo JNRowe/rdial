@@ -504,7 +504,7 @@ def last(globs):
     if not events.running():
         click.echo(_('Last task %s, ran for %s') % (event.task, event.delta))
         if event.message:
-            click.echo(repr(event.message))
+            click.echo(event.message)
     else:
         utils.warn(_('Task %s is still running') % event.task)
 
