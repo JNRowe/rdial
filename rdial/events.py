@@ -177,7 +177,7 @@ class Events(list):
 
         :param str value: Task to mark as dirty
         """
-        if not value in self._dirty:
+        if value not in self._dirty:
             self._dirty.append(value)
 
     @dirty.deleter

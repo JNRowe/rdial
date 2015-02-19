@@ -414,7 +414,7 @@ def wrapper(ctx, globs, time, message, file, wrapper):
     :param str file: Filename to read message from
     :param str wrapper: Run wrapper to execute
     """
-    if not 'run wrappers' in globs.config:
+    if 'run wrappers' not in globs.config:
         raise ValueError(_('No %r section in config') % 'run wrappers')
     try:
         command = globs.config['run wrappers'][wrapper]
