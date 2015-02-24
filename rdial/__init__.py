@@ -1,6 +1,6 @@
 #
 # coding=utf-8
-"""rdial - Simple time tracking for simple people"""
+"""rdial - Simple time tracking for simple people."""
 # Copyright © 2011-2015  James Rowe <jnrowe@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -30,7 +30,7 @@ __history__ = 'See git repository'
 
 from email.utils import parseaddr
 
-# pylint: disable-msg=W0622
+# pylint: disable=redefined-builtin
 __doc__ += """.
 
 A simple time tracking tool, with no frills and no fizzy coating.

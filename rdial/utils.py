@@ -1,6 +1,6 @@
 #
 # coding=utf-8
-"""utils - Utility functions for rdial"""
+"""utils - Utility functions for rdial."""
 # Copyright © 2011-2015  James Rowe <jnrowe@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -16,8 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-
-# pylint: disable-msg=C0121
 
 import datetime
 import functools
@@ -87,7 +85,7 @@ class AttrDict(dict):
     """
 
     def __contains__(self, key):
-        """Check for item membership
+        """Check for item membership.
 
         :param object key: Key to test for
         :rtype: :obj:`bool`
@@ -95,7 +93,7 @@ class AttrDict(dict):
         return hasattr(self, key) or super(AttrDict, self).__contains__(key)
 
     def __getattr__(self, key):
-        """Support item access via dot notation
+        """Support item access via dot notation.
 
         :param object key: Key to fetch
         """
@@ -105,7 +103,7 @@ class AttrDict(dict):
             raise AttributeError(key)
 
     def __setattr__(self, key, value):
-        """Support item assignment via dot notation
+        """Support item assignment via dot notation.
 
         :param object key: Key to set value for
         :param object value: Value to set key to
@@ -116,7 +114,7 @@ class AttrDict(dict):
             raise AttributeError(key)
 
     def __delattr__(self, key):
-        """Support item deletion via dot notation
+        """Support item deletion via dot notation.
 
         :param object key: Key to delete
         """
@@ -131,20 +129,25 @@ class UTC(datetime.tzinfo):
     """UTC timezone object."""
 
     def __repr__(self):
+        """Self-documenting string representation.
+
+        :rtype: :obj:`str`
+        :return: Timezone representation suitable for :func:`eval`
+        """
         return '%s()' % self.__class__.__name__
+        return 'UTC()'
 
-    # pylint: disable-msg=W0613
-    def utcoffset(self, datetime_):
+    def utcoffset(self, _):
+        """Generate offset from UTC for ``datetime`` event."""
         return datetime.timedelta(0)
 
-    def dst(self, datetime_):
+    def dst(self, _):
+        """Generate daylight savings time for ``datetime`` event."""
         return datetime.timedelta(0)
 
-    def tzname(self, datetime_):
+    def tzname(self, _):
+        """Generate timezone name for ``datetime`` event."""
         return 'UTC'
-    # pylint: enable-msg=W0613
-
-utc = UTC()
 
 
 def parse_delta(string):
@@ -166,7 +169,7 @@ def parse_delta(string):
     """, string, re.VERBOSE)
     match_dict = dict((k, int(v) if v else 0)
                       for k, v in match.groupdict().items())
-    return datetime.timedelta(**match_dict)  # pylint: disable-msg=W0142
+    return datetime.timedelta(**match_dict)  # pylint: disable=star-args
 
 
 def format_delta(timedelta_):
@@ -217,7 +220,7 @@ def parse_datetime_user(string):
     try:
         datetime_ = parse_datetime(string)
         if datetime_.tzinfo is None:
-            datetime.replace(tzinfo=Local)
+            datetime.replace(tzinfo=Local)  # pylint: disable=no-member
     except ValueError:
         try:
             output = check_output(['date', '--utc', '--iso-8601=seconds', '-d',
@@ -266,7 +269,7 @@ def utcnow():
     :return: Current date and time, in UTC
 
     """
-    return datetime.datetime.utcnow().replace(tzinfo=utc)
+    return datetime.datetime.utcnow().replace(tzinfo=UTC())
 
 
 def check_output(args, **kwargs):
@@ -285,7 +288,7 @@ def check_output(args, **kwargs):
     except AttributeError:
         process = subprocess.Popen(args, stdout=subprocess.PIPE,
                                    stderr=subprocess.PIPE, **kwargs)
-        output, unused_err = process.communicate()
+        output, _ = process.communicate()
         retcode = process.poll()
         if retcode:
             raise subprocess.CalledProcessError(retcode, args[0])
@@ -302,62 +305,72 @@ def read_config(user_config=None):
     :return: Parsed configuration data
     """
     configs = [os.path.dirname(__file__) + '/config', ]
-    for s in os.getenv('XDG_CONFIG_DIRS', '/etc/xdg').split(':'):
-        p = s + '/rdial/config'
-        if os.path.isfile(p):
-            configs.append(p)
+    for string in os.getenv('XDG_CONFIG_DIRS', '/etc/xdg').split(':'):
+        path = string + '/rdial/config'
+        if os.path.isfile(path):
+            configs.append(path)
     configs.append(xdg_config_location() + '/config')
     configs.append(os.path.abspath('.rdialrc'))
     if user_config:
         configs.append(user_config)
     # Prime config with dynamic key
     lines = ['xdg_data_location = %r' % xdg_data_location(), ]
-    for file in configs:
-        if os.path.isfile(file):
-            lines.extend(click.open_file(file, encoding='utf-8').readlines())
+    for fname in configs:
+        if os.path.isfile(fname):
+            lines.extend(click.open_file(fname, encoding='utf-8').readlines())
     return configobj.ConfigObj(lines)
 
 
-def write_current(f):
+def write_current(fun):
     """Decorator to write ``current`` file on function exit.
 
     :seealso: :doc:`/taskbars`
 
     :rtype: :obj:`function`
     """
-    @functools.wraps(f)
+    @functools.wraps(fun)
     def wrapper(*args, **kwargs):
+        """Write value of ``task`` argument to ``current on exit.
+
+        :param tuple args: Positional arguments
+        :param dict kwargs: Keyword arguments
+        """
         globs = args[0]
-        f(*args, **kwargs)
+        fun(*args, **kwargs)
         open('%s/.current' % globs.directory, 'w').write(kwargs['task'])
     return wrapper
 
 
-def remove_current(f):
+def remove_current(fun):
     """Decorator to remove ``current`` file on function exit.
 
     :seealso: :doc:`/taskbars`
 
     :rtype: :obj:`function`
     """
-    @functools.wraps(f)
+    @functools.wraps(fun)
     def wrapper(*args, **kwargs):
+        """Remove ``current`` file on exit.
+
+        :param tuple args: Positional arguments
+        :param dict kwargs: Keyword arguments
+        """
         globs = args[0]
-        f(*args, **kwargs)
+        fun(*args, **kwargs)
         if os.path.isfile('%s/.current' % globs.directory):
             os.unlink('%s/.current' % globs.directory)
     return wrapper
 
 
-def newer(file, reference):
+def newer(fname, reference):
     """Check whether given file is newer than reference file.
 
-    :param str file: File to check
+    :param str fname: File to check
     :param str reference: file to test against
     :rtype: :obj:`bool`
-    :return: True if ``reference`` is newer than ``reference``
+    :return: True if ``fname`` is newer than ``reference``
     """
-    return os.stat(file).st_mtime > os.stat(reference).st_mtime
+    return os.stat(fname).st_mtime > os.stat(reference).st_mtime
 
 
 def xdg_cache_location():
