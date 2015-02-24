@@ -19,26 +19,24 @@
 
 from datetime import timedelta
 
-from expecter import expect
-
 from rdial.events import Events
 
 
 def test_list_tasks():
     events = Events.read('tests/data/test', write_cache=False)
-    expect(events.tasks()) == ['task', 'task2']
+    events.tasks().must.equal(['task', 'task2'])
 
 
 def test_current_running_event():
     events = Events.read('tests/data/test', write_cache=False)
-    expect(events.running()) == 'task'
+    events.running().must.equal('task')
 
 
 def test_no_currently_running_event():
     events = Events.read('tests/data/test_not_running', write_cache=False)
-    expect(events.running()) == False
+    events.running().does_not.be.ok
 
 
 def test_sum_durations_in_database():
     events = Events.read('tests/data/test_not_running', write_cache=False)
-    expect(events.sum()) == timedelta(hours=2, minutes=15)
+    events.sum().must.equal(timedelta(hours=2, minutes=15))

@@ -23,7 +23,6 @@ from filecmp import dircmp
 from os.path import abspath
 
 from click.testing import CliRunner
-from expecter import expect
 from nose2.tools import params
 
 from rdial.events import (Event, Events)
@@ -42,19 +41,19 @@ from rdial.utils import (parse_datetime, parse_delta, UTC)
 )
 def test_event_creation(task, start, delta, message):
     e = Event(task, start, delta, message)
-    expect(e.task) == task
+    e.task.must.equal(task)
     if isinstance(start, datetime):
-        expect(e.start) == start
+        e.start.must.equal(start)
     elif start:
-        expect(e.start) == parse_datetime(start)
+        e.start.must.equal(parse_datetime(start))
     else:
         # Special case to ignore comparison against utcnow()
         pass
     if isinstance(delta, timedelta):
-        expect(e.delta) == delta
+        e.delta.must.equal(delta)
     else:
-        expect(e.delta) == parse_delta(delta)
-    expect(e.message) == message
+        e.delta.must.equal(parse_delta(delta))
+    e.message.must.equal(message)
 
 
 @params(
@@ -64,7 +63,7 @@ def test_event_creation(task, start, delta, message):
 )
 def test_read_datebase(database, events):
     evs = Events.read('tests/data/' + database, write_cache=False)
-    expect(len(evs)) == events
+    evs.must.have.length_of(events)
 
 
 @params(
@@ -78,9 +77,9 @@ def test_check_events(n, task, start, delta):
     # FIXME: Clean-ish way to perform check, with the caveat that it parses the
     # database on each entry.  Need a better solution.
     events = Events.read('tests/data/test', write_cache=False)
-    expect(events[n].task) == task
-    expect(events[n].start) == start
-    expect(events[n].delta) == delta
+    events[n].task.must.equal(task)
+    events[n].start.must.equal(start)
+    events[n].delta.must.equal(delta)
 
 
 def test_write_database():
@@ -91,16 +90,16 @@ def test_write_database():
     with runner.isolated_filesystem() as tempdir:
         events.write(tempdir)
         comp = dircmp(in_dir, tempdir)
-        expect(comp.diff_files) == []
-        expect(comp.left_only) == []
-        expect(comp.right_only) == []
-        expect(comp.funny_files) == []
+        comp.diff_files.must.be.empty
+        comp.left_only.must.be.empty
+        comp.right_only.must.be.empty
+        comp.funny_files.must.be.empty
 
 
 def test_store_messages_with_events():
     events = Events.read('tests/data/test', write_cache=False)
-    expect(events.last().message) == 'finished'
+    events.last().message.must.equal('finished')
 
 
 def test_non_existing_database():
-    expect(Events()) == Events.read('I_NEVER_EXIST', write_cache=False)
+    Events().must.equal(Events.read('I_NEVER_EXIST', write_cache=False))

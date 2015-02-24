@@ -18,8 +18,6 @@
 #
 
 
-from expecter import expect
-
 from rdial.events import (Events, TaskNotExistError, TaskNotRunningError,
                           TaskRunningError)
 
@@ -27,37 +25,38 @@ from rdial.events import (Events, TaskNotExistError, TaskNotRunningError,
 def test_start_event():
     events = Events.read('tests/data/test_not_running', write_cache=False)
     events.start(task='task2')
-    expect(events.running()) == 'task2'
+    events.running().must.equal('task2')
 
 
 def test_fail_start_when_task_typo():
     events = Events.read('tests/data/test_not_running', write_cache=False)
-    with expect.raises(TaskNotExistError,
-                       "Task non_existant does not exist!  Use `--new' to "
-                       'create it'):
-        events.start(task='non_existant')
+    events.start.when.called_with(task='non_existant').must.throw(
+        TaskNotExistError,
+        "Task non_existant does not exist!  Use `--new' to create it"
+    )
 
 
 def test_fail_start_when_running():
     events = Events.read('tests/data/test', write_cache=False)
-    with expect.raises(TaskRunningError, 'Running task task!'):
-        events.start(task='task2')
+    events.start.when.called_with(task='task2').must.throw(
+        TaskRunningError,
+        'Running task task!')
 
 
 def test_stop_event():
     events = Events.read('tests/data/test', write_cache=False)
     events.stop()
-    expect(events.running()) == False
+    events.running().does_not.be.ok
 
 
 def test_stop_event_with_message():
     events = Events.read('tests/data/test', write_cache=False)
     events.stop(message='test')
     last = events.last()
-    expect(last.message) == 'test'
+    last.message.must.equal('test')
 
 
 def test_fail_stop_when_not_running():
     events = Events.read('tests/data/test_not_running', write_cache=False)
-    with expect.raises(TaskNotRunningError, 'No task running!'):
-        events.stop()
+    events.stop.when.called_with().must.throw(TaskNotRunningError,
+                                                'No task running!')

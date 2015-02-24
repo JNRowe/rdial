@@ -18,7 +18,6 @@
 #
 
 from click import BadParameter
-from expecter import expect
 from nose2.tools import params
 
 from rdial.cmdline import (StartTimeParamType, TaskNameParamType)
@@ -36,8 +35,7 @@ def test_task_name_validity(string, expected):
     if expected is True:
         p.convert(string, None, None) == string
     else:
-        with expect.raises(expected):
-            p.convert(string, None, None)
+        p.convert.when.called_with(string, None, None).must.throw(expected)
 
 
 @params(
@@ -51,5 +49,4 @@ def test_start_time_validity(string, expected):
     if expected is True:
         p.convert(string, None, None) == string
     else:
-        with expect.raises(expected):
-            p.convert(string, None, None)
+        p.convert.when.called_with(string, None, None).must.throw(expected)

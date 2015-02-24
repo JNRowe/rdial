@@ -17,7 +17,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from expecter import expect
 from nose2.tools import params
 
 from rdial.events import Events
@@ -25,7 +24,7 @@ from rdial.events import Events
 
 def test_fetch_events_for_task():
     events = Events.read('tests/data/test', write_cache=False)
-    expect(len(events.for_task(task='task2'))) == 1
+    events.for_task(task='task2').must.have.length_of(1)
 
 
 @params(
@@ -36,9 +35,9 @@ def test_fetch_events_for_task():
 )
 def test_fetch_events_for_date(date, expected):
     events = Events.read('tests/data/date_filtering', write_cache=False)
-    expect(len(events.for_date(**date))) == expected
+    events.for_date(**date).must.have.length_of(expected)
 
 
 def test_fetch_events_for_week():
     events = Events.read('tests/data/date_filtering', write_cache=False)
-    expect(len(events.for_week(year=2011, week=9))) == 1
+    events.for_week(year=2011, week=9).must.have.length_of(1)

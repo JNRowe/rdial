@@ -1,4 +1,4 @@
 -r requirements-base.txt
 mock>=0.7.1
 nose2[coverage_plugin]>=0.5.0
-expecter>=0.2.2
+sure>=1.2.8

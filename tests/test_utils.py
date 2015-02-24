@@ -26,7 +26,6 @@ except ImportError:  # Python 2
     from tempfile import mkdtemp
 from time import sleep
 
-from expecter import expect
 from mock import patch
 
 from rdial.compat import PY2
@@ -35,23 +34,23 @@ from rdial.utils import (AttrDict, check_output, newer, read_config,
 
 
 def test_check_output():
-    expect(check_output(['echo', 'hello'])) == 'hello\n'
+    check_output(['echo', 'hello']).must.equal('hello\n')
 
 
 def test_check_output_py26_compat():
     with patch('subprocess.check_output', side_effect=AttributeError):
-        expect(check_output(['echo', 'hello'])) == 'hello\n'
+        check_output(['echo', 'hello']).must.equal('hello\n')
 
 
 def test_check_output_py26_compat_fail():
     with patch('subprocess.check_output', side_effect=AttributeError):
-        with expect.raises(CalledProcessError):
-            check_output(['false', ])
+        check_output.when.called_with(['false', ]).must.throw(
+            CalledProcessError)
 
 
 def test_read_config_local():
     conf = read_config('tests/data/local.ini')
-    expect(conf['local test'].as_bool('read')) == True
+    conf['local test'].as_bool('read').must.be.ok
 
 
 def test_handle_current():
@@ -61,9 +60,9 @@ def test_handle_current():
             globs = AttrDict(directory=tmpdir)
             bare = lambda globs, task: True
             write_current(bare)(globs, task='test')
-            expect(listdir(tmpdir)).contains('.current')
+            listdir(tmpdir).must.contain('.current')
             remove_current(bare)(globs, task='test')
-            expect(listdir(tmpdir)).does_not_contain('.current')
+            listdir(tmpdir).does_not.contain('.current')
             # check idempotent...
             remove_current(bare)(globs, task='test')
         finally:
@@ -73,9 +72,9 @@ def test_handle_current():
             globs = AttrDict(directory=tmpdir.name)
             bare = lambda globs, task: True
             write_current(bare)(globs, task='test')
-            expect(listdir(tmpdir)).contains('.current')
+            listdir(tmpdir).must.contain('.current')
             remove_current(bare)(globs, task='test')
-            expect(listdir(tmpdir)).does_not_contain('.current')
+            listdir(tmpdir).does_not.contain('.current')
             # check idempotent...
             remove_current(bare)(globs, task='test')
 
@@ -87,9 +86,9 @@ def test_newer():
             f1 = open('%s/file1' % tmpdir, 'w')
             sleep(0.1)
             f2 = open('%s/file2' % tmpdir, 'w')
-            expect(newer(f2.name, f1.name)) == True
-            expect(newer(f1.name, f2.name)) == False
-            expect(newer(f1.name, f1.name)) == False
+            newer(f2.name, f1.name).must.be.ok
+            newer(f1.name, f2.name).does_not.be.ok
+            newer(f1.name, f1.name).does_not.be.ok
         finally:
             rmtree(tmpdir)
     else:
@@ -97,6 +96,6 @@ def test_newer():
             f1 = open('%s/file1' % tmpdir.name, 'w')
             sleep(0.1)
             f2 = open('%s/file2' % tmpdir.name, 'w')
-            expect(newer(f2.name, f1.name)) == True
-            expect(newer(f1.name, f2.name)) == False
-            expect(newer(f1.name, f1.name)) == False
+            newer(f2.name, f1.name).must.be.ok
+            newer(f1.name, f2.name).does_not.be.ok
+            newer(f1.name, f1.name).does_not.be.ok
