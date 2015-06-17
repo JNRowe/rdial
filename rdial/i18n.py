@@ -21,8 +21,18 @@ import gettext
 
 from os import path
 
-PACKAGE_LOCALE = path.join(path.realpath(path.dirname(__file__)), 'locale')
+from .compat import PY2
 
-gettext.install('rdial', PACKAGE_LOCALE)
 
-_, N_ = gettext.gettext, gettext.ngettext
+kwargs = {
+    'localedir': path.join(path.realpath(path.dirname(__file__)), 'locale'),
+    'names': ['ngettext', ]
+}
+if PY2:
+    kwargs['unicode'] = 1
+
+gettext.install('rdial', **kwargs)
+
+_, N_ = _, ngettext
+
+__all__ = [_, N_]
