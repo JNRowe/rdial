@@ -41,7 +41,9 @@ def test_parse_datetime(string, expected):
 )
 def test_parse_datetime_via_date_command(string, delta):
     now = datetime.utcnow().replace(microsecond=0, tzinfo=UTC())
-    expect(parse_datetime_user(string)) == now - delta
+    # Accept a 2.5 second smudge window
+    expect(parse_datetime_user(string)) >= now - delta
+    expect(parse_datetime_user(string)) < now - delta + timedelta(seconds=2.5)
 
 
 @params(
