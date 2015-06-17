@@ -66,6 +66,24 @@ def warn(text):
     _colourise(text, 'yellow')
 
 
+def safer_repr(obj):
+    """Produce a repr string for an object
+
+    .. note::
+        This exists solely for use on deep objects that can be expelled deep in
+        the dependency libraries.  It should *not* be required for any
+        serviceable objects.
+
+    :param object obj: Object to produce repr for
+    :rtype: str
+    :return: `repr` output, or a fallback string
+    """
+    try:
+        return repr(obj)
+    except Exception:
+        return '<invalid repr>'
+
+
 class RdialError(ValueError):
 
     """Generic exception for rdial."""
@@ -100,7 +118,7 @@ class AttrDict(dict):
         try:
             return self[key]
         except KeyError:
-            raise AttributeError(key)
+            raise AttributeError(safer_repr(key))
 
     def __setattr__(self, key, value):
         """Support item assignment via dot notation.
@@ -111,7 +129,7 @@ class AttrDict(dict):
         try:
             self[key] = value
         except:
-            raise AttributeError(key)
+            raise AttributeError(safer_repr(key))
 
     def __delattr__(self, key):
         """Support item deletion via dot notation.
@@ -121,7 +139,7 @@ class AttrDict(dict):
         try:
             del self[key]
         except KeyError:
-            raise AttributeError(key)
+            raise AttributeError(safer_repr(key))
 
 
 class UTC(datetime.tzinfo):
@@ -203,7 +221,8 @@ def parse_datetime(string):
     else:
         datetime_ = ciso8601.parse_datetime(string)
         if not datetime_:
-            raise ValueError('Unable to parse timestamp %r' % string)
+            raise ValueError('Unable to parse timestamp %r'
+                             % (safer_repr(string), ))
     return datetime_
 
 
@@ -229,7 +248,8 @@ def parse_datetime_user(string):
         except subprocess.CalledProcessError:
             datetime_ = None
     if not datetime_:
-        raise ValueError('Unable to parse timestamp %r' % string)
+        raise ValueError('Unable to parse timestamp %r'
+                         % (safer_repr(string), ))
     return datetime_
 
 

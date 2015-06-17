@@ -85,7 +85,8 @@ class Event(object):
         self.task = task
         if isinstance(start, datetime.datetime):
             if not start.tzinfo:
-                raise ValueError('Must not be a naive datetime %r' % start)
+                raise ValueError('Must not be a naive datetime %r' %
+                                 (utils.safer_repr(start), ))
             self.start = start
         else:
             self.start = utils.parse_datetime(start)
