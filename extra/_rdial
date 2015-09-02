@@ -59,7 +59,7 @@ __list_wrappers() {
 
 _arguments \
     '--version[Show the version and exit.]' \
-    "--directory=[Directory to read/write to.]:select directory:_files -W ${XDG_DATA_HOME:-~/.local/share}" \
+    "--directory=[Directory to read/write to.]:select directory:_files -/ ${XDG_DATA_HOME:-~/.local/share}" \
     '--backup[Write data file backups.]' \
     '--no-backup[Do not write data file backups.]' \
     '--cache[Write cache files.]' \
