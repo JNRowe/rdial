@@ -140,7 +140,7 @@ case "$words[1]" in
         '--duration[Filter events for specified time period.]:select time period:(day week month year all)' \
         '--sort[Field to sort by.]:select sort field:(task time)' \
         '--reverse[Reverse sort order.]' \
-        '--style[Table output style.]:__list_styles' \
+        '--style=[Table output style.]:Select style:__list_styles' \
         ':select task:__list_tasks'
     ;;
 (running)
