@@ -19,17 +19,12 @@
 
 from os import listdir
 from subprocess import CalledProcessError
-try:
-    from tempfile import TemporaryDirectory
-except ImportError:  # Python 2
-    from shutil import rmtree
-    from tempfile import mkdtemp
 from time import sleep
 
+from click.testing import CliRunner
 from expecter import expect
 from mock import patch
 
-from rdial.compat import PY2
 from rdial.utils import (AttrDict, check_output, newer, read_config,
                          remove_current, write_current)
 
@@ -55,48 +50,24 @@ def test_read_config_local():
 
 
 def test_handle_current():
-    if PY2:
-        try:
-            tmpdir = mkdtemp()
-            globs = AttrDict(directory=tmpdir)
-            bare = lambda globs, task: True
-            write_current(bare)(globs, task='test')
-            expect(listdir(tmpdir)).contains('.current')
-            remove_current(bare)(globs, task='test')
-            expect(listdir(tmpdir)).does_not_contain('.current')
-            # check idempotent...
-            remove_current(bare)(globs, task='test')
-        finally:
-            rmtree(tmpdir)
-    else:
-        with TemporaryDirectory() as tmpdir:
-            globs = AttrDict(directory=tmpdir.name)
-            bare = lambda globs, task: True
-            write_current(bare)(globs, task='test')
-            expect(listdir(tmpdir)).contains('.current')
-            remove_current(bare)(globs, task='test')
-            expect(listdir(tmpdir)).does_not_contain('.current')
-            # check idempotent...
-            remove_current(bare)(globs, task='test')
+    runner = CliRunner()
+    with runner.isolated_filesystem() as tempdir:
+        globs = AttrDict(directory=tempdir)
+        bare = lambda globs, task: True
+        write_current(bare)(globs, task='test')
+        expect(listdir(tempdir)).contains('.current')
+        remove_current(bare)(globs, task='test')
+        expect(listdir(tempdir)).does_not_contain('.current')
+        # check idempotent...
+        remove_current(bare)(globs, task='test')
 
 
 def test_newer():
-    if PY2:
-        try:
-            tmpdir = mkdtemp()
-            f1 = open('%s/file1' % tmpdir, 'w')
-            sleep(0.1)
-            f2 = open('%s/file2' % tmpdir, 'w')
-            expect(newer(f2.name, f1.name)) == True
-            expect(newer(f1.name, f2.name)) == False
-            expect(newer(f1.name, f1.name)) == False
-        finally:
-            rmtree(tmpdir)
-    else:
-        with TemporaryDirectory() as tmpdir:
-            f1 = open('%s/file1' % tmpdir.name, 'w')
-            sleep(0.1)
-            f2 = open('%s/file2' % tmpdir.name, 'w')
-            expect(newer(f2.name, f1.name)) == True
-            expect(newer(f1.name, f2.name)) == False
-            expect(newer(f1.name, f1.name)) == False
+    runner = CliRunner()
+    with runner.isolated_filesystem() as tempdir:
+        f1 = open('%s/file1' % tempdir, 'w')
+        sleep(0.1)
+        f2 = open('%s/file2' % tempdir, 'w')
+        expect(newer(f2.name, f1.name)) == True
+        expect(newer(f1.name, f2.name)) == False
+        expect(newer(f1.name, f1.name)) == False
