@@ -68,7 +68,18 @@ _arguments \
     '--interactive[Support interactive message editing.]' \
     '--no-interactive[Do not support interactive message editing.]' \
     '--help[Show this message and exit.]' \
-    ':rdial command:(fsck start stop switch run wrapper report running last ledger)' \
+    ':rdial command:((
+        fsck\:"Check storage consistency."
+        start\:"Start task."
+        stop\:"Stop task."
+        switch\:"Switch to another task."
+        run\:"Run command with timer."
+        wrapper\:"Run predefined command with timer."
+        report\:"Report time tracking data."
+        running\:"Display running task, if any."
+        last\:"Display last event, if any."
+        ledger\:"Generate ledger compatible data file."
+    ))' \
     '*::subcmd:->subcmd' && return 0
 
 ### DGEN_TAG: Generated from rdial/__init__.py {{{
