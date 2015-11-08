@@ -52,9 +52,6 @@ version = '.'.join(map(str, rdial._version.tuple[:2]))
 release = rdial._version.dotted
 
 pygments_style = 'sphinx'
-html_theme_options = {
-    'externalrefs': True,
-}
 try:
     html_last_updated_fmt = check_output(['git', 'log',
                                           "--pretty=format:'%ad [%h]'",
