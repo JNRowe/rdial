@@ -61,9 +61,9 @@ mechanisms.  You can interleave your time tracking with other data, maintain
 hierarchies of projects with their own time tracking data and take advantage of
 all the other features ``org-mode`` has to offer.
 
-If I had a copy of emacs_ available everywhere I wanted to log time data I'd
+If I had a copy of emacs_ available everywhere I wanted to log time data I
 wouldn't even consider using anything else.  And if you use emacs_ then you
-shouldn't either.
+shouldn't either!
 
 .. _org-mode: http://www.orgmode.org/
 .. _emacs: http://www.gnu.org/software/emacs/

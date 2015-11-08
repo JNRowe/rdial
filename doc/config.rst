@@ -21,7 +21,7 @@ File format
 
 The configuration file is a ``INI`` format file.  There is a section labelled
 ``rdial`` for global options, and a section for each subcommand.  Each section
-consists of a section of :samp:`name={value}` option pairs.
+consists of a series of :samp:`name={value}` option pairs.
 
 An example configuration file is below:
 

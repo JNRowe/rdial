@@ -3,8 +3,8 @@ Background
 
 I spend an awful lot of time sitting in front of a computer, working on a huge
 number of disparate projects.  And when it comes time to gauge what I've been
-working on it would be nice if I could just fire up a simple tool to see the
-amount of time I'm spending on various tasks and projects.
+working on it would be nice if I could just fire up a simple tool to see where
+I've been spending my time.
 
 The features *I* need in a time tracking tool are:
 
