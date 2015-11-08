@@ -14,7 +14,8 @@ rdial - Simple time tracking for simple people
    :alt: Number of downloads from PyPI
 
 ``rdial`` is a simple way to track the time you spend on tasks.  It tracks the
-name of a task, its start time and its duration… nothing more.
+name of a task, its start time, its duration and optionally a message… nothing
+more.
 
 ``rdial`` is released under the `GPL v3`_ license.
 
