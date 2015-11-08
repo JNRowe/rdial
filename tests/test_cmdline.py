@@ -36,7 +36,7 @@ from rdial.cmdline import (StartTimeParamType, TaskNameParamType)
 def test_task_name_validity(string, expected):
     p = TaskNameParamType()
     if expected is True:
-        p.convert(string, None, None) == string
+        expect(p.convert(string, None, None) == string)
     else:
         with expect.raises(expected):
             p.convert(string, None, None)
@@ -51,7 +51,7 @@ def test_task_name_validity(string, expected):
 def test_start_time_validity(string, expected):
     p = StartTimeParamType()
     if expected is True:
-        p.convert(string, None, None) == string
+        expect(p.convert(string, None, None) == string)
     else:
         with expect.raises(expected):
             p.convert(string, None, None)
