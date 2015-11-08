@@ -469,8 +469,9 @@ def report(globs, task, stats, duration, sort, reverse, style):
         click.echo(N_('%d event in query', '%d events in query', len(events))
                    % len(events))
         click.echo(_('Duration of events %s') % events.sum())
-        click.echo(_('First entry started at %s') % events[0].start)
-        click.echo(_('Last entry started at %s') % events[-1].start)
+        if events:
+            click.echo(_('First entry started at %s') % events[0].start)
+            click.echo(_('Last entry started at %s') % events[-1].start)
         dates = set(e.start.date() for e in events)
         click.echo(_('Events exist on %d dates') % len(dates))
     else:
