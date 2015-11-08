@@ -31,6 +31,7 @@ from rdial.cmdline import (StartTimeParamType, TaskNameParamType)
     ('valid.name', True),
     ('invalid/name', BadParameter),
     ('', BadParameter),
+    ('x' * 256, BadParameter),
 )
 def test_task_name_validity(string, expected):
     p = TaskNameParamType()

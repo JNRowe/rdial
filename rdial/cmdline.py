@@ -51,6 +51,10 @@ class TaskNameParamType(click.ParamType):
             self.fail(_('No task name given'))
         if value.startswith('.') or '/' in value or '\000' in value:
             self.fail(_('%r is not a valid task name') % value)
+        # Should be based on platform's PATH_MAX, but it isn't exposed in a
+        # clean way to Python
+        if len(value) > 255:
+            self.fail(_('%r is too long to be a valid task name') % value)
         return value
 
 
