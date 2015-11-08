@@ -47,6 +47,8 @@ class TaskNameParamType(click.ParamType):
         :rtype: :obj:`str`
         :return: Valid task name
         """
+        if not value:
+            self.fail(_('No task name given'))
         if value.startswith('.') or '/' in value or '\000' in value:
             self.fail(_('%r is not a valid task name') % value)
         return value
