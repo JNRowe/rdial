@@ -170,7 +170,8 @@ def message_option(fun):
               help=_('Do not write data file backups.'))
 @click.option('--cache/--no-cache', envvar='RDIAL_CACHE',
               help=_('Do not write cache files.'))
-@click.option('--config', envvar='RDIAL_CONFIG', type=click.File(),
+@click.option('--config', envvar='RDIAL_CONFIG',
+              type=click.Path(exists=True, dir_okay=False, resolve_path=True),
               help=_('File to read configuration data from.'))
 @click.option('-i', '--interactive/--no-interactive',
               envvar='RDIAL_INTERACTIVE',
