@@ -160,7 +160,8 @@ def message_option(fun):
 
 @click.group(help=_('Simple time tracking for simple people.'),
              epilog=_('Please report bugs to '
-                      'https://github.com/JNRowe/rdial/issues'))
+                      'https://github.com/JNRowe/rdial/issues'),
+             context_settings={'help_option_names': ['-h', '--help']})
 @click.version_option(_version.dotted)
 @click.option('-d', '--directory', envvar='RDIAL_DIRECTORY', metavar='DIR',
               type=click.Path(file_okay=False),
