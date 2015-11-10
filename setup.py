@@ -26,15 +26,15 @@ from setuptools import setup
 
 # Hack to import _version file without importing rdial/__init__.py, its
 # purpose is to allow import without requiring dependencies at this point.
-ver_file = open('rdial/_version.py')
-_version = imp.load_module('_version', ver_file, ver_file.name,
-                           ('.py', ver_file.mode, imp.PY_SOURCE))
+with open('rdial/_version.py') as ver_file:
+    _version = imp.load_module('_version', ver_file, ver_file.name,
+                               ('.py', ver_file.mode, imp.PY_SOURCE))
 
 
 def parse_requires(file):
     deps = []
-    req_file = open('extra/%s' % file)
-    entries = map(lambda s: s.split('#')[0].strip(), req_file.readlines())
+    with open('extra/%s' % file) as req_file:
+        entries = map(lambda s: s.split('#')[0].strip(), req_file.readlines())
     for dep in entries:
         if not dep or dep.startswith('#'):
             continue
@@ -54,12 +54,14 @@ except IOError:
 
 test_requires = parse_requires('requirements-test.txt')
 
+with open('README.rst') as f:
+    long_description = f.read()
 
 setup(
     name='rdial',
     version=_version.dotted,
     description='Simple time tracking for simple people',
-    long_description=open('README.rst').read(),
+    long_description=long_description,
     author='James Rowe',
     author_email='jnrowe@gmail.com',
     url='https://github.com/JNRowe/rdial',

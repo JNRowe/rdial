@@ -104,6 +104,7 @@ Bug reports
 
 * James Gaffney
 * Ryan Sutton
+* Stephen Thorne
 
 Ideas
 '''''
