@@ -159,7 +159,7 @@ def message_option(fun):
 # pylint: disable=too-many-arguments
 
 @click.group(help=_('Simple time tracking for simple people.'),
-             epilog=_('Please report bugs to '
+             epilog=_('Please report bugs at '
                       'https://github.com/JNRowe/rdial/issues'),
              context_settings={'help_option_names': ['-h', '--help']})
 @click.version_option(_version.dotted)
