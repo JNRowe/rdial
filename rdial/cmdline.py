@@ -393,7 +393,8 @@ def run(globs, task, new, time, message, fname, command):
             raise utils.RdialError(err.strerror)
 
         events.start(task, new, time)
-        open('%s/.current' % globs.directory, 'w').write(task)
+        with click.open_file('%s/.current' % globs.directory, 'w') as f:
+            f.write(task)
 
         proc.wait()
 
