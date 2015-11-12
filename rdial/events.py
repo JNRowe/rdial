@@ -219,7 +219,8 @@ class Events(list):  # pylint: disable=too-many-public-methods
                        for d in csv.DictReader(open(fname),
                                                dialect=RdialDialect)]
                 if write_cache:
-                    pickle.dump(evs, open(cache_file, 'w'), -1)
+                    pickle.dump(evs, open(cache_file, 'w'),
+                                pickle.HIGHEST_PROTOCOL)
             events.extend(evs)
         return Events(sorted(events, key=operator.attrgetter('start')))
 
