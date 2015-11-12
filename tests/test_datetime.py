@@ -22,14 +22,12 @@ from datetime import (datetime, timedelta)
 from expecter import expect
 from nose2.tools import params
 
-from rdial.utils import (format_datetime, parse_datetime, parse_datetime_user,
-                         UTC)
+from rdial.utils import (format_datetime, parse_datetime, parse_datetime_user)
 
 
 @params(
-    ('2011-05-04T08:00:00Z', datetime(2011, 5, 4, 8, 0, tzinfo=UTC())),
-    ('2011-05-04T09:15:00Z', datetime(2011, 5, 4, 9, 15, tzinfo=UTC())),
-    ('2011-05-04T10:15:00+0100', datetime(2011, 5, 4, 9, 15, tzinfo=UTC())),
+    ('2011-05-04T08:00:00Z', datetime(2011, 5, 4, 8, 0)),
+    ('2011-05-04T09:15:00Z', datetime(2011, 5, 4, 9, 15)),
 )
 def test_parse_datetime(string, expected):
     expect(parse_datetime(string)) == expected
@@ -40,15 +38,15 @@ def test_parse_datetime(string, expected):
     ('1 hour ago -5 minutes', timedelta(hours=1, minutes=5)),
 )
 def test_parse_datetime_via_date_command(string, delta):
-    now = datetime.utcnow().replace(microsecond=0, tzinfo=UTC())
+    now = datetime.utcnow().replace(microsecond=0)
     # Accept a 2.5 second smudge window
     expect(parse_datetime_user(string)) >= now - delta
     expect(parse_datetime_user(string)) < now - delta + timedelta(seconds=2.5)
 
 
 @params(
-    (datetime(2011, 5, 4, 8, 0, tzinfo=UTC()), '2011-05-04T08:00:00Z'),
-    (datetime(2011, 5, 4, 9, 15, tzinfo=UTC()), '2011-05-04T09:15:00Z'),
+    (datetime(2011, 5, 4, 8, 0), '2011-05-04T08:00:00Z'),
+    (datetime(2011, 5, 4, 9, 15), '2011-05-04T09:15:00Z'),
 )
 def test_format_datetime(dt, expected):
     expect(format_datetime(dt)) == expected

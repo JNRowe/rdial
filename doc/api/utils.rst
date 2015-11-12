@@ -27,8 +27,6 @@ Time handling
 .. autofunction:: parse_datetime
 .. autofunction:: parse_datetime_user
 
-.. autofunction:: utcnow
-
 XDG Base Directory support
 ''''''''''''''''''''''''''
 

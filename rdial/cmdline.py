@@ -510,9 +510,9 @@ def running(globs):
     events = Events.read(globs.directory, write_cache=globs.cache)
     if events.running():
         current = events.last()
+        now = datetime.datetime.utcnow()
         click.echo(_("Task `%s' started %s")
-                   % (current.task,
-                      str(utils.utcnow() - current.start).split('.')[0]))
+                   % (current.task, str(now - current.start).split('.')[0]))
     else:
         utils.warn(_('No task is running!'))
 

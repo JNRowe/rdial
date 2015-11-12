@@ -29,8 +29,6 @@ import ciso8601
 import click
 import configobj
 
-from pytz.reference import Local
-
 from . import compat
 
 
@@ -219,9 +217,9 @@ def parse_datetime(string):
     :return: Parsed datetime object
     """
     if not string:
-        datetime_ = utcnow()
+        datetime_ = datetime.datetime.utcnow()
     else:
-        datetime_ = ciso8601.parse_datetime(string)
+        datetime_ = ciso8601.parse_datetime(string[:19])
         if not datetime_:
             raise ValueError('Unable to parse timestamp %r'
                              % (safer_repr(string), ))
@@ -240,13 +238,11 @@ def parse_datetime_user(string):
     """
     try:
         datetime_ = parse_datetime(string)
-        if datetime_.tzinfo is None:
-            datetime.replace(tzinfo=Local)  # pylint: disable=no-member
     except ValueError:
         try:
             output = check_output(['date', '--utc', '--iso-8601=seconds', '-d',
                                    string])
-            datetime_ = ciso8601.parse_datetime(output.strip())
+            datetime_ = ciso8601.parse_datetime(output.strip()[:19])
         except subprocess.CalledProcessError:
             datetime_ = None
     if not datetime_:
@@ -262,7 +258,6 @@ def format_datetime(datetime_):
     :rtype: str
     :return: ISO-8601 compatible string
     """
-    # Can't call isoformat method as it uses the +00:00 form
     return datetime_.strftime('%Y-%m-%dT%H:%M:%SZ')
 
 
@@ -282,16 +277,6 @@ def iso_week_to_date(year, week):
     start = iso_start + datetime.timedelta(weeks=week - 1)
     end = start + datetime.timedelta(weeks=1)
     return start, end
-
-
-def utcnow():
-    """Wrapper for producing timezone aware current timestamp.
-
-    :rtype: obj:`datetime.datetime`
-    :return: Current date and time, in UTC
-
-    """
-    return datetime.datetime.utcnow().replace(tzinfo=UTC())
 
 
 def check_output(args, **kwargs):
