@@ -190,6 +190,7 @@ def cli(ctx, directory, backup, cache, config, interactive):
     cli_options = {
         'backup': backup,
         'cache': cache,
+        'directory': directory,
         'interactive': interactive,
     }
 
