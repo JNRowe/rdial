@@ -168,7 +168,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
 
     @property
     def dirty(self):
-        """Tasks requiring sync against storage."""
+        """Modified tasks requiring sync against storage."""
         return self._dirty
 
     @dirty.setter

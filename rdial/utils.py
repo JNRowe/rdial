@@ -67,7 +67,7 @@ def warn(text):
 
 
 def safer_repr(obj):
-    """Produce a repr string for an object
+    """Produce a repr string for an object.
 
     .. note::
         This exists solely for use on deep objects that can be expelled deep in
