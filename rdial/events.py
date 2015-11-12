@@ -86,8 +86,8 @@ class Event(object):
         """
         self.task = task
         if isinstance(start, datetime.datetime):
-            if not start.tzinfo:
-                raise ValueError('Must not be a naive datetime %r' %
+            if start.tzinfo:
+                raise ValueError('Must be a naive datetime %r' %
                                  (utils.safer_repr(start), ))
             self.start = start
         else:
@@ -140,7 +140,7 @@ class Event(object):
         """
         if not force and self.delta:
             raise TaskNotRunningError('No task running!')
-        self.delta = utils.utcnow() - self.start
+        self.delta = datetime.datetime.utcnow() - self.start
         self.message = message
 FIELDS = inspect.getargspec(Event.__init__)[0][2:]
 
