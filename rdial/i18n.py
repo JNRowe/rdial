@@ -33,6 +33,6 @@ if PY2:
 
 gettext.install('rdial', **kwargs)
 
-_, N_ = _, ngettext
+_, N_ = _, ngettext  # NOQA: bindings from gettext.install above
 
-__all__ = [_, N_]
+__all__ = (_, N_)
