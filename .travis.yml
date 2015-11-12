@@ -6,7 +6,7 @@ python:
   - 3.3
   - 3.4
 install:
-  - pip install -r extra/requirements-py${TRAVIS_PYTHON_VERSION/./}.txt
+  - pip install -r extra/requirements.txt
   - pip install -r extra/requirements-test.txt
 script:
   - nose2 tests

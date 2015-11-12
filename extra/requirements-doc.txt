@@ -1,3 +1,4 @@
--r requirements-base.txt
+-r requirements.txt
+
 sphinx
 sphinxcontrib-cheeseshop
