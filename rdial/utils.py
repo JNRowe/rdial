@@ -335,10 +335,11 @@ def read_config(user_config=None, cli_options=None):
     conf.merge(configobj.ConfigObj(os.path.abspath('.rdialrc')))
     conf.merge(configobj.ConfigObj(user_config))
 
-    cli_conf = ['[rdial]', ]
-    cli_conf.extend("%s = %r" % (k, v) for k, v in cli_options.items()
-                    if v is not None)
-    conf.merge(configobj.ConfigObj(cli_conf))
+    if cli_options:
+        cli_conf = ['[rdial]', ]
+        cli_conf.extend("%s = %r" % (k, v) for k, v in cli_options.items()
+                        if v is not None)
+        conf.merge(configobj.ConfigObj(cli_conf))
 
     return conf
 
