@@ -159,8 +159,9 @@ def message_option(fun):
 # pylint: disable=too-many-arguments
 
 @click.group(help=_('Simple time tracking for simple people.'),
-             epilog=_('Please report bugs to '
-                      'https://github.com/JNRowe/rdial/issues'))
+             epilog=_('Please report bugs at '
+                      'https://github.com/JNRowe/rdial/issues'),
+             context_settings={'help_option_names': ['-h', '--help']})
 @click.version_option(_version.dotted)
 @click.option('-d', '--directory', envvar='RDIAL_DIRECTORY', metavar='DIR',
               type=click.Path(file_okay=False),
@@ -169,7 +170,8 @@ def message_option(fun):
               help=_('Do not write data file backups.'))
 @click.option('--cache/--no-cache', envvar='RDIAL_CACHE', default=None,
               help=_('Do not write cache files.'))
-@click.option('--config', envvar='RDIAL_CONFIG', type=click.File(),
+@click.option('--config', envvar='RDIAL_CONFIG',
+              type=click.Path(exists=True, dir_okay=False, resolve_path=True),
               help=_('File to read configuration data from.'))
 @click.option('-i', '--interactive/--no-interactive',
               envvar='RDIAL_INTERACTIVE', default=None,
@@ -398,7 +400,8 @@ def run(globs, task, new, time, message, fname, command):
             raise utils.RdialError(err.strerror)
 
         events.start(task, new, time)
-        open('%s/.current' % globs.directory, 'w').write(task)
+        with click.open_file('%s/.current' % globs.directory, 'w') as f:
+            f.write(task)
 
         proc.wait()
 

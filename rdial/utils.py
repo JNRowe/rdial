@@ -359,7 +359,8 @@ def write_current(fun):
         """
         globs = args[0]
         fun(*args, **kwargs)
-        open('%s/.current' % globs.directory, 'w').write(kwargs['task'])
+        with click.open_file('%s/.current' % globs.directory, 'w') as f:
+            f.write(kwargs['task'])
     return wrapper
 
 

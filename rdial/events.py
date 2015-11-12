@@ -211,16 +211,17 @@ class Events(list):  # pylint: disable=too-many-public-methods
             evs = None
             if os.path.exists(cache_file) and utils.newer(cache_file, fname):
                 try:
-                    evs = pickle.load(open(cache_file))
+                    with click.open_file(cache_file, 'rb') as f:
+                        evs = pickle.load(f)
                 except (pickle.UnpicklingError, ImportError):
                     pass
             if evs is None:
-                evs = [Event(task, **d)  # pylint: disable=star-args
-                       for d in csv.DictReader(open(fname),
-                                               dialect=RdialDialect)]
+                with click.open_file(fname, encoding='utf-8') as f:
+                    evs = [Event(task, **d)  # pylint: disable=star-args
+                           for d in csv.DictReader(f, dialect=RdialDialect)]
                 if write_cache:
-                    pickle.dump(evs, open(cache_file, 'w'),
-                                pickle.HIGHEST_PROTOCOL)
+                    with click.open_file(cache_file, 'wb', atomic=True) as f:
+                        pickle.dump(evs, f, pickle.HIGHEST_PROTOCOL)
             events.extend(evs)
         return Events(sorted(events, key=operator.attrgetter('start')))
 
