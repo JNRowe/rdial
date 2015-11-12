@@ -165,14 +165,14 @@ def message_option(fun):
 @click.option('-d', '--directory', envvar='RDIAL_DIRECTORY', metavar='DIR',
               type=click.Path(file_okay=False),
               help=_('Directory to read/write to.'))
-@click.option('--backup/--no-backup', envvar='RDIAL_BACKUP',
+@click.option('--backup/--no-backup', envvar='RDIAL_BACKUP', default=None,
               help=_('Do not write data file backups.'))
-@click.option('--cache/--no-cache', envvar='RDIAL_CACHE',
+@click.option('--cache/--no-cache', envvar='RDIAL_CACHE', default=None,
               help=_('Do not write cache files.'))
 @click.option('--config', envvar='RDIAL_CONFIG', type=click.File(),
               help=_('File to read configuration data from.'))
 @click.option('-i', '--interactive/--no-interactive',
-              envvar='RDIAL_INTERACTIVE',
+              envvar='RDIAL_INTERACTIVE', default=None,
               help=_('Support interactive message editing.'))
 @click.pass_context
 def cli(ctx, directory, backup, cache, config, interactive):
@@ -185,7 +185,14 @@ def cli(ctx, directory, backup, cache, config, interactive):
     :param str config: Location of config file
     :param bool interactive: Whether to support interactive message editing
     """
-    cfg = utils.read_config(config)
+    cli_options = {
+        'backup': backup,
+        'cache': cache,
+        'interactive': interactive,
+    }
+
+    cfg = utils.read_config(config, cli_options)
+
     base = cfg['rdial']
 
     if 'color' in base:
@@ -206,11 +213,11 @@ def cli(ctx, directory, backup, cache, config, interactive):
             ctx.default_map[name] = defs
 
     ctx.obj = utils.AttrDict(
-        backup=backup or base.as_bool('backup'),
-        cache=cache or base.as_bool('cache'),
+        backup=base.as_bool('backup'),
+        cache=base.as_bool('cache'),
         config=cfg,
-        directory=directory or base['directory'],
-        interactive=interactive or base.as_bool('interactive'),
+        directory=base['directory'],
+        interactive=base.as_bool('interactive'),
     )
 
 

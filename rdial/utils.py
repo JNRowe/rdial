@@ -317,28 +317,30 @@ def check_output(args, **kwargs):
     return output
 
 
-def read_config(user_config=None):
+def read_config(user_config=None, cli_options=None):
     """Read configuration data.
 
     :type str user_config: User defined config file
+    :type dict cli_options: Command line options
     :rtype: configobj.ConfigObj
     :return: Parsed configuration data
     """
-    configs = [os.path.dirname(__file__) + '/config', ]
+    # Only base *must* exist
+    conf = configobj.ConfigObj(os.path.dirname(__file__) + '/config',
+                               file_error=True)
+    conf['xdg_data_location'] = xdg_data_location()
     for string in os.getenv('XDG_CONFIG_DIRS', '/etc/xdg').split(':'):
-        path = string + '/rdial/config'
-        if os.path.isfile(path):
-            configs.append(path)
-    configs.append(xdg_config_location() + '/config')
-    configs.append(os.path.abspath('.rdialrc'))
-    if user_config:
-        configs.append(user_config)
-    # Prime config with dynamic key
-    lines = ['xdg_data_location = %r' % xdg_data_location(), ]
-    for fname in configs:
-        if os.path.isfile(fname):
-            lines.extend(click.open_file(fname, encoding='utf-8').readlines())
-    return configobj.ConfigObj(lines)
+        conf.merge(configobj.ConfigObj(string + '/rdial/config'))
+    conf.merge(configobj.ConfigObj(xdg_config_location() + '/config'))
+    conf.merge(configobj.ConfigObj(os.path.abspath('.rdialrc')))
+    conf.merge(configobj.ConfigObj(user_config))
+
+    cli_conf = ['[rdial]', ]
+    cli_conf.extend("%s = %r" % (k, v) for k, v in cli_options.items()
+                    if v is not None)
+    conf.merge(configobj.ConfigObj(cli_conf))
+
+    return conf
 
 
 def write_current(fun):
