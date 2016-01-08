@@ -1,0 +1,4 @@
+click
+
+-r ../tests/data/requires/plain.txt
+
