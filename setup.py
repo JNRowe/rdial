@@ -90,6 +90,7 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
         'Topic :: Office/Business',
         'Topic :: Office/Business :: News/Diary',
         'Topic :: Office/Business :: Scheduling',
