@@ -17,6 +17,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+from __future__ import (absolute_import, division)
+
 import datetime
 import operator
 import os
@@ -559,7 +561,7 @@ def ledger(globs, task, duration, rate):
         end = event.start + event.delta
         # Can't use timedelta.total_seconds() as it was only added in 2.7
         seconds = event.delta.days * 86400 + event.delta.seconds
-        hours = seconds / 3600.0
+        hours = seconds / 3600
         lines.append('%s-%s' % (event.start.strftime('%Y-%m-%d * %H:%M'),
                                 end.strftime('%H:%M')))
         lines.append('    (task:%s)  %.2fh%s'
