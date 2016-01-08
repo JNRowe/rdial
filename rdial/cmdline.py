@@ -265,7 +265,7 @@ def fsck(ctx, globs):
     lines = []
     with click.progressbar(events, label=_('Checking'),
                            fill_char=click.style('#', 'green')) as pbar:
-        last_event = pbar.next()
+        last_event = next(pbar)
         for event in pbar:
             if not last_event.start + last_event.delta <= event.start:
                 warnings += 1
