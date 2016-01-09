@@ -239,6 +239,8 @@ class Events(list):  # pylint: disable=too-many-public-methods
 
         :param str directory: Location to write database files to
         """
+        if not self.dirty:
+            return
         if not os.path.isdir(directory):
             os.makedirs(directory)
 
