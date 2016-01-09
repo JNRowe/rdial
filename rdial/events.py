@@ -203,10 +203,17 @@ class Events(list):  # pylint: disable=too-many-public-methods
         if not os.path.exists(directory):
             return Events(backup=backup)
         events = []
-        cache_dir = os.path.join(utils.xdg_cache_location(),
-                                 directory.replace('/', '_'))
+        xdg_cache_dir = utils.xdg_cache_location()
+        cache_dir = os.path.join(xdg_cache_dir, directory.replace('/', '_'))
         if write_cache and not os.path.isdir(cache_dir):
             os.makedirs(cache_dir)
+            with open('%s/CACHEDIR.TAG' % xdg_cache_dir, 'w') as f:
+                f.writelines([
+                    'Signature: 8a477f597d28d172789f06886806bc55\n',
+                    '# This file is a cache directory tag created by rdial.\n',
+                    '# For information about cache directory tags, see:\n',
+                    '#   http://www.brynosaurus.com/cachedir/\n',
+                ])
         for fname in glob.glob('%s/*.csv' % directory):
             task = os.path.basename(fname)[:-4]
             cache_file = os.path.join(cache_dir, task) + '.pkl'
