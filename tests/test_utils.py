@@ -19,6 +19,7 @@
 
 from os import listdir
 from subprocess import CalledProcessError
+from sys import version_info
 from time import sleep
 
 from click.testing import CliRunner
@@ -34,14 +35,21 @@ def test_check_output():
 
 
 def test_check_output_py26_compat():
-    with patch('subprocess.check_output', side_effect=AttributeError):
+    if version_info[:2] == (2, 6):
         expect(check_output(['echo', 'hello'])) == 'hello\n'
+    else:
+        with patch('subprocess.check_output', side_effect=AttributeError):
+            expect(check_output(['echo', 'hello'])) == 'hello\n'
 
 
 def test_check_output_py26_compat_fail():
-    with patch('subprocess.check_output', side_effect=AttributeError):
+    if version_info[:2] == (2, 6):
         with expect.raises(CalledProcessError):
             check_output(['false', ])
+    else:
+        with patch('subprocess.check_output', side_effect=AttributeError):
+            with expect.raises(CalledProcessError):
+                check_output(['false', ])
 
 
 def test_read_config_local():
