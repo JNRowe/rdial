@@ -35,8 +35,9 @@ from . import compat
 def _colourise(text, colour):
     """Colour text, if possible.
 
-    :param str text: Text to colourise
-    :param str colour: Colour to display text in
+    Args:
+        text (str): Text to colourise
+        colour (str): Colour to display text in
     """
     click.termui.secho(text, fg=colour, bold=True)
 
@@ -44,7 +45,8 @@ def _colourise(text, colour):
 def success(text):
     """Pretty print a success message.
 
-    :param str text: Text to format
+    Args:
+        text (str): Text to format
     """
     _colourise(text, 'green')
 
@@ -52,7 +54,8 @@ def success(text):
 def fail(text):
     """Pretty print a failure message.
 
-    :param str text: Text to format
+    Args:
+        text (str): Text to format
     """
     _colourise(text, 'red')
 
@@ -60,7 +63,8 @@ def fail(text):
 def warn(text):
     """Pretty print a warning message.
 
-    :param str text: Text to format
+    Args:
+        text (str): Text to format
     """
     _colourise(text, 'yellow')
 
@@ -73,9 +77,11 @@ def safer_repr(obj):
         the dependency libraries.  It should *not* be required for any
         serviceable objects.
 
-    :param object obj: Object to produce repr for
-    :rtype: str
-    :return: `repr` output, or a fallback string
+    Args:
+        obj (object): Object to produce repr for
+
+    Returns:
+        str: :func:`repr` output, or a fallback string
     """
     try:
         return repr(obj)
@@ -98,21 +104,26 @@ class AttrDict(dict):
 
     """Dictionary with attribute access.
 
-    .. seealso:: :obj:`dict`
+    See also:
+        :obj:`dict`
     """
 
     def __contains__(self, key):
         """Check for item membership.
 
-        :param object key: Key to test for
-        :rtype: :obj:`bool`
+        Args:
+            key (object): Key to test for
+
+        Returns:
+            bool: True, if item in dictionary
         """
         return hasattr(self, key) or super(AttrDict, self).__contains__(key)
 
     def __getattr__(self, key):
         """Support item access via dot notation.
 
-        :param object key: Key to fetch
+        Args:
+            key (object): Key to fetch
         """
         try:
             return self[key]
@@ -122,8 +133,9 @@ class AttrDict(dict):
     def __setattr__(self, key, value):
         """Support item assignment via dot notation.
 
-        :param object key: Key to set value for
-        :param object value: Value to set key to
+        Args:
+            key (object): Key to set value for
+            value (object): Value to set key to
         """
         try:
             self[key] = value
@@ -133,7 +145,8 @@ class AttrDict(dict):
     def __delattr__(self, key):
         """Support item deletion via dot notation.
 
-        :param object key: Key to delete
+        Args:
+            key (object): Key to delete
         """
         try:
             del self[key]
@@ -148,9 +161,11 @@ _MAPPER = {'D': 'days', 'H': 'hours', 'M': 'minutes', 'S': 'seconds'}
 def parse_delta(string):
     """Parse ISO-8601 duration string.
 
-    :param str string: Duration string to parse
-    :rtype: :obj:`datetime.timedelta`
-    :return: Parsed delta object
+    Args:
+        string (str): Duration string to parse
+
+    Returns:
+        datetime.timedelta: Parsed delta object
     """
     if not string:
         return datetime.timedelta(0)
@@ -169,9 +184,11 @@ def parse_delta(string):
 def format_delta(timedelta_):
     """Format ISO-8601 duration string.
 
-    :param datetime.timedelta timedelta_: Duration to process
-    :rtype: :obj:`str`
-    :return: ISO-8601 representation of duration
+    Args:
+        timedelta_ (datetime.timedelta): Duration to process
+
+    Returns:
+        str: ISO-8601 representation of duration
     """
     if timedelta_ == datetime.timedelta(0):
         return ''
@@ -188,9 +205,11 @@ def format_delta(timedelta_):
 def parse_datetime(string):
     """Parse datetime string.
 
-    :param str string: Datetime string to parse
-    :rtype: :obj:`datetime.datetime`
-    :return: Parsed datetime object
+    Args:
+        string (str): Datetime string to parse
+
+    Returns:
+        datetime.datetime: Parsed datetime object
     """
     if not string:
         datetime_ = datetime.datetime.utcnow()
@@ -208,9 +227,11 @@ def parse_datetime_user(string):
     We accept the normal ISO-8601 formats, but kick through to the formats
     supported by the system's date command if parsing fails.
 
-    :param str string: Datetime string to parse
-    :rtype: :obj:`datetime.datetime`
-    :return: Parsed datetime object
+    Args:
+        string (str): Datetime string to parse
+
+    Returns:
+        datetime.datetime: Parsed datetime object
     """
     try:
         datetime_ = parse_datetime(string)
@@ -230,9 +251,11 @@ def parse_datetime_user(string):
 def format_datetime(datetime_):
     """Format ISO-8601 datetime string.
 
-    :param datetime.datetime datetime_: Datetime to process
-    :rtype: str
-    :return: ISO-8601 compatible string
+    Args:
+        datetime_ (datetime.datetime): Datetime to process
+
+    Returns:
+        str: ISO-8601 compatible string
     """
     return datetime_.strftime('%Y-%m-%dT%H:%M:%SZ')
 
@@ -243,10 +266,12 @@ def iso_week_to_date(year, week):
     ISO-8601 defines a week as Monday to Sunday, with the first week of a year
     being the first week containing a Thursday.
 
-    :param int year: Year to process
-    :param int week: Week number to process
-    :rtype: :obj:`tuple` of :obj:`datetime.date`
-    :return: Date range objects for given week
+    Args:
+        year (int): Year to process
+        week (int): Week number to process
+
+    Returns:
+        tuple of datetime.date: Date range objects for given week
     """
     bound = datetime.date(year, 1, 4)
     iso_start = bound - datetime.timedelta(days=bound.isocalendar()[2] - 1)
@@ -258,12 +283,17 @@ def iso_week_to_date(year, week):
 def check_output(args, **kwargs):
     """Simple check_output implementation for Python 2.6 compatibility.
 
-    ..note:: This hides stderr, unlike the normal check_output function.
+    Note:
+        This hides stderr, unlike the normal check_output function.
 
-    :param list args: Command and arguments to call
-    :rtype: ``str``
-    :return: Command output
-    :raise subprocess.CalledProcessError: If command execution fails
+    Args:
+        args (list): Command and arguments to call
+
+    Returns:
+        str: Command output
+
+    Raises:
+        subprocess.CalledProcessError: If command execution fails
     """
     try:
         output = subprocess.check_output(args, stderr=subprocess.PIPE,
@@ -283,10 +313,12 @@ def check_output(args, **kwargs):
 def read_config(user_config=None, cli_options=None):
     """Read configuration data.
 
-    :type str user_config: User defined config file
-    :type dict cli_options: Command line options
-    :rtype: configobj.ConfigObj
-    :return: Parsed configuration data
+    Args:
+        user_config (str): User defined config file
+        cli_options (dict): Command line options
+
+    Returns:
+        configobj.ConfigObj: Parsed configuration data
     """
     # Only base *must* exist
     conf = configobj.ConfigObj(os.path.dirname(__file__) + '/config',
@@ -308,18 +340,21 @@ def read_config(user_config=None, cli_options=None):
 
 
 def write_current(fun):
-    """Decorator to write ``current`` file on function exit.
+    """Decorator to write :file:`current` file on function exit.
 
-    :seealso: :doc:`/taskbars`
+    See also:
+        :doc:`/taskbars`
 
-    :rtype: :obj:`function`
+    Returns:
+        types.FunctionType: Wrapped function
     """
     @functools.wraps(fun)
     def wrapper(*args, **kwargs):
         """Write value of ``task`` argument to ``current on exit.
 
-        :param tuple args: Positional arguments
-        :param dict kwargs: Keyword arguments
+        Args:
+            args (tuple): Positional arguments
+            kwargs (dict): Keyword arguments
         """
         globs = args[0]
         fun(*args, **kwargs)
@@ -329,18 +364,21 @@ def write_current(fun):
 
 
 def remove_current(fun):
-    """Decorator to remove ``current`` file on function exit.
+    """Decorator to remove :file:`current` file on function exit.
 
-    :seealso: :doc:`/taskbars`
+    See also:
+        :doc:`/taskbars`
 
-    :rtype: :obj:`function`
+    Returns:
+        types.FunctionType: Wrapped function
     """
     @functools.wraps(fun)
     def wrapper(*args, **kwargs):
         """Remove ``current`` file on exit.
 
-        :param tuple args: Positional arguments
-        :param dict kwargs: Keyword arguments
+        Args:
+            args (tuple): Positional arguments
+            kwargs (dict): Keyword arguments
         """
         globs = args[0]
         fun(*args, **kwargs)
@@ -352,10 +390,12 @@ def remove_current(fun):
 def newer(fname, reference):
     """Check whether given file is newer than reference file.
 
-    :param str fname: File to check
-    :param str reference: file to test against
-    :rtype: :obj:`bool`
-    :return: True if ``fname`` is newer than ``reference``
+    Args:
+        fname (str): File to check
+        reference (str): file to test against
+
+    Returns:
+        bool: True if ``fname`` is newer than ``reference``
     """
     return os.stat(fname).st_mtime > os.stat(reference).st_mtime
 
@@ -363,7 +403,8 @@ def newer(fname, reference):
 def xdg_cache_location():
     """Return a cache location honouring $XDG_CACHE_HOME.
 
-    :rtype: :obj:`str`
+    Returns:
+        str: Location of cache directory
     """
     user_dir = os.getenv('XDG_CACHE_HOME',
                          os.path.join(os.getenv('HOME', '/'), '.cache'))
@@ -373,7 +414,8 @@ def xdg_cache_location():
 def xdg_config_location():
     """Return a config location honouring $XDG_CONFIG_HOME.
 
-    :rtype: :obj:`str`
+    Returns:
+        str: Location of config directory
     """
     user_dir = os.getenv('XDG_CONFIG_HOME',
                          os.path.join(os.getenv('HOME', '/'), '.config'))
@@ -383,7 +425,8 @@ def xdg_config_location():
 def xdg_data_location():
     """Return a data location honouring $XDG_DATA_HOME.
 
-    :rtype: :obj:`str`
+    Returns:
+        str: Location of data directory
     """
     user_dir = os.getenv('XDG_DATA_HOME', os.path.join(os.getenv('HOME', '/'),
                          '.local/share'))

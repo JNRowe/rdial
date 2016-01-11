@@ -44,11 +44,13 @@ class TaskNameParamType(click.ParamType):
     def convert(self, value, param, ctx):
         """Check given task name is valid.
 
-        :param str value: Value given to flag
-        :param click.Argument param: Parameter being processed
-        :param click.Context ctx: Current command context
-        :rtype: :obj:`str`
-        :return: Valid task name
+        Args:
+            value (str): Value given to flag
+            param (click.Argument): Parameter being processed
+            ctx (click.Context): Current command context
+
+        Returns:
+            str: Valid task name
         """
         if not value:
             self.fail(_('No task name given'))
@@ -70,11 +72,13 @@ class StartTimeParamType(click.ParamType):
     def convert(self, value, param, ctx):
         """Check given start time is valid.
 
-        :param str value: Value given to flag
-        :param click.Argument param: Parameter being processed
-        :param click.Context ctx: Current command context
-        :rtype: :obj:`datetime.datetime`
-        :return: Valid start time
+        Args:
+            value (str): Value given to flag
+            param (click.Argument): Parameter being processed
+            ctx (click.Context): Current command context
+
+        Returns:
+            datetime.datetime: Valid start time
         """
         try:
             value = utils.parse_datetime_user(value)
@@ -86,9 +90,10 @@ class StartTimeParamType(click.ParamType):
 def task_from_dir(ctx, param, value):
     """Override task name default using name of current directory.
 
-    :param click.Context ctx: Current command context
-    :param click.Argument param: Parameter being processed
-    :param bool value: True if flag given
+    Args:
+        ctx (click.Context): Current command context
+        param (click.Argument): Parameter being processed
+        value (bool): True if flag given
     """
     if value:
         param = [p for p in ctx.command.params if p.name == 'task'][0]
@@ -98,10 +103,12 @@ def task_from_dir(ctx, param, value):
 def get_stop_message(current, edit=False):
     """Interactively fetch stop message.
 
-    :param events.Event current: Current task
-    :param bool edit: Whether to edit existing message
-    :rtype: :obj:`str`
-    :return: Message to use
+    Args:
+        current (events.Event): Current task
+        edit (bool): Whether to edit existing message
+
+    Returns:
+        str: Message to use
     """
     marker = _('# Text below here ignored\n')
     task_message = _("# Task `%s' started %s") % (current.task,
@@ -118,9 +125,11 @@ def get_stop_message(current, edit=False):
 def task_option(fun):
     """Add task selection options.
 
-    :param function fun: Function to add options to
-    :rtype: :obj:`func`
-    :return: Function with additional options
+    Args:
+        fun (types.FunctionType): Function to add options to
+
+    Returns:
+        types.FunctionType: Function with additional options
     """
     fun = click.option('-x', '--from-dir', is_flag=True, expose_value=False,
                        is_eager=True, callback=task_from_dir,
@@ -133,11 +142,14 @@ def task_option(fun):
 def duration_option(fun):
     """Add duration selection option.
 
-    .. note:: This is only here to reduce duplication in command setup.
+    Note:
+        This is only here to reduce duplication in command setup.
 
-    :param function fun: Function to add options to
-    :rtype: :obj:`func`
-    :return: Function with additional options
+    Args:
+        fun (types.FunctionType): Function to add options to
+
+    Returns:
+        types.FunctionType: Function with additional options
     """
     fun = click.option('-d', '--duration', default='all',
                        type=click.Choice(['day', 'week', 'month', 'year',
@@ -149,9 +161,11 @@ def duration_option(fun):
 def message_option(fun):
     """Add message setting options.
 
-    :param function fun: Function to add options to
-    :rtype: :obj:`func`
-    :return: Function with additional options
+    Args:
+        fun (types.FunctionType): Function to add options to
+
+    Returns:
+        types.FunctionType: Function with additional options
     """
     fun = click.option('-m', '--message', help=_('Closing message.'))(fun)
     fun = click.option('-F', '--file', 'fname', type=click.File(),
@@ -183,12 +197,13 @@ def message_option(fun):
 def cli(ctx, directory, backup, cache, config, interactive):
     """Main command entry point.
 
-    :param click.Context ctx: Current command context
-    :param str directory: Location to store event data
-    :param bool backup: Whether to create backup files
-    :param bool cache: Whether to create cache files
-    :param str config: Location of config file
-    :param bool interactive: Whether to support interactive message editing
+    Args:
+        ctx (click.Context): Current command context
+        directory (str): Location to store event data
+        backup (bool): Whether to create backup files
+        cache (bool): Whether to create cache files
+        config (str): Location of config file
+        interactive (bool): Whether to support interactive message editing
     """
     cli_options = {
         'backup': backup,
@@ -230,11 +245,13 @@ def cli(ctx, directory, backup, cache, config, interactive):
 def filter_events(globs, task=None, duration=None):
     """Filter events for report processing.
 
-    :param dict globs: Global options object
-    :param str task: Task name to filter on
-    :param str duration: Time window to filter on
-    :rtype: :obj:`rdial.events.Events`
-    :return: Events matching specified criteria
+    Args:
+        globs (dict): Global options object
+        task (str): Task name to filter on
+        duration (str): Time window to filter on
+
+    Returns:
+        Events: Events matching specified criteria
     """
     events = Events.read(globs.directory, write_cache=globs.cache)
     if task:
@@ -260,8 +277,9 @@ def filter_events(globs, task=None, duration=None):
 def fsck(ctx, globs):
     """Check storage consistency.
 
-    :param click.Context ctx: Current command context
-    :param dict globs: Global options object
+    Args:
+        ctx (click.Context): Current command context
+        globs (dict): Global options object
     """
     warnings = 0
     events = Events.read(globs.directory, write_cache=globs.cache)
@@ -292,10 +310,11 @@ def fsck(ctx, globs):
 def start(globs, task, new, time):
     """Start task.
 
-    :param dict globs: Global options object
-    :param str task: Task name to operate on
-    :param bool new: Create a new task
-    :param datetime.datetime time: Task start time
+    Args:
+        globs (dict): Global options object
+        task (str): Task name to operate on
+        new (bool): Create a new task
+        time (datetime.datetime): Task start time
     """
     with Events.context(globs.directory, globs.backup, globs.cache) as events:
         events.start(task, new, time)
@@ -309,10 +328,11 @@ def start(globs, task, new, time):
 def stop(globs, message, fname, amend):
     """Stop task.
 
-    :param dict globs: Global options object
-    :param str message: Message to assign to event
-    :param str fname: Filename to read message from
-    :param bool amend: Amend a previously stopped event
+    Args:
+        globs (dict): Global options object
+        message (str): Message to assign to event
+        fname (str): Filename to read message from
+        amend (bool): Amend a previously stopped event
     """
     if fname:
         message = fname.read()
@@ -346,12 +366,13 @@ def stop(globs, message, fname, amend):
 def switch(globs, task, new, time, message, fname):
     """Complete last task and start new one.
 
-    :param dict globs: Global options object
-    :param str task: Task name to operate on
-    :param bool new: Create a new task
-    :param datetime.datetime time: Task start time
-    :param str message: Message to assign to event
-    :param str fname: Filename to read message from
+    Args:
+        globs (dict): Global options object
+        task (str): Task name to operate on
+        new (bool): Create a new task
+        time (datetime.datetime): Task start time
+        message (str): Message to assign to event
+        fname (str): Filename to read message from
     """
     if fname:
         message = fname.read()
@@ -385,13 +406,14 @@ def switch(globs, task, new, time, message, fname):
 def run(globs, task, new, time, message, fname, command):
     """Run timed command.
 
-    :param dict globs: Global options object
-    :param str task: Task name to operate on
-    :param bool new: Create a new task
-    :param datetime.datetime time: Task start time
-    :param str message: Message to assign to event
-    :param str fname: Filename to read message from
-    :param str command: Command to run
+    Args:
+        globs (dict): Global options object
+        task (str): Task name to operate on
+        new (bool): Create a new task
+        time (datetime.datetime): Task start time
+        message (str): Message to assign to event
+        fname (str): Filename to read message from
+        command (str): Command to run
     """
     with Events.context(globs.directory, globs.backup, globs.cache) as events:
         if events.running():
@@ -432,12 +454,13 @@ def run(globs, task, new, time, message, fname, command):
 def wrapper(ctx, globs, time, message, fname, wrapper):
     """Run predefined timed command.
 
-    :param click.Context ctx: Click context object
-    :param dict globs: Global options object
-    :param datetime.datetime time: Task start time
-    :param str message: Message to assign to event
-    :param str fname: Filename to read message from
-    :param str wrapper: Run wrapper to execute
+    Args:
+        ctx (click.Context): Click context object
+        globs (dict): Global options object
+        time (datetime.datetime): Task start time
+        message (str): Message to assign to event
+        fname (str): Filename to read message from
+        wrapper (str): Run wrapper to execute
     """
     if 'run wrappers' not in globs.config:
         raise ValueError(_('No %r section in config') % 'run wrappers')
@@ -467,13 +490,14 @@ def wrapper(ctx, globs, time, message, fname, wrapper):
 def report(globs, task, stats, duration, sort, reverse, style):
     """Report time tracking data.
 
-    :param dict globs: Global options object
-    :param str task: Task name to operate on
-    :param bool stats: Display short overview of data
-    :param str duration: Time window to filter on
-    :param str sort: Key to sort events on
-    :param bool reverse: Reverse sort order
-    :param str style: Table formatting style
+    Args:
+        globs (dict): Global options object
+        task (str): Task name to operate on
+        stats (bool): Display short overview of data
+        duration (str): Time window to filter on
+        sort (str): Key to sort events on
+        reverse (bool): Reverse sort order
+        style (str): Table formatting style
     """
     if task == 'default':
         # Lazy way to remove duplicate argument definitions
@@ -506,7 +530,8 @@ def report(globs, task, stats, duration, sort, reverse, style):
 def running(globs):
     """Display running task, if any.
 
-    :param dict globs: Global options object
+    Args:
+        globs (dict): Global options object
     """
     events = Events.read(globs.directory, write_cache=globs.cache)
     if events.running():
@@ -523,7 +548,8 @@ def running(globs):
 def last(globs):
     """Display last event, if any.
 
-    :param dict globs: Global options object
+    Args:
+        globs (dict): Global options object
     """
     events = Events.read(globs.directory, write_cache=globs.cache)
     event = events.last()
@@ -544,10 +570,11 @@ def last(globs):
 def ledger(globs, task, duration, rate):
     """Generate ledger compatible data file.
 
-    :param dict globs: Global options object
-    :param str task: Task name to operate on
-    :param str duration: Time window to filter on
-    :param str rate: Rate to assign hours in report
+    Args:
+        globs (dict): Global options object
+        task (str): Task name to operate on
+        duration (str): Time window to filter on
+        rate (str): Rate to assign hours in report
     """
     if task == 'default':
         # Lazy way to remove duplicate argument definitions
@@ -577,8 +604,8 @@ def ledger(globs, task, duration, rate):
 def main():
     """Command entry point to handle errors.
 
-    :rtype: :obj:`int`
-    :return: Final exit code
+    Returns:
+        int: Final exit code
     """
     try:
         cli()  # pylint: disable=no-value-for-parameter

@@ -25,7 +25,8 @@ if PY2:  # pragma: Python 2
     def mangle_repr_type(klass):
         """Class decorator to force bytestrings for repr with Python 2.
 
-        :param class klass: Class to patch
+        Args:
+            klass (class): Class to patch
         """
         klass.__repr_unicode__ = klass.__repr__
 
@@ -36,7 +37,8 @@ if PY2:  # pragma: Python 2
             machines, but better support for properly configured machines is
             far more important to me.
 
-            :rtype: :obj:`str`
+            Returns:
+                str: UTF-8 encoded ``repr``
             """
             return self.__repr_unicode__().encode('utf-8')
         klass.__repr__ = wrapper

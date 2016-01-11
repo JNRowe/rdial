@@ -9,6 +9,9 @@ Command line
   :mod:`rdial`, and can be skipped if you are simply using the tool from the
   command line.
 
+Commands
+''''''''
+
 .. autofunction:: fsck
 .. autofunction:: start
 .. autofunction:: stop
@@ -20,8 +23,25 @@ Command line
 .. autofunction:: last
 .. autofunction:: ledger
 
+Entry points
+'''''''''''''
+
 .. autofunction:: cli
+.. autofunction:: main
+
+Command support
+'''''''''''''''
 
 .. autofunction:: filter_events
-
 .. autofunction:: get_stop_message
+
+CLI support
+'''''''''''
+
+.. autoclass:: TaskNameParamType
+.. autoclass:: StartTimeParamType
+
+.. autofunction:: task_from_dir
+.. autofunction:: task_option
+.. autofunction:: duration_option
+.. autofunction:: message_option
