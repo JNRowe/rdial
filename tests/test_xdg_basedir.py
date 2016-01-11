@@ -18,7 +18,10 @@
 # rdial.  If not, see <http://www.gnu.org/licenses/>.
 
 from expecter import expect
-from mock import patch
+try:
+    from unittest.mock import patch
+except ImportError:
+    from mock import patch
 
 from rdial.utils import (xdg_config_location, xdg_data_location)
 

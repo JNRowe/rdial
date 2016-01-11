@@ -24,7 +24,10 @@ from time import sleep
 
 from click.testing import CliRunner
 from expecter import expect
-from mock import patch
+try:
+    from unittest.mock import patch
+except ImportError:
+    from mock import patch
 
 from rdial.utils import (AttrDict, check_output, newer, read_config,
                          remove_current, write_current)

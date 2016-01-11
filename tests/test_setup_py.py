@@ -18,8 +18,11 @@
 # rdial.  If not, see <http://www.gnu.org/licenses/>.
 
 from expecter import expect
-from mock import patch
 from nose2.tools import params
+try:
+    from unittest.mock import patch
+except ImportError:
+    from mock import patch
 
 import setup
 
