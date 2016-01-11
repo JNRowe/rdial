@@ -22,7 +22,6 @@ from __future__ import absolute_import
 import datetime
 import functools
 import os
-import re
 import subprocess
 
 import ciso8601
@@ -142,6 +141,10 @@ class AttrDict(dict):
             raise AttributeError(safer_repr(key))
 
 
+#: Map duration string keys to timedelta args
+_MAPPER = {'D': 'days', 'H': 'hours', 'M': 'minutes', 'S': 'seconds'}
+
+
 def parse_delta(string):
     """Parse ISO-8601 duration string.
 
@@ -151,17 +154,16 @@ def parse_delta(string):
     """
     if not string:
         return datetime.timedelta(0)
-    match = re.match(r"""
-        P
-        ((?P<days>\d+)D)?
-        T?
-        ((?P<hours>\d{1,2})H)?
-        ((?P<minutes>\d{1,2})M)?
-        ((?P<seconds>\d{1,2})?(\.(?P<microseconds>\d+)S)?)
-    """, string, re.VERBOSE)
-    match_dict = dict((k, int(v) if v else 0)
-                      for k, v in match.groupdict().items())
-    return datetime.timedelta(**match_dict)  # pylint: disable=star-args
+    parsed = {}
+    block = []
+    for c in string[1:]:
+        if c.isalpha():
+            if block:
+                parsed[_MAPPER[c]] = int(''.join(block))
+            block = []
+        else:
+            block.append(c)
+    return datetime.timedelta(**parsed)  # pylint: disable=star-args
 
 
 def format_delta(timedelta_):

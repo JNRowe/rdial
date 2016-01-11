@@ -35,10 +35,10 @@ from rdial.utils import (parse_datetime, parse_delta)
     ('test', '2013-02-26T19:45:14Z', None, None),
     ('test', datetime(2013, 2, 26, 19, 45, 14), None,
      None),
-    ('test', '2013-02-26T19:45:14Z', 'PT8M19.770869S', None),
+    ('test', '2013-02-26T19:45:14Z', 'PT8M19S', None),
     ('test', '2013-02-26T19:45:14Z', timedelta(minutes=8, seconds=19.770869),
      None),
-    ('test', '2013-02-26T19:45:14Z', 'PT8M19.770869S', 'stopped'),
+    ('test', '2013-02-26T19:45:14Z', 'PT8M19S', 'stopped'),
 )
 def test_event_creation(task, start, delta, message):
     e = Event(task, start, delta, message)

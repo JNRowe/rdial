@@ -56,8 +56,8 @@ Time handling
 .. doctest::
    :options: +NORMALIZE_WHITESPACE
 
-    >>> parse_delta('PT36M10.951511S')
-    datetime.timedelta(0, 2170, 951511)
+    >>> parse_delta('PT36M10S')
+    datetime.timedelta(0, 2170)
     >>> parse_delta('')
     datetime.timedelta(0)
     >>> format_delta(datetime.timedelta(0))
