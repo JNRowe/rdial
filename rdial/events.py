@@ -226,8 +226,12 @@ class Events(list):  # pylint: disable=too-many-public-methods
                     pass
             if evs is None:
                 with click.open_file(fname, encoding='utf-8') as f:
-                    evs = [Event(task, **d)  # pylint: disable=star-args
-                           for d in csv.DictReader(f, dialect=RdialDialect)]
+                    # We're not using the prettier DictReader here as it is
+                    # *significantly* slower for large data files (~5x).
+                    reader = csv.reader(f, dialect=RdialDialect)
+                    assert reader.next() == FIELDS, 'Invalid data %r' % fname
+                    evs = [Event(task, *row)  # pylint: disable=star-args
+                           for row in reader]
                 if write_cache:
                     with click.open_file(cache_file, 'wb', atomic=True) as f:
                         pickle.dump(evs, f, pickle.HIGHEST_PROTOCOL)
