@@ -27,13 +27,13 @@ from expecter import expect
 from nose2.tools import params
 
 from rdial.events import (Event, Events)
-from rdial.utils import (parse_datetime, parse_delta, UTC)
+from rdial.utils import (parse_datetime, parse_delta)
 
 
 @params(
     ('test', None, None, None),
     ('test', '2013-02-26T19:45:14Z', None, None),
-    ('test', datetime(2013, 2, 26, 19, 45, 14, tzinfo=UTC()), None,
+    ('test', datetime(2013, 2, 26, 19, 45, 14), None,
      None),
     ('test', '2013-02-26T19:45:14Z', 'PT8M19.770869S', None),
     ('test', '2013-02-26T19:45:14Z', timedelta(minutes=8, seconds=19.770869),
@@ -68,11 +68,11 @@ def test_read_datebase(database, events):
 
 
 @params(
-    (0, 'task', datetime(2011, 5, 4, 8, tzinfo=UTC()),
+    (0, 'task', datetime(2011, 5, 4, 8),
      timedelta(hours=1)),
-    (1, 'task2', datetime(2011, 5, 4, 9, 15, tzinfo=UTC()),
+    (1, 'task2', datetime(2011, 5, 4, 9, 15),
      timedelta(minutes=15)),
-    (2, 'task', datetime(2011, 5, 4, 9, 30, tzinfo=UTC()), timedelta()),
+    (2, 'task', datetime(2011, 5, 4, 9, 30), timedelta()),
 )
 def test_check_events(n, task, start, delta):
     # FIXME: Clean-ish way to perform check, with the caveat that it parses the

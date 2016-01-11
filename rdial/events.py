@@ -86,8 +86,8 @@ class Event(object):
         """
         self.task = task
         if isinstance(start, datetime.datetime):
-            if not start.tzinfo:
-                raise ValueError('Must not be a naive datetime %r' %
+            if start.tzinfo:
+                raise ValueError('Must be a naive datetime %r' %
                                  (utils.safer_repr(start), ))
             self.start = start
         else:
@@ -140,7 +140,7 @@ class Event(object):
         """
         if not force and self.delta:
             raise TaskNotRunningError('No task running!')
-        self.delta = utils.utcnow() - self.start
+        self.delta = datetime.datetime.utcnow() - self.start
         self.message = message
 FIELDS = inspect.getargspec(Event.__init__)[0][2:]
 
@@ -221,9 +221,16 @@ class Events(list):  # pylint: disable=too-many-public-methods
             if os.path.exists(cache_file) and utils.newer(cache_file, fname):
                 try:
                     with click.open_file(cache_file, 'rb') as f:
-                        evs = pickle.load(f)
+                        cache = pickle.load(f)
                 except (pickle.UnpicklingError, ImportError):
                     pass
+                else:
+                    try:
+                        assert cache['version'] == 1
+                    except TypeError:
+                        os.unlink(cache_file)
+                    else:
+                        evs = cache['events']
             if evs is None:
                 with click.open_file(fname, encoding='utf-8') as f:
                     # We're not using the prettier DictReader here as it is
@@ -234,7 +241,8 @@ class Events(list):  # pylint: disable=too-many-public-methods
                            for row in reader]
                 if write_cache:
                     with click.open_file(cache_file, 'wb', atomic=True) as f:
-                        pickle.dump(evs, f, pickle.HIGHEST_PROTOCOL)
+                        pickle.dump({'version': 1, 'events': evs}, f,
+                                    pickle.HIGHEST_PROTOCOL)
             events.extend(evs)
         return Events(sorted(events, key=operator.attrgetter('start')))
 

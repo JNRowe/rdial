@@ -27,8 +27,6 @@ Time handling
 .. autofunction:: parse_datetime
 .. autofunction:: parse_datetime_user
 
-.. autofunction:: utcnow
-
 XDG Base Directory support
 ''''''''''''''''''''''''''
 
@@ -67,13 +65,13 @@ Time handling
     >>> format_delta(datetime.timedelta(minutes=30))
     'PT30M'
     >>> parse_datetime('2012-02-15T18:59:18Z')
-    datetime.datetime(2012, 2, 15, 18, 59, 18, tzinfo=<UTC>)
+    datetime.datetime(2012, 2, 15, 18, 59, 18)
 
 .. doctest::
    :options: +SKIP
 
     >>> parse_datetime('40 minutes ago')
-    datetime.datetime(2012, 2, 15, 18, 59, 18, tzinfo=<UTC>
+    datetime.datetime(2012, 2, 15, 18, 59, 18
 
 XDG Base Directory support
 ''''''''''''''''''''''''''
