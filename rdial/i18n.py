@@ -28,7 +28,7 @@ from .compat import PY2
 
 kwargs = {
     'localedir': path.join(path.realpath(path.dirname(__file__)), 'locale'),
-    'names': ['ngettext', ]
+    'names': ['gettext', 'ngettext', ]
 }
 if PY2:
     kwargs['unicode'] = 1
