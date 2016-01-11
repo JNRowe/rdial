@@ -31,8 +31,8 @@ Since then I haven't even managed to come up with a clever backronym for it.
 
 .. Perhaps, Reducing Dedication In Actual Labour?
 
-How do I process files using ``go``
-'''''''''''''''''''''''''''''''''''
+How do I process :program:`rdial` data files using ``go``
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 If you keep receiving ``ErrTrailingComma`` errors when reading files using
 golang it is because you are processing files with empty message fields.  The
