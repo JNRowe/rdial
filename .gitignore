@@ -1,5 +1,5 @@
 *.html
-*.pyc
+*.py[co]
 
 /build/
 /dist/
