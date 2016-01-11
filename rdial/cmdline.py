@@ -112,7 +112,7 @@ def get_stop_message(current, edit=False):
     """
     marker = _('# Text below here ignored\n')
     task_message = _("# Task `%s' started %s") % (current.task,
-                                                  current.start.humanize())
+                                                  current.start)
     template = "%s\n%s%s" % (current.message, marker, task_message)
     message = click.edit(template, require_save=not edit)
     if message is None:
