@@ -31,6 +31,7 @@ XDG Base Directory support
 ''''''''''''''''''''''''''
 
 .. autofunction:: xdg_cache_location
+.. autofunction:: xdg_config_location
 .. autofunction:: xdg_data_location
 
 Text formatting
