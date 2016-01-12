@@ -225,7 +225,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
                 ])
         for fname in glob.glob('%s/*.csv' % directory):
             task = os.path.basename(fname)[:-4]
-            cache_file = os.path.join(cache_dir, task) + '.pkl'
+            cache_file = os.path.join(cache_dir, task) + '.rd1'
             evs = None
             if os.path.exists(cache_file) and utils.newer(cache_file, fname):
                 try:
