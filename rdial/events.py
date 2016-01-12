@@ -2,6 +2,7 @@
 # coding=utf-8
 """events - Event models for rdial."""
 # Copyright © 2011-2016  James Rowe <jnrowe@gmail.com>
+#                        Nathan McGregor <nathan.mcgregor@astrium.eads.net>
 #
 # This file is part of rdial.
 #
@@ -244,7 +245,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
                     # We're not using the prettier DictReader here as it is
                     # *significantly* slower for large data files (~5x).
                     reader = csv.reader(f, dialect=RdialDialect)
-                    assert reader.next() == FIELDS, 'Invalid data %r' % fname
+                    assert next(reader) == FIELDS, 'Invalid data %r' % fname
                     evs = [Event(task, *row)  # pylint: disable=star-args
                            for row in reader]
                 if write_cache:
