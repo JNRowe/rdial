@@ -3,6 +3,21 @@ User-visible changes
 
 .. contents::
 
+0.15.0 - 2016-01-12
+-------------------
+
+* Reading the database is now far faster!
+* ``report``'s ``--human`` option has been renamed to ``--stats``
+* unicodecsv_ is now required for Python 2 users
+* User supplied datetime now support falling back to the system's ``date(1)``
+  for parsing
+* A cachedir_ tag is now created to help environments with cleaning tools
+* Python 3.5 is officially supported
+* Python 3.2 is no longer supported, but if you need it speak up!
+
+.. _unicodecsv: https://crate.io/packages/unicodecsv/
+.. _cachedir: http://www.brynosaurus.com/cachedir/
+
 0.14.0 - 2014-06-10
 -------------------
 
