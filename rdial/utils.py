@@ -35,9 +35,13 @@ from . import compat
 def _colourise(text, colour):
     """Colour text, if possible.
 
+    See also:
+        :func:`click.termui.secho`
+
     Args:
         text (str): Text to colourise
         colour (str): Colour to display text in
+
     """
     click.termui.secho(text, fg=colour, bold=True)
 
@@ -47,6 +51,7 @@ def success(text):
 
     Args:
         text (str): Text to format
+
     """
     _colourise(text, 'green')
 
@@ -56,6 +61,7 @@ def fail(text):
 
     Args:
         text (str): Text to format
+
     """
     _colourise(text, 'red')
 
@@ -65,6 +71,7 @@ def warn(text):
 
     Args:
         text (str): Text to format
+
     """
     _colourise(text, 'yellow')
 
@@ -82,6 +89,7 @@ def safer_repr(obj):
 
     Returns:
         str: :func:`repr` output, or a fallback string
+
     """
     try:
         return repr(obj)
@@ -106,6 +114,7 @@ class AttrDict(dict):
 
     See also:
         :obj:`dict`
+
     """
 
     def __contains__(self, key):
@@ -116,6 +125,7 @@ class AttrDict(dict):
 
         Returns:
             bool: True, if item in dictionary
+
         """
         return hasattr(self, key) or super(AttrDict, self).__contains__(key)
 
@@ -124,6 +134,7 @@ class AttrDict(dict):
 
         Args:
             key (object): Key to fetch
+
         """
         try:
             return self[key]
@@ -136,6 +147,7 @@ class AttrDict(dict):
         Args:
             key (object): Key to set value for
             value (object): Value to set key to
+
         """
         try:
             self[key] = value
@@ -147,6 +159,7 @@ class AttrDict(dict):
 
         Args:
             key (object): Key to delete
+
         """
         try:
             del self[key]
@@ -210,6 +223,7 @@ def parse_datetime(string):
 
     Returns:
         datetime.datetime: Parsed datetime object
+
     """
     if not string:
         datetime_ = datetime.datetime.utcnow()
@@ -232,6 +246,7 @@ def parse_datetime_user(string):
 
     Returns:
         datetime.datetime: Parsed datetime object
+
     """
     try:
         datetime_ = parse_datetime(string)
@@ -319,6 +334,7 @@ def read_config(user_config=None, cli_options=None):
 
     Returns:
         configobj.ConfigObj: Parsed configuration data
+
     """
     # Only base *must* exist
     conf = configobj.ConfigObj(os.path.dirname(__file__) + '/config',
@@ -355,6 +371,7 @@ def write_current(fun):
         Args:
             args (tuple): Positional arguments
             kwargs (dict): Keyword arguments
+
         """
         globs = args[0]
         fun(*args, **kwargs)
@@ -379,6 +396,7 @@ def remove_current(fun):
         Args:
             args (tuple): Positional arguments
             kwargs (dict): Keyword arguments
+
         """
         globs = args[0]
         fun(*args, **kwargs)
@@ -396,6 +414,7 @@ def newer(fname, reference):
 
     Returns:
         bool: True if ``fname`` is newer than ``reference``
+
     """
     return os.stat(fname).st_mtime > os.stat(reference).st_mtime
 
@@ -405,6 +424,7 @@ def xdg_cache_location():
 
     Returns:
         str: Location of cache directory
+
     """
     user_dir = os.getenv('XDG_CACHE_HOME',
                          os.path.join(os.getenv('HOME', '/'), '.cache'))
@@ -416,6 +436,7 @@ def xdg_config_location():
 
     Returns:
         str: Location of config directory
+
     """
     user_dir = os.getenv('XDG_CONFIG_HOME',
                          os.path.join(os.getenv('HOME', '/'), '.config'))
@@ -427,6 +448,7 @@ def xdg_data_location():
 
     Returns:
         str: Location of data directory
+
     """
     user_dir = os.getenv('XDG_DATA_HOME', os.path.join(os.getenv('HOME', '/'),
                          '.local/share'))

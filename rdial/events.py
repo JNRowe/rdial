@@ -85,6 +85,7 @@ class Event(object):
             start (datetime.datetime): Start time for event
             delta (datetime.timedelta): Duration for event
             message (str): Message to attach to event
+
         """
         self.task = task
         if isinstance(start, datetime.datetime):
@@ -116,6 +117,7 @@ class Event(object):
 
         Returns:
             dict: Event data for object storage
+
         """
         return {
             'start': utils.format_datetime(self.start),
@@ -128,6 +130,7 @@ class Event(object):
 
         Returns:
             str: Event name, if running
+
         """
         if self.delta == datetime.timedelta(0):
             return self.task
@@ -142,6 +145,7 @@ class Event(object):
 
         Raises:
             TaskNotRunningError: Event not running
+
         """
         if not force and self.delta:
             raise TaskNotRunningError('No task running!')
@@ -160,6 +164,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
         Args:
             iterable (list): Objects to add to container
             backup (bool): Whether to create backup files
+
         """
         super(Events, self).__init__(iterable if iterable else [])
         self.backup = backup
@@ -185,6 +190,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
 
         Args:
             value (str): Task to mark as dirty
+
         """
         if value not in self._dirty:
             self._dirty.append(value)
@@ -208,6 +214,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
 
         Returns:
             Events: Parsed events database
+
         """
         if not os.path.exists(directory):
             return Events(backup=backup)
@@ -260,6 +267,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
 
         Args:
             directory (str): Location to write database files to
+
         """
         if not self.dirty:
             return
@@ -284,6 +292,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
 
         Returns:
             list of str: Names of tasks in database
+
         """
         return sorted(set(event.task for event in self))
 
@@ -294,6 +303,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
 
         Returns:
             Event: Last recorded event
+
         """
         if len(self) > 0:
             return self[-1]
@@ -307,6 +317,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
 
         Returns:
             Event: Running event, if an event running
+
         """
         last = self.last()
         return last.running() if last else False
@@ -320,6 +331,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
 
         Raises:
             TaskRunningError: An event is already running
+
         """
         if not new and task not in self.tasks():
             raise TaskNotExistError("Task %s does not exist!  Use `--new' to "
@@ -342,6 +354,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
 
         Raises:
             TaskNotRunningError: No task running!
+
         """
         if not force and not self.running():
             raise TaskNotRunningError('No task running!')
@@ -356,6 +369,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
 
         Returns:
             Events: Events matching given filter function
+
         """
         return Events(x for x in self if filt(x))
 
@@ -367,6 +381,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
 
         Returns:
             Events: Events marked with given task name
+
         """
         return self.filter(lambda x: x.task == task)
 
@@ -380,6 +395,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
 
         Returns:
             Events: Events occurring within specified date
+
         """
         events = self.filter(lambda x: x.start.year == year)
         if month:
@@ -406,6 +422,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
 
         Returns:
             datetime.timedelta: Sum of all event deltas
+
         """
         return sum((x.delta for x in self), datetime.timedelta(0))
 
@@ -418,6 +435,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
             directory (str): Database location
             backup (bool): Whether to create backup files
             write_cache (bool): Whether to write cache files
+
         """
         events = Events.read(directory, backup, write_cache)
         yield events

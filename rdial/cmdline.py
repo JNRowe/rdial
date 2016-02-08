@@ -51,6 +51,7 @@ class TaskNameParamType(click.ParamType):
 
         Returns:
             str: Valid task name
+
         """
         if not value:
             self.fail(_('No task name given'))
@@ -79,6 +80,7 @@ class StartTimeParamType(click.ParamType):
 
         Returns:
             datetime.datetime: Valid start time
+
         """
         try:
             value = utils.parse_datetime_user(value)
@@ -94,6 +96,7 @@ def task_from_dir(ctx, param, value):
         ctx (click.Context): Current command context
         param (click.Argument): Parameter being processed
         value (bool): True if flag given
+
     """
     if value:
         param = [p for p in ctx.command.params if p.name == 'task'][0]
@@ -109,6 +112,7 @@ def get_stop_message(current, edit=False):
 
     Returns:
         str: Message to use
+
     """
     marker = _('# Text below here ignored\n')
     task_message = _("# Task `%s' started %s") % (current.task,
@@ -130,6 +134,7 @@ def task_option(fun):
 
     Returns:
         types.FunctionType: Function with additional options
+
     """
     fun = click.option('-x', '--from-dir', is_flag=True, expose_value=False,
                        is_eager=True, callback=task_from_dir,
@@ -150,6 +155,7 @@ def duration_option(fun):
 
     Returns:
         types.FunctionType: Function with additional options
+
     """
     fun = click.option('-d', '--duration', default='all',
                        type=click.Choice(['day', 'week', 'month', 'year',
@@ -166,6 +172,7 @@ def message_option(fun):
 
     Returns:
         types.FunctionType: Function with additional options
+
     """
     fun = click.option('-m', '--message', help=_('Closing message.'))(fun)
     fun = click.option('-F', '--file', 'fname', type=click.File(),
@@ -204,6 +211,7 @@ def cli(ctx, directory, backup, cache, config, interactive):
         cache (bool): Whether to create cache files
         config (str): Location of config file
         interactive (bool): Whether to support interactive message editing
+
     """
     cli_options = {
         'backup': backup,
@@ -252,6 +260,7 @@ def filter_events(globs, task=None, duration=None):
 
     Returns:
         Events: Events matching specified criteria
+
     """
     events = Events.read(globs.directory, write_cache=globs.cache)
     if task:
@@ -280,6 +289,7 @@ def fsck(ctx, globs):
     Args:
         ctx (click.Context): Current command context
         globs (dict): Global options object
+
     """
     warnings = 0
     events = Events.read(globs.directory, write_cache=globs.cache)
@@ -315,6 +325,7 @@ def start(globs, task, new, time):
         task (str): Task name to operate on
         new (bool): Create a new task
         time (datetime.datetime): Task start time
+
     """
     with Events.context(globs.directory, globs.backup, globs.cache) as events:
         events.start(task, new, time)
@@ -333,6 +344,7 @@ def stop(globs, message, fname, amend):
         message (str): Message to assign to event
         fname (str): Filename to read message from
         amend (bool): Amend a previously stopped event
+
     """
     if fname:
         message = fname.read()
@@ -373,6 +385,7 @@ def switch(globs, task, new, time, message, fname):
         time (datetime.datetime): Task start time
         message (str): Message to assign to event
         fname (str): Filename to read message from
+
     """
     if fname:
         message = fname.read()
@@ -414,6 +427,7 @@ def run(globs, task, new, time, message, fname, command):
         message (str): Message to assign to event
         fname (str): Filename to read message from
         command (str): Command to run
+
     """
     with Events.context(globs.directory, globs.backup, globs.cache) as events:
         if events.running():
@@ -461,6 +475,7 @@ def wrapper(ctx, globs, time, message, fname, wrapper):
         message (str): Message to assign to event
         fname (str): Filename to read message from
         wrapper (str): Run wrapper to execute
+
     """
     if 'run wrappers' not in globs.config:
         raise ValueError(_('No %r section in config') % 'run wrappers')
@@ -498,6 +513,7 @@ def report(globs, task, stats, duration, sort, reverse, style):
         sort (str): Key to sort events on
         reverse (bool): Reverse sort order
         style (str): Table formatting style
+
     """
     if task == 'default':
         # Lazy way to remove duplicate argument definitions
@@ -532,6 +548,7 @@ def running(globs):
 
     Args:
         globs (dict): Global options object
+
     """
     events = Events.read(globs.directory, write_cache=globs.cache)
     if events.running():
@@ -550,6 +567,7 @@ def last(globs):
 
     Args:
         globs (dict): Global options object
+
     """
     events = Events.read(globs.directory, write_cache=globs.cache)
     event = events.last()
@@ -575,6 +593,7 @@ def ledger(globs, task, duration, rate):
         task (str): Task name to operate on
         duration (str): Time window to filter on
         rate (str): Rate to assign hours in report
+
     """
     if task == 'default':
         # Lazy way to remove duplicate argument definitions
@@ -607,6 +626,7 @@ def main():
 
     Returns:
         int: Final exit code
+
     """
     try:
         cli()  # pylint: disable=no-value-for-parameter
