@@ -308,7 +308,8 @@ def fsck(ctx, globs):
     if lines:
         click.echo_via_pager('\n'.join(lines))
         if warnings:
-            ctx.exit(warnings)
+            # Will be success when 𝐱 % 256 == 0, so cap at 255
+            ctx.exit(min(warnings, 255))
 
 
 @cli.command(help=_('Start task.'))
