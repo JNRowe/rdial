@@ -68,7 +68,7 @@ def fail(text):
         text (str): Text to format
 
     """
-    _colourise(text, 'red')
+    _colourise(_('Error: %s') % (text, ), 'red')
 
 
 def warn(text):
@@ -78,7 +78,7 @@ def warn(text):
         text (str): Text to format
 
     """
-    _colourise(text, 'yellow')
+    _colourise(_('Warning: %s') % (text, ), 'yellow')
 
 
 def safer_repr(obj):
