@@ -28,6 +28,11 @@ import ciso8601
 import click
 import configobj
 
+try:
+    import cduration
+except ImportError:
+    cduration = None
+
 from . import compat
 
 
@@ -182,6 +187,8 @@ def parse_delta(string):
     """
     if not string:
         return datetime.timedelta(0)
+    if cduration:
+        return cduration.parse_duration(string)
     parsed = {}
     block = []
     for c in string[1:]:
