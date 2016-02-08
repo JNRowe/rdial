@@ -68,9 +68,11 @@ man_pages = [
 autoclass_content = 'init'
 autodoc_default_flags = ['members', ]
 
-intersphinx_mapping = {
-    'python': ('http://docs.python.org/', os.getenv('SPHINX_PYTHON_OBJECTS')),
-}
+intersphinx_mapping = {k: (v, os.getenv('SPHINX_%s_OBJECTS' % k.upper()))
+                       for k, v in {
+                           'click': 'http://click.pocoo.org/6/',
+                           'python': 'http://docs.python.org/',
+}.items()}
 
 spelling_lang = 'en_GB'
 spelling_word_list_filename = 'wordlist.txt'
