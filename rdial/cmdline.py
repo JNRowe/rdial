@@ -117,7 +117,7 @@ def get_stop_message(current, edit=False):
     marker = _('# Text below here ignored\n')
     task_message = _("# Task `%s' started %s") % (current.task,
                                                   current.start)
-    template = "%s\n%s%s" % (current.message, marker, task_message)
+    template = '%s\n%s%s' % (current.message, marker, task_message)
     message = click.edit(template, require_save=not edit)
     if message is None:
         message = ''
@@ -393,7 +393,7 @@ def switch(globs, task, new, time, message, fname):
         event = events.last()
         if time and time < event.start:
             raise TaskNotRunningError(_("Can't specify a start time before "
-                                        "current task started!"))
+                                        'current task started!'))
         if not event.running():
             raise TaskNotRunningError(_('No task running!'))
         if new or task in events.tasks():

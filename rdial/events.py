@@ -56,21 +56,15 @@ class TaskNotRunningError(utils.RdialError):
 
     """Exception for calling mutators when a task is not running."""
 
-    pass
-
 
 class TaskRunningError(utils.RdialError):
 
     """Exception for starting task when a task is already running."""
 
-    pass
-
 
 class TaskNotExistError(utils.RdialError):
 
     """Exception for attempting to operate on a non-existing task."""
-
-    pass
 
 
 class Event(object):

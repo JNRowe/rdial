@@ -348,7 +348,7 @@ def read_config(user_config=None, cli_options=None):
 
     if cli_options:
         cli_conf = ['[rdial]', ]
-        cli_conf.extend("%s = %r" % (k, v) for k, v in cli_options.items()
+        cli_conf.extend('%s = %r' % (k, v) for k, v in cli_options.items()
                         if v is not None)
         conf.merge(configobj.ConfigObj(cli_conf))
 
@@ -451,5 +451,5 @@ def xdg_data_location():
 
     """
     user_dir = os.getenv('XDG_DATA_HOME', os.path.join(os.getenv('HOME', '/'),
-                         '.local/share'))
+                                                       '.local/share'))
     return os.path.join(user_dir, 'rdial')

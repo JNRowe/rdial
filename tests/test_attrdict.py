@@ -25,6 +25,7 @@ from rdial.utils import AttrDict
 
 
 class AttrDictTest(TestCase):
+
     def setUp(self):
         self.ad = AttrDict(carrots=3, snacks=0)
 
