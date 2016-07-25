@@ -19,7 +19,7 @@
     <bug-database rdf:resource="http://github.com/JNRowe/rdial/issues" />
     <repository>
         <GitRepository>
-            <location rdf:resource="git://github.com/JNRowe/rdial.git" />
+            <location rdf:resource="https://github.com/JNRowe/rdial.git" />
             <browse rdf:resource="https://github.com/JNRowe/rdial" />
         </GitRepository>
     </repository>
