@@ -20,11 +20,13 @@
 from __future__ import absolute_import
 
 import gettext
+import locale
 
 from os import path
 
 from .compat import PY2
 
+locale.setlocale(locale.LC_ALL, '')
 
 kwargs = {
     'localedir': path.join(path.realpath(path.dirname(__file__)), 'locale'),
