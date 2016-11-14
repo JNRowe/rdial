@@ -12,6 +12,7 @@ Command line
 Commands
 ''''''''
 
+.. autofunction:: bug_data
 .. autofunction:: fsck
 .. autofunction:: start
 .. autofunction:: stop

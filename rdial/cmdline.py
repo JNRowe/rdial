@@ -316,6 +316,44 @@ def filter_events(globs, task=None, duration=None):
     return events
 
 
+@hidden
+@cli.command('bug-data', help=_('Produce data for rdial bug reports.'))
+def bug_data():
+    """Produce data for rdial bug reports.
+
+    .. note:: Ugly implementation follows…
+
+        The problems arise with Python's package support.  There is no well
+        supported and generic interface to the information we want.
+
+        This would be easier, more useful and considerably more elegant using
+        the infrastructure ``pip`` provides, but ``pip`` is a *huge* and
+        *ridiculous* dependency just for this purpose.  And one that isn't
+        available on many of the systems I care about anyway, and even when it
+        appears to be available it is simply a shim to workaround otherwise
+        broken packages that depend on its behaviour.
+
+        It is possible that we should simply defer to ``pip`` for those systems
+        which have it and do something else for others, but the ``pip`` route
+        would basically never be tested which is clearly bad.
+
+    """
+
+    import sys
+
+    click.echo('* OS: %s' % sys.platform)
+    click.echo('* `rdial` version: %s' % _version.dotted)
+    click.echo('* `python` version: %s' % sys.version.replace('\n', '|'))
+    click.echo()
+
+    for m in ['click', 'ciso8601', 'cduration', 'configobj', 'pytz',
+              'tabulate', 'unicodecsv']:
+        if m in sys.modules:
+            click.echo('* `%s` version: %s'
+                       % (m, getattr(sys.modules[m], '__version__',
+                                     'unknown')))
+
+
 @cli.command(help=_('Check storage consistency.'))
 @click.pass_obj
 @click.pass_context
