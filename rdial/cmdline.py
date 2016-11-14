@@ -54,15 +54,17 @@ class TaskNameParamType(click.ParamType):
 
         """
         if not value:
-            self.fail(_('No task name given'))
+            raise click.BadParameter(_('No task name given'))
         if value.startswith('-'):
             utils.warn(_('Task names with leading dashes are non-portable'))
         if value.startswith('.') or '/' in value or '\000' in value:
-            self.fail(_('%r is not a valid task name') % value)
+            raise click.BadParameter(_('%r is not a valid task name') % value)
         # Should be based on platform's PATH_MAX, but it isn't exposed in a
         # clean way to Python
         if len(value) > 255:
-            self.fail(_('%r is too long to be a valid task name') % value)
+            raise click.BadParameter(
+                _('%r is too long to be a valid task name(max 255 characters)')
+                % value)
         return value
 
 
@@ -87,7 +89,8 @@ class StartTimeParamType(click.ParamType):
         try:
             value = utils.parse_datetime_user(value)
         except ValueError:
-            self.fail(_('%r is not a valid ISO-8601 time string') % value)
+            raise click.BadParameter(
+                _('%r is not a valid ISO-8601 time string') % value)
         return value
 
 
@@ -486,7 +489,7 @@ def wrapper(ctx, globs, time, message, fname, wrapper):
     try:
         command = globs.config['run wrappers'][wrapper]
     except KeyError:
-        raise ValueError(_('No such wrapper %r') % wrapper)
+        raise click.BadParameter(_('No such wrapper %r') % wrapper)
     parser = ctx.parent.command.commands['run'].make_parser(ctx)
     args = {'time': time, 'message': message, 'fname': fname, 'new': False}
     args.update(parser.parse_args(shlex.split(command))[0])
