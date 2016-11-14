@@ -246,7 +246,8 @@ class Events(list):  # pylint: disable=too-many-public-methods
                     # We're not using the prettier DictReader here as it is
                     # *significantly* slower for large data files (~5x).
                     reader = csv.reader(f, dialect=RdialDialect)
-                    assert next(reader) == FIELDS, 'Invalid data %r' % fname
+                    assert next(reader) == FIELDS, \
+                        'Invalid data %r' % click.format_filename(fname)
                     evs = [Event(task, *row)  # pylint: disable=star-args
                            for row in reader]
                 if write_cache:
