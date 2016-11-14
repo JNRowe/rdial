@@ -192,19 +192,17 @@ def message_option(fun):
                       'https://github.com/JNRowe/rdial/issues'),
              context_settings={'help_option_names': ['-h', '--help']})
 @click.version_option(_version.dotted)
-@click.option('-d', '--directory', envvar='RDIAL_DIRECTORY', metavar='DIR',
+@click.option('-d', '--directory', metavar='DIR',
               type=click.Path(file_okay=False),
               help=_('Directory to read/write to.'))
-@click.option('--backup/--no-backup', envvar='RDIAL_BACKUP', default=None,
+@click.option('--backup/--no-backup', default=None,
               help=_('Do not write data file backups.'))
-@click.option('--cache/--no-cache', envvar='RDIAL_CACHE', default=None,
+@click.option('--cache/--no-cache', default=None,
               help=_('Do not write cache files.'))
-@click.option('--config', envvar='RDIAL_CONFIG',
-              type=click.Path(exists=True, dir_okay=False, resolve_path=True,
-                              allow_dash=True),
+@click.option('--config', type=click.Path(exists=True, dir_okay=False,
+                                          resolve_path=True, allow_dash=True),
               help=_('File to read configuration data from.'))
-@click.option('-i', '--interactive/--no-interactive',
-              envvar='RDIAL_INTERACTIVE', default=None,
+@click.option('-i', '--interactive/--no-interactive', default=None,
               help=_('Support interactive message editing.'))
 @click.pass_context
 def cli(ctx, directory, backup, cache, config, interactive):
@@ -501,11 +499,11 @@ def wrapper(ctx, globs, time, message, fname, wrapper):
 @click.option('--stats', is_flag=True,
               help=_('Display database statistics.'))
 @duration_option
-@click.option('-s', '--sort', default='task', envvar='RDIAL_SORT',
+@click.option('-s', '--sort', default='task',
               type=click.Choice(['task', 'time']), help=_('Field to sort by.'))
 @click.option('-r', '--reverse/--no-reverse', default=False,
-              envvar='RDIAL_REVERSE', help=_('Reverse sort order.'))
-@click.option('--style', default='simple', envvar='RDIAL_TABLE_STYLE',
+              help=_('Reverse sort order.'))
+@click.option('--style', default='simple',
               type=click.Choice(tabulate._table_formats.keys()),
               help=_('Table output style.'))
 @click.pass_obj
@@ -589,7 +587,7 @@ def last(globs):
 @cli.command(help=_('Generate ledger compatible data file.'))
 @task_option
 @duration_option
-@click.option('-r', '--rate', envvar='RDIAL_RATE', type=click.FLOAT,
+@click.option('-r', '--rate', type=float,
               help=_('Hourly rate for task output.'))
 @click.pass_obj
 def ledger(globs, task, duration, rate):
@@ -636,7 +634,8 @@ def main():
 
     """
     try:
-        cli()  # pylint: disable=no-value-for-parameter
+        # pylint: disable=no-value-for-parameter
+        cli(auto_envvar_prefix='RDIAL')
         return 0
     except (ValueError, utils.RdialError) as error:
         utils.fail(error.message)
