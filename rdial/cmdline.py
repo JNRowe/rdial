@@ -35,6 +35,21 @@ from . import _version
 from . import utils
 
 
+class HiddenGroup(click.Group):
+
+    """Support for 'hidden' commands.
+
+    Any :obj:`click.Command` with the hidden attribute set will not be visible
+    in help output.  This is mainly to be used for diagnostic commands, and
+    shouldn't be abused!
+
+    """
+
+    def list_commands(self, ctx):
+        return sorted(k for k, v in self.commands.items()
+                      if not hasattr(v, 'hidden'))
+
+
 class TaskNameParamType(click.ParamType):
 
     """Task name parameter handler."""
@@ -185,9 +200,26 @@ def message_option(fun):
     return fun
 
 
+def hidden(fun):
+    """Add a hidden attribute to a Command object.
+
+    :see:`HiddenGroup`.
+
+    Args:
+        fun (types.FunctionType): Function to add hidden attribute to
+
+    Returns:
+        types.FunctionType: Function with hidden attribute set
+
+    """
+    fun.hidden = True
+    return fun
+
+
 # pylint: disable=too-many-arguments
 
-@click.group(help=_('Simple time tracking for simple people.'),
+@click.group(cls=HiddenGroup,
+             help=_('Simple time tracking for simple people.'),
              epilog=_('Please report bugs at '
                       'https://github.com/JNRowe/rdial/issues'),
              context_settings={'help_option_names': ['-h', '--help']})

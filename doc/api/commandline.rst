@@ -38,6 +38,7 @@ Command support
 CLI support
 '''''''''''
 
+.. autoclass:: HiddenGroup
 .. autoclass:: TaskNameParamType
 .. autoclass:: StartTimeParamType
 
