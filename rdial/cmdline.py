@@ -118,9 +118,10 @@ def task_from_dir(ctx, param, value):
         value (bool): True if flag given
 
     """
-    if value:
-        param = [p for p in ctx.command.params if p.name == 'task'][0]
-        param.default = os.path.basename(os.path.abspath(os.curdir))
+    if not value or ctx.resilient_parsing:
+        return
+    param = [p for p in ctx.command.params if p.name == 'task'][0]
+    param.default = os.path.basename(os.path.abspath(os.curdir))
 
 
 def get_stop_message(current, edit=False):
