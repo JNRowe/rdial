@@ -299,7 +299,8 @@ def fsck(ctx, globs):
     events = Events.read(globs.directory, write_cache=globs.cache)
     lines = []
     with click.progressbar(events, label=_('Checking'),
-                           fill_char=click.style('#', 'green')) as pbar:
+                           fill_char=click.style(u'█', 'green'),
+                           empty_char=click.style(u'·', 'yellow')) as pbar:
         last_event = next(pbar)
         for event in pbar:
             if not last_event.start + last_event.delta <= event.start:
