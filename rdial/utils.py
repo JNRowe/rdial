@@ -426,6 +426,28 @@ def newer(fname, reference):
     return os.stat(fname).st_mtime > os.stat(reference).st_mtime
 
 
+def _xdg_basedir_dir(dtype):
+    """Return a user directory honouring XDG basedir spec.
+
+    Args:
+        dtype (str): Directory type to find
+
+    Returns:
+        str: Location of directory
+
+    """
+    if dtype not in ['cache', 'config', 'data']:
+        return ValueError(_('Invalid directory type %r') % dtype)
+    user_dir = os.getenv('XDG_%s_HOME' % dtype.upper())
+    if not user_dir:
+        if dtype == 'data':
+            default = '.local/share'
+        else:
+            default = '.%s' % dtype
+        user_dir = os.path.join(os.getenv('HOME', '/'), default)
+    return os.path.join(user_dir, 'rdial')
+
+
 def xdg_cache_location():
     """Return a cache location honouring $XDG_CACHE_HOME.
 
@@ -433,21 +455,23 @@ def xdg_cache_location():
         str: Location of cache directory
 
     """
-    user_dir = os.getenv('XDG_CACHE_HOME',
-                         os.path.join(os.getenv('HOME', '/'), '.cache'))
-    return os.path.join(user_dir, 'rdial')
+    return _xdg_basedir_dir('cache')
 
 
 def xdg_config_location():
     """Return a config location honouring $XDG_CONFIG_HOME.
 
+    .. note::
+        :mod:`click` provides :func:`click.get_app_dir`, but it isn't quite XDG
+        basedir compliant.  It also has no support for cache or data storage
+        locations, so we need to implement these anyway.  It does however
+        support Windows, which this most definitely does not.
+
     Returns:
         str: Location of config directory
 
     """
-    user_dir = os.getenv('XDG_CONFIG_HOME',
-                         os.path.join(os.getenv('HOME', '/'), '.config'))
-    return os.path.join(user_dir, 'rdial')
+    return _xdg_basedir_dir('config')
 
 
 def xdg_data_location():
@@ -457,6 +481,4 @@ def xdg_data_location():
         str: Location of data directory
 
     """
-    user_dir = os.getenv('XDG_DATA_HOME', os.path.join(os.getenv('HOME', '/'),
-                                                       '.local/share'))
-    return os.path.join(user_dir, 'rdial')
+    return _xdg_basedir_dir('data')
