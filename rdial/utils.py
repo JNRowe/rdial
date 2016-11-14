@@ -37,7 +37,7 @@ from . import compat
 
 
 # Set up informational message functions
-def _colourise(text, colour):
+def _colourise(text, colour, **kwargs):
     """Colour text, if possible.
 
     See also:
@@ -46,9 +46,10 @@ def _colourise(text, colour):
     Args:
         text (str): Text to colourise
         colour (str): Colour to display text in
+        kwargs (dict): Extra arguments for :func:`~secho`
 
     """
-    click.termui.secho(text, fg=colour, bold=True)
+    click.termui.secho(text, fg=colour, bold=True, **kwargs)
 
 
 def success(text):
@@ -68,7 +69,7 @@ def fail(text):
         text (str): Text to format
 
     """
-    _colourise(_('Error: %s') % (text, ), 'red')
+    _colourise(_('Error: %s') % (text, ), 'red', err=True)
 
 
 def warn(text):
@@ -78,7 +79,7 @@ def warn(text):
         text (str): Text to format
 
     """
-    _colourise(_('Warning: %s') % (text, ), 'yellow')
+    _colourise(_('Warning: %s') % (text, ), 'yellow', err=True)
 
 
 def safer_repr(obj):
