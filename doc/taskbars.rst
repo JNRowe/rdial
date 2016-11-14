@@ -12,6 +12,9 @@ The following sections should give you some idea of how you can (ab)use the
    The idea here is show minimal examples, for the gist of the solution.  We
    want to see the principal not be flooded with the details.
 
+.. todo::
+   Add more fleshed out examples.
+
 ``awesome``
 -----------
 

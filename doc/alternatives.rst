@@ -11,6 +11,8 @@ coming from.
 
 .. _mail: jnrowe@gmail.com
 
+.. todo:: Check for recent additions to arena
+
 ``gtimelog``
 ------------
 

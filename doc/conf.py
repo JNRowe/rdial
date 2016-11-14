@@ -29,7 +29,7 @@ import rdial
 
 extensions = \
     ['sphinx.ext.%s' % ext for ext in ['autodoc', 'coverage', 'doctest',
-                                       'intersphinx', 'napoleon',
+                                       'intersphinx', 'napoleon', 'todo',
                                        'viewcode']] \
     + ['sphinxcontrib.%s' % ext for ext in ['cheeseshop']]
 
@@ -81,3 +81,6 @@ spelling_word_list_filename = 'wordlist.txt'
 
 # napoleon extension settings
 napoleon_numpy_docstring = False
+
+# todo extension settings
+todo_include_todos = True

@@ -29,6 +29,7 @@ Contents
    taskbars
    alternatives
    release
+   todo
    api/index
 
 Indices and tables
