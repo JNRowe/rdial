@@ -217,7 +217,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
         cache_dir = os.path.join(xdg_cache_dir, directory.replace('/', '_'))
         if write_cache and not os.path.isdir(cache_dir):
             os.makedirs(cache_dir)
-            with open('%s/CACHEDIR.TAG' % xdg_cache_dir, 'w') as f:
+            with click.open_file('%s/CACHEDIR.TAG' % xdg_cache_dir, 'w') as f:
                 f.writelines([
                     'Signature: 8a477f597d28d172789f06886806bc55\n',
                     '# This file is a cache directory tag created by rdial.\n',

@@ -22,6 +22,7 @@ from subprocess import CalledProcessError
 from sys import version_info
 from time import sleep
 
+from click import open_file
 from click.testing import CliRunner
 from expecter import expect
 try:
@@ -76,9 +77,9 @@ def test_handle_current():
 def test_newer():
     runner = CliRunner()
     with runner.isolated_filesystem() as tempdir:
-        f1 = open('%s/file1' % tempdir, 'w')
-        sleep(0.1)
-        f2 = open('%s/file2' % tempdir, 'w')
-        expect(newer(f2.name, f1.name)) == True
-        expect(newer(f1.name, f2.name)) == False
-        expect(newer(f1.name, f1.name)) == False
+        with open_file('%s/file1' % tempdir, 'w') as f1:
+            sleep(0.1)
+            with open_file('%s/file2' % tempdir, 'w') as f2:
+                expect(newer(f2.name, f1.name)) == True
+                expect(newer(f1.name, f2.name)) == False
+                expect(newer(f1.name, f1.name)) == False
