@@ -369,6 +369,7 @@ def fsck(ctx, globs):
     warnings = 0
     events = Events.read(globs.directory, write_cache=globs.cache)
     lines = []
+    # Note: progress is *four* times slower on my data and system
     with click.progressbar(events, label=_('Checking'),
                            fill_char=click.style(u'█', 'green'),
                            empty_char=click.style(u'·', 'yellow')) as pbar:
