@@ -1,6 +1,9 @@
 #
 # coding=utf-8
-"""rdial - Simple time tracking for simple people."""
+"""rdial - Simple time tracking for simple people.
+
+A simple time tracking tool, with no frills and no fizzy coating.
+"""
 # Copyright © 2011-2016  James Rowe <jnrowe@gmail.com>
 #
 # This file is part of rdial.
@@ -24,18 +27,4 @@ from . import _version
 
 __version__ = _version.dotted
 __date__ = _version.date
-__author__ = 'James Rowe <jnrowe@gmail.com>'
 __copyright__ = 'Copyright (C) 2011-2016  James Rowe <jnrowe@gmail.com>'
-__license__ = 'GNU General Public License Version 3'
-__credits__ = ''
-__history__ = 'See git repository'
-
-from email.utils import parseaddr
-
-# pylint: disable=redefined-builtin
-__doc__ += """.
-
-A simple time tracking tool, with no frills and no fizzy coating.
-
-.. moduleauthor:: `%s <mailto:%s>`__
-""" % parseaddr(__author__)
