@@ -25,7 +25,7 @@ from subprocess import (CalledProcessError, check_output)
 root_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 sys.path.insert(0, root_dir)
 
-import rdial
+import rdial  # NOQA
 
 extensions = \
     ['sphinx.ext.%s' % ext for ext in ['autodoc', 'coverage', 'doctest',
