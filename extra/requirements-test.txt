@@ -1,6 +1,5 @@
 -r requirements.txt
 
-expecter>=0.2.2
 hiro>=0.2
 # hiro explicitly requires mock, and not Python 3’s unittest.mock
 mock>=0.7.1

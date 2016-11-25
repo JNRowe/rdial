@@ -16,7 +16,6 @@
 # You should have received a copy of the GNU General Public License along with
 # rdial.  If not, see <http://www.gnu.org/licenses/>.
 
-from expecter import expect
 from pytest import mark
 
 import setup
@@ -29,7 +28,7 @@ import setup
 def test_parse_requires(input, expected):
     requires = setup.parse_requires(
         '../tests/data/requires/{}.txt'.format(input))
-    expect(requires) == expected
+    assert requires == expected
 
 
 @mark.parametrize('version, expected', [
@@ -39,4 +38,4 @@ def test_parse_requires(input, expected):
 def test_parse_markers(version, expected, monkeypatch):
     monkeypatch.setattr(setup.sys, 'version_info', version)
     requires = setup.parse_requires('../tests/data/requires/markers.txt')
-    expect(requires) == expected
+    assert requires == expected

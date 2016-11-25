@@ -16,9 +16,10 @@
 # You should have received a copy of the GNU General Public License along with
 # rdial.  If not, see <http://www.gnu.org/licenses/>.
 
+from datetime import datetime
+
 from click import BadParameter
-from expecter import expect
-from pytest import mark
+from pytest import (mark, raises)
 
 from rdial.cmdline import (StartTimeParamType, TaskNameParamType)
 
@@ -35,9 +36,9 @@ from rdial.cmdline import (StartTimeParamType, TaskNameParamType)
 def test_task_name_validity(string, expected):
     p = TaskNameParamType()
     if expected is True:
-        expect(p.convert(string, None, None) == string)
+        assert p.convert(string, None, None) == string
     else:
-        with expect.raises(expected):
+        with raises(expected):
             p.convert(string, None, None)
 
 
@@ -50,7 +51,7 @@ def test_task_name_validity(string, expected):
 def test_start_time_validity(string, expected):
     p = StartTimeParamType()
     if expected is True:
-        expect(p.convert(string, None, None) == string)
+        assert isinstance(p.convert(string, None, None), datetime)
     else:
-        with expect.raises(expected):
+        with raises(expected):
             p.convert(string, None, None)

@@ -18,7 +18,6 @@
 
 from datetime import (datetime, timedelta)
 
-from expecter import expect
 from pytest import mark
 
 from rdial.utils import parse_datetime_user
@@ -31,5 +30,5 @@ from rdial.utils import parse_datetime_user
 def test_parse_datetime_via_date_command(string, delta):
     now = datetime.utcnow().replace(microsecond=0)
     # Accept a 2.5 second smudge window
-    expect(parse_datetime_user(string)) >= now - delta
-    expect(parse_datetime_user(string)) < now - delta + timedelta(seconds=2.5)
+    assert parse_datetime_user(string) >= now - delta
+    assert parse_datetime_user(string) < now - delta + timedelta(seconds=2.5)

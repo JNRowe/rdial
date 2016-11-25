@@ -19,7 +19,6 @@
 from datetime import datetime
 
 from click.testing import CliRunner
-from expecter import expect
 from hiro import Timeline
 
 from rdial.cmdline import cli
@@ -29,9 +28,9 @@ def test_fsck_overlap():
     runner = CliRunner()
     result = runner.invoke(cli, ['--directory=tests/data/test_fsck',
                                  '--no-cache', 'fsck'])
-    expect(result.exit_code) == 1
-    expect(result.output).contains('Overlap')
-    expect(result.output).contains("'2011-05-04T09:15:00Z', 'PT35M'")
+    assert result.exit_code == 1
+    assert 'Overlap' in result.output
+    assert "'2011-05-04T09:15:00Z', 'PT35M'" in result.output
 
 
 @Timeline(start=datetime(2016, 12, 13, 23, 0))
@@ -39,8 +38,8 @@ def test_fsck_future_start(timeline):
     runner = CliRunner()
     result = runner.invoke(cli, ['--directory=tests/data/test_fsck_future',
                                  '--no-cache', 'fsck'])
-    expect(result.exit_code) == 1
-    expect(result.output).contains('Future start')
+    assert result.exit_code == 1
+    assert 'Future start' in result.output
 
 
 @Timeline(start=datetime(2016, 12, 13, 23, 7))
@@ -48,5 +47,5 @@ def test_fsck_future_end(timeline):
     runner = CliRunner()
     result = runner.invoke(cli, ['--directory=tests/data/test_fsck_future',
                                  '--no-cache', 'fsck'])
-    expect(result.exit_code) == 1
-    expect(result.output).contains('Future end')
+    assert result.exit_code == 1
+    assert 'Future end' in result.output

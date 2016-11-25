@@ -18,7 +18,6 @@
 
 from datetime import date
 
-from expecter import expect
 from pytest import mark
 
 from rdial.utils import iso_week_to_date
@@ -30,4 +29,4 @@ from rdial.utils import iso_week_to_date
     (2013, 52, (date(2013, 12, 23), date(2013, 12, 30))),
 ])
 def test_iso_week_to_date(year, week, expected):
-    expect(iso_week_to_date(year, week)) == expected
+    assert iso_week_to_date(year, week) == expected
