@@ -16,8 +16,6 @@
 # You should have received a copy of the GNU General Public License along with
 # rdial.  If not, see <http://www.gnu.org/licenses/>.
 
-from unittest.mock import patch
-
 from expecter import expect
 from pytest import mark
 
@@ -38,7 +36,7 @@ def test_parse_requires(input, expected):
     ((2, 7, 6), ['unicodecsv', ]),
     ((3, 4, 2), []),
 ])
-def test_parse_markers(version, expected):
-    with patch.object(setup.sys, 'version_info ',version):
-        requires = setup.parse_requires('../tests/data/requires/markers.txt')
+def test_parse_markers(version, expected, monkeypatch):
+    monkeypatch.setattr(setup.sys, 'version_info', version)
+    requires = setup.parse_requires('../tests/data/requires/markers.txt')
     expect(requires) == expected
