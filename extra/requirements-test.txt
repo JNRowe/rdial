@@ -3,5 +3,4 @@
 hiro>=0.2
 # hiro explicitly requires mock, and not Python 3’s unittest.mock
 mock>=0.7.1
-nose2[coverage_plugin]>=0.5.0
 pytest>=3.2
