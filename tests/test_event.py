@@ -22,7 +22,6 @@ from filecmp import dircmp
 from os.path import abspath
 from warnings import (catch_warnings, simplefilter)
 
-from click.testing import CliRunner
 from jnrbase.iso_8601 import (parse_datetime, parse_delta)
 from pytest import mark
 
@@ -106,19 +105,17 @@ def test_check_events(n, task, start, delta):
     assert events[n].delta == delta
 
 
-def test_write_database():
-    runner = CliRunner()
+def test_write_database(tmpdir):
     in_dir = abspath('tests/data/test')
     events = Events.read(in_dir, write_cache=False)
     events._dirty = events.tasks()
-    with runner.isolated_filesystem() as tempdir:
-        events.write(tempdir)
-        comp = dircmp(in_dir, tempdir, [])
-        assert comp.diff_files == []
-        assert comp.left_only == []
-        assert comp.right_only == []
-        assert comp.funny_files == []
-        assert comp.subdirs == {}
+    events.write(tmpdir.strpath)
+    comp = dircmp(in_dir, tmpdir.strpath, [])
+    assert comp.diff_files == []
+    assert comp.left_only == []
+    assert comp.right_only == []
+    assert comp.funny_files == []
+    assert comp.subdirs == {}
 
 
 def test_store_messages_with_events():
