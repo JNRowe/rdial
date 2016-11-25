@@ -17,7 +17,7 @@
 # rdial.  If not, see <http://www.gnu.org/licenses/>.
 
 from expecter import expect
-from nose2.tools import params
+from pytest import mark
 
 from rdial.events import Events
 
@@ -27,12 +27,12 @@ def test_fetch_events_for_task():
     expect(len(events.for_task(task='task2'))) == 1
 
 
-@params(
+@mark.parametrize('date, expected', [
     ({'year': 2011, }, 2),
     ({'year': 2011, 'month': 1}, 1),
     ({'year': 2011, 'month': 3, 'day': 1}, 1),
     ({'year': 2011, 'month': 3, 'day': 31}, 0),
-)
+])
 def test_fetch_events_for_date(date, expected):
     events = Events.read('tests/data/date_filtering', write_cache=False)
     expect(len(events.for_date(**date))) == expected

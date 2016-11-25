@@ -24,13 +24,13 @@ from warnings import (catch_warnings, simplefilter)
 
 from click.testing import CliRunner
 from expecter import expect
-from nose2.tools import params
 from jnrbase.iso_8601 import (parse_datetime, parse_delta)
+from pytest import mark
 
 from rdial.events import (Event, Events)
 
 
-@params(
+@mark.parametrize('task, start, delta, message', [
     ('test', None, None, None),
     ('test', '2013-02-26T19:45:14', None, None),
     ('test', datetime(2013, 2, 26, 19, 45, 14), None,
@@ -39,7 +39,7 @@ from rdial.events import (Event, Events)
     ('test', '2013-02-26T19:45:14', timedelta(minutes=8, seconds=19.770869),
      None),
     ('test', '2013-02-26T19:45:14', 'PT8M19S', 'stopped'),
-)
+])
 def test_event_creation(task, start, delta, message):
     e = Event(task, start, delta, message)
     expect(e.task) == task
@@ -57,26 +57,31 @@ def test_event_creation(task, start, delta, message):
     expect(e.message) == message
 
 
-@params(
+@mark.parametrize('database, events', [
     ('test', 3),
     ('date_filtering', 3),
     ('test_not_running', 3),
-)
+])
 def test_read_datebase(database, events):
     evs = Events.read('tests/data/' + database, write_cache=False)
     expect(len(evs)) == events
 
 
-@params(
+@mark.parametrize('database, events', [
     ('test', 3),
     ('date_filtering', 3),
     ('test_not_running', 3),
-)
+])
 def test_read_datebase_wrapper(database, events):
     with Events.wrapping('tests/data/' + database, write_cache=False) as evs:
         expect(len(evs)) == events
 
 
+@mark.parametrize('database, events', [
+    ('test', 3),
+    ('date_filtering', 3),
+    ('test_not_running', 3),
+])
 def test_read_datebase_context(database, events):
     with catch_warnings(record=True) as warns:
         simplefilter("always")
@@ -86,13 +91,13 @@ def test_read_datebase_context(database, events):
         expect(str(warns[0])).contains('to wrapping')
 
 
-@params(
+@mark.parametrize('n, task, start, delta', [
     (0, 'task', datetime(2011, 5, 4, 8),
      timedelta(hours=1)),
     (1, 'task2', datetime(2011, 5, 4, 9, 15),
      timedelta(minutes=15)),
     (2, 'task', datetime(2011, 5, 4, 9, 30), timedelta()),
-)
+])
 def test_check_events(n, task, start, delta):
     # FIXME: Clean-ish way to perform check, with the caveat that it parses the
     # database on each entry.  Need a better solution.
