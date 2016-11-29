@@ -6,11 +6,11 @@ rdial - Simple time tracking for simple people
    :alt: Test state on master
 
 .. image:: https://pypip.in/v/rdial/badge.png
-   :target: https://crate.io/packages/rdial/
+   :target: https://pypi.python.org/pypi/rdial/
    :alt: Current PyPI release
 
 .. image:: https://pypip.in/d/rdial/badge.png
-   :target: https://crate.io/packages/rdial/
+   :target: https://pypi.python.org/pypi/rdial/
    :alt: Number of downloads from PyPI
 
 ``rdial`` is a simple way to track the time you spend on tasks.  It tracks the
@@ -125,12 +125,12 @@ If you've found a bug please attempt to include a minimal testcase so I can
 reproduce the problem, or even better a patch!
 
 .. _GPL v3: http://www.gnu.org/licenses/
-.. _ciso8601: https://crate.io/packages/ciso8601/
-.. _click: https://crate.io/packages/click/
-.. _configobj: https://crate.io/packages/configobj/
-.. _tabulate: https://crate.io/packages/tabulate/
-.. _unicodecsv: https://crate.io/packages/unicodecsv/
+.. _ciso8601: https://pypi.python.org/pypi/ciso8601/
+.. _click: https://pypi.python.org/pypi/click/
+.. _configobj: https://pypi.python.org/pypi/configobj/
+.. _tabulate: https://pypi.python.org/pypi/tabulate/
+.. _unicodecsv: https://pypi.python.org/pypi/unicodecsv/
 .. _Python: http://www.python.org/
 .. _issue: https://github.com/JNRowe/rdial/issues
-.. _nose2: https://crate.io/packages/nose2/
+.. _nose2: https://pypi.python.org/pypi/nose2/
 .. _mail: jnrowe@gmail.com

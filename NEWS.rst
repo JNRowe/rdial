@@ -15,7 +15,7 @@ User-visible changes
 * Python 3.5 is officially supported
 * Python 3.2 is no longer supported, but if you need it speak up!
 
-.. _unicodecsv: https://crate.io/packages/unicodecsv/
+.. _unicodecsv: https://pypi.python.org/pypi/unicodecsv/
 .. _cachedir: http://www.brynosaurus.com/cachedir/
 
 0.14.0 - 2014-06-10
@@ -34,10 +34,10 @@ User-visible changes
 * configobj_ is now required
 * blessings_ is no longer required
 
-.. _ciso8601: https://crate.io/packages/ciso8601/
-.. _click: https://crate.io/packages/click/
-.. _configobj: https://crate.io/packages/configobj/
-.. _tabulate: https://crate.io/packages/tabulate/
+.. _ciso8601: https://pypi.python.org/pypi/ciso8601/
+.. _click: https://pypi.python.org/pypi/click/
+.. _configobj: https://pypi.python.org/pypi/configobj/
+.. _tabulate: https://pypi.python.org/pypi/tabulate/
 
 0.13.0 - 2014-02-05
 -------------------
@@ -84,7 +84,7 @@ User-visible changes
 * ``gettext`` support, submit your translations!
 * Python 3.3 compatible [#3]
 
-.. _blessings: https://crate.io/packages/blessings/
+.. _blessings: https://pypi.python.org/pypi/blessings/
 
 0.7.0 - 2012-10-17
 ------------------
@@ -108,9 +108,9 @@ User-visible changes
 * zsh_ completion script in ``extra``
 * pip_ requirements files in ``extra``
 
-.. _aaargh: https://crate.io/packages/aaargh/
+.. _aaargh: https://pypi.python.org/pypi/aaargh/
 .. _zsh: http://www.zsh.org/
-.. _pip: https://crate.io/packages/pip/
+.. _pip: https://pypi.python.org/pypi/pip/
 
 0.4.0 - 2012-07-03
 ------------------
@@ -122,8 +122,8 @@ User-visible changes
 
 .. _ledger: http://ledger-cli.org/
 .. _Sphinx: http://sphinx.pocoo.org/
-.. _nose2: https://crate.io/packages/nose2/
-.. _expecter: https://crate.io/packages/expecter/
+.. _nose2: https://pypi.python.org/pypi/nose2/
+.. _expecter: https://pypi.python.org/pypi/expecter/
 
 0.3.0 - 2012-02-16
 ------------------
@@ -133,8 +133,8 @@ User-visible changes
 * ``report`` can now filter tasks by week
 * Tests now require behave_, and ``lettuce`` is no longer required
 
-.. _setuptools: https://crate.io/packages/distribute
-.. _behave: https://crate.io/packages/behave/
+.. _setuptools: https://pypi.python.org/pypi/distribute/
+.. _behave: https://pypi.python.org/pypi/behave/
 
 0.2.0 - 2011-08-06
 ------------------
@@ -143,7 +143,7 @@ User-visible changes
 * isodate_ is now required for date parsing, replacing the custom parser
 * prettytable_ is now required for ``report`` output
 
-.. _isodate: https://crate.io/packages/isodate/
+.. _isodate: https://pypi.python.org/pypi/isodate/
 .. _prettytable: http://code.google.com/p/prettytable/
 
 0.1.0 - 2010-11-02
