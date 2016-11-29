@@ -107,12 +107,6 @@ class RdialError(ValueError):
 
     """Generic exception for rdial."""
 
-    if not compat.PY2:  # pragma: Python 3
-        @property
-        def message(self):
-            """Compatibility hack for Python 3."""
-            return self.args[0]
-
 
 class AttrDict(dict):
 

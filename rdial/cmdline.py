@@ -711,7 +711,7 @@ def main():
         cli(auto_envvar_prefix='RDIAL')
         return 0
     except (ValueError, utils.RdialError) as error:
-        utils.fail(error.message)
+        utils.fail(str(error))
         return 2
     except OSError as error:
         return error.errno
