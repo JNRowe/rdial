@@ -368,6 +368,7 @@ def fsck(ctx, globs):
     """
     warnings = 0
     events = Events.read(globs.directory, write_cache=globs.cache)
+    now = datetime.datetime.utcnow()
     lines = []
     # Note: progress is *four* times slower on my data and system
     with click.progressbar(events, label=_('Checking'),
@@ -380,6 +381,14 @@ def fsck(ctx, globs):
                 lines.append(click.style(_('Overlap:'), 'red'))
                 lines.append(click.style(_('   %r') % last_event, 'yellow'))
                 lines.append(click.style(_('   %r') % event, 'green'))
+            if event.start > now:
+                warnings += 1
+                lines.append(click.style(_('Future start:'), 'red'))
+                lines.append(click.style(_('   %r') % event, 'yellow'))
+            elif event.start + event.delta > now:
+                warnings += 1
+                lines.append(click.style(_('Future end:'), 'red'))
+                lines.append(click.style(_('   %r') % event, 'yellow'))
             last_event = event
     if lines:
         click.echo_via_pager('\n'.join(lines))

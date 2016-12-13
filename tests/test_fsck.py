@@ -17,8 +17,11 @@
 # You should have received a copy of the GNU General Public License along with
 # rdial.  If not, see <http://www.gnu.org/licenses/>.
 
+from datetime import datetime
+
 from click.testing import CliRunner
 from expecter import expect
+from hiro import Timeline
 
 from rdial.cmdline import cli
 
@@ -30,3 +33,21 @@ def test_fsck_overlap():
     expect(result.exit_code) == 1
     expect(result.output).contains('Overlap')
     expect(result.output).contains("'2011-05-04T09:15:00Z', 'PT35M'")
+
+
+@Timeline(start=datetime(2016, 12, 13, 23, 0))
+def test_fsck_future_start(timeline):
+    runner = CliRunner()
+    result = runner.invoke(cli, ['--directory=tests/data/test_fsck_future',
+                                 '--no-cache', 'fsck'])
+    expect(result.exit_code) == 1
+    expect(result.output).contains('Future start')
+
+
+@Timeline(start=datetime(2016, 12, 13, 23, 7))
+def test_fsck_future_end(timeline):
+    runner = CliRunner()
+    result = runner.invoke(cli, ['--directory=tests/data/test_fsck_future',
+                                 '--no-cache', 'fsck'])
+    expect(result.exit_code) == 1
+    expect(result.output).contains('Future end')
