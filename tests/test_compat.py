@@ -1,7 +1,7 @@
 #
 # coding=utf-8
 """test_compat - Test Python 2/3 compatibility support"""
-# Copyright © 2016  James Rowe <jnrowe@gmail.com>
+# Copyright © 2011-2016  James Rowe <jnrowe@gmail.com>
 #
 # This file is part of rdial.
 #
