@@ -398,7 +398,7 @@ def start(globs, task, new, time):
         time (datetime.datetime): Task start time
 
     """
-    with Events.context(globs.directory, globs.backup, globs.cache) as events:
+    with Events.wrapping(globs.directory, globs.backup, globs.cache) as events:
         events.start(task, new, time)
 
 
@@ -419,7 +419,7 @@ def stop(globs, message, fname, amend):
     """
     if fname:
         message = fname.read()
-    with Events.context(globs.directory, globs.backup, globs.cache) as events:
+    with Events.wrapping(globs.directory, globs.backup, globs.cache) as events:
         last_event = events.last()
         if last_event.running():
             if amend:
@@ -460,7 +460,7 @@ def switch(globs, task, new, time, message, fname):
     """
     if fname:
         message = fname.read()
-    with Events.context(globs.directory, globs.backup, globs.cache) as events:
+    with Events.wrapping(globs.directory, globs.backup, globs.cache) as events:
         event = events.last()
         if time and time < event.start:
             raise TaskNotRunningError(_("Can't specify a start time before "
@@ -500,7 +500,7 @@ def run(globs, task, new, time, message, fname, command):
         command (str): Command to run
 
     """
-    with Events.context(globs.directory, globs.backup, globs.cache) as events:
+    with Events.wrapping(globs.directory, globs.backup, globs.cache) as events:
         if events.running():
             raise TaskRunningError(_('Task %s is already started!'
                                      % events.last().task))

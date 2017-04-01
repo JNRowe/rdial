@@ -423,7 +423,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
 
     @staticmethod
     @contextlib.contextmanager
-    def context(directory, backup=True, write_cache=True):
+    def wrapping(directory, backup=True, write_cache=True):
         """Convenience context handler to manage reading and writing database.
 
         Args:
@@ -436,3 +436,11 @@ class Events(list):  # pylint: disable=too-many-public-methods
         yield events
         if events.dirty:
             events.write(directory)
+
+    def context(directory, backup=True, write_cache=True):
+        """Convenience context handler to manage reading and writing database.
+
+        Warning:
+            Deprecated name for wrapping
+        """
+        return Events.wrapping
