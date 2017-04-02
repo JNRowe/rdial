@@ -25,20 +25,20 @@ from os.path import abspath
 from click.testing import CliRunner
 from expecter import expect
 from nose2.tools import params
+from jnrbase.iso_8601 import (parse_datetime, parse_delta, utc)
 
 from rdial.events import (Event, Events)
-from rdial.utils import (parse_datetime, parse_delta)
 
 
 @params(
     ('test', None, None, None),
-    ('test', '2013-02-26T19:45:14Z', None, None),
+    ('test', '2013-02-26T19:45:14', None, None),
     ('test', datetime(2013, 2, 26, 19, 45, 14), None,
      None),
-    ('test', '2013-02-26T19:45:14Z', 'PT8M19S', None),
-    ('test', '2013-02-26T19:45:14Z', timedelta(minutes=8, seconds=19.770869),
+    ('test', '2013-02-26T19:45:14', 'PT8M19S', None),
+    ('test', '2013-02-26T19:45:14', timedelta(minutes=8, seconds=19.770869),
      None),
-    ('test', '2013-02-26T19:45:14Z', 'PT8M19S', 'stopped'),
+    ('test', '2013-02-26T19:45:14', 'PT8M19S', 'stopped'),
 )
 def test_event_creation(task, start, delta, message):
     e = Event(task, start, delta, message)

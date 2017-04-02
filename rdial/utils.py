@@ -33,53 +33,8 @@ try:
 except ImportError:
     cduration = None
 
-from . import compat
-
-
-# Set up informational message functions
-def _colourise(text, colour, **kwargs):
-    """Colour text, if possible.
-
-    See also:
-        :func:`click.termui.secho`
-
-    Args:
-        text (str): Text to colourise
-        colour (str): Colour to display text in
-        kwargs (dict): Extra arguments for :func:`~secho`
-
-    """
-    click.termui.secho(text, fg=colour, bold=True, **kwargs)
-
-
-def success(text):
-    """Pretty print a success message.
-
-    Args:
-        text (str): Text to format
-
-    """
-    _colourise(text, 'green')
-
-
-def fail(text):
-    """Pretty print a failure message.
-
-    Args:
-        text (str): Text to format
-
-    """
-    _colourise(_('Error: %s') % (text, ), 'red', err=True)
-
-
-def warn(text):
-    """Pretty print a warning message.
-
-    Args:
-        text (str): Text to format
-
-    """
-    _colourise(_('Warning: %s') % (text, ), 'yellow', err=True)
+from jnrbase import (compat, xdg_basedir)
+from jnrbase.iso_8601 import parse_datetime
 
 
 def safer_repr(obj):
@@ -108,133 +63,8 @@ class RdialError(ValueError):
     """Generic exception for rdial."""
 
 
-class AttrDict(dict):
-
-    """Dictionary with attribute access.
-
-    See also:
-        :obj:`dict`
-
-    """
-
-    def __contains__(self, key):
-        """Check for item membership.
-
-        Args:
-            key (object): Key to test for
-
-        Returns:
-            bool: True, if item in dictionary
-
-        """
-        return hasattr(self, key) or super(AttrDict, self).__contains__(key)
-
-    def __getattr__(self, key):
-        """Support item access via dot notation.
-
-        Args:
-            key (object): Key to fetch
-
-        """
-        try:
-            return self[key]
-        except KeyError:
-            raise AttributeError(safer_repr(key))
-
-    def __setattr__(self, key, value):
-        """Support item assignment via dot notation.
-
-        Args:
-            key (object): Key to set value for
-            value (object): Value to set key to
-
-        """
-        try:
-            self[key] = value
-        except:
-            raise AttributeError(safer_repr(key))
-
-    def __delattr__(self, key):
-        """Support item deletion via dot notation.
-
-        Args:
-            key (object): Key to delete
-
-        """
-        try:
-            del self[key]
-        except KeyError:
-            raise AttributeError(safer_repr(key))
-
-
 #: Map duration string keys to timedelta args
 _MAPPER = {'D': 'days', 'H': 'hours', 'M': 'minutes', 'S': 'seconds'}
-
-
-def parse_delta(string):
-    """Parse ISO-8601 duration string.
-
-    Args:
-        string (str): Duration string to parse
-
-    Returns:
-        datetime.timedelta: Parsed delta object
-    """
-    if not string:
-        return datetime.timedelta(0)
-    if cduration:
-        return cduration.parse_duration(string)
-    parsed = {}
-    block = []
-    for c in string[1:]:
-        if c.isalpha():
-            if block:
-                parsed[_MAPPER[c]] = int(''.join(block))
-            block = []
-        else:
-            block.append(c)
-    return datetime.timedelta(**parsed)  # pylint: disable=star-args
-
-
-def format_delta(timedelta_):
-    """Format ISO-8601 duration string.
-
-    Args:
-        timedelta_ (datetime.timedelta): Duration to process
-
-    Returns:
-        str: ISO-8601 representation of duration
-    """
-    if timedelta_ == datetime.timedelta(0):
-        return ''
-    days = '%dD' % timedelta_.days if timedelta_.days else ''
-    hours, minutes = divmod(timedelta_.seconds, 3600)
-    minutes, seconds = divmod(minutes, 60)
-    hours = '%02dH' % hours if hours else ''
-    minutes = '%02dM' % minutes if minutes else ''
-    seconds = '%02dS' % seconds if seconds else ''
-    return 'P%s%s%s%s%s' % (days, 'T' if hours or minutes or seconds else '',
-                            hours, minutes, seconds)
-
-
-def parse_datetime(string):
-    """Parse datetime string.
-
-    Args:
-        string (str): Datetime string to parse
-
-    Returns:
-        datetime.datetime: Parsed datetime object
-
-    """
-    if not string:
-        datetime_ = datetime.datetime.utcnow()
-    else:
-        datetime_ = ciso8601.parse_datetime(string[:19])
-        if not datetime_:
-            raise ValueError('Unable to parse timestamp %r'
-                             % (safer_repr(string), ))
-    return datetime_
 
 
 def parse_datetime_user(string):
@@ -251,7 +81,7 @@ def parse_datetime_user(string):
 
     """
     try:
-        datetime_ = parse_datetime(string)
+        datetime_ = parse_datetime(string).replace(tzinfo=None)
     except ValueError:
         try:
             output = check_output(['date', '--utc', '--iso-8601=seconds', '-d',
@@ -263,18 +93,6 @@ def parse_datetime_user(string):
         raise ValueError('Unable to parse timestamp %r'
                          % (safer_repr(string), ))
     return datetime_
-
-
-def format_datetime(datetime_):
-    """Format ISO-8601 datetime string.
-
-    Args:
-        datetime_ (datetime.datetime): Datetime to process
-
-    Returns:
-        str: ISO-8601 compatible string
-    """
-    return datetime_.strftime('%Y-%m-%dT%H:%M:%SZ')
 
 
 def iso_week_to_date(year, week):
@@ -341,10 +159,9 @@ def read_config(user_config=None, cli_options=None):
     # Only base *must* exist
     conf = configobj.ConfigObj(os.path.dirname(__file__) + '/config',
                                file_error=True)
-    conf['xdg_data_location'] = xdg_data_location()
-    for string in os.getenv('XDG_CONFIG_DIRS', '/etc/xdg').split(':'):
-        conf.merge(configobj.ConfigObj(string + '/rdial/config'))
-    conf.merge(configobj.ConfigObj(xdg_config_location() + '/config'))
+    conf['xdg_data_location'] = xdg_basedir.user_data('rdial')
+    for f in xdg_basedir.get_configs('rdial'):
+        conf.merge(configobj.ConfigObj(f))
     conf.merge(configobj.ConfigObj(os.path.abspath('.rdialrc')))
     conf.merge(configobj.ConfigObj(user_config))
 
@@ -419,61 +236,3 @@ def newer(fname, reference):
 
     """
     return os.stat(fname).st_mtime > os.stat(reference).st_mtime
-
-
-def _xdg_basedir_dir(dtype):
-    """Return a user directory honouring XDG basedir spec.
-
-    Args:
-        dtype (str): Directory type to find
-
-    Returns:
-        str: Location of directory
-
-    """
-    if dtype not in ['cache', 'config', 'data']:
-        return ValueError(_('Invalid directory type %r') % dtype)
-    user_dir = os.getenv('XDG_%s_HOME' % dtype.upper())
-    if not user_dir:
-        if dtype == 'data':
-            default = '.local/share'
-        else:
-            default = '.%s' % dtype
-        user_dir = os.path.join(os.getenv('HOME', '/'), default)
-    return os.path.join(user_dir, 'rdial')
-
-
-def xdg_cache_location():
-    """Return a cache location honouring $XDG_CACHE_HOME.
-
-    Returns:
-        str: Location of cache directory
-
-    """
-    return _xdg_basedir_dir('cache')
-
-
-def xdg_config_location():
-    """Return a config location honouring $XDG_CONFIG_HOME.
-
-    .. note::
-        :mod:`click` provides :func:`click.get_app_dir`, but it isn't quite XDG
-        basedir compliant.  It also has no support for cache or data storage
-        locations, so we need to implement these anyway.  It does however
-        support Windows, which this most definitely does not.
-
-    Returns:
-        str: Location of config directory
-
-    """
-    return _xdg_basedir_dir('config')
-
-
-def xdg_data_location():
-    """Return a data location honouring $XDG_DATA_HOME.
-
-    Returns:
-        str: Location of data directory
-
-    """
-    return _xdg_basedir_dir('data')

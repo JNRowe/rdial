@@ -34,7 +34,8 @@ except ImportError:  # Python 3, and 2.x without speedy helper
 
 import click
 
-from . import compat
+from jnrbase import (compat, iso_8601, xdg_basedir)
+
 from . import utils
 
 if compat.PY2:
@@ -88,11 +89,11 @@ class Event(object):
                                  (utils.safer_repr(start), ))
             self.start = start
         else:
-            self.start = utils.parse_datetime(start)
+            self.start = iso_8601.parse_datetime(start).replace(tzinfo=None)
         if isinstance(delta, datetime.timedelta):
             self.delta = delta
         else:
-            self.delta = utils.parse_delta(delta)
+            self.delta = iso_8601.parse_delta(delta)
         self.message = message
 
     @compat.mangle_repr_type
@@ -103,8 +104,8 @@ class Event(object):
             str: Event representation suitable for :func:`eval`
         """
         return 'Event(%r, %r, %r, %r)' \
-            % (self.task, utils.format_datetime(self.start),
-               utils.format_delta(self.delta), self.message)
+            % (self.task, iso_8601.format_datetime(self.start),
+               iso_8601.format_delta(self.delta), self.message)
 
     def writer(self):
         """Prepare object for export.
@@ -114,8 +115,8 @@ class Event(object):
 
         """
         return {
-            'start': utils.format_datetime(self.start),
-            'delta': utils.format_delta(self.delta),
+            'start': iso_8601.format_datetime(self.start),
+            'delta': iso_8601.format_delta(self.delta),
             'message': self.message,
         }
 
@@ -213,7 +214,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
         if not os.path.exists(directory):
             return Events(backup=backup)
         events = []
-        xdg_cache_dir = utils.xdg_cache_location()
+        xdg_cache_dir = xdg_basedir.user_cache('rdial')
         cache_dir = os.path.join(xdg_cache_dir, directory.replace('/', '_'))
         if write_cache and not os.path.isdir(cache_dir):
             os.makedirs(cache_dir)

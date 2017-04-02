@@ -25,13 +25,14 @@ from time import sleep
 from click import open_file
 from click.testing import CliRunner
 from expecter import expect
+from jnrbase.attrdict import AttrDict
 try:
     from unittest.mock import patch
 except ImportError:
     from mock import patch
 
-from rdial.utils import (AttrDict, check_output, newer, read_config,
-                         remove_current, write_current)
+from rdial.utils import (check_output, newer, read_config, remove_current,
+                         write_current)
 
 
 def test_check_output():
