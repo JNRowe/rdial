@@ -47,9 +47,10 @@ def parse_requires(file):
         deps.append(dep)
     return deps
 
+
 install_requires = parse_requires('requirements.txt')
 
-test_requires = parse_requires('requirements-test.txt')
+tests_require = parse_requires('requirements-test.txt')
 
 with open('README.rst') as f:
     long_description = f.read()
@@ -70,6 +71,7 @@ if __name__ == '__main__':
         package_data={'': ['config', 'rdial/locale/*/LC_MESSAGES/*.mo']},
         entry_points={'console_scripts': ['rdial = rdial.cmdline:main', ]},
         install_requires=install_requires,
+        tests_require=tests_require,
         zip_safe=False,
         classifiers=[
             'Development Status :: 5 - Production/Stable',
@@ -91,6 +93,7 @@ if __name__ == '__main__':
             'Programming Language :: Python :: 3.3',
             'Programming Language :: Python :: 3.4',
             'Programming Language :: Python :: 3.5',
+            'Programming Language :: Python :: 3.6',
             'Topic :: Office/Business',
             'Topic :: Office/Business :: News/Diary',
             'Topic :: Office/Business :: Scheduling',
