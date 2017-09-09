@@ -1,7 +1,7 @@
 #
 # coding=utf-8
 """conf - Sphinx configuration information."""
-# Copyright © 2012-2016  James Rowe <jnrowe@gmail.com>
+# Copyright © 2012-2017  James Rowe <jnrowe@gmail.com>
 #
 # This file is part of rdial.
 #

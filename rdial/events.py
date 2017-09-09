@@ -1,7 +1,7 @@
 #
 # coding=utf-8
 """events - Event models for rdial."""
-# Copyright © 2011-2016  James Rowe <jnrowe@gmail.com>
+# Copyright © 2011-2017  James Rowe <jnrowe@gmail.com>
 #                        Nathan McGregor <nathan.mcgregor@astrium.eads.net>
 #
 # This file is part of rdial.
