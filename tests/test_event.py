@@ -21,6 +21,7 @@
 from datetime import (datetime, timedelta)
 from filecmp import dircmp
 from os.path import abspath
+from warnings import (catch_warnings, simplefilter)
 
 from click.testing import CliRunner
 from expecter import expect
@@ -65,6 +66,15 @@ def test_event_creation(task, start, delta, message):
 def test_read_datebase(database, events):
     evs = Events.read('tests/data/' + database, write_cache=False)
     expect(len(evs)) == events
+
+
+def test_read_datebase_context(database, events):
+    with catch_warnings(record=True) as warns:
+        simplefilter("always")
+        with Events.context('tests/data/test', write_cache=False):
+            pass
+        expect(warns[0].category) == DeprecationWarning
+        expect(str(warns[0])).contains('to wrapping')
 
 
 @params(

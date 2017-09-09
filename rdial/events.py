@@ -26,6 +26,7 @@ import glob
 import inspect
 import operator
 import os
+import warnings
 
 try:
     import cPickle as pickle
@@ -438,10 +439,16 @@ class Events(list):  # pylint: disable=too-many-public-methods
         if events.dirty:
             events.write(directory)
 
+    @staticmethod
+    @contextlib.contextmanager
     def context(directory, backup=True, write_cache=True):
         """Convenience context handler to manage reading and writing database.
 
         Warning:
             Deprecated name for wrapping
         """
-        return Events.wrapping
+        warnings.warn('context method has been renamed to wrapping',
+                      DeprecationWarning, 2)
+
+        with Events.wrapping(directory, backup, write_cache) as evs:
+            yield evs
