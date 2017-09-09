@@ -51,6 +51,13 @@ class HiddenGroup(click.Group):
     """
 
     def list_commands(self, ctx):
+        """List visible commands.
+
+        Args:
+            ctx (click.Context): Current command context
+        Returns:
+            list: Visible command names
+        """
         return sorted(k for k, v in self.commands.items()
                       if not hasattr(v, 'hidden'))
 
