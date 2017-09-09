@@ -236,3 +236,20 @@ def newer(fname, reference):
 
     """
     return os.stat(fname).st_mtime > os.stat(reference).st_mtime
+
+
+def term_link(target, name=None):
+    """Generate a terminal hyperlink
+
+    See https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda.
+
+    Args:
+        target (str): Hyperlink target
+        name (str): Target name
+
+    Returns:
+        str: Formatted hyperlink for terminal output
+    """
+    if not name:
+        name = os.path.basename(target)
+    return '\033]8;;%s\007%s\033]8;;\007' % (target, name)

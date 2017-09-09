@@ -16,6 +16,7 @@ Convenience functions and classes
 .. autofunction:: remove_current
 
 .. autofunction:: newer
+.. autofunction:: term_link
 
 Time handling
 '''''''''''''

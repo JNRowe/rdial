@@ -350,7 +350,10 @@ def bug_data():
             pkg = get_distribution(m)
         except DistributionNotFound:
             continue
-        click.echo('* `%s`: %s' % (pkg.project_name, pkg.version))
+        link = utils.term_link(
+            'https://pypi.python.org/pypi/%s' % pkg.project_name,
+            '`%s`' % pkg.project_name)
+        click.echo("* %s: %s" % (link, pkg.version))
 
 
 @cli.command(help=_('Check storage consistency.'))
