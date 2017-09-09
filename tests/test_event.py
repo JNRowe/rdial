@@ -68,6 +68,16 @@ def test_read_datebase(database, events):
     expect(len(evs)) == events
 
 
+@params(
+    ('test', 3),
+    ('date_filtering', 3),
+    ('test_not_running', 3),
+)
+def test_read_datebase_wrapper(database, events):
+    with Events.wrapping('tests/data/' + database, write_cache=False) as evs:
+        expect(len(evs)) == events
+
+
 def test_read_datebase_context(database, events):
     with catch_warnings(record=True) as warns:
         simplefilter("always")
