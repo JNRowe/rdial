@@ -29,7 +29,7 @@ import subprocess
 import click
 import tabulate
 
-from jnrbase import (colourise, i18n)
+from jnrbase import (colourise, i18n, iso_8601)
 from jnrbase.attrdict import AttrDict
 
 from .events import (Events, TaskNotRunningError, TaskRunningError)
@@ -616,7 +616,7 @@ def report(globs, task, stats, duration, sort, reverse, style):
     if events.running():
         current = events.last()
         click.echo(_("Task `%s' started %s")
-                   % (current.task, utils.format_datetime(current.start)))
+                   % (current.task, iso_8601.format_datetime(current.start)))
 
 
 @cli.command(help=_('Display running task, if any.'))
