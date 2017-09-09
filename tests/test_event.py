@@ -26,7 +26,7 @@ from warnings import (catch_warnings, simplefilter)
 from click.testing import CliRunner
 from expecter import expect
 from nose2.tools import params
-from jnrbase.iso_8601 import (parse_datetime, parse_delta, utc)
+from jnrbase.iso_8601 import (parse_datetime, parse_delta)
 
 from rdial.events import (Event, Events)
 
@@ -47,7 +47,7 @@ def test_event_creation(task, start, delta, message):
     if isinstance(start, datetime):
         expect(e.start) == start
     elif start:
-        expect(e.start) == parse_datetime(start)
+        expect(e.start) == parse_datetime(start, naive=True)
     else:
         # Special case to ignore comparison against utcnow()
         pass
