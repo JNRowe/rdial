@@ -33,7 +33,7 @@ try:
 except ImportError:
     cduration = None
 
-from jnrbase import (compat, xdg_basedir)
+from jnrbase import xdg_basedir
 from jnrbase.iso_8601 import parse_datetime
 
 
@@ -84,8 +84,9 @@ def parse_datetime_user(string):
         datetime_ = parse_datetime(string).replace(tzinfo=None)
     except ValueError:
         try:
-            output = check_output(['date', '--utc', '--iso-8601=seconds', '-d',
-                                   string])
+            output = subprocess.check_output(
+                ['date', '--utc', '--iso-8601=seconds', '-d', string],
+                stdout=subprocess.PIPE, encoding='utf-8').stdout
             datetime_ = ciso8601.parse_datetime(output.strip()[:19])
         except subprocess.CalledProcessError:
             datetime_ = None
@@ -113,36 +114,6 @@ def iso_week_to_date(year, week):
     start = iso_start + datetime.timedelta(weeks=week - 1)
     end = start + datetime.timedelta(weeks=1)
     return start, end
-
-
-def check_output(args, **kwargs):
-    """Simple check_output implementation for Python 2.6 compatibility.
-
-    Note:
-        This hides stderr, unlike the normal check_output function.
-
-    Args:
-        args (list): Command and arguments to call
-
-    Returns:
-        str: Command output
-
-    Raises:
-        subprocess.CalledProcessError: If command execution fails
-    """
-    try:
-        output = subprocess.check_output(args, stderr=subprocess.PIPE,
-                                         **kwargs)
-    except AttributeError:
-        process = subprocess.Popen(args, stdout=subprocess.PIPE,
-                                   stderr=subprocess.PIPE, **kwargs)
-        output, _ = process.communicate()
-        retcode = process.poll()
-        if retcode:
-            raise subprocess.CalledProcessError(retcode, args[0])
-    if not compat.PY2:  # pragma: Python 3
-        output = output.decode()
-    return output
 
 
 def read_config(user_config=None, cli_options=None):

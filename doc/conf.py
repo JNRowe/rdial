@@ -56,7 +56,8 @@ pygments_style = 'sphinx'
 try:
     html_last_updated_fmt = check_output(['git', 'log',
                                           "--pretty=format:'%ad [%h]'",
-                                          '--date=short', '-n1'])
+                                          '--date=short', '-n1'],
+                                         encoding='ascii')
 except CalledProcessError:
     pass
 
@@ -72,7 +73,7 @@ autodoc_default_flags = ['members', ]
 intersphinx_mapping = {k: (v, os.getenv('SPHINX_%s_OBJECTS' % k.upper()))
                        for k, v in {
                            'click': 'http://click.pocoo.org/6/',
-                           'python': 'https://docs.python.org/2/',
+                           'python': 'https://docs.python.org/3/',
 }.items()}
 
 # spelling extension settings

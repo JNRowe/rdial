@@ -19,10 +19,7 @@
 
 from expecter import expect
 from nose2.tools import params
-try:
-    from unittest.mock import patch
-except ImportError:
-    from mock import patch
+from unittest.mock import patch
 
 import setup
 

@@ -29,11 +29,7 @@ Requirements
 * configobj_
 * tabulate_
 
-The following are necessary for Python 2 users:
-
-* unicodecsv_
-
-It should work with any version of Python_ 2.6 or newer.  If ``rdial`` doesn't
+It should work with any version of Python_ 3.5 or newer.  If ``rdial`` doesn't
 work with the version of Python you have installed, file an issue_ and I'll
 endeavour to fix it.
 
@@ -129,7 +125,6 @@ reproduce the problem, or even better a patch!
 .. _click: https://pypi.python.org/pypi/click/
 .. _configobj: https://pypi.python.org/pypi/configobj/
 .. _tabulate: https://pypi.python.org/pypi/tabulate/
-.. _unicodecsv: https://pypi.python.org/pypi/unicodecsv/
 .. _Python: http://www.python.org/
 .. _issue: https://github.com/JNRowe/rdial/issues
 .. _nose2: https://pypi.python.org/pypi/nose2/

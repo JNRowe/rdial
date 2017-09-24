@@ -21,28 +21,20 @@
 from __future__ import absolute_import
 
 import contextlib
+import csv
 import datetime
 import glob
 import inspect
 import operator
 import os
+import pickle
 import warnings
-
-try:
-    import cPickle as pickle
-except ImportError:  # Python 3, and 2.x without speedy helper
-    import pickle  # NOQA
 
 import click
 
-from jnrbase import (compat, iso_8601, xdg_basedir)
+from jnrbase import (iso_8601, xdg_basedir)
 
 from . import utils
-
-if compat.PY2:
-    import unicodecsv as csv
-else:
-    import csv
 
 
 class RdialDialect(csv.excel):  # pylint: disable=too-few-public-methods
@@ -97,7 +89,6 @@ class Event(object):
             self.delta = iso_8601.parse_delta(delta)
         self.message = message
 
-    @compat.mangle_repr_type
     def __repr__(self):
         """Self-documenting string representation.
 
@@ -166,7 +157,6 @@ class Events(list):  # pylint: disable=too-many-public-methods
         self.backup = backup
         self._dirty = []
 
-    @compat.mangle_repr_type
     def __repr__(self):
         """Self-documenting string representation.
 

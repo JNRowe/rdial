@@ -345,7 +345,7 @@ def bug_data():
     click.echo()
 
     for m in ['click', 'ciso8601', 'cduration', 'configobj', 'pytz',
-              'tabulate', 'unicodecsv']:
+              'tabulate']:
         try:
             pkg = get_distribution(m)
         except DistributionNotFound:

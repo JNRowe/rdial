@@ -35,7 +35,3 @@ Preferably, include the following too:
 * `configobj` version:
 * `pytz` version:
 * `tabulate` version
-
-… and if using Python 2:
-
-* `unicodecsv` version:

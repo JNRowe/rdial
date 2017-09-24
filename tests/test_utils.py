@@ -18,43 +18,14 @@
 # rdial.  If not, see <http://www.gnu.org/licenses/>.
 
 from os import listdir
-from subprocess import CalledProcessError
-from sys import version_info
 from time import sleep
 
 from click import open_file
 from click.testing import CliRunner
 from expecter import expect
 from jnrbase.attrdict import AttrDict
-try:
-    from unittest.mock import patch
-except ImportError:
-    from mock import patch
 
-from rdial.utils import (check_output, newer, read_config, remove_current,
-                         write_current)
-
-
-def test_check_output():
-    expect(check_output(['echo', 'hello'])) == 'hello\n'
-
-
-def test_check_output_py26_compat():
-    if version_info[:2] == (2, 6):
-        expect(check_output(['echo', 'hello'])) == 'hello\n'
-    else:
-        with patch('subprocess.check_output', side_effect=AttributeError):
-            expect(check_output(['echo', 'hello'])) == 'hello\n'
-
-
-def test_check_output_py26_compat_fail():
-    if version_info[:2] == (2, 6):
-        with expect.raises(CalledProcessError):
-            check_output(['false', ])
-    else:
-        with patch('subprocess.check_output', side_effect=AttributeError):
-            with expect.raises(CalledProcessError):
-                check_output(['false', ])
+from rdial.utils import (newer, read_config, remove_current, write_current)
 
 
 def test_read_config_local():
