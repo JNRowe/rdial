@@ -20,7 +20,7 @@
 import os
 import sys
 
-from subprocess import (CalledProcessError, check_output)
+from subprocess import (CalledProcessError, PIPE, run)
 
 root_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 sys.path.insert(0, root_dir)
@@ -54,10 +54,10 @@ release = rdial._version.dotted
 
 pygments_style = 'sphinx'
 try:
-    html_last_updated_fmt = check_output(['git', 'log',
-                                          "--pretty=format:'%ad [%h]'",
-                                          '--date=short', '-n1'],
-                                         encoding='ascii')
+    proc = run(['git', 'log', "--pretty=format:'%ad [%h]'", '--date=short',
+                '-n1'],
+               stdout=PIPE)
+    html_last_updated_fmt = proc.stdout.decode()
 except CalledProcessError:
     pass
 

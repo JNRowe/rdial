@@ -523,9 +523,9 @@ def run(globs, task, new, time, message, fname, command):
                                      % events.last().task))
 
         try:
-            proc = subprocess.Popen(command, shell=True)
+            proc = subprocess.run(command, shell=True)
         except OSError as err:
-            raise utils.RdialError(err.strerror)
+            raise utils.RdialError(str(err))
 
         events.start(task, new, time)
         with click.open_file('%s/.current' % globs.directory, 'w') as f:
