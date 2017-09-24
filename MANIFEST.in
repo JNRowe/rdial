@@ -4,6 +4,7 @@ include *.rst
 include doc/images/dwm-taskbar.png
 include doc/conf.py
 include doc/wordlist.txt
+include extra/README.pip
 include extra/_rdial
 include extra/doap.rdf
 include extra/rdial.png
