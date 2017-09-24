@@ -1,5 +1,4 @@
 #
-# coding=utf-8
 """test_event_triggers - Test event trigger handling"""
 # Copyright © 2012-2016  James Rowe <jnrowe@gmail.com>
 #

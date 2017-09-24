@@ -1,5 +1,4 @@
 #
-# coding=utf-8
 """rdial - Simple time tracking for simple people.
 
 A simple time tracking tool, with no frills and no fizzy coating.

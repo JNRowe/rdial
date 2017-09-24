@@ -1,5 +1,4 @@
 #
-# coding=utf-8
 """test_event_query - Test event query handling"""
 # Copyright © 2011-2016  James Rowe <jnrowe@gmail.com>
 #

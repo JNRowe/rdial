@@ -1,5 +1,4 @@
 #
-# coding=utf-8
 """test_utils - Test utility functions"""
 # Copyright © 2014-2016  James Rowe <jnrowe@gmail.com>
 #

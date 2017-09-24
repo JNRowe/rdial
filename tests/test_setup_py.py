@@ -1,5 +1,4 @@
 #
-# coding=utf-8
 """test_setup_py - Test setup.py functionality"""
 # Copyright © 2011-2016  James Rowe <jnrowe@gmail.com>
 #

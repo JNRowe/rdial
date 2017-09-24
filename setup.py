@@ -1,5 +1,4 @@
 #! /usr/bin/env python
-# coding=utf-8
 """setup.py - Setuptools tasks and config for rdial"""
 # Copyright © 2011-2017  James Rowe <jnrowe@gmail.com>
 #
