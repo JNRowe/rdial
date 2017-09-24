@@ -77,8 +77,7 @@ class Event():
         self.task = task
         if isinstance(start, datetime.datetime):
             if start.tzinfo:
-                raise ValueError('Must be a naive datetime %r' %
-                                 (utils.safer_repr(start), ))
+                raise ValueError('Must be a naive datetime {!r}'.format(start))
             self.start = start
         else:
             self.start = iso_8601.parse_datetime(start).replace(tzinfo=None)
@@ -94,9 +93,9 @@ class Event():
         Returns:
             str: Event representation suitable for :func:`eval`
         """
-        return 'Event(%r, %r, %r, %r)' \
-            % (self.task, iso_8601.format_datetime(self.start),
-               iso_8601.format_delta(self.delta), self.message)
+        return 'Event({!r}, {!r}, {!r}, {!r})'.format(
+            self.task, iso_8601.format_datetime(self.start),
+            iso_8601.format_delta(self.delta), self.message)
 
     def writer(self):
         """Prepare object for export.
@@ -162,7 +161,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
         Returns:
             str: Events representation suitable for :func:`eval`
         """
-        return 'Events(%s)' % super(self.__class__, self).__repr__()
+        return 'Events({})'.format(super(self.__class__, self).__repr__())
 
     @property
     def dirty(self):
@@ -208,14 +207,15 @@ class Events(list):  # pylint: disable=too-many-public-methods
         cache_dir = os.path.join(xdg_cache_dir, directory.replace('/', '_'))
         if write_cache and not os.path.isdir(cache_dir):
             os.makedirs(cache_dir)
-            with click.open_file('%s/CACHEDIR.TAG' % xdg_cache_dir, 'w') as f:
+            with click.open_file('{}/CACHEDIR.TAG'.format(xdg_cache_dir),
+                                 'w') as f:
                 f.writelines([
                     'Signature: 8a477f597d28d172789f06886806bc55\n',
                     '# This file is a cache directory tag created by rdial.\n',
                     '# For information about cache directory tags, see:\n',
                     '#   http://www.brynosaurus.com/cachedir/\n',
                 ])
-        for fname in glob.glob('%s/*.csv' % directory):
+        for fname in glob.glob('{}/*.csv'.format(directory)):
             task = os.path.basename(fname)[:-4]
             cache_file = os.path.join(cache_dir, task) + '.pkl'
             evs = None
@@ -241,7 +241,8 @@ class Events(list):  # pylint: disable=too-many-public-methods
                     # *significantly* slower for large data files (~5x).
                     reader = csv.reader(f, dialect=RdialDialect)
                     assert next(reader) == FIELDS, \
-                        'Invalid data %r' % click.format_filename(fname)
+                        'Invalid data {!r}'.format(
+                            click.format_filename(fname))
                     evs = [Event(task, *row)  # pylint: disable=star-args
                            for row in reader]
                 if write_cache:
@@ -264,7 +265,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
             os.makedirs(directory)
 
         for task in self.dirty:
-            task_file = '%s/%s.csv' % (directory, task)
+            task_file = '{}/{}.csv'.format(directory, task)
             events = self.for_task(task)
             with click.utils.LazyFile(task_file, 'w', atomic=True) as temp:
                 writer = csv.DictWriter(temp, FIELDS, dialect=RdialDialect)
@@ -273,7 +274,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
                 for event in events:
                     writer.writerow(event.writer())
                 if self.backup and os.path.exists(task_file):
-                    os.rename(task_file, '%s~' % task_file)
+                    os.rename(task_file, '{}~'.format(task_file))
         del self.dirty
 
     def tasks(self):
@@ -323,11 +324,12 @@ class Events(list):  # pylint: disable=too-many-public-methods
 
         """
         if not new and task not in self.tasks():
-            raise TaskNotExistError("Task %s does not exist!  Use `--new' to "
-                                    'create it' % task)
+            raise TaskNotExistError(
+                "Task {} does not exist!  Use `--new' to create it".format(
+                    task))
         running = self.running()
         if running:
-            raise TaskRunningError('Running task %s!' % running)
+            raise TaskRunningError('Running task {}!'.format(running))
         last = self.last()
         if last and start and last.start + last.delta > start:
             raise TaskRunningError('Start date overlaps previous task!')

@@ -28,7 +28,8 @@ import setup
     ('recurse', ['click', 'tabulate', ]),
 )
 def test_parse_requires(input, expected):
-    requires = setup.parse_requires('../tests/data/requires/%s.txt' % input)
+    requires = setup.parse_requires(
+        '../tests/data/requires/{}.txt'.format(input))
     expect(requires) == expected
 
 

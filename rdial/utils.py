@@ -36,27 +36,6 @@ from jnrbase import xdg_basedir
 from jnrbase.iso_8601 import parse_datetime
 
 
-def safer_repr(obj):
-    """Produce a repr string for an object.
-
-    .. note::
-        This exists solely for use on deep objects that can be expelled deep in
-        the dependency libraries.  It should *not* be required for any
-        serviceable objects.
-
-    Args:
-        obj (object): Object to produce repr for
-
-    Returns:
-        str: :func:`repr` output, or a fallback string
-
-    """
-    try:
-        return repr(obj)
-    except Exception:
-        return '<invalid repr>'
-
-
 class RdialError(ValueError):
 
     """Generic exception for rdial."""
@@ -91,8 +70,7 @@ def parse_datetime_user(string):
         except subprocess.CalledProcessError:
             datetime_ = None
     if not datetime_:
-        raise ValueError('Unable to parse timestamp %r'
-                         % (safer_repr(string), ))
+        raise ValueError('Unable to parse timestamp {!r}'.format(string))
     return datetime_
 
 
@@ -138,7 +116,8 @@ def read_config(user_config=None, cli_options=None):
 
     if cli_options:
         cli_conf = ['[rdial]', ]
-        cli_conf.extend('%s = %r' % (k, v) for k, v in cli_options.items()
+        cli_conf.extend('{} = {!r}'.format(k, v)
+                        for k, v in cli_options.items()
                         if v is not None)
         conf.merge(configobj.ConfigObj(cli_conf))
 
@@ -165,7 +144,7 @@ def write_current(fun):
         """
         globs = args[0]
         fun(*args, **kwargs)
-        with click.open_file('%s/.current' % globs.directory, 'w') as f:
+        with click.open_file('{}/.current'.format(globs.directory), 'w') as f:
             f.write(kwargs['task'])
     return wrapper
 
@@ -190,8 +169,8 @@ def remove_current(fun):
         """
         globs = args[0]
         fun(*args, **kwargs)
-        if os.path.isfile('%s/.current' % globs.directory):
-            os.unlink('%s/.current' % globs.directory)
+        if os.path.isfile('{}/.current'.format(globs.directory)):
+            os.unlink('{}/.current'.format(globs.directory))
     return wrapper
 
 
@@ -223,4 +202,4 @@ def term_link(target, name=None):
     """
     if not name:
         name = os.path.basename(target)
-    return '\033]8;;%s\007%s\033]8;;\007' % (target, name)
+    return '\033]8;;{}\007{}\033]8;;\007'.format(target, name)

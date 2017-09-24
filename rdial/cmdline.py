@@ -84,13 +84,14 @@ class TaskNameParamType(click.ParamType):
         if value.startswith('-'):
             utils.warn(_('Task names with leading dashes are non-portable'))
         if value.startswith('.') or '/' in value or '\000' in value:
-            raise click.BadParameter(_('%r is not a valid task name') % value)
+            raise click.BadParameter(
+                _('{!r} is not a valid task name').format(value))
         # Should be based on platform's PATH_MAX, but it isn't exposed in a
         # clean way to Python
         if len(value) > 255:
             raise click.BadParameter(
-                _('%r is too long to be a valid task name(max 255 characters)')
-                % value)
+                _('{!r} is too long to be a valid task name(max 255 '
+                  'characters)').format(value))
         return value
 
 
@@ -116,7 +117,7 @@ class StartTimeParamType(click.ParamType):
             value = utils.parse_datetime_user(value)
         except ValueError:
             raise click.BadParameter(
-                _('%r is not a valid ISO-8601 time string') % value)
+                _('{!r} is not a valid ISO-8601 time string').format(value))
         return value
 
 
@@ -147,9 +148,8 @@ def get_stop_message(current, edit=False):
 
     """
     marker = _('# Text below here ignored\n')
-    task_message = _("# Task `%s' started %s") % (current.task,
-                                                  current.start)
-    template = '%s\n%s%s' % (current.message, marker, task_message)
+    task_message = _("# Task `{.task}' started {.start}").format(current)
+    template = '{}\n{}{}'.format(current.message, marker, task_message)
     message = click.edit(template, require_save=not edit)
     if message is None:
         message = ''
@@ -338,9 +338,9 @@ def bug_data():
 
     from pkg_resources import (DistributionNotFound, get_distribution)
 
-    click.echo('* OS: %s' % sys.platform)
-    click.echo('* `rdial` version: %s' % _version.dotted)
-    click.echo('* `python` version: %s' % sys.version.replace('\n', '|'))
+    click.echo('* OS: {}'.format(sys.platform))
+    click.echo('* `rdial` version: {}'.format(_version.dotted))
+    click.echo('* `python` version: {}'.format(sys.version.replace('\n', '|')))
     click.echo()
 
     for m in ['click', 'ciso8601', 'cduration', 'configobj', 'pytz',
@@ -350,9 +350,9 @@ def bug_data():
         except DistributionNotFound:
             continue
         link = utils.term_link(
-            'https://pypi.python.org/pypi/%s' % pkg.project_name,
-            '`%s`' % pkg.project_name)
-        click.echo("* %s: %s" % (link, pkg.version))
+            'https://pypi.python.org/pypi/{}'.format(pkg.project_name),
+            '`{}`'.format(pkg.project_name))
+        click.echo("* {}: {}".format(link, pkg.version))
 
 
 @cli.command(help=_('Check storage consistency.'))
@@ -379,16 +379,16 @@ def fsck(ctx, globs):
             if not last_event.start + last_event.delta <= event.start:
                 warnings += 1
                 lines.append(colourise.fail(_('Overlap:')))
-                lines.append(colourise.warn(_('   %r' % last_event)))
-                lines.append(colourise.info(_('   %r' % event)))
+                lines.append(colourise.warn('   {!r}'.format(last_event)))
+                lines.append(colourise.info('   {!r}'.format(event)))
             if event.start > now:
                 warnings += 1
                 lines.append(colourise.fail(_('Future start:')))
-                lines.append(colourise.warn(_('   %r') % event))
+                lines.append(colourise.warn('   {!r}'.format(event)))
             elif event.start + event.delta > now:
                 warnings += 1
                 lines.append(colourise.fail(_('Future end:')))
-                lines.append(colourise.warn(_('   %r') % event))
+                lines.append(colourise.warn('   {!r}'.format(event)))
             last_event = event
     if lines:
         click.echo_via_pager('\n'.join(lines))
@@ -439,8 +439,8 @@ def stop(globs, message, fname, amend):
         last_event = events.last()
         if last_event.running():
             if amend:
-                raise TaskRunningError(_("Can't amend running task %s!")
-                                       % last_event.task)
+                raise TaskRunningError(
+                    _("Can't amend running task {}!").format(last_event.task))
         else:
             if not amend:
                 raise TaskNotRunningError(_('No task running!'))
@@ -450,8 +450,9 @@ def stop(globs, message, fname, amend):
             get_stop_message(last_event, edit=amend)
         events.stop(message, force=amend)
     event = events.last()
-    click.echo(_('Task %s running for %s') % (event.task,
-                                              str(event.delta).split('.')[0]))
+    click.echo(_('Task {} running for {}').format(
+        event.task,
+        str(event.delta).split('.')[0]))
 
 
 @cli.command(help=_('Switch to another task.'))
@@ -491,8 +492,9 @@ def switch(globs, task, new, time, message, fname):
             events.stop(message)
         events.last().delta = time - event.start
         events.start(task, new, time)
-    click.echo(_('Task %s running for %s') % (event.task,
-                                              str(event.delta).split('.')[0]))
+    click.echo(_('Task {} running for {}').format(
+        event.task,
+        str(event.delta).split('.')[0]))
 
 
 @cli.command(help=_('Run command with timer.'))
@@ -518,8 +520,8 @@ def run(globs, task, new, time, message, fname, command):
     """
     with Events.wrapping(globs.directory, globs.backup, globs.cache) as events:
         if events.running():
-            raise TaskRunningError(_('Task %s is already started!'
-                                     % events.last().task))
+            raise TaskRunningError(
+                _('Task {} is already started!').format(events.last().task))
 
         try:
             proc = subprocess.run(command, shell=True)
@@ -527,7 +529,7 @@ def run(globs, task, new, time, message, fname, command):
             raise utils.RdialError(str(err))
 
         events.start(task, new, time)
-        with click.open_file('%s/.current' % globs.directory, 'w') as f:
+        with click.open_file('{}/.current'.format(globs.directory), 'w') as f:
             f.write(task)
 
         proc.wait()
@@ -538,9 +540,10 @@ def run(globs, task, new, time, message, fname, command):
             get_stop_message(events.running())
         events.stop(message)
     event = events.last()
-    click.echo(_('Task %s running for %s') % (event.task,
-                                              str(event.delta).split('.')[0]))
-    os.unlink('%s/.current' % globs.directory)
+    click.echo(_('Task {} running for {}').format(
+        event.task,
+        str(event.delta).split('.')[0]))
+    os.unlink('{}/.current'.format(globs.directory))
     if proc.returncode != 0:
         raise OSError(proc.returncode, _('Command failed'))
 
@@ -565,11 +568,11 @@ def wrapper(ctx, globs, time, message, fname, wrapper):
 
     """
     if 'run wrappers' not in globs.config:
-        raise ValueError(_('No %r section in config') % 'run wrappers')
+        raise ValueError(_('No {!r} section in config').format('run wrappers'))
     try:
         command = globs.config['run wrappers'][wrapper]
     except KeyError:
-        raise click.BadParameter(_('No such wrapper %r') % wrapper)
+        raise click.BadParameter(_('No such wrapper {!r}').format(wrapper))
     parser = ctx.parent.command.commands['run'].make_parser(ctx)
     args = {'time': time, 'message': message, 'fname': fname, 'new': False}
     args.update(parser.parse_args(shlex.split(command))[0])
@@ -607,14 +610,14 @@ def report(globs, task, stats, duration, sort, reverse, style):
         task = None
     events = filter_events(globs, task, duration)
     if stats:
-        click.echo(N_('%d event in query', '%d events in query', len(events))
-                   % len(events))
-        click.echo(_('Duration of events %s') % events.sum())
+        click.echo(N_('{} event in query', '{} events in query',
+                      len(events)).format(len(events)))
+        click.echo(_('Duration of events {}').format(events.sum()))
         if events:
-            click.echo(_('First entry started at %s') % events[0].start)
-            click.echo(_('Last entry started at %s') % events[-1].start)
+            click.echo(_('First entry started at {}').format(events[0].start))
+            click.echo(_('Last entry started at {}').format(events[-1].start))
         dates = set(e.start.date() for e in events)
-        click.echo(_('Events exist on %d dates') % len(dates))
+        click.echo(_('Events exist on {:d} dates').format(len(dates)))
     else:
         data = sorted(([t, str(events.for_task(t).sum())]
                        for t in events.tasks()),
@@ -624,8 +627,8 @@ def report(globs, task, stats, duration, sort, reverse, style):
                                                tablefmt=style))
     if events.running():
         current = events.last()
-        click.echo(_("Task `%s' started %s")
-                   % (current.task, iso_8601.format_datetime(current.start)))
+        click.echo(_("Task `{}' started {}").format(
+            current.task, iso_8601.format_datetime(current.start)))
 
 
 @cli.command(help=_('Display running task, if any.'))
@@ -641,8 +644,8 @@ def running(globs):
     if events.running():
         current = events.last()
         now = datetime.datetime.utcnow()
-        click.echo(_("Task `%s' started %s")
-                   % (current.task, str(now - current.start).split('.')[0]))
+        click.echo(_("Task `{}' started {}").format(
+            current.task, str(now - current.start).split('.')[0]))
     else:
         colourise.pwarn(_('No task is running!'))
 
@@ -659,11 +662,11 @@ def last(globs):
     events = Events.read(globs.directory, write_cache=globs.cache)
     event = events.last()
     if not events.running():
-        click.echo(_('Last task %s, ran for %s') % (event.task, event.delta))
+        click.echo(_('Last task {.task}, ran for {.delta}').format(event))
         if event.message:
             click.echo(event.message)
     else:
-        colourise.pwarn(_('Task %s is still running') % event.task)
+        colourise.pwarn(_('Task {.task} is still running').format(event))
 
 
 @cli.command(help=_('Generate ledger compatible data file.'))
@@ -696,11 +699,11 @@ def ledger(globs, task, duration, rate):
         # Can't use timedelta.total_seconds() as it was only added in 2.7
         seconds = event.delta.days * 86400 + event.delta.seconds
         hours = seconds / 3600
-        lines.append('%s-%s' % (event.start.strftime('%Y-%m-%d * %H:%M'),
-                                end.strftime('%H:%M')))
-        lines.append('    (task:%s)  %.2fh%s%s'
-                     % (event.task, hours, ' @ %s' % rate if rate else '',
-                        '  ; %s' % event.message if event.message else ''))
+        lines.append('{}-{}'.format(event.start.strftime('%Y-%m-%d * %H:%M'),
+                                    end.strftime('%H:%M')))
+        lines.append('    (task:{})  {:.2f}h{}{}'.format(
+            event.task, hours, ' @ {}'.format(rate if rate else ''),
+            '  ; {}'.format(event.message if event.message else '')))
     if events.running():
         lines.append(_(';; Running event not included in output!'))
     click.echo_via_pager('\n'.join(lines))

@@ -48,9 +48,9 @@ def test_handle_current():
 def test_newer():
     runner = CliRunner()
     with runner.isolated_filesystem() as tempdir:
-        with open_file('%s/file1' % tempdir, 'w') as f1:
+        with open_file('{}/file1'.format(tempdir), 'w') as f1:
             sleep(0.1)
-            with open_file('%s/file2' % tempdir, 'w') as f2:
+            with open_file('{}/file2'.format(tempdir), 'w') as f2:
                 expect(newer(f2.name, f1.name)) == True
                 expect(newer(f1.name, f2.name)) == False
                 expect(newer(f1.name, f1.name)) == False

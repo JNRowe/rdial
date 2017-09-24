@@ -30,7 +30,7 @@ with open('rdial/_version.py') as ver_file:
 
 def parse_requires(file):
     deps = []
-    with open('extra/%s' % file) as req_file:
+    with open('extra/{}'.format(file)) as req_file:
         entries = map(lambda s: s.split('#')[0].strip(), req_file.readlines())
     for dep in entries:
         if not dep or dep.startswith('#'):
@@ -40,8 +40,9 @@ def parse_requires(file):
             continue
         elif ';' in dep:
             dep, marker = dep.split(';')
-            if not eval(marker.strip(),
-                        {'python_version': '%s.%s' % sys.version_info[:2]}):
+            if not eval(marker.strip(), {
+                    'python_version': '{}.{}'.format(*sys.version_info[:2])
+                }):
                 continue
         deps.append(dep)
     return deps
