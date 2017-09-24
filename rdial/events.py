@@ -221,9 +221,12 @@ class Events(list):  # pylint: disable=too-many-public-methods
             evs = None
             if os.path.exists(cache_file) and utils.newer(cache_file, fname):
                 try:
+                    # UnicodeDecodeError must be caught for the Python 2 to
+                    # 3 upgrade path.
                     with click.open_file(cache_file, 'rb') as f:
                         cache = pickle.load(f)
-                except (pickle.UnpicklingError, ImportError):
+                except (pickle.UnpicklingError, ImportError,
+                        UnicodeDecodeError):
                     pass
                 else:
                     try:
