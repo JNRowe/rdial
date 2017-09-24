@@ -49,7 +49,7 @@ source_suffix = '.rst'
 project = u'rdial'
 copyright = rdial.__copyright__
 
-version = '.'.join(map(str, rdial._version.tuple[:2]))
+version = '.'.join([str(s) for s in rdial._version.tuple[:2]])
 release = rdial._version.dotted
 
 pygments_style = 'sphinx'

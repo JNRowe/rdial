@@ -32,7 +32,7 @@ with open('rdial/_version.py') as ver_file:
 def parse_requires(file):
     deps = []
     with open('extra/%s' % file) as req_file:
-        entries = map(lambda s: s.split('#')[0].strip(), req_file.readlines())
+        entries = [s.split('#')[0].strip() for s in req_file.readlines()]
     for dep in entries:
         if not dep or dep.startswith('#'):
             continue
