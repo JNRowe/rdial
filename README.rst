@@ -5,6 +5,10 @@ rdial - Simple time tracking for simple people
    :target: http://travis-ci.org/JNRowe/rdial
    :alt: Test state on master
 
+.. image:: https://img.shields.io/coveralls/JNRowe/rdial/master.svg?style=plastic
+   :target: https://coveralls.io/repos/JNRowe/rdial
+   :alt: Coverage state on master
+
 .. image:: https://pypip.in/v/rdial/badge.png
    :target: https://pypi.python.org/pypi/rdial/
    :alt: Current PyPI release
