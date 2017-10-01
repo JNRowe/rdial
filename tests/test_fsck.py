@@ -33,19 +33,19 @@ def test_fsck_overlap():
     assert "'2011-05-04T09:15:00Z', 'PT35M'" in result.output
 
 
-@Timeline(start=datetime(2016, 12, 13, 23, 0))
-def test_fsck_future_start(timeline):
-    runner = CliRunner()
-    result = runner.invoke(cli, ['--directory=tests/data/test_fsck_future',
-                                 '--no-cache', 'fsck'])
+def test_fsck_future_start():
+    with Timeline(start=datetime(2016, 12, 13, 23, 0)):
+        runner = CliRunner()
+        result = runner.invoke(cli, ['--directory=tests/data/test_fsck_future',
+                                     '--no-cache', 'fsck'])
     assert result.exit_code == 1
     assert 'Future start' in result.output
 
 
-@Timeline(start=datetime(2016, 12, 13, 23, 7))
-def test_fsck_future_end(timeline):
-    runner = CliRunner()
-    result = runner.invoke(cli, ['--directory=tests/data/test_fsck_future',
-                                 '--no-cache', 'fsck'])
+def test_fsck_future_end():
+    with Timeline(start=datetime(2016, 12, 13, 23, 7)):
+        runner = CliRunner()
+        result = runner.invoke(cli, ['--directory=tests/data/test_fsck_future',
+                                     '--no-cache', 'fsck'])
     assert result.exit_code == 1
     assert 'Future end' in result.output
