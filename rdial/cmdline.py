@@ -277,26 +277,26 @@ def cli(ctx, directory, backup, cache, config, interactive, colour):
     if colour is None:
         if 'color' in base:
             base['colour'] = base['color']
-        colour = base.as_bool('colour')
+        colour = base.getboolean('colour')
     colourise.COLOUR = colour
 
     ctx.default_map = {}
     for name in ctx.command.commands:
-        if name in cfg.sections:
+        if name in cfg.sections():
             defs = {}
             for k in cfg[name]:
                 try:
-                    defs[k] = cfg[name].as_bool(k)
+                    defs[k] = cfg[name].getboolean(k)
                 except ValueError:
                     defs[k] = cfg[name][k]
             ctx.default_map[name] = defs
 
     ctx.obj = AttrDict(
-        backup=base.as_bool('backup'),
-        cache=base.as_bool('cache'),
+        backup=base.getboolean('backup'),
+        cache=base.getboolean('cache'),
         config=cfg,
         directory=base['directory'],
-        interactive=base.as_bool('interactive'),
+        interactive=base.getboolean('interactive'),
     )
 
 
@@ -343,8 +343,7 @@ def bug_data():
     click.echo('* `python` version: {}'.format(sys.version.replace('\n', '|')))
     click.echo()
 
-    for m in ['click', 'ciso8601', 'cduration', 'configobj', 'pytz',
-              'tabulate']:
+    for m in ['click', 'ciso8601', 'cduration', 'pytz', 'tabulate']:
         try:
             pkg = get_distribution(m)
         except DistributionNotFound:

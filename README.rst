@@ -30,7 +30,6 @@ Requirements
 
 * ciso8601_
 * click_
-* configobj_
 * tabulate_
 
 It should work with any version of Python_ 3.5 or newer.  If ``rdial`` doesn’t
@@ -127,7 +126,6 @@ reproduce the problem, or even better a patch!
 .. _GPL v3: http://www.gnu.org/licenses/
 .. _ciso8601: https://pypi.python.org/pypi/ciso8601/
 .. _click: https://pypi.python.org/pypi/click/
-.. _configobj: https://pypi.python.org/pypi/configobj/
 .. _tabulate: https://pypi.python.org/pypi/tabulate/
 .. _Python: http://www.python.org/
 .. _issue: https://github.com/JNRowe/rdial/issues

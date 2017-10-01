@@ -29,7 +29,7 @@ from rdial.utils import (newer, read_config, remove_current, write_current)
 
 def test_read_config_local():
     conf = read_config('tests/data/local.ini')
-    expect(conf['local test'].as_bool('read')) == True
+    expect(conf['local test'].getboolean('read')) == True
 
 
 def test_handle_current():
