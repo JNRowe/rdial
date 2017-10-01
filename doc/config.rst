@@ -4,9 +4,9 @@ Configuration
 :program:`rdial` can be configured using a cascading series of files, processed
 in the following order:
 
-* The package's :file:`rdial/config` file which contains the base configuration
+* The package’s :file:`rdial/config` file which contains the base configuration
 * Any :file:`rdial/config` file that exists in :envvar:`$XDG_CONFIG_DIRS`
-* The user's :file:`rdial/config` file found in :envvar:`$XDG_CONFIG_HOME`
+* The user’s :file:`rdial/config` file found in :envvar:`$XDG_CONFIG_HOME`
 * The :file:`.rdialrc` found in the current directory
 
 .. note::
@@ -71,7 +71,7 @@ with the per-directory config file, to keep per-project task databases.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If this key is set to ``True`` then ``rdial`` will interactively ask the user
-for for messages if they're not supplied as arguments.
+for for messages if they’re not supplied as arguments.
 
 .. _run-wrappers-label:
 

@@ -49,7 +49,7 @@ def parse_datetime_user(string):
     """Parse datetime string from user.
 
     We accept the normal ISO-8601 formats, but kick through to the formats
-    supported by the system's date command if parsing fails.
+    supported by the system’s date command if parsing fails.
 
     Args:
         string (str): Datetime string to parse

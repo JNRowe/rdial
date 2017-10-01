@@ -34,7 +34,7 @@ extensions = \
     + ['sphinxcontrib.{}'.format(ext) for ext in []]
 
 # Only activate spelling if it is installed.  It is not required in the
-# general case and we don't have the granularity to describe this in a clean
+# general case and we don’t have the granularity to describe this in a clean
 # way
 try:
     from sphinxcontrib import spelling  # NOQA

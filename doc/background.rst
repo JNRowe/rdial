@@ -2,9 +2,9 @@ Background
 ==========
 
 I spend an awful lot of time sitting in front of a computer, working on a huge
-number of disparate projects.  And when it comes time to gauge what I've been
+number of disparate projects.  And when it comes time to gauge what I’ve been
 working on it would be nice if I could just fire up a simple tool to see where
-I've been spending my time.
+I’ve been spending my time.
 
 The features *I* need in a time tracking tool are:
 
@@ -27,14 +27,14 @@ options <alternatives>` out there!
 Explicit new tasks
 ''''''''''''''''''
 
-    It is an error to attempt to start a task that doesn't already exist in the
+    It is an error to attempt to start a task that doesn’t already exist in the
     database
 
 If you wish to create a new task you *must* give the :option:`--new` option when
-starting the task.  This should hopefully catch typos and task name "thinkos",
+starting the task.  This should hopefully catch typos and task name “thinkos”,
 and it has proven to do so for me.
 
-Switch vs "stopstart"
+Switch vs “stopstart”
 '''''''''''''''''''''
 
     It is an error to attempt to start a task when another is running, or

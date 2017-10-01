@@ -269,7 +269,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
             events = self.for_task(task)
             with click.utils.LazyFile(task_file, 'w', atomic=True) as temp:
                 writer = csv.DictWriter(temp, FIELDS, dialect=RdialDialect)
-                # Can't use writeheader, it wasn't added until 2.7.
+                # Can’t use writeheader, it wasn’t added until 2.7.
                 writer.writerow(dict(zip(FIELDS, FIELDS)))
                 for event in events:
                     writer.writerow(event.writer())
@@ -325,7 +325,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
         """
         if not new and task not in self.tasks():
             raise TaskNotExistError(
-                "Task {} does not exist!  Use `--new' to create it".format(
+                "Task {} does not exist!  Use “--new” to create it".format(
                     task))
         running = self.running()
         if running:

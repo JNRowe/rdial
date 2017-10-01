@@ -45,7 +45,7 @@ class HiddenGroup(click.Group):
 
     Any :obj:`click.Command` with the hidden attribute set will not be visible
     in help output.  This is mainly to be used for diagnostic commands, and
-    shouldn't be abused!
+    shouldn’t be abused!
 
     """
 
@@ -86,7 +86,7 @@ class TaskNameParamType(click.ParamType):
         if value.startswith('.') or '/' in value or '\000' in value:
             raise click.BadParameter(
                 _('{!r} is not a valid task name').format(value))
-        # Should be based on platform's PATH_MAX, but it isn't exposed in a
+        # Should be based on platform’s PATH_MAX, but it isn’t exposed in a
         # clean way to Python
         if len(value) > 255:
             raise click.BadParameter(
@@ -148,7 +148,7 @@ def get_stop_message(current, edit=False):
 
     """
     marker = _('# Text below here ignored\n')
-    task_message = _("# Task `{.task}' started {.start}").format(current)
+    task_message = _("# Task “{.task}” started {.start}").format(current)
     template = '{}\n{}{}'.format(current.message, marker, task_message)
     message = click.edit(template, require_save=not edit)
     if message is None:
@@ -440,7 +440,7 @@ def stop(globs, message, fname, amend):
         if last_event.running():
             if amend:
                 raise TaskRunningError(
-                    _("Can't amend running task {}!").format(last_event.task))
+                    _("Can’t amend running task {}!").format(last_event.task))
         else:
             if not amend:
                 raise TaskNotRunningError(_('No task running!'))
@@ -480,7 +480,7 @@ def switch(globs, task, new, time, message, fname):
     with Events.wrapping(globs.directory, globs.backup, globs.cache) as events:
         event = events.last()
         if time and time < event.start:
-            raise TaskNotRunningError(_("Can't specify a start time before "
+            raise TaskNotRunningError(_("Can’t specify a start time before "
                                         'current task started!'))
         if not event.running():
             raise TaskNotRunningError(_('No task running!'))
@@ -627,7 +627,7 @@ def report(globs, task, stats, duration, sort, reverse, style):
                                                tablefmt=style))
     if events.running():
         current = events.last()
-        click.echo(_("Task `{}' started {}").format(
+        click.echo(_("Task “{}” started {}").format(
             current.task, iso_8601.format_datetime(current.start)))
 
 
@@ -644,7 +644,7 @@ def running(globs):
     if events.running():
         current = events.last()
         now = datetime.datetime.utcnow()
-        click.echo(_("Task `{}' started {}").format(
+        click.echo(_("Task “{}” started {}").format(
             current.task, str(now - current.start).split('.')[0]))
     else:
         colourise.pwarn(_('No task is running!'))
@@ -696,7 +696,7 @@ def ledger(globs, task, duration, rate):
         if not event.delta:
             continue
         end = event.start + event.delta
-        # Can't use timedelta.total_seconds() as it was only added in 2.7
+        # Can’t use timedelta.total_seconds() as it was only added in 2.7
         seconds = event.delta.days * 86400 + event.delta.seconds
         hours = seconds / 3600
         lines.append('{}-{}'.format(event.start.strftime('%Y-%m-%d * %H:%M'),
