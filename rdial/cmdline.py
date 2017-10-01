@@ -584,9 +584,10 @@ def wrapper(ctx, globs, time, message, fname, wrapper):
 @click.option('--stats', is_flag=True,
               help=_('Display database statistics.'))
 @duration_option
-@click.option('-s', '--sort', default='task',
+@click.option('-s', '--sort', default='task', envvar='RDIAL_SORT',
               type=click.Choice(['task', 'time']), help=_('Field to sort by.'))
 @click.option('-r', '--reverse/--no-reverse', default=False,
+              envvar='RDIAL_REVERSE',
               help=_('Reverse sort order.'))
 @click.option('--style', default='simple',
               type=click.Choice(tabulate._table_formats.keys()),
@@ -672,7 +673,7 @@ def last(globs):
 @cli.command(help=_('Generate ledger compatible data file.'))
 @task_option
 @duration_option
-@click.option('-r', '--rate', type=float,
+@click.option('-r', '--rate', type=float, envvar='RDIAL_RATE',
               help=_('Hourly rate for task output.'))
 @click.pass_obj
 def ledger(globs, task, duration, rate):
