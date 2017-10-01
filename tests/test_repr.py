@@ -1,5 +1,4 @@
 #
-# coding=utf-8
 """test_repr - Test __repr__ methods for self-reproducibility"""
 # Copyright © 2011-2016  James Rowe <jnrowe@gmail.com>
 #

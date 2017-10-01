@@ -1,5 +1,4 @@
 #
-# coding=utf-8
 """test_setup_py - Test setup.py functionality"""
 # Copyright © 2011-2016  James Rowe <jnrowe@gmail.com>
 #
@@ -19,10 +18,7 @@
 
 from expecter import expect
 from nose2.tools import params
-try:
-    from unittest.mock import patch
-except ImportError:
-    from mock import patch
+from unittest.mock import patch
 
 import setup
 
@@ -32,7 +28,8 @@ import setup
     ('recurse', ['click', 'tabulate', ]),
 )
 def test_parse_requires(input, expected):
-    requires = setup.parse_requires('../tests/data/requires/%s.txt' % input)
+    requires = setup.parse_requires(
+        '../tests/data/requires/{}.txt'.format(input))
     expect(requires) == expected
 
 

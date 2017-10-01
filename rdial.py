@@ -1,5 +1,4 @@
 #! /usr/bin/env python
-# coding=utf-8
 """rdial - Simple time tracking for simple people"""
 # Copyright © 2011-2016  James Rowe <jnrowe@gmail.com>
 #

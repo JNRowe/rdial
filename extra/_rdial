@@ -1,5 +1,4 @@
 #compdef rdial rdial.py
-# coding=utf-8
 # rdial - ZSH completion support for rdial
 # Copyright © 2012-2016  James Rowe <jnrowe@gmail.com>
 #
@@ -19,7 +18,7 @@
 
 # Most of this file is generated from rdial/__init__.py, but feel free to
 # customise it!  If you make improvements, open a pull request against
-# `JNRowe/rdial' with your super changes attached.
+# ‘JNRowe/rdial’ with your super changes attached.
 
 (( $+functions[__list_styles] )) ||
 __list_styles() {

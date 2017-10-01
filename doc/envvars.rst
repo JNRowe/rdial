@@ -36,7 +36,7 @@ to make it easy for users to configure per-project defaults using shell hooks.
 .. envvar:: RDIAL_INTERACTIVE
 
    This controls whether :program:`rdial` asks for messages interactively if
-   they're not provided as arguments.  It must be a boolean setting that
+   they’re not provided as arguments.  It must be a boolean setting that
    accepts ``false``/``true``, ``0``/``1`` or ``y``/``n`` as its value.
 
 .. envvar:: RDIAL_RATE

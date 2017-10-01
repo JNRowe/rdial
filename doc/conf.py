@@ -1,5 +1,4 @@
 #
-# coding=utf-8
 """conf - Sphinx configuration information."""
 # Copyright © 2012-2017  James Rowe <jnrowe@gmail.com>
 #
@@ -20,21 +19,22 @@
 import os
 import sys
 
-from subprocess import (CalledProcessError, check_output)
+from contextlib import suppress
+from subprocess import (CalledProcessError, PIPE, run)
 
-root_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+root_dir = os.path.dirname(os.path.dirname(__file__))
 sys.path.insert(0, root_dir)
 
 import rdial  # NOQA
 
 extensions = \
-    ['sphinx.ext.%s' % ext for ext in ['autodoc', 'coverage', 'doctest',
-                                       'intersphinx', 'napoleon', 'todo',
-                                       'viewcode']] \
-    + ['sphinxcontrib.%s' % ext for ext in []]
+    ['sphinx.ext.{}'.format(ext)
+     for ext in ['autodoc', 'coverage', 'doctest', 'intersphinx', 'napoleon',
+                 'todo', 'viewcode']] \
+    + ['sphinxcontrib.{}'.format(ext) for ext in []]
 
 # Only activate spelling if it is installed.  It is not required in the
-# general case and we don't have the granularity to describe this in a clean
+# general case and we don’t have the granularity to describe this in a clean
 # way
 try:
     from sphinxcontrib import spelling  # NOQA
@@ -53,12 +53,11 @@ version = '.'.join([str(s) for s in rdial._version.tuple[:2]])
 release = rdial._version.dotted
 
 pygments_style = 'sphinx'
-try:
-    html_last_updated_fmt = check_output(['git', 'log',
-                                          "--pretty=format:'%ad [%h]'",
-                                          '--date=short', '-n1'])
-except CalledProcessError:
-    pass
+with suppress(CalledProcessError):
+    proc = run(['git', 'log', "--pretty=format:'%ad [%h]'", '--date=short',
+                '-n1'],
+               stdout=PIPE)
+    html_last_updated_fmt = proc.stdout.decode()
 
 man_pages = [
     ('rdial.1', 'rdial', u'rdial Documentation', [u'James Rowe'], 1)
@@ -69,10 +68,10 @@ autoclass_content = 'init'
 autodoc_default_flags = ['members', ]
 
 # intersphinx extension settings
-intersphinx_mapping = {k: (v, os.getenv('SPHINX_%s_OBJECTS' % k.upper()))
+intersphinx_mapping = {k: (v, os.getenv('SPHINX_{}_OBJECTS'.format(k.upper())))
                        for k, v in {
                            'click': 'http://click.pocoo.org/6/',
-                           'python': 'https://docs.python.org/2/',
+                           'python': 'https://docs.python.org/3/',
 }.items()}
 
 # spelling extension settings

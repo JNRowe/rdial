@@ -1,5 +1,4 @@
 #! /usr/bin/env python
-# coding=utf-8
 """setup.py - Setuptools tasks and config for rdial"""
 # Copyright © 2011-2017  James Rowe <jnrowe@gmail.com>
 #
@@ -31,7 +30,7 @@ with open('rdial/_version.py') as ver_file:
 
 def parse_requires(file):
     deps = []
-    with open('extra/%s' % file) as req_file:
+    with open('extra/{}'.format(file)) as req_file:
         entries = [s.split('#')[0].strip() for s in req_file.readlines()]
     for dep in entries:
         if not dep or dep.startswith('#'):
@@ -41,8 +40,9 @@ def parse_requires(file):
             continue
         elif ';' in dep:
             dep, marker = dep.split(';')
-            if not eval(marker.strip(),
-                        {'python_version': '%s.%s' % sys.version_info[:2]}):
+            if not eval(marker.strip(), {
+                    'python_version': '{}.{}'.format(*sys.version_info[:2])
+                }):
                 continue
         deps.append(dep)
     return deps
@@ -86,12 +86,7 @@ if __name__ == '__main__':
             'Natural Language :: English',
             'Operating System :: OS Independent',
             'Programming Language :: Python',
-            'Programming Language :: Python :: 2',
-            'Programming Language :: Python :: 2.6',
-            'Programming Language :: Python :: 2.7',
             'Programming Language :: Python :: 3',
-            'Programming Language :: Python :: 3.3',
-            'Programming Language :: Python :: 3.4',
             'Programming Language :: Python :: 3.5',
             'Programming Language :: Python :: 3.6',
             'Topic :: Office/Business',

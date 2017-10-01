@@ -1,5 +1,4 @@
 #
-# coding=utf-8
 """events - Event models for rdial."""
 # Copyright © 2011-2017  James Rowe <jnrowe@gmail.com>
 #                        Nathan McGregor <nathan.mcgregor@astrium.eads.net>
@@ -21,28 +20,20 @@
 from __future__ import absolute_import
 
 import contextlib
+import csv
 import datetime
 import glob
 import inspect
 import operator
 import os
+import pickle
 import warnings
-
-try:
-    import cPickle as pickle
-except ImportError:  # Python 3, and 2.x without speedy helper
-    import pickle  # NOQA
 
 import click
 
-from jnrbase import (compat, iso_8601, xdg_basedir)
+from jnrbase import (iso_8601, xdg_basedir)
 
 from . import utils
-
-if compat.PY2:
-    import unicodecsv as csv
-else:
-    import csv
 
 
 class RdialDialect(csv.excel):  # pylint: disable=too-few-public-methods
@@ -69,7 +60,7 @@ class TaskNotExistError(utils.RdialError):
     """Exception for attempting to operate on a non-existing task."""
 
 
-class Event(object):
+class Event():
 
     """Base object for handling database event."""
 
@@ -86,8 +77,7 @@ class Event(object):
         self.task = task
         if isinstance(start, datetime.datetime):
             if start.tzinfo:
-                raise ValueError('Must be a naive datetime %r' %
-                                 (utils.safer_repr(start), ))
+                raise ValueError('Must be a naive datetime {!r}'.format(start))
             self.start = start
         else:
             self.start = iso_8601.parse_datetime(start).replace(tzinfo=None)
@@ -97,16 +87,15 @@ class Event(object):
             self.delta = iso_8601.parse_delta(delta)
         self.message = message
 
-    @compat.mangle_repr_type
     def __repr__(self):
         """Self-documenting string representation.
 
         Returns:
             str: Event representation suitable for :func:`eval`
         """
-        return 'Event(%r, %r, %r, %r)' \
-            % (self.task, iso_8601.format_datetime(self.start),
-               iso_8601.format_delta(self.delta), self.message)
+        return 'Event({!r}, {!r}, {!r}, {!r})'.format(
+            self.task, iso_8601.format_datetime(self.start),
+            iso_8601.format_delta(self.delta), self.message)
 
     def writer(self):
         """Prepare object for export.
@@ -147,7 +136,7 @@ class Event(object):
             raise TaskNotRunningError('No task running!')
         self.delta = datetime.datetime.utcnow() - self.start
         self.message = message
-FIELDS = inspect.getargspec(Event.__init__)[0][2:]
+FIELDS = list(inspect.signature(Event).parameters.keys())[1:]
 
 
 class Events(list):  # pylint: disable=too-many-public-methods
@@ -166,14 +155,13 @@ class Events(list):  # pylint: disable=too-many-public-methods
         self.backup = backup
         self._dirty = []
 
-    @compat.mangle_repr_type
     def __repr__(self):
         """Self-documenting string representation.
 
         Returns:
             str: Events representation suitable for :func:`eval`
         """
-        return 'Events(%s)' % super(self.__class__, self).__repr__()
+        return 'Events({})'.format(super(self.__class__, self).__repr__())
 
     @property
     def dirty(self):
@@ -219,22 +207,26 @@ class Events(list):  # pylint: disable=too-many-public-methods
         cache_dir = os.path.join(xdg_cache_dir, directory.replace('/', '_'))
         if write_cache and not os.path.isdir(cache_dir):
             os.makedirs(cache_dir)
-            with click.open_file('%s/CACHEDIR.TAG' % xdg_cache_dir, 'w') as f:
+            with click.open_file('{}/CACHEDIR.TAG'.format(xdg_cache_dir),
+                                 'w') as f:
                 f.writelines([
                     'Signature: 8a477f597d28d172789f06886806bc55\n',
                     '# This file is a cache directory tag created by rdial.\n',
                     '# For information about cache directory tags, see:\n',
                     '#   http://www.brynosaurus.com/cachedir/\n',
                 ])
-        for fname in glob.glob('%s/*.csv' % directory):
+        for fname in glob.glob('{}/*.csv'.format(directory)):
             task = os.path.basename(fname)[:-4]
             cache_file = os.path.join(cache_dir, task) + '.pkl'
             evs = None
             if os.path.exists(cache_file) and utils.newer(cache_file, fname):
                 try:
+                    # UnicodeDecodeError must be caught for the Python 2 to
+                    # 3 upgrade path.
                     with click.open_file(cache_file, 'rb') as f:
                         cache = pickle.load(f)
-                except (pickle.UnpicklingError, ImportError):
+                except (pickle.UnpicklingError, ImportError,
+                        UnicodeDecodeError):
                     pass
                 else:
                     try:
@@ -249,7 +241,8 @@ class Events(list):  # pylint: disable=too-many-public-methods
                     # *significantly* slower for large data files (~5x).
                     reader = csv.reader(f, dialect=RdialDialect)
                     assert next(reader) == FIELDS, \
-                        'Invalid data %r' % click.format_filename(fname)
+                        'Invalid data {!r}'.format(
+                            click.format_filename(fname))
                     evs = [Event(task, *row)  # pylint: disable=star-args
                            for row in reader]
                 if write_cache:
@@ -272,16 +265,15 @@ class Events(list):  # pylint: disable=too-many-public-methods
             os.makedirs(directory)
 
         for task in self.dirty:
-            task_file = '%s/%s.csv' % (directory, task)
+            task_file = '{}/{}.csv'.format(directory, task)
             events = self.for_task(task)
             with click.utils.LazyFile(task_file, 'w', atomic=True) as temp:
                 writer = csv.DictWriter(temp, FIELDS, dialect=RdialDialect)
-                # Can't use writeheader, it wasn't added until 2.7.
-                writer.writerow(dict(zip(FIELDS, FIELDS)))
+                writer.writeheader()
                 for event in events:
                     writer.writerow(event.writer())
                 if self.backup and os.path.exists(task_file):
-                    os.rename(task_file, '%s~' % task_file)
+                    os.rename(task_file, '{}~'.format(task_file))
         del self.dirty
 
     def tasks(self):
@@ -331,11 +323,12 @@ class Events(list):  # pylint: disable=too-many-public-methods
 
         """
         if not new and task not in self.tasks():
-            raise TaskNotExistError("Task %s does not exist!  Use `--new' to "
-                                    'create it' % task)
+            raise TaskNotExistError(
+                "Task {} does not exist!  Use “--new” to create it".format(
+                    task))
         running = self.running()
         if running:
-            raise TaskRunningError('Running task %s!' % running)
+            raise TaskRunningError('Running task {}!'.format(running))
         last = self.last()
         if last and start and last.start + last.delta > start:
             raise TaskRunningError('Start date overlaps previous task!')

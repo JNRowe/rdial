@@ -5,6 +5,10 @@ rdial - Simple time tracking for simple people
    :target: http://travis-ci.org/JNRowe/rdial
    :alt: Test state on master
 
+.. image:: https://img.shields.io/coveralls/JNRowe/rdial/master.svg?style=plastic
+   :target: https://coveralls.io/repos/JNRowe/rdial
+   :alt: Coverage state on master
+
 .. image:: https://pypip.in/v/rdial/badge.png
    :target: https://pypi.python.org/pypi/rdial/
    :alt: Current PyPI release
@@ -22,25 +26,21 @@ more.
 Requirements
 ------------
 
-``rdial``'s dependencies outside of the standard library are:
+``rdial``’s dependencies outside of the standard library are:
 
 * ciso8601_
 * click_
 * configobj_
 * tabulate_
 
-The following are necessary for Python 2 users:
-
-* unicodecsv_
-
-It should work with any version of Python_ 2.6 or newer.  If ``rdial`` doesn't
-work with the version of Python you have installed, file an issue_ and I'll
+It should work with any version of Python_ 3.5 or newer.  If ``rdial`` doesn’t
+work with the version of Python you have installed, file an issue_ and I’ll
 endeavour to fix it.
 
 The module has been tested on many UNIX-like systems, including Linux and OS X,
 but it should work fine on other systems too.
 
-To run the tests you'll need nose2_.  Once you have nose2_ installed you can run
+To run the tests you’ll need nose2_.  Once you have nose2_ installed you can run
 the tests with the following commands:
 
 .. code:: console
@@ -92,7 +92,7 @@ Interface
 Contributors
 ------------
 
-I'd like to thank the following people who have contributed to ``rdial``.
+I’d like to thank the following people who have contributed to ``rdial``.
 
 Patches
 '''''''
@@ -112,8 +112,8 @@ Ideas
 * Adam Baxter
 * Kevin Simmons
 
-If I've forgotten to include your name I wholeheartedly apologise.  Just drop me
-a mail_ and I'll update the list!
+If I’ve forgotten to include your name I wholeheartedly apologise.  Just drop me
+a mail_ and I’ll update the list!
 
 Bugs
 ----
@@ -121,7 +121,7 @@ Bugs
 If you find any problems, bugs or just have a question about this package either
 file an issue_ or drop me a mail_.
 
-If you've found a bug please attempt to include a minimal testcase so I can
+If you’ve found a bug please attempt to include a minimal testcase so I can
 reproduce the problem, or even better a patch!
 
 .. _GPL v3: http://www.gnu.org/licenses/
@@ -129,7 +129,6 @@ reproduce the problem, or even better a patch!
 .. _click: https://pypi.python.org/pypi/click/
 .. _configobj: https://pypi.python.org/pypi/configobj/
 .. _tabulate: https://pypi.python.org/pypi/tabulate/
-.. _unicodecsv: https://pypi.python.org/pypi/unicodecsv/
 .. _Python: http://www.python.org/
 .. _issue: https://github.com/JNRowe/rdial/issues
 .. _nose2: https://pypi.python.org/pypi/nose2/

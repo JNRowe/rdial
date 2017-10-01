@@ -7,9 +7,9 @@ User-visible changes
 -------------------
 
 * Reading the database is now far faster!
-* ``report``'s ``--human`` option has been renamed to ``--stats``
+* ``report``’s ``--human`` option has been renamed to ``--stats``
 * unicodecsv_ is now required for Python 2 users
-* User supplied datetime now support falling back to the system's ``date(1)``
+* User supplied datetime now support falling back to the system’s ``date(1)``
   for parsing
 * A cachedir_ tag is now created to help environments with cleaning tools
 * Python 3.5 is officially supported

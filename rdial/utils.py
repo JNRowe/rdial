@@ -1,5 +1,4 @@
 #
-# coding=utf-8
 """utils - Utility functions for rdial."""
 # Copyright © 2012-2017  James Rowe <jnrowe@gmail.com>
 #
@@ -33,29 +32,8 @@ try:
 except ImportError:
     cduration = None
 
-from jnrbase import (compat, xdg_basedir)
+from jnrbase import xdg_basedir
 from jnrbase.iso_8601 import parse_datetime
-
-
-def safer_repr(obj):
-    """Produce a repr string for an object.
-
-    .. note::
-        This exists solely for use on deep objects that can be expelled deep in
-        the dependency libraries.  It should *not* be required for any
-        serviceable objects.
-
-    Args:
-        obj (object): Object to produce repr for
-
-    Returns:
-        str: :func:`repr` output, or a fallback string
-
-    """
-    try:
-        return repr(obj)
-    except Exception:
-        return '<invalid repr>'
 
 
 class RdialError(ValueError):
@@ -71,7 +49,7 @@ def parse_datetime_user(string):
     """Parse datetime string from user.
 
     We accept the normal ISO-8601 formats, but kick through to the formats
-    supported by the system's date command if parsing fails.
+    supported by the system’s date command if parsing fails.
 
     Args:
         string (str): Datetime string to parse
@@ -84,14 +62,15 @@ def parse_datetime_user(string):
         datetime_ = parse_datetime(string).replace(tzinfo=None)
     except ValueError:
         try:
-            output = check_output(['date', '--utc', '--iso-8601=seconds', '-d',
-                                   string])
+            proc = subprocess.run(['date', '--utc', '--iso-8601=seconds',
+                                     '-d', string],
+                                    stdout=subprocess.PIPE, check=True)
+            output = proc.stdout.decode()
             datetime_ = ciso8601.parse_datetime(output.strip()[:19])
         except subprocess.CalledProcessError:
             datetime_ = None
     if not datetime_:
-        raise ValueError('Unable to parse timestamp %r'
-                         % (safer_repr(string), ))
+        raise ValueError('Unable to parse timestamp {!r}'.format(string))
     return datetime_
 
 
@@ -113,36 +92,6 @@ def iso_week_to_date(year, week):
     start = iso_start + datetime.timedelta(weeks=week - 1)
     end = start + datetime.timedelta(weeks=1)
     return start, end
-
-
-def check_output(args, **kwargs):
-    """Simple check_output implementation for Python 2.6 compatibility.
-
-    Note:
-        This hides stderr, unlike the normal check_output function.
-
-    Args:
-        args (list): Command and arguments to call
-
-    Returns:
-        str: Command output
-
-    Raises:
-        subprocess.CalledProcessError: If command execution fails
-    """
-    try:
-        output = subprocess.check_output(args, stderr=subprocess.PIPE,
-                                         **kwargs)
-    except AttributeError:
-        process = subprocess.Popen(args, stdout=subprocess.PIPE,
-                                   stderr=subprocess.PIPE, **kwargs)
-        output, _ = process.communicate()
-        retcode = process.poll()
-        if retcode:
-            raise subprocess.CalledProcessError(retcode, args[0])
-    if not compat.PY2:  # pragma: Python 3
-        output = output.decode()
-    return output
 
 
 def read_config(user_config=None, cli_options=None):
@@ -167,7 +116,8 @@ def read_config(user_config=None, cli_options=None):
 
     if cli_options:
         cli_conf = ['[rdial]', ]
-        cli_conf.extend('%s = %r' % (k, v) for k, v in cli_options.items()
+        cli_conf.extend('{} = {!r}'.format(k, v)
+                        for k, v in cli_options.items()
                         if v is not None)
         conf.merge(configobj.ConfigObj(cli_conf))
 
@@ -194,7 +144,7 @@ def write_current(fun):
         """
         globs = args[0]
         fun(*args, **kwargs)
-        with click.open_file('%s/.current' % globs.directory, 'w') as f:
+        with click.open_file('{}/.current'.format(globs.directory), 'w') as f:
             f.write(kwargs['task'])
     return wrapper
 
@@ -219,8 +169,8 @@ def remove_current(fun):
         """
         globs = args[0]
         fun(*args, **kwargs)
-        if os.path.isfile('%s/.current' % globs.directory):
-            os.unlink('%s/.current' % globs.directory)
+        if os.path.isfile('{}/.current'.format(globs.directory)):
+            os.unlink('{}/.current'.format(globs.directory))
     return wrapper
 
 
@@ -252,4 +202,4 @@ def term_link(target, name=None):
     """
     if not name:
         name = os.path.basename(target)
-    return '\033]8;;%s\007%s\033]8;;\007' % (target, name)
+    return '\033]8;;{}\007{}\033]8;;\007'.format(target, name)

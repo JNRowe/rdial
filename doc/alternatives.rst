@@ -4,9 +4,9 @@ Alternatives
 Before diving in and spitting out this package I looked at the alternatives
 below.  If I have missed something please drop me a mail_.
 
-It isn't meant to be unbiased, and you should try the packages out for yourself.
+It isn’t meant to be unbiased, and you should try the packages out for yourself.
 I keep it here mostly as a reference for myself, and maybe to help out people
-who are already familiar with one of the entries below so they can see where I'm
+who are already familiar with one of the entries below so they can see where I’m
 coming from.
 
 .. _mail: jnrowe@gmail.com
@@ -17,9 +17,9 @@ coming from.
 ------------
 
 ``gtimelog`` is an interesting tool, and ticks most of the boxes for me.  The
-ideas are quite well thought out, and the interface is very simple to use.  I'm
-sure it's great for people with strictly structured working days, but that
-definitely isn't me.
+ideas are quite well thought out, and the interface is very simple to use.  I’m
+sure it’s great for people with strictly structured working days, but that
+definitely isn’t me.
 
 As a side note, when we were playing with it at the office a number of
 co-workers stumbled across various bugs that dogged its usage.  Unfortunately,
@@ -52,8 +52,8 @@ they spend working on small projects.
 ``ktimetracker``
 ----------------
 
-Works well, but isn't available on most of the platforms I care about.  If KDE
-is available everywhere you care about, I'd heartily recommend it.
+Works well, but isn’t available on most of the platforms I care about.  If KDE
+is available everywhere you care about, I’d heartily recommend it.
 
 ``org-mode``
 ------------
@@ -64,8 +64,8 @@ hierarchies of projects with their own time tracking data and take advantage of
 all the other features ``org-mode`` has to offer.
 
 If I had a copy of emacs_ available everywhere I wanted to log time data I
-wouldn't even consider using anything else.  And if you use emacs_ then you
-shouldn't either!
+wouldn’t even consider using anything else.  And if you use emacs_ then you
+shouldn’t either!
 
 .. _org-mode: http://www.orgmode.org/
 .. _emacs: http://www.gnu.org/software/emacs/

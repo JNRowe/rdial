@@ -38,8 +38,8 @@ shows the currently running task:
 
 .. note::
    The above example is compact but very naïve, and will be incorrect in the
-   time between state changes and updates.  If you're implementing your own
-   widget you'll be better served by using GFileMonitor_ to track state changes.
+   time between state changes and updates.  If you’re implementing your own
+   widget you’ll be better served by using GFileMonitor_ to track state changes.
 
 You could also hook the ``mouse::enter`` and ``mouse::leave`` signals_ to create
 a naughty_ popup showing the task time, or use awful.button_ to allow you to
@@ -54,7 +54,7 @@ switch tasks directly from the taskbar.
 ``dwm``
 -------
 
-With dwm_ you're basically free to pump the status bar however you wish.  You
+With dwm_ you’re basically free to pump the status bar however you wish.  You
 could, for example, just show the current task with the following genie_
 snippet:
 
@@ -85,8 +85,8 @@ snippet:
 
 .. note::
    The above example is compact but very naïve, and will be incorrect in the
-   time between state changes and updates.  If you're implementing your own
-   status tool you'll be better served by using GFileMonitor_ to track state
+   time between state changes and updates.  If you’re implementing your own
+   status tool you’ll be better served by using GFileMonitor_ to track state
    changes.
 
 You could also implement a simple task manager using dmenu_, the following
