@@ -269,8 +269,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
             events = self.for_task(task)
             with click.utils.LazyFile(task_file, 'w', atomic=True) as temp:
                 writer = csv.DictWriter(temp, FIELDS, dialect=RdialDialect)
-                # Can’t use writeheader, it wasn’t added until 2.7.
-                writer.writerow(dict(zip(FIELDS, FIELDS)))
+                writer.writeheader()
                 for event in events:
                     writer.writerow(event.writer())
                 if self.backup and os.path.exists(task_file):
