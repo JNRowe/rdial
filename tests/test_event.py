@@ -20,10 +20,9 @@
 from datetime import (datetime, timedelta)
 from filecmp import dircmp
 from os.path import abspath
-from warnings import (catch_warnings, simplefilter)
 
 from jnrbase.iso_8601 import (parse_datetime, parse_delta)
-from pytest import mark
+from pytest import mark, warns
 
 from rdial.events import (Event, Events)
 
@@ -81,12 +80,10 @@ def test_read_datebase_wrapper(database, events):
     ('test_not_running', 3),
 ])
 def test_read_datebase_context(database, events):
-    with catch_warnings(record=True) as warns:
-        simplefilter("always")
+    with warns(DeprecationWarning) as record:
         with Events.context('tests/data/test', write_cache=False):
             pass
-        assert warns[0].category == DeprecationWarning
-        assert 'to wrapping' in str(warns[0])
+    assert 'to wrapping' in record[0].message.args[0]
 
 
 @mark.parametrize('n, task, start, delta', [
