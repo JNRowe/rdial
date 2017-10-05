@@ -85,6 +85,29 @@ class Event():
             self.delta = iso_8601.parse_delta(delta)
         self.message = message
 
+    def __eq__(self, other):
+        """Comare ``Event`` objects for equality.
+
+        Args:
+            other (Event): Object to test equality against
+
+        Returns:
+            bool: True if objects are equal
+        """
+        return self.task == other.task and self.start == other.start \
+            and self.delta == other.delta and self.message == other.message
+
+    def __ne__(self, other):
+        """Comare ``Event`` objects for inequality.
+
+        Args:
+            other (Event): Object to test inequality against
+
+        Returns:
+            bool: True if objects are not equal
+        """
+        return not self == other
+
     def __repr__(self):
         """Self-documenting string representation.
 

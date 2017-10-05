@@ -106,6 +106,15 @@ def test_read_datebase_context(database, events):
     assert 'to wrapping' in record[0].message.args[0]
 
 
+@mark.parametrize('database, result', [
+    ('test', Event('task', '2011-05-04T09:30:00Z', '', 'finished')),
+    ('', None),
+])
+def test_read_last(database, result):
+    evs = Events.read('tests/data/' + database, write_cache=False)
+    assert evs.last() == result
+
+
 @mark.parametrize('n, task, start, delta', [
     (0, 'task', datetime(2011, 5, 4, 8),
      timedelta(hours=1)),
