@@ -425,3 +425,18 @@ def test_last(database, expected):
                                  'last'])
     assert result.exit_code == 0
     assert expected in result.output
+
+
+def test_ledger():
+    runner = CliRunner()
+    result = runner.invoke(cli, ['--directory', 'tests/data/test_not_running',
+                                 'ledger'])
+    assert result.exit_code == 0
+    assert '2011-05-04 * 09:30-10:30' in result.output
+
+
+def test_ledger_running():
+    runner = CliRunner()
+    result = runner.invoke(cli, ['--directory', 'tests/data/test', 'ledger'])
+    assert result.exit_code == 0
+    assert ';; Running event not included in output!' in result.output

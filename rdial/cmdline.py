@@ -697,8 +697,8 @@ def ledger(globs, task, duration, rate):
         lines.append('{}-{}'.format(event.start.strftime('%Y-%m-%d * %H:%M'),
                                     end.strftime('%H:%M')))
         lines.append('    (task:{})  {:.2f}h{}{}'.format(
-            event.task, hours, ' @ {}'.format(rate if rate else ''),
-            '  ; {}'.format(event.message if event.message else '')))
+            event.task, hours, ' @ {}'.format(rate) if rate else '',
+            '  ; {}'.format(event.message) if event.message else ''))
     if events.running():
         lines.append(_(';; Running event not included in output!'))
     click.echo_via_pager('\n'.join(lines))
