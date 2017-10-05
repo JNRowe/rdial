@@ -413,3 +413,15 @@ def test_running(database, expected):
                                  'running'])
     assert result.exit_code == 0
     assert expected in result.output
+
+
+@mark.parametrize('database, expected', [
+    ('test', 'Task task is still running'),
+    ('test_not_running', 'Last task task, ran for 1:00:00'),
+])
+def test_last(database, expected):
+    runner = CliRunner()
+    result = runner.invoke(cli, ['--directory', 'tests/data/' + database,
+                                 'last'])
+    assert result.exit_code == 0
+    assert expected in result.output

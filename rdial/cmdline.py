@@ -657,7 +657,7 @@ def last(globs):
     events = Events.read(globs.directory, write_cache=globs.cache)
     event = events.last()
     if not events.running():
-        click.echo(_('Last task {.task}, ran for {.delta}').format(event))
+        click.echo(_('Last task {0.task}, ran for {0.delta}').format(event))
         if event.message:
             click.echo(event.message)
     else:
