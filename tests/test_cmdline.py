@@ -25,7 +25,7 @@ from click.testing import CliRunner
 from pytest import (mark, raises)
 
 from rdial.cmdline import (HiddenGroup, StartTimeParamType, TaskNameParamType,
-                           cli, get_stop_message, hidden, task_option)
+                           cli, get_stop_message, hidden, main, task_option)
 from rdial.events import (Event, TaskNotRunningError, TaskRunningError)
 
 
@@ -440,3 +440,43 @@ def test_ledger_running():
     result = runner.invoke(cli, ['--directory', 'tests/data/test', 'ledger'])
     assert result.exit_code == 0
     assert ';; Running event not included in output!' in result.output
+
+
+def test_main_wrapper(monkeypatch, capsys):
+    monkeypatch.setattr('sys.argv', ['rdial', '--directory', 'tests/data/test',
+                                     'running'])
+
+    def exit_mock(n):
+        if n == 0:
+            return n
+        else:
+            raise ValueError(n)
+    monkeypatch.setattr('sys.exit', exit_mock)
+    result = main()
+    assert result == 0
+    assert 'Task “task” started' in capsys.readouterr()[0]
+
+
+def test_main_wrapper_error(monkeypatch, capsys):
+    monkeypatch.setattr('sys.argv', ['rdial', '--directory',
+                                     'tests/data/test_not_running', 'stop'])
+
+    def exit_mock(n):
+        if n == 0:
+            return n
+        else:
+            raise ValueError(n)
+    monkeypatch.setattr('sys.exit', exit_mock)
+    result = main()
+    assert result == 2
+    assert capsys.readouterr()[0] == 'No task running!\n'
+
+
+def test_main_wrapper_informative_return_code(capsys, monkeypatch, tmpdir):
+    test_dir = tmpdir.join('test').strpath
+    copytree('tests/data/test_not_running', test_dir)
+    monkeypatch.setattr('sys.argv', ['rdial', '--directory', test_dir, 'run',
+                                     '-c', '( exit 50 )', 'task'])
+    result = main()
+    assert result == 50
+    assert 'Task task running for' in capsys.readouterr()[0]
