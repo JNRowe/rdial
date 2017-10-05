@@ -17,6 +17,7 @@
 # rdial.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
+from shutil import copytree
 
 from click import (BadParameter, command, echo, group, option, pass_context,
                    pass_obj)
@@ -152,3 +153,12 @@ def test_command_defaults():
                       catch_exceptions=False)
     defaults = excinfo.value.args[0].default_map
     assert defaults['choice'] == 'questionable'
+
+
+def test_start_event(tmpdir):
+    test_dir = tmpdir.join('test').strpath
+    copytree('tests/data/test_not_running', test_dir)
+    runner = CliRunner()
+    result = runner.invoke(cli, ['--directory', test_dir, 'start', 'task'])
+    assert result.exit_code == 0
+    assert result.output == ''
