@@ -524,16 +524,11 @@ def run(globs, task, new, time, message, fname, command):
             raise TaskRunningError(
                 _('Task {} is already started!').format(events.last().task))
 
-        try:
-            proc = subprocess.run(command, shell=True)
-        except OSError as err:
-            raise utils.RdialError(str(err))
+        proc = subprocess.run(command, shell=True)
 
         events.start(task, new, time)
         with click.open_file('{}/.current'.format(globs.directory), 'w') as f:
             f.write(task)
-
-        proc.wait()
 
         if fname:
             message = fname.read()

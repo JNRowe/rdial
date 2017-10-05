@@ -293,3 +293,65 @@ def test_switch_event_running_interactive(monkeypatch, tmpdir):
         assert f.read().endswith('interactive message\n')
     with tmpdir.join('test', 'task2.csv').open() as f:
         assert len(f.read().splitlines()) == 3
+
+
+def test_run_timed(capfd, tmpdir):
+    test_dir = tmpdir.join('test').strpath
+    copytree('tests/data/test_not_running', test_dir)
+    runner = CliRunner()
+    result = runner.invoke(cli, ['--directory', test_dir, 'run', '-c',
+                                 'echo "long running command"', 'task'])
+    assert result.exit_code == 0
+    assert 'Task task running for' in result.output
+    assert capfd.readouterr()[0] == 'long running command\n'
+
+
+def test_run_event_already_running(tmpdir):
+    test_dir = tmpdir.join('test').strpath
+    copytree('tests/data/test', test_dir)
+    runner = CliRunner()
+    result = runner.invoke(cli, ['--directory', test_dir, 'run', 'task2'])
+    assert isinstance(result.exception, TaskRunningError)
+    assert result.exception.args[0] == 'Task task is already started!'
+
+
+def test_run_failed_command(tmpdir):
+    test_dir = tmpdir.join('test').strpath
+    copytree('tests/data/test_not_running', test_dir)
+    runner = CliRunner()
+    result = runner.invoke(cli, ['--directory', test_dir, 'run', '-c',
+                                 '( exit 50 )', 'task'])
+    assert isinstance(result.exception, OSError)
+    assert result.exception.args == (50, 'Command failed')
+
+
+def test_run_with_file_message(capfd, tmpdir):
+    test_dir = tmpdir.join('test').strpath
+    msg_file = tmpdir.join('message').strpath
+    with open(msg_file, 'w') as f:
+        f.write('stopping message')
+    copytree('tests/data/test_not_running', test_dir)
+    runner = CliRunner()
+    result = runner.invoke(cli, ['--directory', test_dir, 'run', '-F',
+                                 msg_file, '-c',
+                                 'echo "long running command"', 'task'])
+    assert result.exit_code == 0
+    assert 'Task task running for' in result.output
+    with tmpdir.join('test', 'task.csv').open() as f:
+        assert f.read().endswith('stopping message\n')
+    assert capfd.readouterr()[0] == 'long running command\n'
+
+
+def test_run_interactive(monkeypatch, tmpdir):
+    monkeypatch.setattr('click.edit',
+                        lambda s, **kwargs: 'interactive message')
+    test_dir = tmpdir.join('test').strpath
+    copytree('tests/data/test_not_running', test_dir)
+    runner = CliRunner()
+    result = runner.invoke(cli, ['--directory', test_dir, '--interactive',
+                                 'run', '-c', 'echo "long running command"',
+                                 'task'])
+    assert result.exit_code == 0
+    assert 'Task task running for' in result.output
+    with tmpdir.join('test', 'task.csv').open() as f:
+        assert f.read().endswith('interactive message\n')
