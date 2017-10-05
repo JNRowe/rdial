@@ -17,12 +17,12 @@
 # rdial.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from datetime import (datetime, timedelta)
+from datetime import (datetime, timedelta, timezone)
 from filecmp import dircmp
 from os.path import abspath
 
 from jnrbase.iso_8601 import (parse_datetime, parse_delta)
-from pytest import mark, warns
+from pytest import mark, raises, warns
 
 from rdial.events import (Event, Events)
 
@@ -52,6 +52,12 @@ def test_event_creation(task, start, delta, message):
     else:
         assert e.delta == parse_delta(delta)
     assert e.message == message
+
+
+def test_event_creation_non_naive():
+    with raises(ValueError, match='Must be a naive datetime'):
+        Event('test', datetime(2013, 2, 26, 19, 45, 14, tzinfo=timezone.utc),
+              None, None)
 
 
 @mark.parametrize('database, events', [

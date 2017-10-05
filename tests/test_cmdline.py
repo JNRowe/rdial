@@ -23,6 +23,7 @@ from click.testing import CliRunner
 from pytest import (mark, raises)
 
 from rdial.cmdline import (StartTimeParamType, TaskNameParamType, task_option)
+from rdial.events import Event
 
 
 @mark.parametrize('string, expected', [
