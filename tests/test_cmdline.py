@@ -355,3 +355,25 @@ def test_run_interactive(monkeypatch, tmpdir):
     assert 'Task task running for' in result.output
     with tmpdir.join('test', 'task.csv').open() as f:
         assert f.read().endswith('interactive message\n')
+
+
+def test_wrapper_no_config():
+    runner = CliRunner()
+    result = runner.invoke(cli, ['--config', 'tests/data/defaults.ini',
+                                 'wrapper', 'calendar'])
+    assert isinstance(result.exception, SystemExit)
+    assert "No such wrapper 'calendar'" in result.output
+
+
+def test_wrapper_run_command(capfd, tmpdir):
+    test_dir = tmpdir.join('test').strpath
+    copytree('tests/data/test_not_running', test_dir)
+    runner = CliRunner()
+    result = runner.invoke(cli, ['--config', 'tests/data/wrappers.ini',
+                                 '--directory', test_dir,
+                                 'wrapper', 'calendar'])
+    assert result.exit_code == 0
+    assert 'Task task running for' in result.output
+    with tmpdir.join('test', 'task.csv').open() as f:
+        assert len(f.read().splitlines()) == 4
+    assert 'May 2011' in capfd.readouterr()[0]
