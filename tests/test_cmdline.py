@@ -18,10 +18,11 @@
 
 from datetime import datetime
 
-from click import BadParameter
+from click import (BadParameter, command, echo)
+from click.testing import CliRunner
 from pytest import (mark, raises)
 
-from rdial.cmdline import (StartTimeParamType, TaskNameParamType)
+from rdial.cmdline import (StartTimeParamType, TaskNameParamType, task_option)
 
 
 @mark.parametrize('string, expected', [
@@ -41,6 +42,20 @@ def test_task_name_validity(string, expected):
     else:
         with raises(expected):
             p.convert(string, None, None)
+
+
+def test_task_name_from_dir(tmpdir):
+    @task_option
+    @command()
+    def cli(task):
+        echo(task)
+
+    runner = CliRunner()
+    result = runner.invoke(cli, ['--from-dir', ])
+    assert result.output == 'rdial\n'
+    with tmpdir.mkdir('new_dir').as_cwd():
+        result = runner.invoke(cli, ['--from-dir', ])
+        assert result.output.endswith('new_dir\n')
 
 
 @mark.parametrize('string, expected', [
