@@ -401,3 +401,15 @@ def test_report_event_running():
     assert result.exit_code == 0
     assert 'Task “task” started 2011-05-04T09:30:00Z' \
         in result.output.splitlines()
+
+
+@mark.parametrize('database, expected', [
+    ('test', 'Task “task” started'),
+    ('test_not_running', 'No task is running!'),
+])
+def test_running(database, expected):
+    runner = CliRunner()
+    result = runner.invoke(cli, ['--directory', 'tests/data/' + database,
+                                 'running'])
+    assert result.exit_code == 0
+    assert expected in result.output
