@@ -377,3 +377,27 @@ def test_wrapper_run_command(capfd, tmpdir):
     with tmpdir.join('test', 'task.csv').open() as f:
         assert len(f.read().splitlines()) == 4
     assert 'May 2011' in capfd.readouterr()[0]
+
+
+def test_report():
+    runner = CliRunner()
+    result = runner.invoke(cli, ['--directory', 'tests/data/test_not_running',
+                                 'report'])
+    assert result.exit_code == 0
+    assert 'task    2:00:00' in result.output
+
+
+def test_report_stats():
+    runner = CliRunner()
+    result = runner.invoke(cli, ['--directory', 'tests/data/test_not_running',
+                                 'report', '--stats'])
+    assert result.exit_code == 0
+    assert 'Duration of events 2:15:00' in result.output
+
+
+def test_report_event_running():
+    runner = CliRunner()
+    result = runner.invoke(cli, ['--directory', 'tests/data/test', 'report'])
+    assert result.exit_code == 0
+    assert 'Task “task” started 2011-05-04T09:30:00Z' \
+        in result.output.splitlines()
