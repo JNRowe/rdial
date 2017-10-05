@@ -23,7 +23,7 @@ from click.testing import CliRunner
 from pytest import (mark, raises)
 
 from rdial.cmdline import (HiddenGroup, StartTimeParamType, TaskNameParamType,
-                           hidden, task_option)
+                           get_stop_message, hidden, task_option)
 from rdial.events import Event
 
 
@@ -94,3 +94,24 @@ def test_HiddenGroup():
     lines = [s.strip() for s in result.output.splitlines()]
     assert 'now_you_see_me' in lines
     assert 'now_you_dont' not in lines
+
+
+@mark.parametrize('edit_func, message', [
+    (lambda s, **kwargs: s,
+     'finished'),
+    (lambda _, **kwargs: None,
+     ''),
+])
+def test_get_stop_message(edit_func, message, monkeypatch):
+    monkeypatch.setattr('click.edit', edit_func)
+    ev = Event('task', '2011-05-04T09:30:00Z', '', message)
+    assert get_stop_message(ev) == message
+
+
+def test_get_stop_message_template(monkeypatch):
+    output = []
+    monkeypatch.setattr('click.edit',
+                        lambda s, **kwargs: output.extend(s.splitlines()))
+    ev = Event('task', '2011-05-04T09:30:00Z')
+    get_stop_message(ev)
+    assert '# Task “task” started 2011-05-04T09:30:00Z'.format(ev) in output

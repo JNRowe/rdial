@@ -147,7 +147,9 @@ def get_stop_message(current, edit=False):
 
     """
     marker = _('# Text below here ignored\n')
-    task_message = _("# Task “{.task}” started {.start}").format(current)
+    task_message = _("# Task “{}” started {}").format(
+        current.task,
+        iso_8601.format_datetime(current.start))
     template = '{}\n{}{}'.format(current.message, marker, task_message)
     message = click.edit(template, require_save=not edit)
     if message is None:
@@ -445,7 +447,7 @@ def stop(globs, message, fname, amend):
         if amend and not message:
             message = last_event.message
         if globs.interactive and not message:
-            get_stop_message(last_event, edit=amend)
+            message = get_stop_message(last_event, edit=amend)
         events.stop(message, force=amend)
     event = events.last()
     click.echo(_('Task {} running for {}').format(
@@ -484,7 +486,7 @@ def switch(globs, task, new, time, message, fname):
             raise TaskNotRunningError(_('No task running!'))
         if new or task in events.tasks():
             if globs.interactive and not message:
-                get_stop_message(event)
+                message = get_stop_message(event)
             # This is dirty, but we kick on to Events.start() to save
             # duplication of error handling for task names
             events.stop(message)
@@ -535,7 +537,7 @@ def run(globs, task, new, time, message, fname, command):
         if fname:
             message = fname.read()
         if globs.interactive and not message:
-            get_stop_message(events.running())
+            message = get_stop_message(events.last())
         events.stop(message)
     event = events.last()
     click.echo(_('Task {} running for {}').format(
