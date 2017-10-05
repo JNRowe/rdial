@@ -80,7 +80,8 @@ class TaskNameParamType(click.ParamType):
         if not value:
             raise click.BadParameter(_('No task name given'))
         if value.startswith('-'):
-            utils.warn(_('Task names with leading dashes are non-portable'))
+            raise click.BadParameter(_('Task names with leading dashes are '
+                                       'non-portable'))
         if value.startswith('.') or '/' in value or '\000' in value:
             raise click.BadParameter(
                 _('{!r} is not a valid task name').format(value))
