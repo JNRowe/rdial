@@ -18,12 +18,12 @@
 
 from datetime import datetime
 
-from click import (BadParameter, command, echo, group)
+from click import (BadParameter, command, echo, group, pass_obj)
 from click.testing import CliRunner
 from pytest import (mark, raises)
 
 from rdial.cmdline import (HiddenGroup, StartTimeParamType, TaskNameParamType,
-                           get_stop_message, hidden, task_option)
+                           cli, get_stop_message, hidden, task_option)
 from rdial.events import Event
 
 
@@ -115,3 +115,22 @@ def test_get_stop_message_template(monkeypatch):
     ev = Event('task', '2011-05-04T09:30:00Z')
     get_stop_message(ev)
     assert '# Task “task” started 2011-05-04T09:30:00Z'.format(ev) in output
+
+
+@mark.parametrize('config, result', [
+    ('color', True),
+    ('no_color', False),
+])
+def test_colour_for_u_deficient(config, result):
+    @cli.command()
+    @pass_obj
+    def raise_config(obj):
+        raise ValueError(obj)
+
+    runner = CliRunner()
+    with raises(ValueError) as excinfo:
+        runner.invoke(cli,
+                      ['--config', 'tests/data/{}.ini'.format(config),
+                       'raise_config'],
+                      catch_exceptions=False)
+    assert excinfo.value.args[0].colour is result

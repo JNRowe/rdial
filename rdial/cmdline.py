@@ -295,6 +295,7 @@ def cli(ctx, directory, backup, cache, config, interactive, colour):
     ctx.obj = AttrDict(
         backup=base.getboolean('backup'),
         cache=base.getboolean('cache'),
+        colour=colour,
         config=cfg,
         directory=base['directory'],
         interactive=base.getboolean('interactive'),
