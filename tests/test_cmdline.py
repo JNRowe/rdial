@@ -18,7 +18,8 @@
 
 from datetime import datetime
 
-from click import (BadParameter, command, echo, group, pass_obj)
+from click import (BadParameter, command, echo, group, option, pass_context,
+                   pass_obj)
 from click.testing import CliRunner
 from pytest import (mark, raises)
 
@@ -134,3 +135,20 @@ def test_colour_for_u_deficient(config, result):
                        'raise_config'],
                       catch_exceptions=False)
     assert excinfo.value.args[0].colour is result
+
+
+def test_command_defaults():
+    @cli.command()
+    @option('--choice')
+    @pass_context
+    def raise_context(ctx, choice):
+        raise ValueError(ctx)
+
+    runner = CliRunner()
+    with raises(ValueError) as excinfo:
+        runner.invoke(cli,
+                      ['--config', 'tests/data/defaults.ini',
+                       'raise_context', ],
+                      catch_exceptions=False)
+    defaults = excinfo.value.args[0].default_map
+    assert defaults['choice'] == 'questionable'
