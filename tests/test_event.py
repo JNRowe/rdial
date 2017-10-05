@@ -20,6 +20,7 @@
 from datetime import (datetime, timedelta, timezone)
 from filecmp import dircmp
 from os.path import abspath
+from shutil import copytree
 
 from jnrbase.iso_8601 import (parse_datetime, parse_delta)
 from pytest import mark, raises, warns
@@ -78,6 +79,19 @@ def test_read_datebase(database, events):
 def test_read_datebase_wrapper(database, events):
     with Events.wrapping('tests/data/' + database, write_cache=False) as evs:
         assert len(evs) == events
+
+
+def test_read_datebase_wrapper_write(tmpdir):
+    test_dir = tmpdir.join('test').strpath
+    copytree('tests/data/test', test_dir)
+    with Events.wrapping(test_dir, write_cache=False) as evs:
+        evs.stop()
+    comp = dircmp('tests/data/test', test_dir, [])
+    assert comp.diff_files == ['task.csv', ]
+    assert comp.left_only == []
+    assert comp.right_only == ['task.csv~', ]
+    assert comp.funny_files == []
+    assert comp.subdirs == {}
 
 
 @mark.parametrize('database, events', [
