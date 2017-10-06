@@ -302,7 +302,7 @@ def cli(ctx, directory, backup, cache, config, interactive, colour):
     )
 
 
-def filter_events(globs, task=None, duration=None):
+def filter_events(globs, task=None, duration='all'):
     """Filter events for report processing.
 
     Args:
@@ -317,7 +317,7 @@ def filter_events(globs, task=None, duration=None):
     events = Events.read(globs.directory, write_cache=globs.cache)
     if task:
         events = events.for_task(task)
-    if not duration == 'all':
+    if not duration == 'all':  # pragma: no cover
         if duration == 'week':
             today = datetime.date.today()
             events = events.for_week(*today.isocalendar()[:2])

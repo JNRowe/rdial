@@ -16,8 +16,10 @@
 # You should have received a copy of the GNU General Public License along with
 # rdial.  If not, see <http://www.gnu.org/licenses/>.
 
+from jnrbase.attrdict import AttrDict
 from pytest import mark
 
+from rdial.cmdline import filter_events
 from rdial.events import Events
 
 
@@ -40,3 +42,13 @@ def test_fetch_events_for_date(date, expected):
 def test_fetch_events_for_week():
     events = Events.read('tests/data/date_filtering', write_cache=False)
     assert len(events.for_week(year=2011, week=9)) == 1
+
+
+@mark.parametrize('task, result', [
+    (None, ['task', 'task2']),
+    ('task', ['task', ]),
+])
+def test_filter_events_by_task(task, result):
+    globs = AttrDict(directory='tests/data/test', cache=False)
+    evs = filter_events(globs, task)
+    assert evs.tasks() == result
