@@ -60,3 +60,9 @@ def test_fail_stop_when_not_running():
     events = Events.read('tests/data/test_not_running', write_cache=False)
     with raises(TaskNotRunningError, match='No task running!'):
         events.stop()
+
+
+def test_fail_stop_single_when_not_running():
+    events = Events.read('tests/data/test_not_running', write_cache=False)
+    with raises(TaskNotRunningError, match='No task running!'):
+        events.last().stop()
