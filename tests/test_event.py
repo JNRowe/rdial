@@ -63,6 +63,26 @@ def test_event_creation_non_naive():
               None, None)
 
 
+def test_event_equality():
+    ev1 = Event('test', datetime(2013, 2, 26, 19, 45, 14),
+                None, None)
+    ev2 = Event('test', datetime(2013, 2, 26, 19, 45, 14),
+                None, None)
+    assert ev1 == ev2
+
+
+@mark.parametrize('ev1, ev2', [
+    (Event('test', datetime(2013, 2, 26, 19, 45, 14), ),
+     Event('not_test', datetime(2013, 2, 26, 19, 45, 14), )),
+    (Event('date', datetime(2013, 2, 26, 19, 45, 14), ),
+     Event('date', datetime(2001, 1, 1, 0, 0, 0), )),
+    (Event('message', datetime(2013, 2, 26, 19, 45, 14), None, 'test'),
+     Event('message', datetime(2013, 2, 26, 19, 45, 14), None, 'breakage')),
+])
+def test_event_inequality(ev1, ev2):
+    assert ev1 != ev2
+
+
 @mark.parametrize('database, events', [
     ('test', 3),
     ('date_filtering', 3),
