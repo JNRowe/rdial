@@ -25,7 +25,7 @@ from shutil import copytree
 from jnrbase.iso_8601 import (parse_datetime, parse_delta)
 from pytest import mark, raises, warns
 
-from rdial.events import (Event, Events)
+from rdial.events import (Event, Events, TaskRunningError)
 
 
 @mark.parametrize('task, start, delta, message', [
@@ -113,6 +113,12 @@ def test_read_datebase_context(database, events):
 def test_read_last(database, result):
     evs = Events.read('tests/data/' + database, write_cache=False)
     assert evs.last() == result
+
+
+def test_fail_start_with_overlap():
+    evs = Events.read('tests/data/test_not_running', write_cache=False)
+    with raises(TaskRunningError, match='Start date overlaps'):
+        evs.start('task', start=datetime(2011, 5, 4, 9, 33))
 
 
 @mark.parametrize('n, task, start, delta', [
