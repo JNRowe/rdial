@@ -184,6 +184,32 @@ def test_write_database_cache(monkeypatch, tmpdir):
     assert {f.split('/')[-1][:-4] for f in cache_files} == set(events.tasks())
 
 
+def test_read_database_cache(monkeypatch, tmpdir):
+    monkeypatch.setattr(events_mod.xdg_basedir, 'user_cache',
+                        lambda s: tmpdir.join('cache').strpath)
+    read = set()
+    monkeypatch.setattr(
+        events_mod.pickle, 'load',
+        lambda f: read.add(f.name.split('/')[-1][:-4]))
+    in_dir = 'tests/data/test'
+    events = Events.read(in_dir)
+    events = Events.read(in_dir)
+    assert read == set(events.tasks())
+
+
+def test_read_database_cache_broken(monkeypatch, tmpdir):
+    monkeypatch.setattr(events_mod.xdg_basedir, 'user_cache',
+                        lambda s: tmpdir.join('cache').strpath)
+    in_dir = 'tests/data/test'
+    events = Events.read(in_dir)
+    cache_files = glob(tmpdir.join('cache', '**', '*.pkl').strpath,
+                       recursive=True)
+    with open(cache_files[0], 'w') as f:
+        f.write('Broken data')
+    events2 = Events.read(in_dir)
+    assert events == events2
+
+
 def test_store_messages_with_events():
     events = Events.read('tests/data/test', write_cache=False)
     assert events.last().message == 'finished'
