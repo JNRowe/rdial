@@ -19,12 +19,14 @@
 
 from datetime import (datetime, timedelta, timezone)
 from filecmp import dircmp
+from glob import glob
 from os.path import abspath
 from shutil import copytree
 
 from jnrbase.iso_8601 import (parse_datetime, parse_delta)
 from pytest import mark, raises, warns
 
+from rdial import events as events_mod
 from rdial.events import (Event, Events, TaskRunningError)
 
 
@@ -148,6 +150,38 @@ def test_write_database(tmpdir):
     assert comp.right_only == []
     assert comp.funny_files == []
     assert comp.subdirs == {}
+
+
+def test_write_database_event_backups(tmpdir):
+    test_dir = tmpdir.join('test').strpath
+    copytree('tests/data/test_not_running', test_dir)
+    events = Events.read(test_dir, write_cache=False)
+    events.start('task')
+    events.write(test_dir)
+    comp = dircmp('tests/data/test_not_running', test_dir, [])
+    assert comp.diff_files == ['task.csv', ]
+    assert comp.left_only == []
+    assert comp.right_only == ['task.csv~', ]
+    assert comp.funny_files == []
+    assert comp.subdirs == {}
+
+
+def test_write_database_no_change_noop(tmpdir):
+    in_dir = 'tests/data/test'
+    events = Events.read(in_dir, write_cache=False)
+    events.write(tmpdir.strpath)
+    assert glob(tmpdir.join('*').strpath) == []
+
+
+def test_write_database_cache(monkeypatch, tmpdir):
+    monkeypatch.setattr(events_mod.xdg_basedir, 'user_cache',
+                        lambda s: tmpdir.join('cache').strpath)
+    events = Events.read('tests/data/test')
+    events._dirty = events.tasks()
+    events.write(tmpdir.join('database').strpath)
+    cache_files = glob(tmpdir.join('cache', '**', '*.pkl').strpath,
+                       recursive=True)
+    assert {f.split('/')[-1][:-4] for f in cache_files} == set(events.tasks())
 
 
 def test_store_messages_with_events():
