@@ -41,7 +41,7 @@ default behaviour of the ``encoding/csv`` pkg is to raise an error when it
 encounters an empty final field.  You can tell ``go`` to accept empty final
 fields by setting the ``TrailingComma`` attribute on your CSV reader.
 
-.. sourcecode:: go
+.. code-block:: go
 
     reader := csv.NewReader(file)
     reader.TrailingComma = true

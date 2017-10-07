@@ -21,7 +21,7 @@ The following sections should give you some idea of how you can (ab)use the
 For example, with awesome_, you could create a simple timer based widget that
 shows the currently running task:
 
-.. sourcecode:: moon
+.. code-block:: moon
 
     GLib = lgi.GLib
     tasktext = wibox.widget.textbox!
@@ -58,7 +58,7 @@ With dwm_ you’re basically free to pump the status bar however you wish.  You
 could, for example, just show the current task with the following genie_
 snippet:
 
-.. sourcecode:: vala
+.. code-block:: vala
 
     [indent=4]
 
@@ -92,7 +92,7 @@ snippet:
 You could also implement a simple task manager using dmenu_, the following
 zsh_ snippet shows how to build a selector for an existing task:
 
-.. sourcecode:: sh
+.. code-block:: sh
 
     echo ${XDG_DATA_HOME:-~/.local/share}/rdial/*~*~(:t:s/.csv/) |
         tr ' ' '\n' |
