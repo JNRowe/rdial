@@ -34,10 +34,8 @@ An example configuration file is below:
     sort = time
     reverse = True
 
-The configuration files are processed using configobj_, and you can make use
-of all the features it provides(such as interpolation).
-
-.. _configobj: http://configobj.readthedocs.org/
+The configuration files are processed using :mod:`configparser`, and you can
+make use of all the features it provides(such as interpolation).
 
 ``rdial`` section
 -----------------
