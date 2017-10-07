@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU General Public License along with
 # rdial.  If not, see <http://www.gnu.org/licenses/>.
 
+import configparser
 import datetime
 import functools
 import os
@@ -23,7 +24,6 @@ import subprocess
 
 import ciso8601
 import click
-import configobj
 
 try:
     import cduration
@@ -100,24 +100,25 @@ def read_config(user_config=None, cli_options=None):
         cli_options (dict): Command line options
 
     Returns:
-        configobj.ConfigObj: Parsed configuration data
+        configparser.ConfigParser: Parsed configuration data
 
     """
     # Only base *must* exist
-    conf = configobj.ConfigObj(os.path.dirname(__file__) + '/config',
-                               file_error=True)
-    conf['xdg_data_location'] = xdg_basedir.user_data('rdial')
+    conf = configparser.ConfigParser()
+    # No, it *really* must
+    with open(os.path.dirname(__file__) + '/config') as f:
+        conf.read_file(f)
+    conf['DEFAULT'] = {'xdg_data_location': xdg_basedir.user_data('rdial')}
     for f in xdg_basedir.get_configs('rdial'):
-        conf.merge(configobj.ConfigObj(f))
-    conf.merge(configobj.ConfigObj(os.path.abspath('.rdialrc')))
-    conf.merge(configobj.ConfigObj(user_config))
+        conf.read(f)
+    conf.read(os.path.abspath('.rdialrc'))
+    if user_config:
+        conf.read(user_config)
 
     if cli_options:
-        cli_conf = ['[rdial]', ]
-        cli_conf.extend('{} = {!r}'.format(k, v)
-                        for k, v in cli_options.items()
-                        if v is not None)
-        conf.merge(configobj.ConfigObj(cli_conf))
+        conf.read_dict({
+            'rdial': {k: v for k, v in cli_options.items() if v is not None}
+        })
 
     return conf
 
