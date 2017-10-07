@@ -43,7 +43,7 @@ Commands
 --------
 
 ``fsck`` - Check storage consistency
-''''''''''''''''''''''''''''''''''''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. program:: rdial fsck
 
@@ -56,7 +56,7 @@ Commands
    Show help message and exit.
 
 ``start`` - Start task
-''''''''''''''''''''''
+~~~~~~~~~~~~~~~~~~~~~~
 
 .. program:: rdial start
 
@@ -81,7 +81,7 @@ Commands
    Show help message and exit.
 
 ``stop`` - Stop task
-''''''''''''''''''''
+~~~~~~~~~~~~~~~~~~~~
 
 .. program:: rdial stop
 
@@ -106,7 +106,7 @@ Commands
    Show help message and exit.
 
 ``switch`` - Switch to another task
-'''''''''''''''''''''''''''''''''''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. program:: rdial switch
 
@@ -141,7 +141,7 @@ Commands
 .. _run-subcommand-label:
 
 ``run`` - Run command with timer
-''''''''''''''''''''''''''''''''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. program:: rdial run
 
@@ -178,7 +178,7 @@ Commands
    Show help message and exit.
 
 ``wrapper`` - Run predefined command with timer
-'''''''''''''''''''''''''''''''''''''''''''''''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. program:: rdial wrapper
 
@@ -205,7 +205,7 @@ See :ref:`run wrappers configuration <run-wrappers-label>`.
    Show help message and exit.
 
 ``report`` - Report time tracking data
-''''''''''''''''''''''''''''''''''''''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. program:: rdial report
 
@@ -242,7 +242,7 @@ See :ref:`run wrappers configuration <run-wrappers-label>`.
    Show help message and exit.
 
 ``running`` - Display running task, if any
-''''''''''''''''''''''''''''''''''''''''''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. program:: rdial running
 
@@ -255,7 +255,7 @@ See :ref:`run wrappers configuration <run-wrappers-label>`.
    Show help message and exit.
 
 ``last`` - Display last task, if any
-''''''''''''''''''''''''''''''''''''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. program:: rdial last
 
@@ -268,7 +268,7 @@ See :ref:`run wrappers configuration <run-wrappers-label>`.
    Show help message and exit.
 
 ``ledger`` - Generate ``ledger`` compatible data file
-'''''''''''''''''''''''''''''''''''''''''''''''''''''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. program:: rdial ledger
 

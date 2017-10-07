@@ -10,7 +10,7 @@ Command line
   command line.
 
 Commands
-''''''''
+~~~~~~~~
 
 .. autofunction:: bug_data
 .. autofunction:: fsck
@@ -25,19 +25,19 @@ Commands
 .. autofunction:: ledger
 
 Entry points
-'''''''''''''
+~~~~~~~~~~~~~
 
 .. autofunction:: cli
 .. autofunction:: main
 
 Command support
-'''''''''''''''
+~~~~~~~~~~~~~~~
 
 .. autofunction:: filter_events
 .. autofunction:: get_stop_message
 
 CLI support
-'''''''''''
+~~~~~~~~~~~
 
 .. autoclass:: HiddenGroup
 .. autoclass:: TaskNameParamType

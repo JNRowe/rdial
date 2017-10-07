@@ -10,7 +10,7 @@ Utilities
   command line.
 
 Convenience functions and classes
-'''''''''''''''''''''''''''''''''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. autofunction:: write_current
 .. autofunction:: remove_current
@@ -19,7 +19,7 @@ Convenience functions and classes
 .. autofunction:: term_link
 
 Time handling
-'''''''''''''
+~~~~~~~~~~~~~
 
 .. autofunction:: parse_datetime_user
 
@@ -27,7 +27,7 @@ Examples
 --------
 
 Time handling
-'''''''''''''
+~~~~~~~~~~~~~
 
 .. testsetup::
 

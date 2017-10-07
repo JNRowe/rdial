@@ -1,5 +1,5 @@
 Frequently Asked Questions
---------------------------
+==========================
 
 ..
     Ask them, and perhaps they’ll become frequent enough to be added here ;)
@@ -8,7 +8,7 @@ Frequently Asked Questions
    :local:
 
 Why must I specify ``--new`` when creating a new task?
-''''''''''''''''''''''''''''''''''''''''''''''''''''''
+------------------------------------------------------
 
 Perhaps you’re super special and never produce a typo, I’m not.  The
 :option:`rdial start --new` option is a fix for this common -- to me --
@@ -21,7 +21,7 @@ not sidestep it by allowing :command:`rdial start` to stop running tasks or
 :command:`rdial switch` to work without a running task.
 
 Where does the name :program:`rdial` come from?
-'''''''''''''''''''''''''''''''''''''''''''''''
+-----------------------------------------------
 
 Around the beginning of 2012 I wrote a very simple shell script to track my
 time, and at some point I decided it should be safer and cleaner.  I came up
@@ -32,8 +32,8 @@ Since then I haven’t even managed to come up with a clever backronym for it.
 
 .. Perhaps, Reducing Dedication In Actual Labour?
 
-How do I process :program:`rdial` data files using ``go``
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+How do I process :program:`rdial` data files using ``go``?
+----------------------------------------------------------
 
 If you keep receiving ``ErrTrailingComma`` errors when reading files using
 golang it is because you are processing files with empty message fields.  The
@@ -41,7 +41,7 @@ default behaviour of the ``encoding/csv`` pkg is to raise an error when it
 encounters an empty final field.  You can tell ``go`` to accept empty final
 fields by setting the ``TrailingComma`` attribute on your CSV reader.
 
-.. sourcecode:: go
+.. code-block:: go
 
     reader := csv.NewReader(file)
     reader.TrailingComma = true
