@@ -25,7 +25,7 @@ little explanation.  They may well be enough to deter you from using
 options <alternatives>` out there!
 
 Explicit new tasks
-''''''''''''''''''
+~~~~~~~~~~~~~~~~~~
 
     It is an error to attempt to start a task that doesn’t already exist in the
     database
@@ -35,7 +35,7 @@ If you wish to create a new task you *must* give the :option:`rdial start
 task name “thinkos”, and it has proven to do so for me.
 
 Switch vs “stopstart”
-'''''''''''''''''''''
+~~~~~~~~~~~~~~~~~~~~~
 
     It is an error to attempt to start a task when another is running, or
     switch a task when one is not running
