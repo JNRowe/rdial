@@ -151,7 +151,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
         """
         super(Events, self).__init__(iterable if iterable else [])
         self.backup = backup
-        self._dirty = []
+        self._dirty = set()
 
     def __repr__(self):
         """Self-documenting string representation.
@@ -174,13 +174,12 @@ class Events(list):  # pylint: disable=too-many-public-methods
             value (str): Task to mark as dirty
 
         """
-        if value not in self._dirty:
-            self._dirty.append(value)
+        self._dirty.add(value)
 
     @dirty.deleter
     def dirty(self):
         """Mark dirty queue as flushed."""
-        self._dirty = []
+        self._dirty = set()
 
     @staticmethod
     def read(directory, backup=True, write_cache=True):
