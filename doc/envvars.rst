@@ -9,19 +9,19 @@ to make it easy for users to configure per-project defaults using shell hooks.
 
    This controls whether :program:`rdial` creates backup of data files.  It
    must be a boolean setting that accepts ``false``/``true``, ``0``/``1`` or
-   ``y``/``n`` as its value.
+   ``n``/``y`` as its value.
 
 .. envvar:: RDIAL_CACHE
 
    This controls whether :program:`rdial` creates a cache for data files.  It
    must be a boolean setting that accepts ``false``/``true``, ``0``/``1`` or
-   ``y``/``n`` as its value.
+   ``n``/``y`` as its value.
 
 .. envvar:: RDIAL_COLOUR
 
    This controls whether :program:`rdial` displays informational messages in
    colour.  It must be a boolean setting that accepts ``false``/``true``,
-   ``0``/``1`` or ``y``/``n`` as its value.
+   ``0``/``1`` or ``n``/``y`` as its value.
 
 .. envvar:: RDIAL_CONFIG
 
@@ -37,7 +37,7 @@ to make it easy for users to configure per-project defaults using shell hooks.
 
    This controls whether :program:`rdial` asks for messages interactively if
    they’re not provided as arguments.  It must be a boolean setting that
-   accepts ``false``/``true``, ``0``/``1`` or ``y``/``n`` as its value.
+   accepts ``false``/``true``, ``0``/``1`` or ``n``/``y`` as its value.
 
 .. envvar:: RDIAL_RATE
 
@@ -48,7 +48,7 @@ to make it easy for users to configure per-project defaults using shell hooks.
 
    This controls whether :program:`rdial` inverts the sort order when
    displaying reports.  It is a boolean setting that accepts
-   ``false``/``true``, ``0``/``1`` or ``y``/``n`` as its value.
+   ``false``/``true``, ``0``/``1`` or ``n``/``y`` as its value.
 
 .. envvar:: RDIAL_SORT
 

@@ -30,9 +30,9 @@ Explicit new tasks
     It is an error to attempt to start a task that doesn’t already exist in the
     database
 
-If you wish to create a new task you *must* give the :option:`--new` option when
-starting the task.  This should hopefully catch typos and task name “thinkos”,
-and it has proven to do so for me.
+If you wish to create a new task you *must* give the :option:`rdial start
+--new` option when starting the task.  This should hopefully catch typos and
+task name “thinkos”, and it has proven to do so for me.
 
 Switch vs “stopstart”
 '''''''''''''''''''''

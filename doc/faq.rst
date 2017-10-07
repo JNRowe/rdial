@@ -7,12 +7,12 @@ Frequently Asked Questions
 .. contents::
    :local:
 
-Why must I specify :option:`--new` when creating a new task
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+Why must I specify ``--new`` when creating a new task?
+''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 Perhaps you’re super special and never produce a typo, I’m not.  The
-:option:`--new` option to :command:`rdial start` is a fix for this common -- to
-me -- problem.
+:option:`rdial start --new` option is a fix for this common -- to me --
+problem.
 
 The :command:`rdial switch` command is of related design.  You can not use it
 when no task is running, and attempting to do so is probably a sign you’ve lost
