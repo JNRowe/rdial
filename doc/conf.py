@@ -20,12 +20,13 @@ import os
 import sys
 
 from contextlib import suppress
-from subprocess import (CalledProcessError, PIPE, run)
+from subprocess import CalledProcessError, PIPE, run
 
 root_dir = os.path.dirname(os.path.dirname(__file__))
 sys.path.insert(0, root_dir)
 
-import rdial  # NOQA
+import rdial  # NOQA: E402
+
 
 extensions = \
     ['sphinx.ext.{}'.format(ext)
@@ -37,7 +38,7 @@ extensions = \
 # general case and we don’t have the granularity to describe this in a clean
 # way
 try:
-    from sphinxcontrib import spelling  # NOQA
+    from sphinxcontrib import spelling  # NOQA: E401
 except ImportError:
     pass
 else:

@@ -22,11 +22,11 @@ from shutil import copytree
 from click import (BadParameter, command, echo, group, option, pass_context,
                    pass_obj)
 from click.testing import CliRunner
-from pytest import (mark, raises)
+from pytest import mark, raises
 
 from rdial.cmdline import (HiddenGroup, StartTimeParamType, TaskNameParamType,
                            cli, get_stop_message, hidden, main, task_option)
-from rdial.events import (Event, TaskNotRunningError, TaskRunningError)
+from rdial.events import Event, TaskNotRunningError, TaskRunningError
 
 
 @mark.parametrize('string, expected', [

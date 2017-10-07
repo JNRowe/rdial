@@ -26,13 +26,11 @@ import subprocess
 import click
 import tabulate
 
-from jnrbase import (colourise, i18n, iso_8601)
+from jnrbase import colourise, i18n, iso_8601
 from jnrbase.attrdict import AttrDict
 
-from .events import (Events, TaskNotRunningError, TaskRunningError)
-from . import _version
-from . import utils
-
+from . import _version, utils
+from .events import Events, TaskNotRunningError, TaskRunningError
 
 _, N_ = i18n.setup(_version)
 
@@ -147,7 +145,7 @@ def get_stop_message(current, edit=False):
 
     """
     marker = _('# Text below here ignored\n')
-    task_message = _("# Task “{}” started {}").format(
+    task_message = _('# Task “{}” started {}').format(
         current.task,
         iso_8601.format_datetime(current.start))
     template = '{}\n{}{}'.format(current.message, marker, task_message)
@@ -353,7 +351,7 @@ def bug_data():
         link = utils.term_link(
             'https://pypi.python.org/pypi/{}'.format(pkg.project_name),
             '`{}`'.format(pkg.project_name))
-        click.echo("* {}: {}".format(link, pkg.version))
+        click.echo('* {}: {}'.format(link, pkg.version))
 
 
 @cli.command(help=_('Check storage consistency.'))
@@ -441,7 +439,7 @@ def stop(globs, message, fname, amend):
         if last_event.running():
             if amend:
                 raise TaskRunningError(
-                    _("Can’t amend running task {}!").format(last_event.task))
+                    _('Can’t amend running task {}!').format(last_event.task))
         else:
             if not amend:
                 raise TaskNotRunningError(_('No task running!'))
@@ -481,7 +479,7 @@ def switch(globs, task, new, time, message, fname):
     with Events.wrapping(globs.directory, globs.backup, globs.cache) as events:
         event = events.last()
         if time and time < event.start:
-            raise TaskNotRunningError(_("Can’t specify a start time before "
+            raise TaskNotRunningError(_('Can’t specify a start time before '
                                         'current task started!'))
         if not event.running():
             raise TaskNotRunningError(_('No task running!'))
@@ -622,7 +620,7 @@ def report(globs, task, stats, duration, sort, reverse, style):
                                                tablefmt=style))
     if events.running():
         current = events.last()
-        click.echo(_("Task “{}” started {}").format(
+        click.echo(_('Task “{}” started {}').format(
             current.task, iso_8601.format_datetime(current.start)))
 
 
@@ -639,7 +637,7 @@ def running(globs):
     if events.running():
         current = events.last()
         now = datetime.datetime.utcnow()
-        click.echo(_("Task “{}” started {}").format(
+        click.echo(_('Task “{}” started {}').format(
             current.task, str(now - current.start).split('.')[0]))
     else:
         colourise.pwarn(_('No task is running!'))

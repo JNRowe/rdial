@@ -22,16 +22,16 @@ import functools
 import os
 import subprocess
 
-import ciso8601
 import click
+import ciso8601
+
+from jnrbase import xdg_basedir
+from jnrbase.iso_8601 import parse_datetime
 
 try:
     import cduration
 except ImportError:
     cduration = None
-
-from jnrbase import xdg_basedir
-from jnrbase.iso_8601 import parse_datetime
 
 
 class RdialError(ValueError):
@@ -61,8 +61,8 @@ def parse_datetime_user(string):
     except ValueError:
         try:
             proc = subprocess.run(['date', '--utc', '--iso-8601=seconds',
-                                     '-d', string],
-                                    stdout=subprocess.PIPE, check=True)
+                                   '-d', string],
+                                  stdout=subprocess.PIPE, check=True)
             output = proc.stdout.decode()
             datetime_ = ciso8601.parse_datetime(output.strip()[:19])
         except subprocess.CalledProcessError:
