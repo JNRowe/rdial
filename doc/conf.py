@@ -52,6 +52,8 @@ copyright = rdial.__copyright__
 version = '.'.join([str(s) for s in rdial._version.tuple[:2]])
 release = rdial._version.dotted
 
+html_experimental_html5_writer = True
+
 pygments_style = 'sphinx'
 with suppress(CalledProcessError):
     proc = run(['git', 'log', "--pretty=format:'%ad [%h]'", '--date=short',
