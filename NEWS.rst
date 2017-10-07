@@ -3,6 +3,28 @@ User-visible changes
 
 .. contents::
 
+0.16.0 - [soon]
+---------------
+
+* Python 3 *only*, for Python 2 support you must use 0.15.0 or earlier
+* There is a new ``bug-data`` subcommand for generating more helpful bug
+  reports, please use it
+* ``--{,no-}colour`` can now be given as a command line option
+* jnrbase_ is now required
+* ``configobj`` is no longer required
+* ``unicodecsv`` is no longer required
+
+.. _jnrbase: https://pypi.python.org/pypi/jnrbase/
+
+Developers/API users
+~~~~~~~~~~~~~~~~~~~~
+
+* ``Events.wrapping()`` should be used, and ``Events.context()`` will be
+  removed in the future
+* pytest_ is used for running tests, and ``expecter`` is no longer required
+
+.. _pytest: https://pypi.python.org/pypi/pytest/
+
 0.15.0 - 2016-01-12
 -------------------
 
