@@ -25,7 +25,7 @@ from subprocess import CalledProcessError, PIPE, run
 root_dir = os.path.dirname(os.path.dirname(__file__))
 sys.path.insert(0, root_dir)
 
-import rdial  # NOQA
+import rdial  # NOQA: E402
 
 
 extensions = \
@@ -38,7 +38,7 @@ extensions = \
 # general case and we don’t have the granularity to describe this in a clean
 # way
 try:
-    from sphinxcontrib import spelling  # NOQA
+    from sphinxcontrib import spelling  # NOQA: E401
 except ImportError:
     pass
 else:
