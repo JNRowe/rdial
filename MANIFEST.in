@@ -16,8 +16,9 @@ include rdial/locale/*/LC_MESSAGES/*.mo
 include rdial/locale/*/LC_MESSAGES/*.po
 
 include tests/*.py
-include tests/data/local.ini
+include tests/data/*.ini
 include tests/data/requires/*.txt
 
+recursive-include .github *.rst
 recursive-include doc *.rst
 recursive-include tests/data *.csv
