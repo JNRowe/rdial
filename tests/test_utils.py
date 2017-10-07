@@ -19,8 +19,10 @@
 from time import sleep
 
 from jnrbase.attrdict import AttrDict
+from pytest import mark
 
-from rdial.utils import (newer, read_config, remove_current, write_current)
+from rdial.utils import (newer, read_config, remove_current, term_link,
+                         write_current)
 
 
 def test_read_config_local():
@@ -46,3 +48,12 @@ def test_newer(tmpdir):
     assert newer(f2.strpath, f1.strpath)
     assert not newer(f1.strpath, f2.strpath)
     assert not newer(f1.strpath, f1.strpath)
+
+
+@mark.parametrize('target, name, result', [
+    ('pypi://rdial', 'this package',
+     '\x1b]8;;pypi://rdial\x07this package\x1b]8;;\x07'),
+    ('pypi://rdial', None, '\x1b]8;;pypi://rdial\x07rdial\x1b]8;;\x07'),
+])
+def test_term_link(target, name, result):
+    assert term_link(target, name) == result

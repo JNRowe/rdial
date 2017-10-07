@@ -80,7 +80,8 @@ class TaskNameParamType(click.ParamType):
         if not value:
             raise click.BadParameter(_('No task name given'))
         if value.startswith('-'):
-            utils.warn(_('Task names with leading dashes are non-portable'))
+            raise click.BadParameter(_('Task names with leading dashes are '
+                                       'non-portable'))
         if value.startswith('.') or '/' in value or '\000' in value:
             raise click.BadParameter(
                 _('{!r} is not a valid task name').format(value))
@@ -146,7 +147,9 @@ def get_stop_message(current, edit=False):
 
     """
     marker = _('# Text below here ignored\n')
-    task_message = _("# Task “{.task}” started {.start}").format(current)
+    task_message = _("# Task “{}” started {}").format(
+        current.task,
+        iso_8601.format_datetime(current.start))
     template = '{}\n{}{}'.format(current.message, marker, task_message)
     message = click.edit(template, require_save=not edit)
     if message is None:
@@ -292,13 +295,14 @@ def cli(ctx, directory, backup, cache, config, interactive, colour):
     ctx.obj = AttrDict(
         backup=base.getboolean('backup'),
         cache=base.getboolean('cache'),
+        colour=colour,
         config=cfg,
         directory=base['directory'],
         interactive=base.getboolean('interactive'),
     )
 
 
-def filter_events(globs, task=None, duration=None):
+def filter_events(globs, task=None, duration='all'):
     """Filter events for report processing.
 
     Args:
@@ -313,7 +317,7 @@ def filter_events(globs, task=None, duration=None):
     events = Events.read(globs.directory, write_cache=globs.cache)
     if task:
         events = events.for_task(task)
-    if not duration == 'all':
+    if not duration == 'all':  # pragma: no cover
         if duration == 'week':
             today = datetime.date.today()
             events = events.for_week(*today.isocalendar()[:2])
@@ -444,7 +448,7 @@ def stop(globs, message, fname, amend):
         if amend and not message:
             message = last_event.message
         if globs.interactive and not message:
-            get_stop_message(last_event, edit=amend)
+            message = get_stop_message(last_event, edit=amend)
         events.stop(message, force=amend)
     event = events.last()
     click.echo(_('Task {} running for {}').format(
@@ -483,7 +487,7 @@ def switch(globs, task, new, time, message, fname):
             raise TaskNotRunningError(_('No task running!'))
         if new or task in events.tasks():
             if globs.interactive and not message:
-                get_stop_message(event)
+                message = get_stop_message(event)
             # This is dirty, but we kick on to Events.start() to save
             # duplication of error handling for task names
             events.stop(message)
@@ -520,21 +524,16 @@ def run(globs, task, new, time, message, fname, command):
             raise TaskRunningError(
                 _('Task {} is already started!').format(events.last().task))
 
-        try:
-            proc = subprocess.run(command, shell=True)
-        except OSError as err:
-            raise utils.RdialError(str(err))
+        proc = subprocess.run(command, shell=True)
 
         events.start(task, new, time)
         with click.open_file('{}/.current'.format(globs.directory), 'w') as f:
             f.write(task)
 
-        proc.wait()
-
         if fname:
             message = fname.read()
         if globs.interactive and not message:
-            get_stop_message(events.running())
+            message = get_stop_message(events.last())
         events.stop(message)
     event = events.last()
     click.echo(_('Task {} running for {}').format(
@@ -658,7 +657,7 @@ def last(globs):
     events = Events.read(globs.directory, write_cache=globs.cache)
     event = events.last()
     if not events.running():
-        click.echo(_('Last task {.task}, ran for {.delta}').format(event))
+        click.echo(_('Last task {0.task}, ran for {0.delta}').format(event))
         if event.message:
             click.echo(event.message)
     else:
@@ -698,8 +697,8 @@ def ledger(globs, task, duration, rate):
         lines.append('{}-{}'.format(event.start.strftime('%Y-%m-%d * %H:%M'),
                                     end.strftime('%H:%M')))
         lines.append('    (task:{})  {:.2f}h{}{}'.format(
-            event.task, hours, ' @ {}'.format(rate if rate else ''),
-            '  ; {}'.format(event.message if event.message else '')))
+            event.task, hours, ' @ {}'.format(rate) if rate else '',
+            '  ; {}'.format(event.message) if event.message else ''))
     if events.running():
         lines.append(_(';; Running event not included in output!'))
     click.echo_via_pager('\n'.join(lines))
