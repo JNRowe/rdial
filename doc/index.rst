@@ -6,7 +6,7 @@ name of a task, its start time, its duration and optionally a message… nothing
 more.
 
 
-It is written in Python_, and requires v2.6 or later.  :mod:`rdial` is released
+It is written in Python_, and requires v3.5 or later.  :mod:`rdial` is released
 under the `GPL v3`_.
 
 :Git repository:  https://github.com/JNRowe/rdial/
