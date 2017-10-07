@@ -22,16 +22,16 @@ import functools
 import os
 import subprocess
 
-import ciso8601
 import click
+import ciso8601
+
+from jnrbase import xdg_basedir
+from jnrbase.iso_8601 import parse_datetime
 
 try:
     import cduration
 except ImportError:
     cduration = None
-
-from jnrbase import xdg_basedir
-from jnrbase.iso_8601 import parse_datetime
 
 
 class RdialError(ValueError):

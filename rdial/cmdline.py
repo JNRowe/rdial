@@ -26,13 +26,11 @@ import subprocess
 import click
 import tabulate
 
-from jnrbase import (colourise, i18n, iso_8601)
+from jnrbase import colourise, i18n, iso_8601
 from jnrbase.attrdict import AttrDict
 
-from .events import (Events, TaskNotRunningError, TaskRunningError)
-from . import _version
-from . import utils
-
+from . import _version, utils
+from .events import Events, TaskNotRunningError, TaskRunningError
 
 _, N_ = i18n.setup(_version)
 

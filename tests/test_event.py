@@ -17,16 +17,16 @@
 # rdial.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from datetime import (datetime, timedelta, timezone)
+from datetime import datetime, timedelta, timezone
 from filecmp import dircmp
 from glob import glob
 from shutil import copytree
 
-from jnrbase.iso_8601 import (parse_datetime, parse_delta)
+from jnrbase.iso_8601 import parse_datetime, parse_delta
 from pytest import mark, raises, warns
 
 from rdial import events as events_mod
-from rdial.events import (Event, Events, TaskRunningError)
+from rdial.events import Event, Events, TaskRunningError
 
 
 @mark.parametrize('task, start, delta, message', [

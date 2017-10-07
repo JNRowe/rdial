@@ -29,7 +29,7 @@ import warnings
 
 import click
 
-from jnrbase import (iso_8601, xdg_basedir)
+from jnrbase import iso_8601, xdg_basedir
 
 from . import utils
 
