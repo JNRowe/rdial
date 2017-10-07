@@ -565,8 +565,6 @@ def wrapper(ctx, globs, time, message, fname, wrapper):
         wrapper (str): Run wrapper to execute
 
     """
-    if 'run wrappers' not in globs.config:
-        raise ValueError(_('No {!r} section in config').format('run wrappers'))
     try:
         command = globs.config['run wrappers'][wrapper]
     except KeyError:
