@@ -16,29 +16,26 @@
 # You should have received a copy of the GNU General Public License along with
 # rdial.  If not, see <http://www.gnu.org/licenses/>.
 
-from expecter import expect
-from nose2.tools import params
-from unittest.mock import patch
+from pytest import mark
 
 import setup
 
 
-@params(
+@mark.parametrize('input, expected', [
     ('plain', ['tabulate', ]),
     ('recurse', ['click', 'tabulate', ]),
-)
+])
 def test_parse_requires(input, expected):
     requires = setup.parse_requires(
         '../tests/data/requires/{}.txt'.format(input))
-    expect(requires) == expected
+    assert requires == expected
 
 
-@params(
+@mark.parametrize('version, expected', [
     ((2, 7, 6), ['unicodecsv', ]),
     ((3, 4, 2), []),
-)
-@patch('setup.sys')
-def test_parse_markers(version, expected, setup_sys):
-    setup_sys.version_info = version
+])
+def test_parse_markers(version, expected, monkeypatch):
+    monkeypatch.setattr(setup.sys, 'version_info', version)
     requires = setup.parse_requires('../tests/data/requires/markers.txt')
-    expect(requires) == expected
+    assert requires == expected

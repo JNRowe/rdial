@@ -18,18 +18,17 @@
 
 from datetime import (datetime, timedelta)
 
-from expecter import expect
-from nose2.tools import params
+from pytest import mark
 
 from rdial.utils import parse_datetime_user
 
 
-@params(
+@mark.parametrize('string, delta', [
     ('5 minutes ago', timedelta(minutes=5)),
     ('1 hour ago -5 minutes', timedelta(hours=1, minutes=5)),
-)
+])
 def test_parse_datetime_via_date_command(string, delta):
     now = datetime.utcnow().replace(microsecond=0)
     # Accept a 2.5 second smudge window
-    expect(parse_datetime_user(string)) >= now - delta
-    expect(parse_datetime_user(string)) < now - delta + timedelta(seconds=2.5)
+    assert parse_datetime_user(string) >= now - delta
+    assert parse_datetime_user(string) < now - delta + timedelta(seconds=2.5)

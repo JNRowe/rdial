@@ -20,17 +20,14 @@
 from datetime import (datetime, timedelta)
 from filecmp import dircmp
 from os.path import abspath
-from warnings import (catch_warnings, simplefilter)
 
-from click.testing import CliRunner
-from expecter import expect
-from nose2.tools import params
 from jnrbase.iso_8601 import (parse_datetime, parse_delta)
+from pytest import mark, warns
 
 from rdial.events import (Event, Events)
 
 
-@params(
+@mark.parametrize('task, start, delta, message', [
     ('test', None, None, None),
     ('test', '2013-02-26T19:45:14', None, None),
     ('test', datetime(2013, 2, 26, 19, 45, 14), None,
@@ -39,87 +36,89 @@ from rdial.events import (Event, Events)
     ('test', '2013-02-26T19:45:14', timedelta(minutes=8, seconds=19.770869),
      None),
     ('test', '2013-02-26T19:45:14', 'PT8M19S', 'stopped'),
-)
+])
 def test_event_creation(task, start, delta, message):
     e = Event(task, start, delta, message)
-    expect(e.task) == task
+    assert e.task == task
     if isinstance(start, datetime):
-        expect(e.start) == start
+        assert e.start == start
     elif start:
-        expect(e.start) == parse_datetime(start, naive=True)
+        assert e.start == parse_datetime(start, naive=True)
     else:
         # Special case to ignore comparison against utcnow()
         pass
     if isinstance(delta, timedelta):
-        expect(e.delta) == delta
+        assert e.delta == delta
     else:
-        expect(e.delta) == parse_delta(delta)
-    expect(e.message) == message
+        assert e.delta == parse_delta(delta)
+    assert e.message == message
 
 
-@params(
+@mark.parametrize('database, events', [
     ('test', 3),
     ('date_filtering', 3),
     ('test_not_running', 3),
-)
+])
 def test_read_datebase(database, events):
     evs = Events.read('tests/data/' + database, write_cache=False)
-    expect(len(evs)) == events
+    assert len(evs) == events
 
 
-@params(
+@mark.parametrize('database, events', [
     ('test', 3),
     ('date_filtering', 3),
     ('test_not_running', 3),
-)
+])
 def test_read_datebase_wrapper(database, events):
     with Events.wrapping('tests/data/' + database, write_cache=False) as evs:
-        expect(len(evs)) == events
+        assert len(evs) == events
 
 
+@mark.parametrize('database, events', [
+    ('test', 3),
+    ('date_filtering', 3),
+    ('test_not_running', 3),
+])
 def test_read_datebase_context(database, events):
-    with catch_warnings(record=True) as warns:
-        simplefilter("always")
+    with warns(DeprecationWarning) as record:
         with Events.context('tests/data/test', write_cache=False):
             pass
-        expect(warns[0].category) == DeprecationWarning
-        expect(str(warns[0])).contains('to wrapping')
+    assert 'to wrapping' in record[0].message.args[0]
 
 
-@params(
+@mark.parametrize('n, task, start, delta', [
     (0, 'task', datetime(2011, 5, 4, 8),
      timedelta(hours=1)),
     (1, 'task2', datetime(2011, 5, 4, 9, 15),
      timedelta(minutes=15)),
     (2, 'task', datetime(2011, 5, 4, 9, 30), timedelta()),
-)
+])
 def test_check_events(n, task, start, delta):
     # FIXME: Clean-ish way to perform check, with the caveat that it parses the
     # database on each entry.  Need a better solution.
     events = Events.read('tests/data/test', write_cache=False)
-    expect(events[n].task) == task
-    expect(events[n].start) == start
-    expect(events[n].delta) == delta
+    assert events[n].task == task
+    assert events[n].start == start
+    assert events[n].delta == delta
 
 
-def test_write_database():
-    runner = CliRunner()
+def test_write_database(tmpdir):
     in_dir = abspath('tests/data/test')
     events = Events.read(in_dir, write_cache=False)
     events._dirty = events.tasks()
-    with runner.isolated_filesystem() as tempdir:
-        events.write(tempdir)
-        comp = dircmp(in_dir, tempdir)
-        expect(comp.diff_files) == []
-        expect(comp.left_only) == []
-        expect(comp.right_only) == []
-        expect(comp.funny_files) == []
+    events.write(tmpdir.strpath)
+    comp = dircmp(in_dir, tmpdir.strpath, [])
+    assert comp.diff_files == []
+    assert comp.left_only == []
+    assert comp.right_only == []
+    assert comp.funny_files == []
+    assert comp.subdirs == {}
 
 
 def test_store_messages_with_events():
     events = Events.read('tests/data/test', write_cache=False)
-    expect(events.last().message) == 'finished'
+    assert events.last().message == 'finished'
 
 
 def test_non_existing_database():
-    expect(Events()) == Events.read('I_NEVER_EXIST', write_cache=False)
+    assert Events() == Events.read('I_NEVER_EXIST', write_cache=False)

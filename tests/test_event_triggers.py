@@ -17,7 +17,7 @@
 # rdial.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from expecter import expect
+from pytest import raises
 
 from rdial.events import (Events, TaskNotExistError, TaskNotRunningError,
                           TaskRunningError)
@@ -26,37 +26,37 @@ from rdial.events import (Events, TaskNotExistError, TaskNotRunningError,
 def test_start_event():
     events = Events.read('tests/data/test_not_running', write_cache=False)
     events.start(task='task2')
-    expect(events.running()) == 'task2'
+    assert events.running() == 'task2'
 
 
 def test_fail_start_when_task_typo():
     events = Events.read('tests/data/test_not_running', write_cache=False)
-    with expect.raises(TaskNotExistError,
-                       'Task non_existant does not exist!  Use “--new” to '
-                       'create it'):
-        events.start(task='non_existant')
+    with raises(TaskNotExistError,
+                match="Task non_existent does not exist!  Use “--new” to "
+                      "create it"):
+        events.start(task='non_existent')
 
 
 def test_fail_start_when_running():
     events = Events.read('tests/data/test', write_cache=False)
-    with expect.raises(TaskRunningError, 'Running task task!'):
+    with raises(TaskRunningError, match='Running task task!'):
         events.start(task='task2')
 
 
 def test_stop_event():
     events = Events.read('tests/data/test', write_cache=False)
     events.stop()
-    expect(events.running()) == False
+    assert not events.running()
 
 
 def test_stop_event_with_message():
     events = Events.read('tests/data/test', write_cache=False)
     events.stop(message='test')
     last = events.last()
-    expect(last.message) == 'test'
+    assert last.message == 'test'
 
 
 def test_fail_stop_when_not_running():
     events = Events.read('tests/data/test_not_running', write_cache=False)
-    with expect.raises(TaskNotRunningError, 'No task running!'):
+    with raises(TaskNotRunningError, match='No task running!'):
         events.stop()

@@ -16,28 +16,27 @@
 # You should have received a copy of the GNU General Public License along with
 # rdial.  If not, see <http://www.gnu.org/licenses/>.
 
-from expecter import expect
-from nose2.tools import params
+from pytest import mark
 
 from rdial.events import Events
 
 
 def test_fetch_events_for_task():
     events = Events.read('tests/data/test', write_cache=False)
-    expect(len(events.for_task(task='task2'))) == 1
+    assert len(events.for_task(task='task2')) == 1
 
 
-@params(
+@mark.parametrize('date, expected', [
     ({'year': 2011, }, 2),
     ({'year': 2011, 'month': 1}, 1),
     ({'year': 2011, 'month': 3, 'day': 1}, 1),
     ({'year': 2011, 'month': 3, 'day': 31}, 0),
-)
+])
 def test_fetch_events_for_date(date, expected):
     events = Events.read('tests/data/date_filtering', write_cache=False)
-    expect(len(events.for_date(**date))) == expected
+    assert len(events.for_date(**date)) == expected
 
 
 def test_fetch_events_for_week():
     events = Events.read('tests/data/date_filtering', write_cache=False)
-    expect(len(events.for_week(year=2011, week=9))) == 1
+    assert len(events.for_week(year=2011, week=9)) == 1

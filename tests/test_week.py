@@ -18,16 +18,15 @@
 
 from datetime import date
 
-from expecter import expect
-from nose2.tools import params
+from pytest import mark
 
 from rdial.utils import iso_week_to_date
 
 
-@params(
+@mark.parametrize('year, week, expected', [
     (2007, 1, (date(2007, 1, 1), date(2007, 1, 8))),  # Year starts same day
     (2009, 53, (date(2009, 12, 28), date(2010, 1, 4))),  # ISO year spans 2010
     (2013, 52, (date(2013, 12, 23), date(2013, 12, 30))),
-)
+])
 def test_iso_week_to_date(year, week, expected):
-    expect(iso_week_to_date(year, week)) == expected
+    assert iso_week_to_date(year, week) == expected

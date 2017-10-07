@@ -9,7 +9,6 @@ include extra/_rdial
 include extra/doap.rdf
 include extra/rdial.png
 include extra/requirements*.txt
-include nose2.cfg
 include rdial.py
 include rdial/config
 include rdial/locale/rdial.pot

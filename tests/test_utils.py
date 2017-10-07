@@ -16,12 +16,8 @@
 # You should have received a copy of the GNU General Public License along with
 # rdial.  If not, see <http://www.gnu.org/licenses/>.
 
-from os import listdir
 from time import sleep
 
-from click import open_file
-from click.testing import CliRunner
-from expecter import expect
 from jnrbase.attrdict import AttrDict
 
 from rdial.utils import (newer, read_config, remove_current, write_current)
@@ -29,28 +25,24 @@ from rdial.utils import (newer, read_config, remove_current, write_current)
 
 def test_read_config_local():
     conf = read_config('tests/data/local.ini')
-    expect(conf['local test'].getboolean('read')) == True
+    assert conf['local test'].getboolean('read')
 
 
-def test_handle_current():
-    runner = CliRunner()
-    with runner.isolated_filesystem() as tempdir:
-        globs = AttrDict(directory=tempdir)
-        bare = lambda globs, task: True
-        write_current(bare)(globs, task='test')
-        expect(listdir(tempdir)).contains('.current')
-        remove_current(bare)(globs, task='test')
-        expect(listdir(tempdir)).does_not_contain('.current')
-        # check idempotent...
-        remove_current(bare)(globs, task='test')
+def test_handle_current(tmpdir):
+    globs = AttrDict(directory=tmpdir.strpath)
+    bare = lambda globs, task: True
+    write_current(bare)(globs, task='test')
+    assert tmpdir.join('.current').exists()
+    remove_current(bare)(globs, task='test')
+    assert not tmpdir.join('.current').exists()
+    # check idempotent...
+    remove_current(bare)(globs, task='test')
 
 
-def test_newer():
-    runner = CliRunner()
-    with runner.isolated_filesystem() as tempdir:
-        with open_file('{}/file1'.format(tempdir), 'w') as f1:
-            sleep(0.1)
-            with open_file('{}/file2'.format(tempdir), 'w') as f2:
-                expect(newer(f2.name, f1.name)) == True
-                expect(newer(f1.name, f2.name)) == False
-                expect(newer(f1.name, f1.name)) == False
+def test_newer(tmpdir):
+    f1 = tmpdir.join('file1').ensure()
+    sleep(0.1)
+    f2 = tmpdir.join('file2').ensure()
+    assert newer(f2.strpath, f1.strpath)
+    assert not newer(f1.strpath, f2.strpath)
+    assert not newer(f1.strpath, f1.strpath)
