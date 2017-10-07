@@ -61,8 +61,8 @@ def parse_datetime_user(string):
     except ValueError:
         try:
             proc = subprocess.run(['date', '--utc', '--iso-8601=seconds',
-                                     '-d', string],
-                                    stdout=subprocess.PIPE, check=True)
+                                   '-d', string],
+                                  stdout=subprocess.PIPE, check=True)
             output = proc.stdout.decode()
             datetime_ = ciso8601.parse_datetime(output.strip()[:19])
         except subprocess.CalledProcessError:
