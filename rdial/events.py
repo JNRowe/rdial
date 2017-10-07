@@ -34,11 +34,10 @@ from jnrbase import (iso_8601, xdg_basedir)
 from . import utils
 
 
-class RdialDialect(csv.excel):  # pylint: disable=too-few-public-methods
+class RdialDialect(csv.unix_dialect):  # pylint: disable=too-few-public-methods
 
     """CSV dialect for rdial data files."""
 
-    lineterminator = '\n'
     quoting = csv.QUOTE_MINIMAL
     strict = True
 
