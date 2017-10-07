@@ -244,7 +244,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
                     # 3 upgrade path.
                     with click.open_file(cache_file, 'rb') as f:
                         cache = pickle.load(f)
-                except (pickle.UnpicklingError, ImportError,
+                except (pickle.UnpicklingError, EOFError, ImportError,
                         UnicodeDecodeError):
                     pass
                 else:
