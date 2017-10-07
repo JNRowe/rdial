@@ -24,26 +24,35 @@ the name of a task, its start time and its duration… nothing more.
 OPTIONS
 -------
 
---version
+.. program:: rdial
+
+.. option:: --version
+
     Show the version and exit.
 
--d <directory>, --directory=<directory>
+.. option:: -d <directory>, --directory=<directory>
+
     Database location, defaults to ``${XDG_DATA_HOME:-~/.local/share}/rdial``.
 
---backup/--no-backup
+.. option:: --backup, --no-backup
+
     Write data file backups.
 
---cache/--no-cache
+.. option:: --cache, --no-cache
+
     Do not write cache files.
 
---config <file>
+.. option:: --config <file>
+
     File to read configuration data from, defaults to
     ``${XDG_CONFIG_HOME:-~/.config}/rdial/config``.
 
--i, --interactive/--no-interactive
+.. option:: -i, --interactive, --no-interactive
+
     Support interactive message editing.
 
---help
+.. option:: --help
+
     Show help message and exit.
 
 COMMANDS
@@ -52,168 +61,198 @@ COMMANDS
 ``fsck``
 ''''''''
 
+.. program:: rdial fsck
+
 Check storage consistency
 
---help
+.. option:: --help
+
     Show help message and exit.
 
 ``start``
 '''''''''
 
+.. program:: rdial start
+
 Start task
 
--x, --from-dir
+.. option:: -x, --from-dir
     Use directory name as task name.
 
--n, --new
+.. option:: -n, --new
     Start a new task.
 
--t <time>, --time <time>
+.. option:: -t <time>, --time <time>
     Manually set start time for task.
 
---help
+.. option:: --help
+
     Show help message and exit.
 
 ``stop``
 ''''''''
 
+.. program:: rdial stop
+
 Stop task
 
--m <message>, --message=<message>
+.. option:: -m <message>, --message=<message>
     Closing message.
 
--F <file>, --file <file>
+.. option:: -F <file>, --file <file>
     Read closing message from file.
 
---amend
+.. option:: --amend
     Amend previous stop entry.
 
---help
+.. option:: --help
+
     Show help message and exit.
 
 ``switch``
 ''''''''''
 
+.. program:: rdial switch
+
 Switch to another task
 
--x, --from-dir
+.. option:: -x, --from-dir
     Use directory name as task name.
 
--n, --new
+.. option:: -n, --new
     Start a new task.
 
--t <time>, --time <time>
+.. option:: -t <time>, --time <time>
     Manually set start time for task.
 
--m <message>, --message <message>
+.. option:: -m <message>, --message <message>
     Closing message for current task.
 
--F <file>, --file <file>
+.. option:: -F <file>, --file <file>
     Read closing message for current task from file.
 
---help
+.. option:: --help
+
     Show help message and exit.
 
 ``run``
 '''''''
 
+.. program:: rdial run
+
 Run command with timer
 
--x, --from-dir
+.. option:: -x, --from-dir
     Use directory name as task name.
 
--n, --new
+.. option:: -n, --new
     Start a new task.
 
--t <time>, --time <time>
+.. option:: -t <time>, --time <time>
     Manually set start time for task.
 
--m <message>, --message <message>
+.. option:: -m <message>, --message <message>
     Closing message for current task.
 
--F <file>, --file <file>
+.. option:: -F <file>, --file <file>
     Read closing message for current task from file.
 
--c <command>, --command <command>
+.. option:: -c <command>, --command <command>
     Command to run.
 
---help
+.. option:: --help
+
     Show help message and exit.
 
 ``wrapper``
 '''''''''''
 
+.. program:: rdial wrapper
+
 Run predefined command with timer
 
--t <time>, --time <time>
+.. option:: -t <time>, --time <time>
     Manually set start time for task.
 
--m <message>, --message <message>
+.. option:: -m <message>, --message <message>
     Closing message for current task.
 
--F <file>, --file <file>
+.. option:: -F <file>, --file <file>
     Read closing message for current task from file.
 
---help
+.. option:: --help
+
     Show help message and exit.
 
 ``report``
 ''''''''''
 
+.. program:: rdial report
+
 Report time tracking data
 
--d <duration>, --duration=<duration>
+.. option:: -d <duration>, --duration=<duration>
     Filter events for specified time period {day,week,month,year,all}.
 
--s <order>, --sort=<order>
+.. option:: -s <order>, --sort=<order>
     Field to sort by {task,time}.
 
--r, --reverse
+.. option:: -r, --reverse
     Reverse sort order.
 
---style
+.. option:: --style
     Table output style {grid,latex,mediawiki,orgtbl,pipe,plain,rst,simple,tsv}.
 
---stats
+.. option:: --stats
     Display database statistics.
 
--x, --from-dir
+.. option:: -x, --from-dir
     Use directory name as task name.
 
---help
+.. option:: --help
+
     Show help message and exit.
 
 ``running``
 '''''''''''
 
+.. program:: rdial running
+
 Display running task, if any
 
---help
+.. option:: --help
+
     Show help message and exit.
 
 ``last``
 ''''''''
 
+.. program:: rdial last
+
 Display last task, if any
 
---help
+.. option:: --help
+
     Show help message and exit.
 
 ``ledger``
 ''''''''''
 
+.. program:: rdial ledger
+
 Generate `ledger <http://ledger-cli.org/>`__ compatible data file
 
--d <duration>, --duration=<duration>
+.. option:: -d <duration>, --duration=<duration>
     Filter events for specified time period {day,week,month,year,all}.
 
--r <rate>, --rate <rate>
+.. option:: -r <rate>, --rate <rate>
     Hourly rate for task output.
 
--x, --from-dir
+.. option:: -x, --from-dir
     Use directory name as task name.
 
---help
+.. option:: --help
+
     Show help message and exit.
 
 BUGS
