@@ -344,7 +344,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
         """
         if not new and task not in self.tasks():
             raise TaskNotExistError(
-                "Task {} does not exist!  Use “--new” to create it".format(
+                'Task {} does not exist!  Use “--new” to create it'.format(
                     task))
         running = self.running()
         if running:
