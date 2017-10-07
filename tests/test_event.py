@@ -19,7 +19,6 @@
 
 from datetime import (datetime, timedelta)
 from filecmp import dircmp
-from os.path import abspath
 
 from jnrbase.iso_8601 import (parse_datetime, parse_delta)
 from pytest import mark, warns
@@ -103,7 +102,7 @@ def test_check_events(n, task, start, delta):
 
 
 def test_write_database(tmpdir):
-    in_dir = abspath('tests/data/test')
+    in_dir = 'tests/data/test'
     events = Events.read(in_dir, write_cache=False)
     events._dirty = events.tasks()
     events.write(tmpdir.strpath)
