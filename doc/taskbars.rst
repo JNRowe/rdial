@@ -25,7 +25,7 @@ shows the currently running task:
 
     GLib = lgi.GLib
     tasktext = wibox.widget.textbox!
-    tasktimer = with timer timeout: 30
+    tasktimer = with gears.timer timeout: 30
         \connect_signal "timeout", ->
             if file = io.open GLib.get_user_data_dir! .. "/rdial/.current"
                 tasktext\set_markup file\read!
