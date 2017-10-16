@@ -160,6 +160,9 @@ def get_stop_message(current, edit=False):
 def task_option(fun):
     """Add task selection options.
 
+    Note:
+        This is only here to reduce duplication in command setup.
+
     Args:
         fun (types.FunctionType): Function to add options to
 
@@ -197,6 +200,9 @@ def duration_option(fun):
 
 def message_option(fun):
     """Add message setting options.
+
+    Note:
+        This is only here to reduce duplication in command setup.
 
     Args:
         fun (types.FunctionType): Function to add options to
@@ -304,7 +310,7 @@ def filter_events(globs, task=None, duration='all'):
     """Filter events for report processing.
 
     Args:
-        globs (utils.AttrDict): Global options object
+        globs (~jnrbase.attrdict.AttrDict): Global options object
         task (str): Task name to filter on
         duration (str): Time window to filter on
 
@@ -362,7 +368,7 @@ def fsck(ctx, globs):
 
     Args:
         ctx (click.Context): Current command context
-        globs (utils.AttrDict): Global options object
+        globs (~jnrbase.attrdict.AttrDict): Global options object
 
     """
     warnings = 0
@@ -407,7 +413,7 @@ def start(globs, task, new, time):
     """Start task.
 
     Args:
-        globs (utils.AttrDict): Global options object
+        globs (~jnrbase.attrdict.AttrDict): Global options object
         task (str): Task name to operate on
         new (bool): Create a new task
         time (datetime.datetime): Task start time
@@ -426,7 +432,7 @@ def stop(globs, message, fname, amend):
     """Stop task.
 
     Args:
-        globs (utils.AttrDict): Global options object
+        globs (~jnrbase.attrdict.AttrDict): Global options object
         message (str): Message to assign to event
         fname (str): Filename to read message from
         amend (bool): Amend a previously stopped event
@@ -466,7 +472,7 @@ def switch(globs, task, new, time, message, fname):
     """Complete last task and start new one.
 
     Args:
-        globs (utils.AttrDict): Global options object
+        globs (~jnrbase.attrdict.AttrDict): Global options object
         task (str): Task name to operate on
         new (bool): Create a new task
         time (datetime.datetime): Task start time
@@ -508,7 +514,7 @@ def run(globs, task, new, time, message, fname, command):
     """Run timed command.
 
     Args:
-        globs (utils.AttrDict): Global options object
+        globs (~jnrbase.attrdict.AttrDict): Global options object
         task (str): Task name to operate on
         new (bool): Create a new task
         time (datetime.datetime): Task start time
@@ -554,7 +560,7 @@ def wrapper(ctx, globs, time, message, fname, wrapper):
 
     Args:
         ctx (click.Context): Click context object
-        globs (utils.AttrDict): Global options object
+        globs (~jnrbase.attrdict.AttrDict): Global options object
         time (datetime.datetime): Task start time
         message (str): Message to assign to event
         fname (str): Filename to read message from
@@ -589,7 +595,7 @@ def report(globs, task, stats, duration, sort, reverse, style):
     """Report time tracking data.
 
     Args:
-        globs (utils.AttrDict): Global options object
+        globs (~jnrbase.attrdict.AttrDict): Global options object
         task (str): Task name to operate on
         stats (bool): Display short overview of data
         duration (str): Time window to filter on
@@ -630,7 +636,7 @@ def running(globs):
     """Display running task, if any.
 
     Args:
-        globs (utils.AttrDict): Global options object
+        globs (~jnrbase.attrdict.AttrDict): Global options object
 
     """
     events = Events.read(globs.directory, write_cache=globs.cache)
@@ -649,7 +655,7 @@ def last(globs):
     """Display last event, if any.
 
     Args:
-        globs (utils.AttrDict): Global options object
+        globs (~jnrbase.attrdict.AttrDict): Global options object
 
     """
     events = Events.read(globs.directory, write_cache=globs.cache)
@@ -672,7 +678,7 @@ def ledger(globs, task, duration, rate):
     """Generate ledger compatible data file.
 
     Args:
-        globs (utils.AttrDict): Global options object
+        globs (~jnrbase.attrdict.AttrDict): Global options object
         task (str): Task name to operate on
         duration (str): Time window to filter on
         rate (str): Rate to assign hours in report

@@ -207,8 +207,10 @@ class Events(list):  # pylint: disable=too-many-public-methods
     def read(directory, backup=True, write_cache=True):
         """Read and parse database.
 
-        Assume a new :obj:`Events` object should be created if the file is
-        missing
+        .. note::
+
+            Assumes a new :obj:`Events` object should be created if the
+            directory is missing.
 
         Args:
             directory (str): Location to read database files from
@@ -335,6 +337,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
 
         Args:
             task (str): Task name to tracking
+            new (bool): Whether to create a new task
             start (str): ISO-8601 start time for event
 
         Raises:
@@ -399,8 +402,8 @@ class Events(list):  # pylint: disable=too-many-public-methods
 
         Args:
             year (int): Year to filter on
-            month (int): Month to filter on, or :obj:`None`
-            day (int): Day to filter on, or :obj:`None`
+            month (int): Month to filter on
+            day (int): Day to filter on
 
         Returns:
             Events: Events occurring within specified date

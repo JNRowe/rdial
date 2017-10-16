@@ -51,6 +51,10 @@ OPTIONS
 
     Support interactive message editing.
 
+.. option:: --colour, --no-colour
+
+    Output colourised informational text.
+
 .. option:: --help
 
     Show help message and exit.
@@ -77,12 +81,15 @@ Check storage consistency
 Start task
 
 .. option:: -x, --from-dir
+
     Use directory name as task name.
 
 .. option:: -n, --new
+
     Start a new task.
 
 .. option:: -t <time>, --time <time>
+
     Manually set start time for task.
 
 .. option:: --help
@@ -96,13 +103,16 @@ Start task
 
 Stop task
 
-.. option:: -m <message>, --message=<message>
-    Closing message.
-
 .. option:: -F <file>, --file <file>
+
     Read closing message from file.
 
+.. option:: -m <message>, --message=<message>
+
+    Closing message.
+
 .. option:: --amend
+
     Amend previous stop entry.
 
 .. option:: --help
@@ -117,19 +127,24 @@ Stop task
 Switch to another task
 
 .. option:: -x, --from-dir
+
     Use directory name as task name.
 
 .. option:: -n, --new
+
     Start a new task.
 
 .. option:: -t <time>, --time <time>
+
     Manually set start time for task.
 
-.. option:: -m <message>, --message <message>
-    Closing message for current task.
-
 .. option:: -F <file>, --file <file>
+
     Read closing message for current task from file.
+
+.. option:: -m <message>, --message <message>
+
+    Closing message for current task.
 
 .. option:: --help
 
@@ -143,21 +158,27 @@ Switch to another task
 Run command with timer
 
 .. option:: -x, --from-dir
+
     Use directory name as task name.
 
 .. option:: -n, --new
+
     Start a new task.
 
 .. option:: -t <time>, --time <time>
+
     Manually set start time for task.
 
-.. option:: -m <message>, --message <message>
-    Closing message for current task.
-
 .. option:: -F <file>, --file <file>
+
     Read closing message for current task from file.
 
+.. option:: -m <message>, --message <message>
+
+    Closing message for current task.
+
 .. option:: -c <command>, --command <command>
+
     Command to run.
 
 .. option:: --help
@@ -172,13 +193,16 @@ Run command with timer
 Run predefined command with timer
 
 .. option:: -t <time>, --time <time>
+
     Manually set start time for task.
 
-.. option:: -m <message>, --message <message>
-    Closing message for current task.
-
 .. option:: -F <file>, --file <file>
+
     Read closing message for current task from file.
+
+.. option:: -m <message>, --message <message>
+
+    Closing message for current task.
 
 .. option:: --help
 
@@ -191,23 +215,34 @@ Run predefined command with timer
 
 Report time tracking data
 
+.. option:: -x, --from-dir
+
+    Use directory name as task name.
+
+.. option:: --stats
+
+    Display database statistics.
+
 .. option:: -d <duration>, --duration=<duration>
+
     Filter events for specified time period {day,week,month,year,all}.
 
 .. option:: -s <order>, --sort=<order>
+
     Field to sort by {task,time}.
 
-.. option:: -r, --reverse
+.. option:: -r, --reverse, --no-reverse
+
     Reverse sort order.
 
 .. option:: --style
-    Table output style {grid,latex,mediawiki,orgtbl,pipe,plain,rst,simple,tsv}.
 
-.. option:: --stats
-    Display database statistics.
+    Table output style {fancy_grid,grid,html,latex,latex_booktabs,mediawiki,orgtbl,pipe,plain,psql,rst,simple,tsv}
 
-.. option:: -x, --from-dir
-    Use directory name as task name.
+    See the tabulate_ documentation for descriptions of the supported formats
+    for your installation.
+
+.. _tabulate: https://pypi.python.org/pypi/tabulate
 
 .. option:: --help
 
@@ -242,14 +277,17 @@ Display last task, if any
 
 Generate `ledger <http://ledger-cli.org/>`__ compatible data file
 
+.. option:: -x, --from-dir
+
+    Use directory name as task name.
+
 .. option:: -d <duration>, --duration=<duration>
+
     Filter events for specified time period {day,week,month,year,all}.
 
 .. option:: -r <rate>, --rate <rate>
-    Hourly rate for task output.
 
-.. option:: -x, --from-dir
-    Use directory name as task name.
+    Hourly rate for task output.
 
 .. option:: --help
 
@@ -268,7 +306,7 @@ Written by `James Rowe <mailto:jnrowe@gmail.com>`__
 RESOURCES
 ---------
 
-Home page, containing full documentation: http://rdial.rtfd.org/
+Full documentation: http://rdial.readthedocs.io/
 
 Issue tracker: https://github.com/JNRowe/rdial/issues/
 
@@ -277,7 +315,14 @@ COPYING
 
 Copyright © 2011-2017  James Rowe.
 
-This program is free software: you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by the
-Free Software Foundation, either version 3 of the License, or (at your
-option) any later version.
+rdial is free software: you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
+
+rdial is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+rdial.  If not, see <http://www.gnu.org/licenses/>.

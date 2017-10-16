@@ -36,7 +36,6 @@ Indices and tables
 ------------------
 
 * :ref:`genindex`
-* :ref:`modindex`
 * :ref:`search`
 
 .. _Python: http://www.python.org/
