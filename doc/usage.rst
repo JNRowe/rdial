@@ -35,6 +35,10 @@ Options
 
    Support interactive message editing.
 
+.. option:: --colour/--no-colour
+
+   Output colourised informational text.
+
 .. option:: --help
 
    Show help message and exit.
@@ -87,15 +91,15 @@ Commands
 
 ::
 
-    rdial stop [--help] [-m <message>] [--amend]
-
-.. option:: -m <message>, --message=<message>
-
-   Closing message.
+    rdial stop [--help] [-F file] [-m message] [--amend]
 
 .. option:: -F <file>, --file <file>
 
    Read closing message from file.
+
+.. option:: -m <message>, --message=<message>
+
+   Closing message.
 
 .. option:: --amend
 
@@ -112,7 +116,7 @@ Commands
 
 ::
 
-    rdial switch [--help] [-x] [-n] [-m <message>] [task]
+    rdial switch [--help] [-x] [-n] [-F file] [-m message] [task]
 
 .. option:: -x, --from-dir
 
@@ -126,13 +130,13 @@ Commands
 
    Manually set start time for task.
 
-.. option:: -m <message>, --message <message>
-
-   Closing message for current task.
-
 .. option:: -F <file>, --file <file>
 
    Read closing message for current task from file.
+
+.. option:: -m <message>, --message <message>
+
+   Closing message for current task.
 
 .. option:: --help
 
@@ -147,7 +151,7 @@ Commands
 
 ::
 
-    rdial run [--help] [-x] [-n] [-t time] [-m message] [-F file] [-c command] <task>
+    rdial run [--help] [-x] [-n] [-t time] [-F file] [-m message] [-c command] <task>
 
 .. option:: -x, --from-dir
 
@@ -161,13 +165,13 @@ Commands
 
    Manually set start time for task.
 
-.. option:: -m <message>, --message <message>
-
-   Closing message for current task.
-
 .. option:: -F <file>, --file <file>
 
    Read closing message for current task from file.
+
+.. option:: -m <message>, --message <message>
+
+   Closing message for current task.
 
 .. option:: -c <command>, --command <command>
 
@@ -184,7 +188,7 @@ Commands
 
 ::
 
-    rdial wrapper [--help] [-t time] [-m message] [-F file] <wrapper>
+    rdial wrapper [--help] [-t time] [-F file] [-m message] <wrapper>
 
 See :ref:`run wrappers configuration <run-wrappers-label>`.
 
@@ -192,13 +196,13 @@ See :ref:`run wrappers configuration <run-wrappers-label>`.
 
    Manually set start time for task.
 
-.. option:: -m <message>, --message <message>
-
-   Closing message for current task.
-
 .. option:: -F <file>, --file <file>
 
    Read closing message for current task from file.
+
+.. option:: -m <message>, --message <message>
+
+   Closing message for current task.
 
 .. option:: --help
 
@@ -211,7 +215,15 @@ See :ref:`run wrappers configuration <run-wrappers-label>`.
 
 ::
 
-    rdial report [--help] [-d <duration>] [-s <order] [-r] [--style] [--stats] <task>
+    rdial report [--help] [-x] [--stats] [-d <duration>] [-s <order] [-r] [--style <style>] <task>
+
+.. option:: -x, --from-dir
+
+   Use directory name as task name.
+
+.. option:: --stats
+
+    Display database statistics.
 
 .. option:: -d <duration>, --duration=<duration>
 
@@ -221,21 +233,18 @@ See :ref:`run wrappers configuration <run-wrappers-label>`.
 
    Field to sort by {task,time}.
 
-.. option:: -r, --reverse
+.. option:: -r, --reverse/--no-reverse
 
    Reverse sort order.
 
 .. option:: --style
 
-   Table output style {grid,latex,mediawiki,orgtbl,pipe,plain,rst,simple,tsv}
+   Table output style {fancy_grid,grid,html,latex,latex_booktabs,mediawiki,orgtbl,pipe,plain,psql,rst,simple,tsv}
 
-.. option:: --stats
+   See the tabulate_ documentation for descriptions of the supported formats
+   for your installation.
 
-    Display database statistics.
-
-.. option:: -x, --from-dir
-
-   Use directory name as task name.
+.. _tabulate: https://pypi.python.org/pypi/tabulate
 
 .. option:: --help
 
@@ -274,7 +283,11 @@ See :ref:`run wrappers configuration <run-wrappers-label>`.
 
 ::
 
-    rdial ledger [--help] [-d <duration>] [-r RATE] [task]
+    rdial ledger [--help] [-x] [-d <duration>] [-r RATE] [task]
+
+.. option:: -x, --from-dir
+
+   Use directory name as task name.
 
 .. option:: -d <duration>, --duration=<duration>
 
@@ -283,10 +296,6 @@ See :ref:`run wrappers configuration <run-wrappers-label>`.
 .. option:: -r <rate>, --rate <rate>
 
    Hourly rate for task output.
-
-.. option:: -x, --from-dir
-
-   Use directory name as task name.
 
 .. option:: --help
 

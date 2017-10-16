@@ -51,6 +51,10 @@ OPTIONS
 
     Support interactive message editing.
 
+.. option:: --colour, --no-colour
+
+    Output colourised informational text.
+
 .. option:: --help
 
     Show help message and exit.
@@ -96,11 +100,12 @@ Start task
 
 Stop task
 
-.. option:: -m <message>, --message=<message>
-    Closing message.
-
 .. option:: -F <file>, --file <file>
     Read closing message from file.
+
+.. option:: -m <message>, --message=<message>
+
+    Closing message.
 
 .. option:: --amend
     Amend previous stop entry.
@@ -125,11 +130,12 @@ Switch to another task
 .. option:: -t <time>, --time <time>
     Manually set start time for task.
 
-.. option:: -m <message>, --message <message>
-    Closing message for current task.
-
 .. option:: -F <file>, --file <file>
     Read closing message for current task from file.
+
+.. option:: -m <message>, --message <message>
+
+    Closing message for current task.
 
 .. option:: --help
 
@@ -151,11 +157,12 @@ Run command with timer
 .. option:: -t <time>, --time <time>
     Manually set start time for task.
 
-.. option:: -m <message>, --message <message>
-    Closing message for current task.
-
 .. option:: -F <file>, --file <file>
     Read closing message for current task from file.
+
+.. option:: -m <message>, --message <message>
+
+    Closing message for current task.
 
 .. option:: -c <command>, --command <command>
     Command to run.
@@ -174,11 +181,12 @@ Run predefined command with timer
 .. option:: -t <time>, --time <time>
     Manually set start time for task.
 
-.. option:: -m <message>, --message <message>
-    Closing message for current task.
-
 .. option:: -F <file>, --file <file>
     Read closing message for current task from file.
+
+.. option:: -m <message>, --message <message>
+
+    Closing message for current task.
 
 .. option:: --help
 
@@ -191,23 +199,32 @@ Run predefined command with timer
 
 Report time tracking data
 
+.. option:: -x, --from-dir
+
+    Use directory name as task name.
+
+.. option:: --stats
+
+    Display database statistics.
+
 .. option:: -d <duration>, --duration=<duration>
     Filter events for specified time period {day,week,month,year,all}.
 
 .. option:: -s <order>, --sort=<order>
     Field to sort by {task,time}.
 
-.. option:: -r, --reverse
+.. option:: -r, --reverse, --no-reverse
+
     Reverse sort order.
 
 .. option:: --style
-    Table output style {grid,latex,mediawiki,orgtbl,pipe,plain,rst,simple,tsv}.
 
-.. option:: --stats
-    Display database statistics.
+    Table output style {fancy_grid,grid,html,latex,latex_booktabs,mediawiki,orgtbl,pipe,plain,psql,rst,simple,tsv}
 
-.. option:: -x, --from-dir
-    Use directory name as task name.
+    See the tabulate_ documentation for descriptions of the supported formats
+    for your installation.
+
+.. _tabulate: https://pypi.python.org/pypi/tabulate
 
 .. option:: --help
 
@@ -242,14 +259,16 @@ Display last task, if any
 
 Generate `ledger <http://ledger-cli.org/>`__ compatible data file
 
+.. option:: -x, --from-dir
+
+    Use directory name as task name.
+
 .. option:: -d <duration>, --duration=<duration>
     Filter events for specified time period {day,week,month,year,all}.
 
 .. option:: -r <rate>, --rate <rate>
-    Hourly rate for task output.
 
-.. option:: -x, --from-dir
-    Use directory name as task name.
+    Hourly rate for task output.
 
 .. option:: --help
 
