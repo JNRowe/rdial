@@ -2,7 +2,7 @@ rdial - Simple time tracking for simple people
 ==============================================
 
 .. image:: https://img.shields.io/travis/JNRowe/rdial.png
-   :target: http://travis-ci.org/JNRowe/rdial
+   :target: https://travis-ci.org/JNRowe/rdial
    :alt: Test state on master
 
 .. image:: https://img.shields.io/coveralls/JNRowe/rdial/master.png
