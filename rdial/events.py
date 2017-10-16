@@ -57,7 +57,7 @@ class TaskNotExistError(utils.RdialError):
     """Exception for attempting to operate on a non-existing task."""
 
 
-class Event():
+class Event:
 
     """Base object for handling database event."""
 
