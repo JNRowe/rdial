@@ -306,7 +306,7 @@ Written by `James Rowe <mailto:jnrowe@gmail.com>`__
 RESOURCES
 ---------
 
-Home page, containing full documentation: http://rdial.rtfd.org/
+Full documentation: http://rdial.readthedocs.io/
 
 Issue tracker: https://github.com/JNRowe/rdial/issues/
 
