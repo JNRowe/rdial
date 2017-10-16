@@ -24,8 +24,9 @@ Requirements
 
 ``rdial``’s mandatory dependencies outside of the standard library are:
 
-* ciso8601_
-* click_
+* ciso8601_ ≥ 1.0.1
+* click_ ≥ 5.1
+* jnrbase_ ``[colour]`` ≥ 0.5.0
 * tabulate_
 
 It should work with Python_ version 3.5, or newer.  If ``rdial`` doesn’t work
@@ -126,6 +127,7 @@ the problem, or even better a patch that fixes it!
 .. _GPL v3: http://www.gnu.org/licenses/
 .. _ciso8601: https://pypi.python.org/pypi/ciso8601/
 .. _click: https://pypi.python.org/pypi/click/
+.. _jnrbase: https://pypi.python.org/pypi/jnrbase/
 .. _tabulate: https://pypi.python.org/pypi/tabulate/
 .. _Python: http://www.python.org/
 .. _issue: https://github.com/JNRowe/rdial/issues
