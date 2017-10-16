@@ -27,6 +27,9 @@ sys.path.insert(0, root_dir)
 
 import rdial  # NOQA: E402
 
+on_rtd = os.getenv('READTHEDOCS')
+if not on_rtd:
+    import sphinx_rtd_theme
 
 extensions = \
     ['sphinx.ext.{}'.format(ext)
@@ -34,15 +37,17 @@ extensions = \
                  'todo', 'viewcode']] \
     + ['sphinxcontrib.{}'.format(ext) for ext in []]
 
-# Only activate spelling if it is installed.  It is not required in the
-# general case and we don’t have the granularity to describe this in a clean
-# way
-try:
-    from sphinxcontrib import spelling  # NOQA: E401
-except ImportError:
-    pass
-else:
-    extensions.append('sphinxcontrib.spelling')
+
+if not on_rtd:
+    # Only activate spelling if it is installed.  It is not required in the
+    # general case and we don’t have the granularity to describe this in a
+    # clean way
+    try:
+        from sphinxcontrib import spelling  # NOQA: E401
+    except ImportError:
+        pass
+    else:
+        extensions.append('sphinxcontrib.spelling')
 
 master_doc = 'index'
 source_suffix = '.rst'
@@ -54,6 +59,12 @@ version = '.'.join([str(s) for s in rdial._version.tuple[:2]])
 release = rdial._version.dotted
 
 html_experimental_html5_writer = True
+
+# readthedocs.org handles this setup for their builds, but it is nice to see
+# approximately correct builds on the local system too
+if not on_rtd:
+    html_theme = "sphinx_rtd_theme"
+    html_theme_path = [sphinx_rtd_theme.get_html_theme_path(), ]
 
 pygments_style = 'sphinx'
 with suppress(CalledProcessError):
