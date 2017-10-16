@@ -30,7 +30,7 @@ from jnrbase.iso_8601 import parse_datetime
 
 try:
     import cduration
-except ImportError:
+except ImportError:  # pragma: no cover
     cduration = None
 
 
