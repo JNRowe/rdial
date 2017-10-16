@@ -1,15 +1,15 @@
 rdial - Simple time tracking for simple people
 ==============================================
 
-.. image:: https://secure.travis-ci.org/JNRowe/rdial.png?branch=master
+.. image:: https://img.shields.io/travis/JNRowe/rdial.png
    :target: http://travis-ci.org/JNRowe/rdial
    :alt: Test state on master
 
-.. image:: https://img.shields.io/coveralls/JNRowe/rdial/master.svg?style=plastic
+.. image:: https://img.shields.io/coveralls/JNRowe/rdial/master.png
    :target: https://coveralls.io/repos/JNRowe/rdial
    :alt: Coverage state on master
 
-.. image:: https://pypip.in/v/rdial/badge.png
+.. image:: https://img.shields.io/pypi/v/rdial.png
    :target: https://pypi.python.org/pypi/rdial/
    :alt: Current PyPI release
 
