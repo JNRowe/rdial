@@ -13,10 +13,6 @@ rdial - Simple time tracking for simple people
    :target: https://pypi.python.org/pypi/rdial/
    :alt: Current PyPI release
 
-.. image:: https://pypip.in/d/rdial/badge.png
-   :target: https://pypi.python.org/pypi/rdial/
-   :alt: Number of downloads from PyPI
-
 ``rdial`` is a simple way to track the time you spend on tasks.  It tracks the
 name of a task, its start time, its duration and optionally a message… nothing
 more.
