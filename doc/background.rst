@@ -1,10 +1,10 @@
 Background
 ==========
 
-I spend an awful lot of time sitting in front of a computer, working on a huge
-number of disparate projects.  And when it comes time to gauge what I’ve been
-working on it would be nice if I could just fire up a simple tool to see where
-I’ve been spending my time.
+I spend an awful lot of time sitting in front of a computer, working on a many
+disparate projects.  And when it comes time to gauge what I’ve been working on
+it would be great if I could just fire up a simple tool to see where I’ve been
+spending my time.
 
 The features *I* need in a time tracking tool are:
 
@@ -14,38 +14,37 @@ The features *I* need in a time tracking tool are:
 * Works on all the platforms I regularly use; desktop, mobile phone, ZipIt, and
   more
 
-Now :mod:`rdial` is born, and I should be able to realise those dreams!
+Now :mod:`rdial` is born, and I can realise those dreams!
 
 Philosophy
 ----------
 
-There are a few interface choices in :program:`rdial` that may be need a
-little explanation.  They may well be enough to deter you from using
-:program:`rdial` at all, but that is fine as there are :doc:`plenty more
-options <alternatives>` out there!
+A few interface choices in :program:`rdial` may be need a little explanation.
+Any one may well be enough to deter you from using :program:`rdial` at all, but
+that is fine as :doc:`other options <alternatives>` are out there!
 
 Explicit new tasks
 ~~~~~~~~~~~~~~~~~~
 
-    It is an error to attempt to start a task that doesn’t already exist in the
+    It is an error to try to start a task that doesn’t already exist in the
     database
 
 If you wish to create a new task you *must* give the :option:`rdial start
---new` option when starting the task.  This should hopefully catch typos and
-task name “thinkos”, and it has proven to do so for me.
+--new` option when starting the task.  This should — with hope — catch typos
+and task name “thinkos”, and it has proven to do exactly that for me.
 
 Switch vs “stopstart”
 ~~~~~~~~~~~~~~~~~~~~~
 
-    It is an error to attempt to start a task when another is running, or
-    switch a task when one is not running
+    It is an error to try to start a task when another is running, or switch
+    a task when no task is running
 
-If you wish to start a new task you *must* stop the previous one.  At first it
+If you wish to start a new task you *must* stop the previous task.  At first it
 seems natural to just accept that :command:`rdial start` should complete the
 previous task, but doing so encourages users to not be aware of their current
 state.
 
 Similarly, if you wish to switch to a new task then a task *must* be running.
 It might be convenient to make :command:`rdial switch` just start the new task
-if one is not running, but again it encourages users to be unaware of their
+if a task is not running, but again it encourages users to be unaware of their
 current state.

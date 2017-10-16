@@ -4,10 +4,10 @@ Getting started
 Basic usage
 -----------
 
-The command interface is hopefully quite intuitive.  The following is a sample
+The command interface is — I hope — quite intuitive.  The following is a sample
 session:
 
-.. code-block:: sh
+.. code-block:: console
 
     $ rdial start my_task
     $ rdial running
@@ -16,14 +16,14 @@ session:
     Task my_task running for 0:44:00
 
 Help on individual subcommands is available via ``rdial <subcommand> --help`` or
-in the :doc:`usage` document.
+in the :doc:`usage <usage>` document.
 
 Current task
 ------------
 
 The current task name is written to the database directory in the
-:file:`.current` file.  You can use its contents to populate notifiers in task
-bars.
+:file:`.current` file.  You could, for example,  use its contents to populate
+notifiers in task bars.
 
 .. image:: images/dwm-taskbar.png
    :alt: Current task display example
@@ -31,5 +31,5 @@ bars.
 As the file is created when the user executes :command:`rdial start` you can
 also use its modification time to quickly calculate a running time for the task.
 
-See the :doc:`taskbars` document for some guidance on using ``rdial`` in various
-environments.
+See the :doc:`taskbar integration <taskbars>` document for some guidance on
+using  :program:`rdial` in various environments.

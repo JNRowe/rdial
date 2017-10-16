@@ -3,7 +3,7 @@ Usage
 
 The :program:`rdial` script is the main workhorse of :mod:`rdial`.
 
-See :doc:`getting_started` for basic usage examples.
+See the :doc:`getting started <getting_started>` for basic usage examples.
 
 Options
 -------

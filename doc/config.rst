@@ -19,9 +19,9 @@ in the following order:
 File format
 -----------
 
-The configuration file is a ``INI`` format file.  There is a section labelled
-``rdial`` for global options, and a section for each subcommand.  Each section
-consists of a series of :samp:`name={value}` option pairs.
+The configuration file is a ``INI`` format file.  Use a section labelled
+``rdial`` for global options, and a separate section for each subcommand.  Each
+section consists of a series of :samp:`name={value}` option pairs.
 
 An example configuration file is below:
 
@@ -84,9 +84,9 @@ as values.  For example:
 .. code-block:: ini
 
     [run wrappers]
-    feeds = -c 'mutt -f ~/Mail/RSS2email/' procast
+    feeds = -c 'mutt -f ~/Mail/RSS2email/' procrast
     calendar = -c 'wyrd ~/.reminders/events' calendar
 
 The above configuration entry ``feeds`` allows us to use :samp:`rdial wrapper
 {feeds}` to open ``mutt`` in a specific mailbox, and time our usage under the
-``procast`` task.
+ever popular ``procrast``-ination task.
