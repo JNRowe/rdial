@@ -81,12 +81,15 @@ Check storage consistency
 Start task
 
 .. option:: -x, --from-dir
+
     Use directory name as task name.
 
 .. option:: -n, --new
+
     Start a new task.
 
 .. option:: -t <time>, --time <time>
+
     Manually set start time for task.
 
 .. option:: --help
@@ -101,6 +104,7 @@ Start task
 Stop task
 
 .. option:: -F <file>, --file <file>
+
     Read closing message from file.
 
 .. option:: -m <message>, --message=<message>
@@ -108,6 +112,7 @@ Stop task
     Closing message.
 
 .. option:: --amend
+
     Amend previous stop entry.
 
 .. option:: --help
@@ -122,15 +127,19 @@ Stop task
 Switch to another task
 
 .. option:: -x, --from-dir
+
     Use directory name as task name.
 
 .. option:: -n, --new
+
     Start a new task.
 
 .. option:: -t <time>, --time <time>
+
     Manually set start time for task.
 
 .. option:: -F <file>, --file <file>
+
     Read closing message for current task from file.
 
 .. option:: -m <message>, --message <message>
@@ -149,15 +158,19 @@ Switch to another task
 Run command with timer
 
 .. option:: -x, --from-dir
+
     Use directory name as task name.
 
 .. option:: -n, --new
+
     Start a new task.
 
 .. option:: -t <time>, --time <time>
+
     Manually set start time for task.
 
 .. option:: -F <file>, --file <file>
+
     Read closing message for current task from file.
 
 .. option:: -m <message>, --message <message>
@@ -165,6 +178,7 @@ Run command with timer
     Closing message for current task.
 
 .. option:: -c <command>, --command <command>
+
     Command to run.
 
 .. option:: --help
@@ -179,9 +193,11 @@ Run command with timer
 Run predefined command with timer
 
 .. option:: -t <time>, --time <time>
+
     Manually set start time for task.
 
 .. option:: -F <file>, --file <file>
+
     Read closing message for current task from file.
 
 .. option:: -m <message>, --message <message>
@@ -208,9 +224,11 @@ Report time tracking data
     Display database statistics.
 
 .. option:: -d <duration>, --duration=<duration>
+
     Filter events for specified time period {day,week,month,year,all}.
 
 .. option:: -s <order>, --sort=<order>
+
     Field to sort by {task,time}.
 
 .. option:: -r, --reverse, --no-reverse
@@ -264,6 +282,7 @@ Generate `ledger <http://ledger-cli.org/>`__ compatible data file
     Use directory name as task name.
 
 .. option:: -d <duration>, --duration=<duration>
+
     Filter events for specified time period {day,week,month,year,all}.
 
 .. option:: -r <rate>, --rate <rate>
