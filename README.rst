@@ -61,7 +61,7 @@ and a ``task2.csv`` file with the following contents:
 .. code:: text
 
     start,delta,message
-    2011-05-04T09:15:00Z,PT00H15M00S
+    2011-05-04T09:15:00Z,PT00H15M00S,
 
 The format is a CSV file containing the following fields:
 
@@ -102,6 +102,7 @@ Patches
 Bug reports
 '''''''''''
 
+* Henry Richards
 * James Gaffney
 * Ryan Sutton
 * Stephen Thorne
