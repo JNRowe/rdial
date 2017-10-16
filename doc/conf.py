@@ -82,10 +82,12 @@ autoclass_content = 'init'
 autodoc_default_flags = ['members', ]
 
 # intersphinx extension settings
-intersphinx_mapping = {k: (v, os.getenv('SPHINX_{}_OBJECTS'.format(k.upper())))
-                       for k, v in {
-                           'click': 'http://click.pocoo.org/6/',
-                           'python': 'https://docs.python.org/3/',
+intersphinx_mapping = {
+    k: (v, os.getenv('SPHINX_{}_OBJECTS'.format(k.upper())))
+    for k, v in {
+        'click': 'http://click.pocoo.org/6/',
+        'jnrbase': 'http://jnrbase.readthedocs.io/en/latest/',
+        'python': 'https://docs.python.org/3/',
 }.items()}
 
 # spelling extension settings

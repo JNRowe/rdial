@@ -124,17 +124,20 @@ def read_config(user_config=None, cli_options=None):
 
 
 def write_current(fun):
-    """Decorator to write :file:`current` file on function exit.
+    """Decorator to write :file:`.current` file on function exit.
 
     See also:
         :doc:`/taskbars`
+
+    Args:
+        fun (types.FunctionType): Function to add hidden attribute to
 
     Returns:
         types.FunctionType: Wrapped function
     """
     @functools.wraps(fun)
     def wrapper(*args, **kwargs):
-        """Write value of ``task`` argument to ``current on exit.
+        """Write value of ``task`` argument to ``.current`` on exit.
 
         Args:
             args (tuple): Positional arguments
@@ -149,17 +152,20 @@ def write_current(fun):
 
 
 def remove_current(fun):
-    """Decorator to remove :file:`current` file on function exit.
+    """Decorator to remove :file:`.current` file on function exit.
 
     See also:
         :doc:`/taskbars`
+
+    Args:
+        fun (types.FunctionType): Function to add hidden attribute to
 
     Returns:
         types.FunctionType: Wrapped function
     """
     @functools.wraps(fun)
     def wrapper(*args, **kwargs):
-        """Remove ``current`` file on exit.
+        """Remove ``.current`` file on exit.
 
         Args:
             args (tuple): Positional arguments
@@ -181,7 +187,7 @@ def newer(fname, reference):
         reference (str): file to test against
 
     Returns:
-        bool: True if ``fname`` is newer than ``reference``
+        bool: ``True`` if ``fname`` is newer than ``reference``
 
     """
     return os.stat(fname).st_mtime > os.stat(reference).st_mtime
