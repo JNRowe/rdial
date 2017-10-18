@@ -16,8 +16,6 @@
 # You should have received a copy of the GNU General Public License along with
 # rdial.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
-
 from configparser import ConfigParser
 from importlib.util import module_from_spec, spec_from_file_location
 
@@ -71,12 +69,6 @@ def parse_requires(file):
         elif dep.startswith('-r '):
             deps.extend(parse_requires(dep.split()[1]))
             continue
-        elif ';' in dep:
-            dep, marker = dep.split(';')
-            if not eval(marker.strip(), {
-                    'python_version': '{}.{}'.format(*sys.version_info[:2])
-                }):
-                continue
         deps.append(dep)
     return deps
 
