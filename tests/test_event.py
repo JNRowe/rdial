@@ -45,7 +45,7 @@ def test_event_creation(task, start, delta, message):
     if isinstance(start, datetime):
         assert e.start == start
     elif start:
-        assert e.start == parse_datetime(start, naive=True)
+        assert e.start == parse_datetime(start).replace(tzinfo=None)
     else:
         # Special case to ignore comparison against utcnow()
         pass
