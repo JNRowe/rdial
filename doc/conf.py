@@ -53,7 +53,7 @@ master_doc = 'index'
 source_suffix = '.rst'
 
 project = u'rdial'
-copyright = '2011-2017 James Rowe'
+copyright = '2011-2017  James Rowe'
 
 version = '.'.join([str(s) for s in rdial._version.tuple[:2]])
 release = rdial._version.dotted
