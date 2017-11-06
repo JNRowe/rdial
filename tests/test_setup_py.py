@@ -29,13 +29,3 @@ def test_parse_requires(input, expected):
     requires = setup.parse_requires(
         '../tests/data/requires/{}.txt'.format(input))
     assert requires == expected
-
-
-@mark.parametrize('version, expected', [
-    ((2, 7, 6), ['unicodecsv', ]),
-    ((3, 4, 2), []),
-])
-def test_parse_markers(version, expected, monkeypatch):
-    monkeypatch.setattr(setup.sys, 'version_info', version)
-    requires = setup.parse_requires('../tests/data/requires/markers.txt')
-    assert requires == expected
