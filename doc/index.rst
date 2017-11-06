@@ -31,6 +31,7 @@ Contents
    release
    todo
    api/index
+   glossary
 
 Indices and tables
 ------------------
