@@ -1,6 +1,8 @@
 Configuration
 =============
 
+.. highlight:: ini
+
 :program:`rdial` can be configured using a cascading series of files, processed
 in the following order:
 
@@ -23,9 +25,7 @@ The configuration file is a ``INI`` format file.  Use a section labelled
 ``rdial`` for global options, and a separate section for each subcommand.  Each
 section consists of a series of :samp:`name={value}` option pairs.
 
-An example configuration file is below:
-
-.. code-block:: ini
+An example configuration file is below::
 
     [rdial]
     colour = False
@@ -79,9 +79,7 @@ for for messages if they’re not supplied as arguments.
 This section is used to configure pre-defined arguments for the :ref:`rdial run
 <run-subcommand-label>` subcommand.  It consists of a series of string keys to
 use as the wrapper title, and arguments to the :program:`rdial run` subcommand
-as values.  For example:
-
-.. code-block:: ini
+as values.  For example::
 
     [run wrappers]
     feeds = -c 'mutt -f ~/Mail/RSS2email/' procrast

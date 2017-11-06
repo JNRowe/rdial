@@ -7,12 +7,12 @@ Release HOWTO
   first thing I recommend that you do is find/write a tool that allows you to
   automate all of this, or you’re going to miss important steps at some point.
 
+.. highlight:: console
+
 Test
 ----
 
-Tests can be run via pytest_:
-
-.. code-block:: console
+Tests can be run via pytest_::
 
     $ pip install -r extra/requirements-test.txt
     $ pytest -v tests
@@ -40,9 +40,7 @@ Update PyPI
   This is the section you’re especially likely to get wrong at some point if you
   try to handle all of this manually ;)
 
-Create and upload the new release tarballs to PyPI using twine_:
-
-.. code-block:: console
+Create and upload the new release tarballs to PyPI using twine_::
 
     $ ./setup.py sdist bdist_wheel
     $ twine upload --sign dist/rdial-${version}*
