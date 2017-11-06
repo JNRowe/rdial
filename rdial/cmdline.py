@@ -695,9 +695,7 @@ def ledger(globs, task, duration, rate):
         if not event.delta:
             continue
         end = event.start + event.delta
-        # Can’t use timedelta.total_seconds() as it was only added in 2.7
-        seconds = event.delta.days * 86400 + event.delta.seconds
-        hours = seconds / 3600
+        hours = event.delta.total_seconds() / 3600
         lines.append('{}-{}'.format(event.start.strftime('%Y-%m-%d * %H:%M'),
                                     end.strftime('%H:%M')))
         lines.append('    (task:{})  {:.2f}h{}{}'.format(
