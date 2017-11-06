@@ -1,4 +1,4 @@
-.. currentmodule:: rdial.utils
+.. module:: rdial.utils
 
 Utilities
 =========

@@ -1,4 +1,4 @@
-.. currentmodule:: rdial.cmdline
+.. module:: rdial.cmdline
 
 Command line
 ============
