@@ -86,6 +86,10 @@ for k in ['classifiers', 'packages', 'py_modules']:
     if k in metadata:
         metadata[k] = make_list(metadata[k])
 
+for k in ['include_package_data', ]:
+    if k in metadata:
+        metadata[k] = conf.getboolean('metadata', k)
+
 for k in ['entry_points', 'package_data']:
     if k in metadata:
         metadata[k] = eval(metadata[k], {'__builtins__': {}})

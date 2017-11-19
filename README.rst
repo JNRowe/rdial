@@ -102,6 +102,7 @@ Patches
 Bug reports
 '''''''''''
 
+* Delphine Beauchemin
 * Henry Richards
 * James Gaffney
 * Ryan Sutton
