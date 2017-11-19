@@ -1,17 +1,7 @@
 rdial - Simple time tracking for simple people
 ==============================================
 
-.. image:: https://img.shields.io/travis/JNRowe/rdial.png
-   :target: https://travis-ci.org/JNRowe/rdial
-   :alt: Test state on master
-
-.. image:: https://img.shields.io/coveralls/JNRowe/rdial/master.png
-   :target: https://coveralls.io/repos/JNRowe/rdial
-   :alt: Coverage state on master
-
-.. image:: https://img.shields.io/pypi/v/rdial.png
-   :target: https://pypi.python.org/pypi/rdial/
-   :alt: Current PyPI release
+|travis| |coveralls| |pypi|
 
 ``rdial`` is a simple way to track the time you spend on tasks.  It tracks the
 name of a task, its start time, its duration and optionally a message… nothing
@@ -136,3 +126,15 @@ the problem, or even better a patch that fixes it!
 .. _pytest: https://pypi.python.org/packages/pytest/
 .. _ISO 8601:  https://en.wikipedia.org/wiki/Iso8601
 .. _mail: jnrowe@gmail.com
+
+.. |travis| image:: https://img.shields.io/travis/JNRowe/rdial.png
+   :target: https://travis-ci.org/JNRowe/rdial
+   :alt: Test state on master
+
+.. |coveralls| image:: https://img.shields.io/coveralls/JNRowe/rdial/master.png
+   :target: https://coveralls.io/repos/JNRowe/rdial
+   :alt: Coverage state on master
+
+.. |pypi| image:: https://img.shields.io/pypi/v/rdial.png
+   :target: https://pypi.python.org/pypi/rdial/
+   :alt: Current PyPI release
