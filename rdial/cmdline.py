@@ -404,22 +404,27 @@ def fsck(ctx, globs):
 
 @cli.command(help=_('Start task.'))
 @task_option
+@click.option('-c', '--continue', 'continue_', is_flag=True,
+              help=_('Restart previous task.'))
 @click.option('-n', '--new', is_flag=True, help=_('Start a new task.'))
 @click.option('-t', '--time', default='', help=_('Set start time.'),
               type=StartTimeParamType())
 @click.pass_obj
 @utils.write_current
-def start(globs, task, new, time):
+def start(globs, task, continue_, new, time):
     """Start task.
 
     Args:
         globs (~jnrbase.attrdict.AttrDict): Global options object
         task (str): Task name to operate on
+        continue_ (bool): Pull task name from last running task
         new (bool): Create a new task
         time (datetime.datetime): Task start time
 
     """
     with Events.wrapping(globs.directory, globs.backup, globs.cache) as events:
+        if continue_:
+            task = events.last().task
         events.start(task, new, time)
 
 

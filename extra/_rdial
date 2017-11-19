@@ -91,6 +91,7 @@ case "$words[1]" in
     _arguments \
         '--help[Show this message and exit.]' \
         '--from-dir[Use directory name as task name.]' \
+        '--continue[Restart previous task.]' \
         '--new[Start a new task.]' \
         '--time=[Set start time.]' \
         ':select task:__list_tasks'

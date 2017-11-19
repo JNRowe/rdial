@@ -72,6 +72,10 @@ Commands
 
    Use directory name as task name.
 
+.. option:: -c, --continue
+
+   Restart previous task.
+
 .. option:: -n, --new
 
    Start a new task.
