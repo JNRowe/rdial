@@ -114,7 +114,7 @@ class Event:
             str: Event representation suitable for :func:`eval`
         """
         return 'Event({!r}, {!r}, {!r}, {!r})'.format(
-            self.task, iso_8601.format_datetime(self.start),
+            self.task, iso_8601.format_datetime(self.start) + 'Z',
             iso_8601.format_delta(self.delta), self.message)
 
     def writer(self):
@@ -125,7 +125,7 @@ class Event:
 
         """
         return {
-            'start': iso_8601.format_datetime(self.start),
+            'start': iso_8601.format_datetime(self.start) + 'Z',
             'delta': iso_8601.format_delta(self.delta),
             'message': self.message,
         }

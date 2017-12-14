@@ -16,7 +16,7 @@ Requirements
 
 * ciso8601_ ≥ 1.0.1
 * click_ ≥ 5.1
-* jnrbase_ ``[colour]`` ≥ 0.5.0
+* jnrbase_ ``[colour]`` ≥ 0.8.1
 * tabulate_
 
 It should work with Python_ version 3.5, or newer.  If ``rdial`` doesn’t work

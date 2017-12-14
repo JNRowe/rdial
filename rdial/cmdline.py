@@ -145,7 +145,7 @@ def get_stop_message(current, edit=False):
 
     """
     marker = _('# Text below here ignored\n')
-    task_message = _('# Task “{}” started {}').format(
+    task_message = _('# Task “{}” started {}Z').format(
         current.task,
         iso_8601.format_datetime(current.start))
     template = '{}\n{}{}'.format(current.message, marker, task_message)
@@ -631,7 +631,7 @@ def report(globs, task, stats, duration, sort, reverse, style):
                                                tablefmt=style))
     if events.running():
         current = events.last()
-        click.echo(_('Task “{}” started {}').format(
+        click.echo(_('Task “{}” started {}Z').format(
             current.task, iso_8601.format_datetime(current.start)))
 
 
