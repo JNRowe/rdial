@@ -131,7 +131,7 @@ the problem, or even better a patch that fixes it!
    :target: https://travis-ci.org/JNRowe/rdial
    :alt: Test state on master
 
-.. |coveralls| image:: https://img.shields.io/coveralls/JNRowe/rdial/master.png
+.. |coveralls| image:: https://img.shields.io/coveralls/github/JNRowe/rdial/master.png
    :target: https://coveralls.io/repos/JNRowe/rdial
    :alt: Coverage state on master
 
