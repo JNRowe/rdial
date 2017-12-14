@@ -3,6 +3,16 @@ User-visible changes
 
 .. contents::
 
+0.17.0 - 2017-12-14
+-------------------
+
+* ``start`` now supports a ``--continue`` option to re-start a task
+* ``jnrbase`` v0.8.1 or later is now required
+* ``pytz`` is no longer required
+* sphinx_rtd_theme_ is required for building the docs
+
+.. _sphinx_rtd_theme: https://pypi.python.org/pypi/sphinx_rtd_theme/
+
 0.16.0 - 2017-10-07
 -------------------
 
