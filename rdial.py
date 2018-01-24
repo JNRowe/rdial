@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 """rdial - Simple time tracking for simple people"""
 # Copyright © 2011-2016  James Rowe <jnrowe@gmail.com>
 #
