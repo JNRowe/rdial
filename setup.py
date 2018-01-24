@@ -1,5 +1,5 @@
 #! /usr/bin/env python3
-"""setup.py - Setuptools tasks and config for rdial"""
+"""setup.py - Setuptools tasks and config for rdial."""
 # Copyright © 2011-2017  James Rowe <jnrowe@gmail.com>
 #
 # This file is part of rdial.
