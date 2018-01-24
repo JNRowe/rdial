@@ -27,7 +27,7 @@ from rdial.events import (Events, TaskNotExistError, TaskNotRunningError,
 
 def test_start_event():
     events = Events.read('tests/data/test_not_running', write_cache=False)
-    events.start(task='task2')
+    events.start('task2')
     assert events.running() == 'task2'
 
 
@@ -36,13 +36,13 @@ def test_fail_start_when_task_typo():
     with raises(TaskNotExistError,
                 match='Task non_existent does not exist!  Use “--new” to '
                       'create it'):
-        events.start(task='non_existent')
+        events.start('non_existent')
 
 
 def test_fail_start_when_running():
     events = Events.read('tests/data/test', write_cache=False)
     with raises(TaskRunningError, match='Running task task!'):
-        events.start(task='task2')
+        events.start('task2')
 
 
 def test_stop_event():

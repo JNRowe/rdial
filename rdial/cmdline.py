@@ -48,11 +48,11 @@ class HiddenGroup(click.Group):
 
     """
 
-    def list_commands(self, ctx: click.Context) -> List[str]:
+    def list_commands(self, __ctx: click.Context) -> List[str]:
         """List visible commands.
 
         Args:
-            ctx: Current command context
+            __ctx: Current command context
         Returns:
             Visible command names
         """
@@ -66,34 +66,34 @@ class TaskNameParamType(click.ParamType):
 
     name = 'taskname'
 
-    def convert(self, value: str, param: Optional[click.Argument],
-                ctx: Optional[click.Context]) -> str:
+    def convert(self, __value: str, __param: Optional[click.Argument],
+                __ctx: Optional[click.Context]) -> str:
         """Check given task name is valid.
 
         Args:
-            value: Value given to flag
-            param: Parameter being processed
-            ctx: Current command context
+            __value: Value given to flag
+            __param: Parameter being processed
+            __ctx: Current command context
 
         Returns:
             Valid task name
 
         """
-        if not value:
+        if not __value:
             raise click.BadParameter(_('No task name given'))
-        if value.startswith('-'):
+        if __value.startswith('-'):
             raise click.BadParameter(_('Task names with leading dashes are '
                                        'non-portable'))
-        if value.startswith('.') or '/' in value or '\000' in value:
+        if __value.startswith('.') or '/' in __value or '\000' in __value:
             raise click.BadParameter(
-                _('{!r} is not a valid task name').format(value))
+                _('{!r} is not a valid task name').format(__value))
         # Should be based on platform’s PATH_MAX, but it isn’t exposed in a
         # clean way to Python
-        if len(value) > 255:
+        if len(__value) > 255:
             raise click.BadParameter(
                 _('{!r} is too long to be a valid task name(max 255 '
-                  'characters)').format(value))
-        return value
+                  'characters)').format(__value))
+        return __value
 
 
 class StartTimeParamType(click.ParamType):
@@ -102,49 +102,49 @@ class StartTimeParamType(click.ParamType):
 
     name = 'time'
 
-    def convert(self, value: str, param: Optional[click.Argument],
-                ctx: Optional[click.Context]) -> datetime.datetime:
+    def convert(self, __value: str, __param: Optional[click.Argument],
+                __ctx: Optional[click.Context]) -> datetime.datetime:
         """Check given start time is valid.
 
         Args:
-            value: Value given to flag
-            param: Parameter being processed
-            ctx: Current command context
+            __value: Value given to flag
+            __param: Parameter being processed
+            __ctx: Current command context
 
         Returns:
             Valid start time
 
         """
         try:
-            value = utils.parse_datetime_user(value)
+            __value = utils.parse_datetime_user(__value)
         except ValueError:
             raise click.BadParameter(
-                _('{!r} is not a valid ISO-8601 time string').format(value))
-        return value
+                _('{!r} is not a valid ISO-8601 time string').format(__value))
+        return __value
 
 
-def task_from_dir(ctx: click.Context, param: click.Option,
-                  value: bool) -> None:
+def task_from_dir(__ctx: click.Context, __param: click.Option,
+                  __value: bool) -> None:
     """Override task name default using name of current directory.
 
     Args:
-        ctx: Current command context
-        param: Parameter being processed
-        value: True if flag given
+        __ctx: Current command context
+        __param: Parameter being processed
+        __value: True if flag given
 
     """
-    if not value or ctx.resilient_parsing:
+    if not __value or __ctx.resilient_parsing:
         return
-    param = [p for p in ctx.command.params if p.name == 'task'][0]
-    param.default = os.path.basename(os.path.abspath(os.curdir))
+    __param = [p for p in __ctx.command.params if p.name == 'task'][0]
+    __param.default = os.path.basename(os.path.abspath(os.curdir))
 
 
-def get_stop_message(current: Event, edit: bool = False) -> str:
+def get_stop_message(__current: Event, __edit: bool = False) -> str:
     """Interactively fetch stop message.
 
     Args:
-        current: Current task
-        edit: Whether to edit existing message
+        __current: Current task
+        __edit: Whether to edit existing message
 
     Returns:
         Message to use
@@ -152,10 +152,10 @@ def get_stop_message(current: Event, edit: bool = False) -> str:
     """
     marker = _('# Text below here ignored\n')
     task_message = _('# Task “{}” started {}Z').format(
-        current.task,
-        iso_8601.format_datetime(current.start))
-    template = '{}\n{}{}'.format(current.message, marker, task_message)
-    message = click.edit(template, require_save=not edit)
+        __current.task,
+        iso_8601.format_datetime(__current.start))
+    template = '{}\n{}{}'.format(__current.message, marker, task_message)
+    message = click.edit(template, require_save=not __edit)
     if message is None:
         message = ''
     else:
@@ -163,80 +163,80 @@ def get_stop_message(current: Event, edit: bool = False) -> str:
     return message
 
 
-def task_option(fun: Callable) -> Callable:
+def task_option(__fun: Callable) -> Callable:
     """Add task selection options.
 
     Note:
         This is only here to reduce duplication in command setup.
 
     Args:
-        fun: Function to add options to
+        __fun: Function to add options to
 
     Returns:
         Function with additional options
 
     """
-    fun = click.option('-x', '--from-dir', is_flag=True, expose_value=False,
-                       is_eager=True, callback=task_from_dir,
-                       help=_('Use directory name as task name.'))(fun)
-    fun = click.argument('task', default='default', envvar='RDIAL_TASK',
-                         required=False, type=TaskNameParamType())(fun)
-    return fun
+    __fun = click.option('-x', '--from-dir', is_flag=True, expose_value=False,
+                         is_eager=True, callback=task_from_dir,
+                         help=_('Use directory name as task name.'))(__fun)
+    __fun = click.argument('task', default='default', envvar='RDIAL_TASK',
+                           required=False, type=TaskNameParamType())(__fun)
+    return __fun
 
 
-def duration_option(fun: Callable) -> Callable:
+def duration_option(__fun: Callable) -> Callable:
     """Add duration selection option.
 
     Note:
         This is only here to reduce duplication in command setup.
 
     Args:
-        fun: Function to add options to
+        __fun: Function to add options to
 
     Returns:
         Function with additional options
 
     """
-    fun = click.option('-d', '--duration', default='all',
-                       type=click.Choice(['day', 'week', 'month', 'year',
-                                          'all']),
-                       help=_('Filter events for specified time period.'))(fun)
-    return fun
+    __fun = click.option(
+        '-d', '--duration', default='all',
+        type=click.Choice(['day', 'week', 'month', 'year', 'all']),
+        help=_('Filter events for specified time period.'))(__fun)
+    return __fun
 
 
-def message_option(fun: Callable) -> Callable:
+def message_option(__fun: Callable) -> Callable:
     """Add message setting options.
 
     Note:
         This is only here to reduce duplication in command setup.
 
     Args:
-        fun: Function to add options to
+        __fun: Function to add options to
 
     Returns:
         Function with additional options
 
     """
-    fun = click.option('-m', '--message', help=_('Closing message.'))(fun)
-    fun = click.option('-F', '--file', 'fname', type=click.File(),
-                       help=_('Read closing message from file.'))(fun)
-    return fun
+    __fun = click.option('-m', '--message', help=_('Closing message.'))(__fun)
+    __fun = click.option('-F', '--file', 'fname', type=click.File(),
+                         help=_('Read closing message from file.'))(__fun)
+    return __fun
 
 
-def hidden(fun: click.Command) -> click.Command:
+def hidden(__fun: click.Command) -> click.Command:
     """Add a hidden attribute to a Command object.
 
     :see:`HiddenGroup`.
 
     Args:
-        fun: Function to add hidden attribute to
+        __fun: Function to add hidden attribute to
 
     Returns:
         Function with hidden attribute set
 
     """
-    fun.hidden = True
-    return fun
+    __fun.hidden = True
+    return __fun
 
 
 # pylint: disable=too-many-arguments
@@ -313,31 +313,31 @@ def cli(ctx: click.Context, directory: str, backup: bool, cache: bool,
     )
 
 
-def filter_events(globs: AttrDict, task: Optional[str] = None,
-                  duration: str = 'all') -> Events:
+def filter_events(__globs: AttrDict, __task: Optional[str] = None,
+                  __duration: str = 'all') -> Events:
     """Filter events for report processing.
 
     Args:
-        globs: Global options object
-        task: Task name to filter on
-        duration: Time window to filter on
+        __globs: Global options object
+        __task: Task name to filter on
+        __duration: Time window to filter on
 
     Returns:
         Events: Events matching specified criteria
 
     """
-    events = Events.read(globs.directory, write_cache=globs.cache)
-    if task:
-        events = events.for_task(task)
-    if not duration == 'all':  # pragma: no cover
-        if duration == 'week':
+    events = Events.read(__globs.directory, write_cache=__globs.cache)
+    if __task:
+        events = events.for_task(__task)
+    if not __duration == 'all':  # pragma: no cover
+        if __duration == 'week':
             today = datetime.date.today()
             events = events.for_week(*today.isocalendar()[:2])
         else:
             year, month, day = datetime.date.today().timetuple()[:3]
-            if duration == 'month':
+            if __duration == 'month':
                 day = None
-            elif duration == 'year':
+            elif __duration == 'year':
                 month = None
                 day = None
             events = events.for_date(year, month, day)
@@ -466,7 +466,7 @@ def stop(globs: AttrDict, message: str, fname: str, amend: bool):
         if amend and not message:
             message = last_event.message
         if globs.interactive and not message:
-            message = get_stop_message(last_event, edit=amend)
+            message = get_stop_message(last_event, amend)
         events.stop(message, force=amend)
     event = events.last()
     click.echo(_('Task {} running for {}').format(

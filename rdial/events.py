@@ -63,20 +63,20 @@ class Event:
 
     """Base object for handling database event."""
 
-    def __init__(self, task: str,
+    def __init__(self, __task: str,
                  start: Optional[Union[datetime.datetime, str]] = None,
                  delta: Optional[Union[datetime.timedelta, str]] = None,
                  message: Optional[str] = '') -> None:
         """Initialise a new ``Event`` object.
 
         Args:
-            task: Task name to tracking
+            __task: Task name to tracking
             start: Start time for event
             delta: Duration for event
             message: Message to attach to event
 
         """
-        self.task = task
+        self.task = __task
         if isinstance(start, datetime.datetime):
             if start.tzinfo:
                 raise ValueError('Must be a naive datetime {!r}'.format(start))
@@ -89,28 +89,28 @@ class Event:
             self.delta = iso_8601.parse_delta(delta)
         self.message = message
 
-    def __eq__(self, other: 'Event') -> bool:
+    def __eq__(self, __other: 'Event') -> bool:
         """Comare ``Event`` objects for equality.
 
         Args:
-            other: Object to test equality against
+            __other: Object to test equality against
 
         Returns:
             True if objects are equal
         """
-        return self.task == other.task and self.start == other.start \
-            and self.delta == other.delta and self.message == other.message
+        return self.task == __other.task and self.start == __other.start \
+            and self.delta == __other.delta and self.message == __other.message
 
-    def __ne__(self, other: 'Event') -> bool:
+    def __ne__(self, __other: 'Event') -> bool:
         """Comare ``Event`` objects for inequality.
 
         Args:
-            other: Object to test inequality against
+            __other: Object to test inequality against
 
         Returns:
             True if objects are not equal
         """
-        return not self == other
+        return not self == __other
 
     def __repr__(self) -> str:
         """Self-documenting string representation.
@@ -168,16 +168,16 @@ class Events(list):  # pylint: disable=too-many-public-methods
 
     """Container for database events."""
 
-    def __init__(self, iterable: Optional[List[Event]] = None,
+    def __init__(self, __iterable: Optional[List[Event]] = None,
                  backup: bool = True) -> None:
         """Initialise a new ``Events`` object.
 
         Args:
-            iterable: Objects to add to container
+            __iterable: Objects to add to container
             backup: Whether to create backup files
 
         """
-        super(Events, self).__init__(iterable if iterable else [])
+        super(Events, self).__init__(__iterable if __iterable else [])
         self.backup = backup
         self._dirty = set()
 
@@ -195,14 +195,14 @@ class Events(list):  # pylint: disable=too-many-public-methods
         return self._dirty
 
     @dirty.setter
-    def dirty(self, value: str):
+    def dirty(self, __value: str):
         """Mark task as needing sync.
 
         Args:
-            value: Task to mark as dirty
+            __value: Task to mark as dirty
 
         """
-        self._dirty.add(value)
+        self._dirty.add(__value)
 
     @dirty.deleter
     def dirty(self):
@@ -210,7 +210,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
         self._dirty = set()
 
     @staticmethod
-    def read(directory: str, backup: bool = True,
+    def read(__directory: str, backup: bool = True,
              write_cache: bool = True) -> 'Events':
         """Read and parse database.
 
@@ -220,7 +220,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
             directory is missing.
 
         Args:
-            directory: Location to read database files from
+            __directory: Location to read database files from
             backup: Whether to create backup files
             write_cache: Whether to write cache files
 
@@ -228,11 +228,11 @@ class Events(list):  # pylint: disable=too-many-public-methods
             Parsed events database
 
         """
-        if not os.path.exists(directory):
+        if not os.path.exists(__directory):
             return Events(backup=backup)
         events = []
         xdg_cache_dir = xdg_basedir.user_cache('rdial')
-        cache_dir = os.path.join(xdg_cache_dir, directory.replace('/', '_'))
+        cache_dir = os.path.join(xdg_cache_dir, __directory.replace('/', '_'))
         if write_cache and not os.path.isdir(cache_dir):
             os.makedirs(cache_dir)
             with click.open_file('{}/CACHEDIR.TAG'.format(xdg_cache_dir),
@@ -243,7 +243,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
                     '# For information about cache directory tags, see:\n',
                     '#   http://www.brynosaurus.com/cachedir/\n',
                 ])
-        for fname in glob.glob('{}/*.csv'.format(directory)):
+        for fname in glob.glob('{}/*.csv'.format(__directory)):
             task = os.path.basename(fname)[:-4]
             cache_file = os.path.join(cache_dir, task) + '.pkl'
             evs = None
@@ -280,20 +280,20 @@ class Events(list):  # pylint: disable=too-many-public-methods
             events.extend(evs)
         return Events(sorted(events, key=operator.attrgetter('start')))
 
-    def write(self, directory: str) -> None:
+    def write(self, __directory: str) -> None:
         """Write database file.
 
         Args:
-            directory: Location to write database files to
+            __directory: Location to write database files to
 
         """
         if not self.dirty:
             return
-        if not os.path.isdir(directory):
-            os.makedirs(directory)
+        if not os.path.isdir(__directory):
+            os.makedirs(__directory)
 
         for task in self.dirty:
-            task_file = '{}/{}.csv'.format(directory, task)
+            task_file = '{}/{}.csv'.format(__directory, task)
             events = self.for_task(task)
             with click.utils.LazyFile(task_file, 'w', atomic=True) as temp:
                 writer = csv.DictWriter(temp, FIELDS, dialect=RdialDialect)
@@ -339,12 +339,12 @@ class Events(list):  # pylint: disable=too-many-public-methods
         last = self.last()
         return last.running() if last else False
 
-    def start(self, task: str, new: bool = False,
+    def start(self, __task: str, new: bool = False,
               start: Union[datetime.datetime, str] = '') -> None:
         """Start a new event.
 
         Args:
-            task: Task name to tracking
+            __task: Task name to tracking
             new: Whether to create a new task
             start: ISO-8601 start time for event
 
@@ -352,18 +352,18 @@ class Events(list):  # pylint: disable=too-many-public-methods
             TaskRunningError: An event is already running
 
         """
-        if not new and task not in self.tasks():
+        if not new and __task not in self.tasks():
             raise TaskNotExistError(
                 'Task {} does not exist!  Use “--new” to create it'.format(
-                    task))
+                    __task))
         running = self.running()
         if running:
             raise TaskRunningError('Running task {}!'.format(running))
         last = self.last()
         if last and start and last.start + last.delta > start:
             raise TaskRunningError('Start date overlaps previous task!')
-        self.append(Event(task, start))
-        self.dirty = task
+        self.append(Event(__task, start))
+        self.dirty = __task
 
     def stop(self, message: Optional[str] = None, force: bool = False) -> None:
         """Stop running event.
@@ -381,29 +381,29 @@ class Events(list):  # pylint: disable=too-many-public-methods
         self.last().stop(message, force)
         self.dirty = self.last().task
 
-    def filter(self, filt: Callable) -> 'Events':
+    def filter(self, __filt: Callable) -> 'Events':
         """Apply filter to events.
 
         Args:
-            filt: Function to filter with
+            __filt: Function to filter with
 
         Returns:
             Events matching given filter function
 
         """
-        return Events(x for x in self if filt(x))
+        return Events(x for x in self if __filt(x))
 
-    def for_task(self, task: str) -> 'Events':
+    def for_task(self, __task: str) -> 'Events':
         """Filter events for a specific task.
 
         Args:
-            task: Task name to filter on
+            __task: Task name to filter on
 
         Returns:
             Events marked with given task name
 
         """
-        return self.filter(lambda x: x.task == task)
+        return self.filter(lambda x: x.task == __task)
 
     def for_date(self, year: int, month: Optional[int] = None,
                  day: Optional[int] = None) -> 'Events':
@@ -425,17 +425,17 @@ class Events(list):  # pylint: disable=too-many-public-methods
             events = events.filter(lambda x: x.start.day == day)
         return events
 
-    def for_week(self, year: int, week: int) -> 'Events':
+    def for_week(self, __year: int, __week: int) -> 'Events':
         """Filter events for a specific ISO-8601 week.
 
         Args:
-            year: Year to filter events on
-            week: ISO-8601 month number to filter events on
+            __year: Year to filter events on
+            __week: ISO-8601 month number to filter events on
 
         Returns:
             Events occurring in given ISO-8601 week
         """
-        start, end = utils.iso_week_to_date(year, week)
+        start, end = utils.iso_week_to_date(__year, __week)
         return self.filter(lambda x: start <= x.start.date() < end)
 
     def sum(self) -> datetime.timedelta:
@@ -449,17 +449,17 @@ class Events(list):  # pylint: disable=too-many-public-methods
 
     @staticmethod
     @contextlib.contextmanager
-    def wrapping(directory: str, backup: bool = True,
+    def wrapping(__directory: str, backup: bool = True,
                  write_cache: bool = True) -> Iterator['Events']:
         """Convenience context handler to manage reading and writing database.
 
         Args:
-            directory: Database location
+            __directory: Database location
             backup: Whether to create backup files
             write_cache: Whether to write cache files
 
         """
-        events = Events.read(directory, backup, write_cache)
+        events = Events.read(__directory, backup, write_cache)
         yield events
         if events.dirty:
-            events.write(directory)
+            events.write(__directory)

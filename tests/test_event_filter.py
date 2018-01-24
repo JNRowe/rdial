@@ -29,7 +29,7 @@ from rdial.events import Events
 
 def test_fetch_events_for_task():
     events = Events.read('tests/data/test', write_cache=False)
-    assert len(events.for_task(task='task2')) == 1
+    assert len(events.for_task('task2')) == 1
 
 
 @mark.parametrize('date, expected', [
@@ -45,7 +45,7 @@ def test_fetch_events_for_date(date: Dict[str, int], expected: int):
 
 def test_fetch_events_for_week():
     events = Events.read('tests/data/date_filtering', write_cache=False)
-    assert len(events.for_week(year=2011, week=9)) == 1
+    assert len(events.for_week(2011, 9)) == 1
 
 
 @mark.parametrize('task, result', [

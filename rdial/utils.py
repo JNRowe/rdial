@@ -46,51 +46,52 @@ _MAPPER: Dict[str, str] = {'D': 'days', 'H': 'hours', 'M': 'minutes',
                            'S': 'seconds'}
 
 
-def parse_datetime_user(string: str) -> datetime:
+def parse_datetime_user(__string: str) -> datetime:
     """Parse datetime string from user.
 
     We accept the normal ISO-8601 formats, but kick through to the formats
     supported by the system’s date command if parsing fails.
 
     Args:
-        string: Datetime string to parse
+        __string: Datetime string to parse
 
     Returns:
         Parsed datetime object
 
     """
     try:
-        datetime_ = parse_datetime(string)
+        datetime_ = parse_datetime(__string)
     except ValueError:
         try:
             proc = subprocess.run(['date', '--utc', '--iso-8601=seconds',
-                                   '-d', string],
+                                   '-d', __string],
                                   stdout=subprocess.PIPE, check=True)
             output = proc.stdout.decode()
             datetime_ = parse_datetime(output.strip()[:19])
         except subprocess.CalledProcessError:
             datetime_ = None
     if not datetime_:
-        raise ValueError('Unable to parse timestamp {!r}'.format(string))
+        raise ValueError('Unable to parse timestamp {!r}'.format(__string))
     return datetime_.replace(tzinfo=None)
 
 
-def iso_week_to_date(year: int, week: int) -> Tuple[date, date]:
+def iso_week_to_date(__year: int, __week: int) -> Tuple[datetime.date,
+                                                        datetime.date]:
     """Generate date range for a given ISO-8601 week.
 
     ISO-8601 defines a week as Monday to Sunday, with the first week of a year
     being the first week containing a Thursday.
 
     Args:
-        year: Year to process
-        week: Week number to process
+        __year: Year to process
+        __week: Week number to process
 
     Returns:
         Date range objects for given week
     """
-    bound = date(year, 1, 4)
+    bound = date(__year, 1, 4)
     iso_start = bound - timedelta(days=bound.isocalendar()[2] - 1)
-    start = iso_start + timedelta(weeks=week - 1)
+    start = iso_start + timedelta(weeks=__week - 1)
     end = start + timedelta(weeks=1)
     return start, end
 
@@ -128,19 +129,19 @@ def read_config(user_config: Optional[str] = None,
     return conf
 
 
-def write_current(fun: Callable) -> Callable:
+def write_current(__fun: Callable) -> Callable:
     """Decorator to write :file:`.current` file on function exit.
 
     See also:
         :doc:`/taskbars`
 
     Args:
-        fun: Function to add hidden attribute to
+        __fun: Function to add hidden attribute to
 
     Returns:
         Wrapped function
     """
-    @functools.wraps(fun)
+    @functools.wraps(__fun)
     def wrapper(*args, **kwargs):
         """Write value of ``task`` argument to ``.current`` on exit.
 
@@ -150,25 +151,25 @@ def write_current(fun: Callable) -> Callable:
 
         """
         globs = args[0]
-        fun(*args, **kwargs)
+        __fun(*args, **kwargs)
         with click.open_file('{}/.current'.format(globs.directory), 'w') as f:
             f.write(kwargs['task'])
     return wrapper
 
 
-def remove_current(fun: Callable) -> Callable:
+def remove_current(__fun: Callable) -> Callable:
     """Decorator to remove :file:`.current` file on function exit.
 
     See also:
         :doc:`/taskbars`
 
     Args:
-        fun: Function to add hidden attribute to
+        __fun: Function to add hidden attribute to
 
     Returns:
         Wrapped function
     """
-    @functools.wraps(fun)
+    @functools.wraps(__fun)
     def wrapper(*args, **kwargs):
         """Remove ``.current`` file on exit.
 
@@ -178,38 +179,38 @@ def remove_current(fun: Callable) -> Callable:
 
         """
         globs = args[0]
-        fun(*args, **kwargs)
+        __fun(*args, **kwargs)
         if os.path.isfile('{}/.current'.format(globs.directory)):
             os.unlink('{}/.current'.format(globs.directory))
     return wrapper
 
 
-def newer(fname: str, reference: str) -> bool:
+def newer(__fname: str, __reference: str) -> bool:
     """Check whether given file is newer than reference file.
 
     Args:
-        fname: File to check
-        reference: file to test against
+        __fname: File to check
+        __reference: file to test against
 
     Returns:
-        ``True`` if ``fname`` is newer than ``reference``
+        ``True`` if ``__fname`` is newer than ``__reference``
 
     """
-    return os.stat(fname).st_mtime > os.stat(reference).st_mtime
+    return os.stat(__fname).st_mtime > os.stat(__reference).st_mtime
 
 
-def term_link(target: str, name: Optional[str] = None) -> str:
+def term_link(__target: str, name: Optional[str] = None) -> str:
     """Generate a terminal hyperlink
 
     See https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda.
 
     Args:
-        target: Hyperlink target
+        __target: Hyperlink target
         name: Target name
 
     Returns:
         str: Formatted hyperlink for terminal output
     """
     if not name:
-        name = os.path.basename(target)
-    return '\033]8;;{}\007{}\033]8;;\007'.format(target, name)
+        name = os.path.basename(__target)
+    return '\033]8;;{}\007{}\033]8;;\007'.format(__target, name)
