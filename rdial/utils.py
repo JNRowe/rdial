@@ -25,7 +25,6 @@ import os
 import subprocess
 
 import click
-import ciso8601
 
 from jnrbase import xdg_basedir
 from jnrbase.iso_8601 import parse_datetime
@@ -59,19 +58,19 @@ def parse_datetime_user(string):
 
     """
     try:
-        datetime_ = parse_datetime(string).replace(tzinfo=None)
+        datetime_ = parse_datetime(string)
     except ValueError:
         try:
             proc = subprocess.run(['date', '--utc', '--iso-8601=seconds',
                                    '-d', string],
                                   stdout=subprocess.PIPE, check=True)
             output = proc.stdout.decode()
-            datetime_ = ciso8601.parse_datetime(output.strip()[:19])
+            datetime_ = parse_datetime(output.strip()[:19])
         except subprocess.CalledProcessError:
             datetime_ = None
     if not datetime_:
         raise ValueError('Unable to parse timestamp {!r}'.format(string))
-    return datetime_
+    return datetime_.replace(tzinfo=None)
 
 
 def iso_week_to_date(year, week):

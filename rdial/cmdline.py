@@ -351,7 +351,7 @@ def bug_data():
     click.echo('* `python` version: {}'.format(sys.version.replace('\n', '|')))
     click.echo()
 
-    for m in ['click', 'ciso8601', 'cduration', 'tabulate']:
+    for m in ['click', 'cduration', 'jnrbase', 'tabulate']:
         try:
             pkg = get_distribution(m)
         except DistributionNotFound:
