@@ -117,18 +117,6 @@ def test_read_datebase_wrapper_write(tmpdir):
     assert comp.subdirs == {}
 
 
-@mark.parametrize('database, events', [
-    ('test', 3),
-    ('date_filtering', 3),
-    ('test_not_running', 3),
-])
-def test_read_datebase_context(database, events):
-    with warns(DeprecationWarning) as record:
-        with Events.context('tests/data/test', write_cache=False):
-            pass
-    assert 'to wrapping' in record[0].message.args[0]
-
-
 @mark.parametrize('database, result', [
     ('test', Event('task', '2011-05-04T09:30:00Z', '', 'finished')),
     ('', None),

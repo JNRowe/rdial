@@ -27,7 +27,6 @@ import inspect
 import operator
 import os
 import pickle
-import warnings
 
 import click
 
@@ -455,17 +454,3 @@ class Events(list):  # pylint: disable=too-many-public-methods
         yield events
         if events.dirty:
             events.write(directory)
-
-    @staticmethod
-    @contextlib.contextmanager
-    def context(directory, backup=True, write_cache=True):
-        """Convenience context handler to manage reading and writing database.
-
-        Warning:
-            Deprecated name for wrapping
-        """
-        warnings.warn('context method has been renamed to wrapping',
-                      DeprecationWarning, 2)
-
-        with Events.wrapping(directory, backup, write_cache) as evs:
-            yield evs
