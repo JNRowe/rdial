@@ -157,7 +157,7 @@ class Event:
             raise TaskNotRunningError('No task running!')
         self.delta = datetime.datetime.utcnow() - self.start
         self.message = message
-FIELDS = list(inspect.signature(Event).parameters.keys())[1:]
+FIELDS = list(inspect.signature(Event).parameters.keys())[1:]  # NOQA
 
 
 class Events(list):  # pylint: disable=too-many-public-methods
