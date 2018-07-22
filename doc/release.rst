@@ -53,4 +53,4 @@ You should also test installation from PyPI, to check the experience
 :mod:`rdial`’s end users will have.
 
 .. _pytest: http://pytest.org/
-.. _twine: https://pypi.python.org/pypi/twine
+.. _twine: https://pypi.org/project/twine

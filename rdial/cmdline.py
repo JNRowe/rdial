@@ -357,7 +357,7 @@ def bug_data():
         except DistributionNotFound:
             continue
         link = utils.term_link(
-            'https://pypi.python.org/pypi/{}'.format(pkg.project_name),
+            'https://pypi.org/project/{}'.format(pkg.project_name),
             '`{}`'.format(pkg.project_name))
         click.echo('* {}: {}'.format(link, pkg.version))
 

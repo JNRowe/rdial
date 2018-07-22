@@ -118,13 +118,13 @@ If you’ve found a bug please try to include a minimal testcase that reproduces
 the problem, or even better a patch that fixes it!
 
 .. _GPL v3: http://www.gnu.org/licenses/
-.. _ciso8601: https://pypi.python.org/pypi/ciso8601/
-.. _click: https://pypi.python.org/pypi/click/
-.. _jnrbase: https://pypi.python.org/pypi/jnrbase/
-.. _tabulate: https://pypi.python.org/pypi/tabulate/
+.. _ciso8601: https://pypi.org/project/ciso8601/
+.. _click: https://pypi.org/project/click/
+.. _jnrbase: https://pypi.org/project/jnrbase/
+.. _tabulate: https://pypi.org/project/tabulate/
 .. _Python: http://www.python.org/
 .. _issue: https://github.com/JNRowe/rdial/issues
-.. _pytest: https://pypi.python.org/packages/pytest/
+.. _pytest: https://pypi.org/projects/pytest/
 .. _ISO 8601:  https://en.wikipedia.org/wiki/Iso8601
 .. _mail: jnrowe@gmail.com
 
@@ -137,7 +137,7 @@ the problem, or even better a patch that fixes it!
    :alt: Coverage state on master
 
 .. |pypi| image:: https://img.shields.io/pypi/v/rdial.png
-   :target: https://pypi.python.org/pypi/rdial/
+   :target: https://pypi.org/project/rdial/
    :alt: Current PyPI release
 
 .. |readthedocs| image:: https://img.shields.io/readthedocs/rdial/stable.png

@@ -15,7 +15,7 @@
     </description>
 
     <homepage rdf:resource="https://github.com/JNRowe/rdial" />
-    <download-page rdf:resource="https://pypi.python.org/pypi/rdial/" />
+    <download-page rdf:resource="https://pypi.org/project/rdial/" />
     <bug-database rdf:resource="https://github.com/JNRowe/rdial/issues" />
     <repository>
         <GitRepository>

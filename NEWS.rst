@@ -11,7 +11,7 @@ User-visible changes
 * ``pytz`` is no longer required
 * sphinx_rtd_theme_ is required for building the docs
 
-.. _sphinx_rtd_theme: https://pypi.python.org/pypi/sphinx_rtd_theme/
+.. _sphinx_rtd_theme: https://pypi.org/project/sphinx_rtd_theme/
 
 0.16.0 - 2017-10-07
 -------------------
@@ -24,7 +24,7 @@ User-visible changes
 * ``configobj`` is no longer required
 * ``unicodecsv`` is no longer required
 
-.. _jnrbase: https://pypi.python.org/pypi/jnrbase/
+.. _jnrbase: https://pypi.org/project/jnrbase/
 
 Developers/API users
 ~~~~~~~~~~~~~~~~~~~~
@@ -33,7 +33,7 @@ Developers/API users
   removed in the future
 * pytest_ is used for running tests, and ``expecter`` is no longer required
 
-.. _pytest: https://pypi.python.org/pypi/pytest/
+.. _pytest: https://pypi.org/project/pytest/
 
 0.15.0 - 2016-01-12
 -------------------
@@ -47,7 +47,7 @@ Developers/API users
 * Python 3.5 is officially supported
 * Python 3.2 is no longer supported, but if you need it speak up!
 
-.. _unicodecsv: https://pypi.python.org/pypi/unicodecsv/
+.. _unicodecsv: https://pypi.org/project/unicodecsv/
 .. _cachedir: http://www.brynosaurus.com/cachedir/
 
 0.14.0 - 2014-06-10
@@ -66,10 +66,10 @@ Developers/API users
 * configobj_ is now required
 * blessings_ is no longer required
 
-.. _ciso8601: https://pypi.python.org/pypi/ciso8601/
-.. _click: https://pypi.python.org/pypi/click/
-.. _configobj: https://pypi.python.org/pypi/configobj/
-.. _tabulate: https://pypi.python.org/pypi/tabulate/
+.. _ciso8601: https://pypi.org/project/ciso8601/
+.. _click: https://pypi.org/project/click/
+.. _configobj: https://pypi.org/project/configobj/
+.. _tabulate: https://pypi.org/project/tabulate/
 
 0.13.0 - 2014-02-05
 -------------------
@@ -116,7 +116,7 @@ Developers/API users
 * ``gettext`` support, submit your translations!
 * Python 3.3 compatible [#3]
 
-.. _blessings: https://pypi.python.org/pypi/blessings/
+.. _blessings: https://pypi.org/project/blessings/
 
 0.7.0 - 2012-10-17
 ------------------
@@ -140,9 +140,9 @@ Developers/API users
 * zsh_ completion script in ``extra``
 * pip_ requirements files in ``extra``
 
-.. _aaargh: https://pypi.python.org/pypi/aaargh/
+.. _aaargh: https://pypi.org/project/aaargh/
 .. _zsh: http://www.zsh.org/
-.. _pip: https://pypi.python.org/pypi/pip/
+.. _pip: https://pypi.org/project/pip/
 
 0.4.0 - 2012-07-03
 ------------------
@@ -154,8 +154,8 @@ Developers/API users
 
 .. _ledger: http://ledger-cli.org/
 .. _Sphinx: http://sphinx.pocoo.org/
-.. _nose2: https://pypi.python.org/pypi/nose2/
-.. _expecter: https://pypi.python.org/pypi/expecter/
+.. _nose2: https://pypi.org/project/nose2/
+.. _expecter: https://pypi.org/project/expecter/
 
 0.3.0 - 2012-02-16
 ------------------
@@ -165,8 +165,8 @@ Developers/API users
 * ``report`` can now filter tasks by week
 * Tests now require behave_, and ``lettuce`` is no longer required
 
-.. _setuptools: https://pypi.python.org/pypi/distribute/
-.. _behave: https://pypi.python.org/pypi/behave/
+.. _setuptools: https://pypi.org/project/distribute/
+.. _behave: https://pypi.org/project/behave/
 
 0.2.0 - 2011-08-06
 ------------------
@@ -175,7 +175,7 @@ Developers/API users
 * isodate_ is now required for date parsing, replacing the custom parser
 * prettytable_ is now required for ``report`` output
 
-.. _isodate: https://pypi.python.org/pypi/isodate/
+.. _isodate: https://pypi.org/project/isodate/
 .. _prettytable: http://code.google.com/p/prettytable/
 
 0.1.0 - 2010-11-02

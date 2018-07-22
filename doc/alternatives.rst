@@ -46,7 +46,7 @@ anyone be interested in working on it.
 I still happily recommend it to people who are simply trying to log the time
 spent working on small projects.
 
-.. _hammertime: https://pypi.python.org/pypi/Hammertime/
+.. _hammertime: https://pypi.org/project/Hammertime/
 
 ``ktimetracker``
 ----------------

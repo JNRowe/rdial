@@ -248,7 +248,7 @@ See :ref:`run wrappers configuration <run-wrappers-label>`.
    See the tabulate_ documentation for descriptions of the supported formats
    for your installation.
 
-.. _tabulate: https://pypi.python.org/pypi/tabulate
+.. _tabulate: https://pypi.org/project/tabulate
 
 .. option:: --help
 
