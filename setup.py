@@ -79,10 +79,8 @@ def parse_requires(file: str) -> List[str]:
 
 conf = ConfigParser()
 conf.read('setup.cfg')
-metadata = dict(conf['metadata'])
 
 install_requires = parse_requires('requirements.txt')
-
 tests_require = parse_requires('requirements-test.txt')
 
 metadata = dict(conf['metadata']) \
