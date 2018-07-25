@@ -58,8 +58,8 @@ source_suffix = '.rst'
 project = 'rdial'
 copyright = '2011-2017  James Rowe'
 
-version = '.'.join([str(s) for s in rdial._version.tuple[:2]])
 release = rdial._version.dotted
+version = release.rsplit('.', 1)[0]
 
 html_experimental_html5_writer = True
 modindex_common_prefix = ['rdial.', ]
