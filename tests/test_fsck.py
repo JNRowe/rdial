@@ -1,6 +1,6 @@
 #
 """test_fsck - Test database fsck support"""
-# Copyright © 2011-2016  James Rowe <jnrowe@gmail.com>
+# Copyright © 2011-2018  James Rowe <jnrowe@gmail.com>
 #
 # This file is part of rdial.
 #

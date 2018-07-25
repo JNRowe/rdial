@@ -1,6 +1,6 @@
 #
 """test_event_filter - Test event filter handling"""
-# Copyright © 2011-2016  James Rowe <jnrowe@gmail.com>
+# Copyright © 2011-2018  James Rowe <jnrowe@gmail.com>
 #
 # This file is part of rdial.
 #
