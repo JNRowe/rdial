@@ -55,7 +55,7 @@ if not on_rtd:
 master_doc = 'index'
 source_suffix = '.rst'
 
-project = u'rdial'
+project = 'rdial'
 copyright = '2011-2017  James Rowe'
 
 version = '.'.join([str(s) for s in rdial._version.tuple[:2]])
