@@ -34,12 +34,12 @@ on_rtd = os.getenv('READTHEDOCS')
 if not on_rtd:
     import sphinx_rtd_theme
 
-extensions: List[str] = \
+extensions = \
     ['sphinx.ext.{}'.format(ext)
      for ext in ['autodoc', 'coverage', 'doctest', 'intersphinx', 'napoleon',
                  'todo', 'viewcode']] \
     + ['sphinxcontrib.{}'.format(ext) for ext in []] \
-    + ['sphinx_autodoc_typehints', ]
+    + ['sphinx_autodoc_typehints', ]  # type: List[str]
 
 
 if not on_rtd:
@@ -68,7 +68,8 @@ html_experimental_html5_writer = True
 # approximately correct builds on the local system too
 if not on_rtd:
     html_theme = "sphinx_rtd_theme"
-    html_theme_path: List[str] = [sphinx_rtd_theme.get_html_theme_path(), ]
+    html_theme_path = [sphinx_rtd_theme.get_html_theme_path(), ]  \
+        # type: List[str]
 
 pygments_style = 'sphinx'
 with suppress(CalledProcessError):
@@ -77,22 +78,22 @@ with suppress(CalledProcessError):
                stdout=PIPE)
     html_last_updated_fmt = proc.stdout.decode()
 
-man_pages: Tuple[str, str, str, List[str], int] = [
+man_pages = [
     ('rdial.1', 'rdial', 'rdial Documentation', ['James Rowe', ], 1)
-]
+]  # type: Tuple[str, str, str, List[str], int]
 
 # Autodoc extension settings
 autoclass_content = 'init'
-autodoc_default_flags: List[str] = ['members', ]
+autodoc_default_flags = ['members', ]  # type: List[str]
 
 # intersphinx extension settings
-intersphinx_mapping: Dict[str, str] = {
+intersphinx_mapping = {
     k: (v, os.getenv('SPHINX_{}_OBJECTS'.format(k.upper())))
     for k, v in {
         'click': 'http://click.pocoo.org/6/',
         'jnrbase': 'http://jnrbase.readthedocs.io/en/latest/',
         'python': 'https://docs.python.org/3/',
-}.items()}
+}.items()}  # type: Dict[str, str]
 
 # spelling extension settings
 spelling_lang = 'en_GB'

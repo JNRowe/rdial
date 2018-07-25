@@ -85,7 +85,8 @@ install_requires = parse_requires('requirements.txt')
 
 tests_require = parse_requires('requirements-test.txt')
 
-metadata: Dict[str, Union[List[str], bool, str]] = dict(conf['metadata'])
+metadata = dict(conf['metadata']) \
+    # type: Dict[str, Union[List[str], bool, str]]
 for k in ['classifiers', 'packages', 'py_modules']:
     if k in metadata:
         metadata[k] = make_list(metadata[k])

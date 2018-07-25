@@ -42,8 +42,8 @@ class RdialError(ValueError):
 
 
 #: Map duration string keys to timedelta args
-_MAPPER: Dict[str, str] = {'D': 'days', 'H': 'hours', 'M': 'minutes',
-                           'S': 'seconds'}
+_MAPPER = {'D': 'days', 'H': 'hours', 'M': 'minutes',  'S': 'seconds'} \
+    # type : Dict[str, str]
 
 
 def parse_datetime_user(__string: str) -> datetime:
