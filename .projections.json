@@ -1,0 +1,93 @@
+{
+    "doc/api/*.rst": {
+        "alternate": "rdial/{}.py",
+        "template": [
+            ".. module:: rdial.{}",
+            "   :synopsis: FIXME",
+            "",
+            "{}",
+            "===",
+            "",
+            "Constants",
+            "---------",
+            "",
+            "Classes",
+            "-------",
+            "",
+            "Functions",
+            "---------",
+            "",
+            ".. _{}-examples:",
+            "",
+            "Examples",
+            "--------",
+            "",
+            ".. testsetup::",
+            "",
+            "    from rdial.{} import FIXME",
+            "",
+            ".. doctest::",
+            "",
+            "    >>>"
+        ],
+        "type": "doc"
+    },
+    "rdial/*.py": {
+        "alternate": "doc/api/{}.rst",
+        "template": [
+            "#",
+            "\"\"\"{} - FIXME.\"\"\"",
+            "# Copyright © 1649-1651  Automated By <git@hooks>",
+            "#",
+            "# This file is part of rdial.",
+            "#",
+            "# rdial is free software: you can redistribute it and/or modify it under the",
+            "# terms of the GNU General Public License as published by the Free Software",
+            "# Foundation, either version 3 of the License, or (at your option) any later",
+            "# version.",
+            "#",
+            "# rdial is distributed in the hope that it will be useful, but WITHOUT ANY",
+            "# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR",
+            "# A PARTICULAR PURPOSE.  See the GNU General Public License for more details.",
+            "#",
+            "# You should have received a copy of the GNU General Public License along with",
+            "# rdial.  If not, see <http://www.gnu.org/licenses/>."
+        ],
+        "type": "source"
+    },
+    "tests/test_*.py": {
+        "alternate": "rdial/{}.py",
+        "template": [
+            "#",
+            "\"\"\"test_{} - Test {} support.\"\"\"",
+            "# Copyright © 1649-1651  Automated By <git@hooks>",
+            "#",
+            "# This file is part of rdial.",
+            "#",
+            "# rdial is free software: you can redistribute it and/or modify it under the",
+            "# terms of the GNU General Public License as published by the Free Software",
+            "# Foundation, either version 3 of the License, or (at your option) any later",
+            "# version.",
+            "#",
+            "# rdial is distributed in the hope that it will be useful, but WITHOUT ANY",
+            "# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR",
+            "# A PARTICULAR PURPOSE.  See the GNU General Public License for more details.",
+            "#",
+            "# You should have received a copy of the GNU General Public License along with",
+            "# rdial.  If not, see <http://www.gnu.org/licenses/>.",
+            "",
+            "from pytest import mark",
+            "",
+            "from rdial import {}",
+            ""
+        ],
+        "type": "test"
+    },
+    "*.rst": {
+        "alternate": "{}.html",
+        "type": "doc"
+    },
+    "*": {
+        "make": "pytest tests"
+    }
+}
