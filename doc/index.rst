@@ -1,5 +1,5 @@
-:mod:`rdial`
-============
+``rdial``
+=========
 
 ``rdial`` is a simple way to track the time you spend on tasks.  It tracks the
 name of a task, its start time, its duration and optionally a message… nothing
@@ -31,11 +31,13 @@ Contents
    release
    todo
    api/index
+   glossary
 
 Indices and tables
 ------------------
 
 * :ref:`genindex`
+* :ref:`modindex`
 * :ref:`search`
 
 .. _Python: http://www.python.org/

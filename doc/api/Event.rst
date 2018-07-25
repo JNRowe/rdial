@@ -1,4 +1,4 @@
-.. currentmodule:: rdial.events
+.. module:: rdial.events
 
 ``Event``
 =========

@@ -1,13 +1,13 @@
 Getting started
 ===============
 
+.. highlight:: console
+
 Basic usage
 -----------
 
 The command interface is — I hope — quite intuitive.  The following is a sample
-session:
-
-.. code-block:: console
+session::
 
     $ rdial start my_task
     $ rdial running
