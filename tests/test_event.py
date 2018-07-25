@@ -23,6 +23,7 @@ from datetime import datetime, timedelta, timezone
 from filecmp import dircmp
 from glob import glob
 from shutil import copytree
+from typing import Optional, Union
 
 from jnrbase.iso_8601 import parse_datetime, parse_delta
 from pytest import mark, raises, warns
@@ -41,7 +42,8 @@ from rdial.events import Event, Events, TaskRunningError
      None),
     ('test', '2013-02-26T19:45:14', 'PT8M19S', 'stopped'),
 ])
-def test_event_creation(task, start, delta, message):
+def test_event_creation(task: str, start: Optional[Union[str, datetime]],
+                        delta: Optional[Union[str, timedelta]], message: str):
     e = Event(task, start, delta, message)
     assert e.task == task
     if isinstance(start, datetime):
@@ -80,7 +82,7 @@ def test_event_equality():
     (Event('message', datetime(2013, 2, 26, 19, 45, 14), None, 'test'),
      Event('message', datetime(2013, 2, 26, 19, 45, 14), None, 'breakage')),
 ])
-def test_event_inequality(ev1, ev2):
+def test_event_inequality(ev1: Event, ev2: Event):
     assert ev1 != ev2
 
 
@@ -89,7 +91,7 @@ def test_event_inequality(ev1, ev2):
     ('date_filtering', 3),
     ('test_not_running', 3),
 ])
-def test_read_datebase(database, events):
+def test_read_datebase(database: str, events: int):
     evs = Events.read('tests/data/' + database, write_cache=False)
     assert len(evs) == events
 
@@ -99,7 +101,7 @@ def test_read_datebase(database, events):
     ('date_filtering', 3),
     ('test_not_running', 3),
 ])
-def test_read_datebase_wrapper(database, events):
+def test_read_datebase_wrapper(database: str, events: int):
     with Events.wrapping('tests/data/' + database, write_cache=False) as evs:
         assert len(evs) == events
 
@@ -121,7 +123,7 @@ def test_read_datebase_wrapper_write(tmpdir):
     ('test', Event('task', '2011-05-04T09:30:00Z', '', 'finished')),
     ('', None),
 ])
-def test_read_last(database, result):
+def test_read_last(database: str, result: Optional[Event]):
     evs = Events.read('tests/data/' + database, write_cache=False)
     assert evs.last() == result
 
@@ -139,7 +141,7 @@ def test_fail_start_with_overlap():
      timedelta(minutes=15)),
     (2, 'task', datetime(2011, 5, 4, 9, 30), timedelta()),
 ])
-def test_check_events(n, task, start, delta):
+def test_check_events(n: int, task: str, start: datetime, delta: timedelta):
     # FIXME: Clean-ish way to perform check, with the caveat that it parses the
     # database on each entry.  Need a better solution.
     events = Events.read('tests/data/test', write_cache=False)

@@ -18,6 +18,8 @@
 #
 # SPDX-License-Identifier: GPL-3.0+
 
+from typing import List
+
 from pytest import mark
 
 import setup
@@ -27,7 +29,7 @@ import setup
     ('plain', ['tabulate', ]),
     ('recurse', ['click', 'tabulate', ]),
 ])
-def test_parse_requires(input, expected):
+def test_parse_requires(input: str, expected: List[str]):
     requires = setup.parse_requires(
         '../tests/data/requires/{}.txt'.format(input))
     assert requires == expected

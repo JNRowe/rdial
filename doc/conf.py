@@ -23,6 +23,7 @@ import sys
 
 from contextlib import suppress
 from subprocess import CalledProcessError, PIPE, run
+from typing import Dict, List, Tuple
 
 root_dir = os.path.dirname(os.path.dirname(__file__))
 sys.path.insert(0, root_dir)
@@ -33,7 +34,7 @@ on_rtd = os.getenv('READTHEDOCS')
 if not on_rtd:
     import sphinx_rtd_theme
 
-extensions = \
+extensions: List[str] = \
     ['sphinx.ext.{}'.format(ext)
      for ext in ['autodoc', 'coverage', 'doctest', 'intersphinx', 'napoleon',
                  'todo', 'viewcode']] \
@@ -66,7 +67,7 @@ html_experimental_html5_writer = True
 # approximately correct builds on the local system too
 if not on_rtd:
     html_theme = "sphinx_rtd_theme"
-    html_theme_path = [sphinx_rtd_theme.get_html_theme_path(), ]
+    html_theme_path: List[str] = [sphinx_rtd_theme.get_html_theme_path(), ]
 
 pygments_style = 'sphinx'
 with suppress(CalledProcessError):
@@ -75,16 +76,16 @@ with suppress(CalledProcessError):
                stdout=PIPE)
     html_last_updated_fmt = proc.stdout.decode()
 
-man_pages = [
-    ('rdial.1', 'rdial', u'rdial Documentation', [u'James Rowe'], 1)
+man_pages: Tuple[str, str, str, List[str], int] = [
+    ('rdial.1', 'rdial', 'rdial Documentation', ['James Rowe', ], 1)
 ]
 
 # Autodoc extension settings
 autoclass_content = 'init'
-autodoc_default_flags = ['members', ]
+autodoc_default_flags: List[str] = ['members', ]
 
 # intersphinx extension settings
-intersphinx_mapping = {
+intersphinx_mapping: Dict[str, str] = {
     k: (v, os.getenv('SPHINX_{}_OBJECTS'.format(k.upper())))
     for k, v in {
         'click': 'http://click.pocoo.org/6/',

@@ -23,11 +23,11 @@ import unittest
 from rdial.events import Event, Events
 
 
-def eval_repr(obj):
+def eval_repr(obj: object):
     """Regenerate an object from its __repr__ output.
 
     Args:
-        obj (object): Object to evaluate
+        obj: Object to evaluate
 
     """
     return repr(eval(repr(obj)))

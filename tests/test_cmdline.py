@@ -20,9 +20,10 @@
 
 from datetime import datetime
 from shutil import copytree
+from typing import Callable, Optional
 
-from click import (BadParameter, command, echo, group, option, pass_context,
-                   pass_obj)
+from click import (BadParameter, Context, Option, command, echo, group,
+                   option, pass_context, pass_obj)
 from click.testing import CliRunner
 from pytest import mark, raises
 
@@ -41,7 +42,7 @@ from rdial.events import Event, TaskNotRunningError, TaskRunningError
     ('x' * 256, BadParameter),
     ('-bad-start', BadParameter),
 ])
-def test_task_name_validity(string, expected):
+def test_task_name_validity(string: str, expected: Optional[BadParameter]):
     p = TaskNameParamType()
     if expected is True:
         assert p.convert(string, None, None) == string
@@ -70,7 +71,7 @@ def test_task_name_from_dir(tmpdir):
     ('2011-05-04T09:15:00Z', True),
     ('AB1 time', BadParameter),
 ])
-def test_start_time_validity(string, expected):
+def test_start_time_validity(string: str, expected: Optional[BadParameter]):
     p = StartTimeParamType()
     if expected is True:
         assert isinstance(p.convert(string, None, None), datetime)
@@ -106,7 +107,7 @@ def test_HiddenGroup():
     (lambda _, **kwargs: None,
      ''),
 ])
-def test_get_stop_message(edit_func, message, monkeypatch):
+def test_get_stop_message(edit_func: Callable, message: str, monkeypatch):
     monkeypatch.setattr('click.edit', edit_func)
     ev = Event('task', '2011-05-04T09:30:00Z', '', message)
     assert get_stop_message(ev) == message
@@ -125,7 +126,7 @@ def test_get_stop_message_template(monkeypatch):
     ('color', True),
     ('no_color', False),
 ])
-def test_colour_for_u_deficient(config, result):
+def test_colour_for_u_deficient(config: str, result: bool):
     @cli.command()
     @pass_obj
     def raise_config(obj):
@@ -144,7 +145,7 @@ def test_command_defaults():
     @cli.command()
     @option('--choice')
     @pass_context
-    def raise_context(ctx, choice):
+    def raise_context(ctx: Context, choice: Option):
         raise ValueError(ctx)
 
     runner = CliRunner()
@@ -409,7 +410,7 @@ def test_report_event_running():
     ('test', 'Task “task” started'),
     ('test_not_running', 'No task is running!'),
 ])
-def test_running(database, expected):
+def test_running(database: str, expected: str):
     runner = CliRunner()
     result = runner.invoke(cli, ['--directory', 'tests/data/' + database,
                                  'running'])
@@ -421,7 +422,7 @@ def test_running(database, expected):
     ('test', 'Task task is still running'),
     ('test_not_running', 'Last task task, ran for 1:00:00'),
 ])
-def test_last(database, expected):
+def test_last(database: str, expected: str):
     runner = CliRunner()
     result = runner.invoke(cli, ['--directory', 'tests/data/' + database,
                                  'last'])

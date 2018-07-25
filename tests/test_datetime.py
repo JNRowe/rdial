@@ -29,7 +29,7 @@ from rdial.utils import parse_datetime_user
     ('5 minutes ago', timedelta(minutes=5)),
     ('1 hour ago -5 minutes', timedelta(hours=1, minutes=5)),
 ])
-def test_parse_datetime_via_date_command(string, delta):
+def test_parse_datetime_via_date_command(string: str, delta: timedelta):
     now = datetime.utcnow().replace(microsecond=0)
     # Accept a 2.5 second smudge window
     assert parse_datetime_user(string) >= now - delta
