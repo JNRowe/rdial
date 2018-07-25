@@ -24,7 +24,7 @@ from rdial.events import Event, Events
 
 
 def eval_repr(obj: object):
-    """Regenerate an object from its __repr__ output.
+    """Regenerate an object from its ``__repr__`` output.
 
     Args:
         obj: Object to evaluate
@@ -35,7 +35,7 @@ def eval_repr(obj: object):
 
 class ReprTest(unittest.TestCase):
 
-    """repr() should return self-documenting string."""
+    """``repr()`` should return self-documenting string."""
 
     def test_event(self):
         ev = Event('task', '2011-05-05T11:23:48Z', 'PT01H00M00S')

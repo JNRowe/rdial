@@ -20,7 +20,6 @@
 
 import os
 import sys
-
 from contextlib import suppress
 from subprocess import CalledProcessError, PIPE, run
 from typing import Dict, List, Tuple
@@ -30,7 +29,7 @@ sys.path.insert(0, root_dir)
 
 import rdial  # NOQA: E402
 
-on_rtd = os.getenv('READTHEDOCS')
+on_rtd = 'READTHEDOCS' in os.environ
 if not on_rtd:
     import sphinx_rtd_theme
 
@@ -56,11 +55,11 @@ if not on_rtd:
 master_doc = 'index'
 source_suffix = '.rst'
 
-project = u'rdial'
+project = 'rdial'
 copyright = '2011-2017  James Rowe'
 
-version = '.'.join([str(s) for s in rdial._version.tuple[:2]])
 release = rdial._version.dotted
+version = release.rsplit('.', 1)[0]
 
 html_experimental_html5_writer = True
 modindex_common_prefix = ['rdial.', ]

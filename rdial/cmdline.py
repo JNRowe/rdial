@@ -273,6 +273,7 @@ def cli(ctx: click.Context, directory: str, backup: bool, cache: bool,
         cache: Whether to create cache files
         config: Location of config file
         interactive: Whether to support interactive message editing
+        colour: Whether to colourise output
 
     """
     cli_options = {
