@@ -20,7 +20,6 @@
 
 import os
 import sys
-
 from contextlib import suppress
 from subprocess import CalledProcessError, PIPE, run
 from typing import Dict, List, Tuple
