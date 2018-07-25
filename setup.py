@@ -20,6 +20,8 @@
 
 from configparser import ConfigParser
 from importlib.util import module_from_spec, spec_from_file_location
+from types import ModuleType
+from typing import Dict, List, Union
 
 from setuptools import setup
 from setuptools.command.test import test
@@ -37,7 +39,7 @@ class PytestTest(test):
         exit(main(self.test_args))
 
 
-def import_file(package, fname):
+def import_file(package: str, fname: str) -> ModuleType:
     """Import file directly.
 
     This is a hack to import files from packages without importing
@@ -45,10 +47,10 @@ def import_file(package, fname):
     all the dependencies at this point.
 
     Args:
-        package (str): Package to import from
-        fname (str): File to import
+        package: Package to import from
+        fname: File to import
     Returns:
-        types.ModuleType: Imported module
+        Imported module
     """
     mod_name = fname.rstrip('.py')
     spec = spec_from_file_location(mod_name, '{}/{}'.format(package, fname))
@@ -57,11 +59,11 @@ def import_file(package, fname):
     return module
 
 
-def make_list(s):
+def make_list(s: str) -> List[str]:
     return s.strip().splitlines()
 
 
-def parse_requires(file):
+def parse_requires(file: str) -> List[str]:
     deps = []
     with open('extra/{}'.format(file)) as req_file:
         entries = [s.split('#')[0].strip() for s in req_file.readlines()]
@@ -83,7 +85,8 @@ install_requires = parse_requires('requirements.txt')
 
 tests_require = parse_requires('requirements-test.txt')
 
-metadata = dict(conf['metadata'])
+metadata = dict(conf['metadata']) \
+    # type: Dict[str, Union[List[str], bool, str]]
 for k in ['classifiers', 'packages', 'py_modules']:
     if k in metadata:
         metadata[k] = make_list(metadata[k])

@@ -18,6 +18,8 @@
 #
 # SPDX-License-Identifier: GPL-3.0+
 
+from typing import Dict, List, Optional
+
 from jnrbase.attrdict import AttrDict
 from pytest import mark
 
@@ -27,7 +29,7 @@ from rdial.events import Events
 
 def test_fetch_events_for_task():
     events = Events.read('tests/data/test', write_cache=False)
-    assert len(events.for_task(task='task2')) == 1
+    assert len(events.for_task('task2')) == 1
 
 
 @mark.parametrize('date, expected', [
@@ -36,21 +38,21 @@ def test_fetch_events_for_task():
     ({'year': 2011, 'month': 3, 'day': 1}, 1),
     ({'year': 2011, 'month': 3, 'day': 31}, 0),
 ])
-def test_fetch_events_for_date(date, expected):
+def test_fetch_events_for_date(date: Dict[str, int], expected: int):
     events = Events.read('tests/data/date_filtering', write_cache=False)
     assert len(events.for_date(**date)) == expected
 
 
 def test_fetch_events_for_week():
     events = Events.read('tests/data/date_filtering', write_cache=False)
-    assert len(events.for_week(year=2011, week=9)) == 1
+    assert len(events.for_week(2011, 9)) == 1
 
 
 @mark.parametrize('task, result', [
     (None, ['task', 'task2']),
     ('task', ['task', ]),
 ])
-def test_filter_events_by_task(task, result):
+def test_filter_events_by_task(task: Optional[str], result: List[str]):
     globs = AttrDict(directory='tests/data/test', cache=False)
     evs = filter_events(globs, task)
     assert evs.tasks() == result

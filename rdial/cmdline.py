@@ -24,6 +24,7 @@ import operator
 import os
 import shlex
 import subprocess
+from typing import Callable, List, Optional
 
 import click
 import tabulate
@@ -32,7 +33,7 @@ from jnrbase import colourise, i18n, iso_8601
 from jnrbase.attrdict import AttrDict
 
 from . import _version, utils
-from .events import Events, TaskNotRunningError, TaskRunningError
+from .events import Event, Events, TaskNotRunningError, TaskRunningError
 
 _, N_ = i18n.setup(_version)
 
@@ -47,13 +48,13 @@ class HiddenGroup(click.Group):
 
     """
 
-    def list_commands(self, ctx):
+    def list_commands(self, __ctx: click.Context) -> List[str]:
         """List visible commands.
 
         Args:
-            ctx (click.Context): Current command context
+            __ctx: Current command context
         Returns:
-            list: Visible command names
+            Visible command names
         """
         return sorted(k for k, v in self.commands.items()
                       if not hasattr(v, 'hidden'))
@@ -65,33 +66,34 @@ class TaskNameParamType(click.ParamType):
 
     name = 'taskname'
 
-    def convert(self, value, param, ctx):
+    def convert(self, __value: str, __param: Optional[click.Argument],
+                __ctx: Optional[click.Context]) -> str:
         """Check given task name is valid.
 
         Args:
-            value (str): Value given to flag
-            param (click.Argument): Parameter being processed
-            ctx (click.Context): Current command context
+            __value: Value given to flag
+            __param: Parameter being processed
+            __ctx: Current command context
 
         Returns:
-            str: Valid task name
+            Valid task name
 
         """
-        if not value:
+        if not __value:
             raise click.BadParameter(_('No task name given'))
-        if value.startswith('-'):
+        if __value.startswith('-'):
             raise click.BadParameter(_('Task names with leading dashes are '
                                        'non-portable'))
-        if value.startswith('.') or '/' in value or '\000' in value:
+        if __value.startswith('.') or '/' in __value or '\000' in __value:
             raise click.BadParameter(
-                _('{!r} is not a valid task name').format(value))
+                _('{!r} is not a valid task name').format(__value))
         # Should be based on platform’s PATH_MAX, but it isn’t exposed in a
         # clean way to Python
-        if len(value) > 255:
+        if len(__value) > 255:
             raise click.BadParameter(
                 _('{!r} is too long to be a valid task name(max 255 '
-                  'characters)').format(value))
-        return value
+                  'characters)').format(__value))
+        return __value
 
 
 class StartTimeParamType(click.ParamType):
@@ -100,58 +102,60 @@ class StartTimeParamType(click.ParamType):
 
     name = 'time'
 
-    def convert(self, value, param, ctx):
+    def convert(self, __value: str, __param: Optional[click.Argument],
+                __ctx: Optional[click.Context]) -> datetime.datetime:
         """Check given start time is valid.
 
         Args:
-            value (str): Value given to flag
-            param (click.Argument): Parameter being processed
-            ctx (click.Context): Current command context
+            __value: Value given to flag
+            __param: Parameter being processed
+            __ctx: Current command context
 
         Returns:
-            datetime.datetime: Valid start time
+            Valid start time
 
         """
         try:
-            value = utils.parse_datetime_user(value)
+            __value = utils.parse_datetime_user(__value)
         except ValueError:
             raise click.BadParameter(
-                _('{!r} is not a valid ISO-8601 time string').format(value))
-        return value
+                _('{!r} is not a valid ISO-8601 time string').format(__value))
+        return __value
 
 
-def task_from_dir(ctx, param, value):
+def task_from_dir(__ctx: click.Context, __param: click.Option,
+                  __value: bool) -> None:
     """Override task name default using name of current directory.
 
     Args:
-        ctx (click.Context): Current command context
-        param (click.Argument): Parameter being processed
-        value (bool): True if flag given
+        __ctx: Current command context
+        __param: Parameter being processed
+        __value: True if flag given
 
     """
-    if not value or ctx.resilient_parsing:
+    if not __value or __ctx.resilient_parsing:
         return
-    param = [p for p in ctx.command.params if p.name == 'task'][0]
-    param.default = os.path.basename(os.path.abspath(os.curdir))
+    __param = [p for p in __ctx.command.params if p.name == 'task'][0]
+    __param.default = os.path.basename(os.path.abspath(os.curdir))
 
 
-def get_stop_message(current, edit=False):
+def get_stop_message(__current: Event, __edit: bool = False) -> str:
     """Interactively fetch stop message.
 
     Args:
-        current (events.Event): Current task
-        edit (bool): Whether to edit existing message
+        __current: Current task
+        __edit: Whether to edit existing message
 
     Returns:
-        str: Message to use
+        Message to use
 
     """
     marker = _('# Text below here ignored\n')
     task_message = _('# Task “{}” started {}Z').format(
-        current.task,
-        iso_8601.format_datetime(current.start))
-    template = '{}\n{}{}'.format(current.message, marker, task_message)
-    message = click.edit(template, require_save=not edit)
+        __current.task,
+        iso_8601.format_datetime(__current.start))
+    template = '{}\n{}{}'.format(__current.message, marker, task_message)
+    message = click.edit(template, require_save=not __edit)
     if message is None:
         message = ''
     else:
@@ -159,80 +163,80 @@ def get_stop_message(current, edit=False):
     return message
 
 
-def task_option(fun):
+def task_option(__fun: Callable) -> Callable:
     """Add task selection options.
 
     Note:
         This is only here to reduce duplication in command setup.
 
     Args:
-        fun (types.FunctionType): Function to add options to
+        __fun: Function to add options to
 
     Returns:
-        types.FunctionType: Function with additional options
+        Function with additional options
 
     """
-    fun = click.option('-x', '--from-dir', is_flag=True, expose_value=False,
-                       is_eager=True, callback=task_from_dir,
-                       help=_('Use directory name as task name.'))(fun)
-    fun = click.argument('task', default='default', envvar='RDIAL_TASK',
-                         required=False, type=TaskNameParamType())(fun)
-    return fun
+    __fun = click.option('-x', '--from-dir', is_flag=True, expose_value=False,
+                         is_eager=True, callback=task_from_dir,
+                         help=_('Use directory name as task name.'))(__fun)
+    __fun = click.argument('task', default='default', envvar='RDIAL_TASK',
+                           required=False, type=TaskNameParamType())(__fun)
+    return __fun
 
 
-def duration_option(fun):
+def duration_option(__fun: Callable) -> Callable:
     """Add duration selection option.
 
     Note:
         This is only here to reduce duplication in command setup.
 
     Args:
-        fun (types.FunctionType): Function to add options to
+        __fun: Function to add options to
 
     Returns:
-        types.FunctionType: Function with additional options
+        Function with additional options
 
     """
-    fun = click.option('-d', '--duration', default='all',
-                       type=click.Choice(['day', 'week', 'month', 'year',
-                                          'all']),
-                       help=_('Filter events for specified time period.'))(fun)
-    return fun
+    __fun = click.option(
+        '-d', '--duration', default='all',
+        type=click.Choice(['day', 'week', 'month', 'year', 'all']),
+        help=_('Filter events for specified time period.'))(__fun)
+    return __fun
 
 
-def message_option(fun):
+def message_option(__fun: Callable) -> Callable:
     """Add message setting options.
 
     Note:
         This is only here to reduce duplication in command setup.
 
     Args:
-        fun (types.FunctionType): Function to add options to
+        __fun: Function to add options to
 
     Returns:
-        types.FunctionType: Function with additional options
+        Function with additional options
 
     """
-    fun = click.option('-m', '--message', help=_('Closing message.'))(fun)
-    fun = click.option('-F', '--file', 'fname', type=click.File(),
-                       help=_('Read closing message from file.'))(fun)
-    return fun
+    __fun = click.option('-m', '--message', help=_('Closing message.'))(__fun)
+    __fun = click.option('-F', '--file', 'fname', type=click.File(),
+                         help=_('Read closing message from file.'))(__fun)
+    return __fun
 
 
-def hidden(fun):
+def hidden(__fun: click.Command) -> click.Command:
     """Add a hidden attribute to a Command object.
 
     :see:`HiddenGroup`.
 
     Args:
-        fun (types.FunctionType): Function to add hidden attribute to
+        __fun: Function to add hidden attribute to
 
     Returns:
-        types.FunctionType: Function with hidden attribute set
+        Function with hidden attribute set
 
     """
-    fun.hidden = True
-    return fun
+    __fun.hidden = True
+    return __fun
 
 
 # pylint: disable=too-many-arguments
@@ -258,16 +262,17 @@ def hidden(fun):
 @click.option('--colour/--no-colour', envvar='RDIAL_COLOUR', default=None,
               help=_('Output colourised informational text.'))
 @click.pass_context
-def cli(ctx, directory, backup, cache, config, interactive, colour):
+def cli(ctx: click.Context, directory: str, backup: bool, cache: bool,
+        config: str, interactive: bool, colour: bool):
     """Main command entry point.
 
     Args:
-        ctx (click.Context): Current command context
-        directory (str): Location to store event data
-        backup (bool): Whether to create backup files
-        cache (bool): Whether to create cache files
-        config (str): Location of config file
-        interactive (bool): Whether to support interactive message editing
+        ctx: Current command context
+        directory: Location to store event data
+        backup: Whether to create backup files
+        cache: Whether to create cache files
+        config: Location of config file
+        interactive: Whether to support interactive message editing
 
     """
     cli_options = {
@@ -308,30 +313,31 @@ def cli(ctx, directory, backup, cache, config, interactive, colour):
     )
 
 
-def filter_events(globs, task=None, duration='all'):
+def filter_events(__globs: AttrDict, __task: Optional[str] = None,
+                  __duration: str = 'all') -> Events:
     """Filter events for report processing.
 
     Args:
-        globs (~jnrbase.attrdict.AttrDict): Global options object
-        task (str): Task name to filter on
-        duration (str): Time window to filter on
+        __globs: Global options object
+        __task: Task name to filter on
+        __duration: Time window to filter on
 
     Returns:
         Events: Events matching specified criteria
 
     """
-    events = Events.read(globs.directory, write_cache=globs.cache)
-    if task:
-        events = events.for_task(task)
-    if not duration == 'all':  # pragma: no cover
-        if duration == 'week':
+    events = Events.read(__globs.directory, write_cache=__globs.cache)
+    if __task:
+        events = events.for_task(__task)
+    if not __duration == 'all':  # pragma: no cover
+        if __duration == 'week':
             today = datetime.date.today()
             events = events.for_week(*today.isocalendar()[:2])
         else:
             year, month, day = datetime.date.today().timetuple()[:3]
-            if duration == 'month':
+            if __duration == 'month':
                 day = None
-            elif duration == 'year':
+            elif __duration == 'year':
                 month = None
                 day = None
             events = events.for_date(year, month, day)
@@ -365,12 +371,12 @@ def bug_data():
 @cli.command(help=_('Check storage consistency.'))
 @click.pass_obj
 @click.pass_context
-def fsck(ctx, globs):
+def fsck(ctx: click.Context, globs: AttrDict):
     """Check storage consistency.
 
     Args:
-        ctx (click.Context): Current command context
-        globs (~jnrbase.attrdict.AttrDict): Global options object
+        ctx: Current command context
+        globs: Global options object
 
     """
     warnings = 0
@@ -413,15 +419,16 @@ def fsck(ctx, globs):
               type=StartTimeParamType())
 @click.pass_obj
 @utils.write_current
-def start(globs, task, continue_, new, time):
+def start(globs: AttrDict, task: str, continue_: bool, new: bool,
+          time: datetime):
     """Start task.
 
     Args:
-        globs (~jnrbase.attrdict.AttrDict): Global options object
-        task (str): Task name to operate on
-        continue_ (bool): Pull task name from last running task
-        new (bool): Create a new task
-        time (datetime.datetime): Task start time
+        globs: Global options object
+        taskk: Task name to operate on
+        continue_: Pull task name from last running task
+        new: Create a new task
+        time: Task start time
 
     """
     with Events.wrapping(globs.directory, globs.backup, globs.cache) as events:
@@ -435,14 +442,14 @@ def start(globs, task, continue_, new, time):
 @click.option('--amend', is_flag=True, help=_('Amend previous stop entry.'))
 @click.pass_obj
 @utils.remove_current
-def stop(globs, message, fname, amend):
+def stop(globs: AttrDict, message: str, fname: str, amend: bool):
     """Stop task.
 
     Args:
-        globs (~jnrbase.attrdict.AttrDict): Global options object
-        message (str): Message to assign to event
-        fname (str): Filename to read message from
-        amend (bool): Amend a previously stopped event
+        globs: Global options object
+        message: Message to assign to event
+        fname: Filename to read message from
+        amend: Amend a previously stopped event
 
     """
     if fname:
@@ -459,7 +466,7 @@ def stop(globs, message, fname, amend):
         if amend and not message:
             message = last_event.message
         if globs.interactive and not message:
-            message = get_stop_message(last_event, edit=amend)
+            message = get_stop_message(last_event, amend)
         events.stop(message, force=amend)
     event = events.last()
     click.echo(_('Task {} running for {}').format(
@@ -475,16 +482,17 @@ def stop(globs, message, fname, amend):
 @message_option
 @click.pass_obj
 @utils.write_current
-def switch(globs, task, new, time, message, fname):
+def switch(globs: AttrDict, task: str, new: bool, time: datetime,
+           message: str, fname: str):
     """Complete last task and start new one.
 
     Args:
-        globs (~jnrbase.attrdict.AttrDict): Global options object
-        task (str): Task name to operate on
-        new (bool): Create a new task
-        time (datetime.datetime): Task start time
-        message (str): Message to assign to event
-        fname (str): Filename to read message from
+        globs: Global options object
+        task: Task name to operate on
+        new: Create a new task
+        time: Task start time
+        message: Message to assign to event
+        fname: Filename to read message from
 
     """
     if fname:
@@ -517,17 +525,18 @@ def switch(globs, task, new, time, message, fname):
 @message_option
 @click.option('-c', '--command', help=_('Command to run.'))
 @click.pass_obj
-def run(globs, task, new, time, message, fname, command):
+def run(globs: AttrDict, task: str, new: bool, time: datetime, message: str,
+        fname: str, command: str):
     """Run timed command.
 
     Args:
-        globs (~jnrbase.attrdict.AttrDict): Global options object
-        task (str): Task name to operate on
-        new (bool): Create a new task
-        time (datetime.datetime): Task start time
-        message (str): Message to assign to event
-        fname (str): Filename to read message from
-        command (str): Command to run
+        globs: Global options object
+        task: Task name to operate on
+        new: Create a new task
+        time: Task start time
+        message: Message to assign to event
+        fname: Filename to read message from
+        command: Command to run
 
     """
     with Events.wrapping(globs.directory, globs.backup, globs.cache) as events:
@@ -562,16 +571,17 @@ def run(globs, task, new, time, message, fname, command):
 @click.argument('wrapper', default='default')
 @click.pass_obj
 @click.pass_context
-def wrapper(ctx, globs, time, message, fname, wrapper):
+def wrapper(ctx: click.Context, globs: AttrDict, time: datetime, message: str,
+            fname: str, wrapper: str):
     """Run predefined timed command.
 
     Args:
-        ctx (click.Context): Click context object
-        globs (~jnrbase.attrdict.AttrDict): Global options object
-        time (datetime.datetime): Task start time
-        message (str): Message to assign to event
-        fname (str): Filename to read message from
-        wrapper (str): Run wrapper to execute
+        ctx: Click context object
+        globs: Global options object
+        time: Task start time
+        message: Message to assign to event
+        fname: Filename to read message from
+        wrapper: Run wrapper to execute
 
     """
     try:
@@ -598,17 +608,18 @@ def wrapper(ctx, globs, time, message, fname, wrapper):
               type=click.Choice(tabulate._table_formats.keys()),
               help=_('Table output style.'))
 @click.pass_obj
-def report(globs, task, stats, duration, sort, reverse, style):
+def report(globs: AttrDict, task: str, stats: bool, duration: str, sort: str,
+           reverse: bool, style: str):
     """Report time tracking data.
 
     Args:
-        globs (~jnrbase.attrdict.AttrDict): Global options object
-        task (str): Task name to operate on
-        stats (bool): Display short overview of data
-        duration (str): Time window to filter on
-        sort (str): Key to sort events on
-        reverse (bool): Reverse sort order
-        style (str): Table formatting style
+        globs: Global options object
+        task: Task name to operate on
+        stats: Display short overview of data
+        duration: Time window to filter on
+        sort: Key to sort events on
+        reverse: Reverse sort order
+        style: Table formatting style
 
     """
     if task == 'default':
@@ -639,11 +650,11 @@ def report(globs, task, stats, duration, sort, reverse, style):
 
 @cli.command(help=_('Display running task, if any.'))
 @click.pass_obj
-def running(globs):
+def running(globs: AttrDict):
     """Display running task, if any.
 
     Args:
-        globs (~jnrbase.attrdict.AttrDict): Global options object
+        globs: Global options object
 
     """
     events = Events.read(globs.directory, write_cache=globs.cache)
@@ -658,11 +669,11 @@ def running(globs):
 
 @cli.command(help=_('Display last event, if any.'))
 @click.pass_obj
-def last(globs):
+def last(globs: AttrDict):
     """Display last event, if any.
 
     Args:
-        globs (~jnrbase.attrdict.AttrDict): Global options object
+        globs: Global options object
 
     """
     events = Events.read(globs.directory, write_cache=globs.cache)
@@ -681,14 +692,14 @@ def last(globs):
 @click.option('-r', '--rate', type=float, envvar='RDIAL_RATE',
               help=_('Hourly rate for task output.'))
 @click.pass_obj
-def ledger(globs, task, duration, rate):
+def ledger(globs: AttrDict, task: str, duration: str, rate: str):
     """Generate ledger compatible data file.
 
     Args:
-        globs (~jnrbase.attrdict.AttrDict): Global options object
-        task (str): Task name to operate on
-        duration (str): Time window to filter on
-        rate (str): Rate to assign hours in report
+        globs: Global options object
+        task: Task name to operate on
+        duration: Time window to filter on
+        rate: Rate to assign hours in report
 
     """
     if task == 'default':
@@ -715,11 +726,11 @@ def ledger(globs, task, duration, rate):
 # pylint: enable=too-many-arguments
 
 
-def main():
+def main() -> int:
     """Command entry point to handle errors.
 
     Returns:
-        int: Final exit code
+        Final exit code
 
     """
     try:

@@ -19,6 +19,7 @@
 # SPDX-License-Identifier: GPL-3.0+
 
 from time import sleep
+from typing import Optional
 
 from jnrbase.attrdict import AttrDict
 from pytest import mark
@@ -57,5 +58,5 @@ def test_newer(tmpdir):
      '\x1b]8;;pypi://rdial\x07this package\x1b]8;;\x07'),
     ('pypi://rdial', None, '\x1b]8;;pypi://rdial\x07rdial\x1b]8;;\x07'),
 ])
-def test_term_link(target, name, result):
+def test_term_link(target: str, name: Optional[str], result: str):
     assert term_link(target, name) == result

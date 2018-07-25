@@ -23,6 +23,7 @@ import sys
 
 from contextlib import suppress
 from subprocess import CalledProcessError, PIPE, run
+from typing import Dict, List, Tuple
 
 root_dir = os.path.dirname(os.path.dirname(__file__))
 sys.path.insert(0, root_dir)
@@ -37,7 +38,8 @@ extensions = \
     ['sphinx.ext.{}'.format(ext)
      for ext in ['autodoc', 'coverage', 'doctest', 'intersphinx', 'napoleon',
                  'todo', 'viewcode']] \
-    + ['sphinxcontrib.{}'.format(ext) for ext in []]
+    + ['sphinxcontrib.{}'.format(ext) for ext in []] \
+    + ['sphinx_autodoc_typehints', ]  # type: List[str]
 
 
 if not on_rtd:
@@ -67,7 +69,8 @@ modindex_common_prefix = ['rdial.', ]
 # approximately correct builds on the local system too
 if not on_rtd:
     html_theme = "sphinx_rtd_theme"
-    html_theme_path = [sphinx_rtd_theme.get_html_theme_path(), ]
+    html_theme_path = [sphinx_rtd_theme.get_html_theme_path(), ]  \
+        # type: List[str]
 
 pygments_style = 'sphinx'
 with suppress(CalledProcessError):
@@ -77,12 +80,12 @@ with suppress(CalledProcessError):
     html_last_updated_fmt = proc.stdout.decode()
 
 man_pages = [
-    ('rdial.1', 'rdial', u'rdial Documentation', [u'James Rowe'], 1)
-]
+    ('rdial.1', 'rdial', 'rdial Documentation', ['James Rowe', ], 1)
+]  # type: Tuple[str, str, str, List[str], int]
 
 # Autodoc extension settings
 autoclass_content = 'init'
-autodoc_default_flags = ['members', ]
+autodoc_default_flags = ['members', ]  # type: List[str]
 
 # intersphinx extension settings
 intersphinx_mapping = {
@@ -91,7 +94,7 @@ intersphinx_mapping = {
         'click': 'http://click.pocoo.org/6/',
         'jnrbase': 'http://jnrbase.readthedocs.io/en/latest/',
         'python': 'https://docs.python.org/3/',
-}.items()}
+}.items()}  # type: Dict[str, str]
 
 # spelling extension settings
 spelling_lang = 'en_GB'
