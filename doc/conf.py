@@ -29,7 +29,7 @@ sys.path.insert(0, root_dir)
 
 import rdial  # NOQA: E402
 
-on_rtd = os.getenv('READTHEDOCS')
+on_rtd = 'READTHEDOCS' in os.environ
 if not on_rtd:
     import sphinx_rtd_theme
 
