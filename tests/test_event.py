@@ -26,7 +26,7 @@ from shutil import copytree
 from typing import Optional, Union
 
 from jnrbase.iso_8601 import parse_datetime, parse_delta
-from pytest import mark, raises, warns
+from pytest import mark, raises
 
 from rdial import events as events_mod
 from rdial.events import Event, Events, TaskRunningError
