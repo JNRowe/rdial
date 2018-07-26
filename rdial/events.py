@@ -381,7 +381,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
         self.last().stop(message, force)
         self.dirty = self.last().task
 
-    def filter(self, __filt: Callable) -> 'Events':
+    def filter(self, __filt: Callable[[Event, ], bool]) -> 'Events':
         """Apply filter to events.
 
         Args:
