@@ -407,7 +407,8 @@ def fsck(ctx: click.Context, globs: AttrDict):
     if lines:
         click.echo_via_pager('\n'.join(lines))
         if warnings:
-            # Will be success when 𝐱 % 256 == 0, so cap at 255
+            # Will be success when 𝐱 % 256 == 0, so cap at 255.  That said
+            # you’ve got bigger problems if you’re hitting this ;)
             ctx.exit(min(warnings, 255))
 
 
