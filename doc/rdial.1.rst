@@ -246,7 +246,7 @@ Report time tracking data
     See the tabulate_ documentation for descriptions of the supported formats
     for your installation.
 
-.. _tabulate: https://pypi.org/project/tabulate
+.. _tabulate: https://pypi.org/project/tabulate/
 
 .. option:: --help
 
