@@ -19,7 +19,7 @@ Requirements
 * jnrbase_ ``[colour]`` ≥ 0.8.1
 * tabulate_
 
-It should work with Python_ version 3.5, or newer.  If ``rdial`` doesn’t work
+It should work with Python_ version 3.6, or newer.  If ``rdial`` doesn’t work
 with the version of Python you have installed, file an issue_ and I’ll
 endeavour to fix it.
 
