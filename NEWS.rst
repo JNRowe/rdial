@@ -3,6 +3,13 @@ User-visible changes
 
 .. contents::
 
+* ``timeclock`` subcommand to create output suitable for processing with
+  ledger_’s timeclock mode
+* Python 3.5 is officially supported
+* API is now frozen; changes will follow semver_
+
+.. _semver: https://semver.org/
+
 0.17.0 - 2017-12-14
 -------------------
 

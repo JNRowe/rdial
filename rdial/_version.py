@@ -1,13 +1,10 @@
-# This is rdial version 0.17.1 (2018-07-22)
+# This is rdial version 1.0.0 (2018-09-06)
 # pylint: skip-file
 
-from typing import Dict, Tuple
-
-
-dotted = '0.17.1'  # type: str
-libtool = '17:21'  # type: str
-hex = 0x001101  # type: int
-date = '2018-07-22'  # type: str
-tuple = (0, 17, 1)  # type: Tuple[int, int, int]
-dict = {'major': 0, 'minor': 17, 'micro': 1}  # type: Dict[str, int]
-web = 'rdial/0.17.1'  # type: str
+dotted = '1.0.0'
+libtool = '10:20'
+hex = 0x010000
+date = '2018-09-06'
+tuple = (1, 0, 0)
+dict = {'major': 1, 'minor': 0, 'micro': 0}
+web = 'rdial/1.0.0'
