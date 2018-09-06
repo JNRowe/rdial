@@ -174,6 +174,15 @@ def test_start_event(tmpdir):
     assert result.output == ''
 
 
+def test_restart_event(tmpdir):
+    test_dir = tmpdir.join('test').strpath
+    copytree('tests/data/test_not_running', test_dir)
+    runner = CliRunner()
+    result = runner.invoke(cli, ['--directory', test_dir, 'start', '--continue'])
+    assert result.exit_code == 0
+    assert result.output == ''
+
+
 def test_stop_event(tmpdir):
     test_dir = tmpdir.join('test').strpath
     copytree('tests/data/test', test_dir)
