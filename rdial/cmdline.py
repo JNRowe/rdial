@@ -725,6 +725,37 @@ def ledger(globs: AttrDict, task: str, duration: str, rate: str):
         lines.append(_(';; Running event not included in output!'))
     click.echo_via_pager('\n'.join(lines))
 
+
+@cli.command(help=_('Generate ledger compatible timeclock file.'))
+@task_option
+@duration_option
+@click.pass_obj
+def timeclock(globs: AttrDict, task: str, duration: str):
+    """Generate ledger compatible timeclock data file.
+
+    Args:
+        globs: Global options object
+        task: Task name to operate on
+        duration: Time window to filter on
+    """
+    if task == 'default':
+        # Lazy way to remove duplicate argument definitions
+        task = None
+    events = filter_events(globs, task, duration)
+    lines = []
+    if events.running():
+        lines.append(_(';; Running event not included in output!'))
+    for event in events:
+        if not event.delta:
+            continue
+        lines.append(f'i {event.start:%F %T} {event.task}')
+        lines.append(f'o {event.start + event.delta:%F %T}'
+                     f'{"  ; " + event.message if event.message else ""}\n')
+    if events.running():
+        lines.append(_(';; Running event not included in output!'))
+    click.echo_via_pager('\n'.join(lines))
+
+
 # pylint: enable=too-many-arguments
 
 

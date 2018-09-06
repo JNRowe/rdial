@@ -445,6 +445,21 @@ def test_ledger_running():
     assert ';; Running event not included in output!' in result.output
 
 
+def test_timeclock():
+    runner = CliRunner()
+    result = runner.invoke(cli, ['--directory', 'tests/data/test_not_running',
+                                 'timeclock'])
+    assert result.exit_code == 0
+    assert 'i 2011-05-04 09:30:00 task' in result.output.splitlines()
+    assert 'o 2011-05-04 10:30:00  ; stop message' in result.output.splitlines()
+
+
+def test_timeclock_running():
+    runner = CliRunner()
+    result = runner.invoke(cli, ['--directory', 'tests/data/test', 'timeclock'])
+    assert result.exit_code == 0
+    assert ';; Running event not included in output!' in result.output
+
 def test_main_wrapper(monkeypatch, capsys):
     monkeypatch.setattr('sys.argv', ['rdial', '--directory', 'tests/data/test',
                                      'running'])

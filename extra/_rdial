@@ -80,6 +80,7 @@ _arguments \
         running\:"Display running task, if any."
         last\:"Display last event, if any."
         ledger\:"Generate ledger compatible data file."
+        timeclock\:"Generate ledger compatible timeclock file."
     ))' \
     '*::subcmd:->subcmd' && return 0
 
@@ -159,6 +160,13 @@ case "$words[1]" in
         '--from-dir[Use directory name as task name.]' \
         '--duration[Filter events for specified time period.]:select time period:(day week month year all)' \
         '--rate=[Hourly rate for task output.]:set hourly rate: ' \
+        ':select task:__list_tasks'
+    ;;
+(timeclock)
+    _arguments \
+        '--help[Show this message and exit.]' \
+        '--from-dir[Use directory name as task name.]' \
+        '--duration[Filter events for specified time period.]:select time period:(day week month year all)' \
         ':select task:__list_tasks'
     ;;
 (*)

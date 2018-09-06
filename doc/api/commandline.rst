@@ -23,6 +23,7 @@ Commands
 .. autofunction:: running(globs)
 .. autofunction:: last(globs)
 .. autofunction:: ledger(globs, task, duration, rate)
+.. autofunction:: timeclock(globs, task, duration, rate)
 
 Entry points
 ~~~~~~~~~~~~~

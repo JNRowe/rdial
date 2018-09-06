@@ -297,6 +297,25 @@ Generate `ledger <http://ledger-cli.org/>`__ compatible data file
 
     Show help message and exit.
 
+``timeclock``
+'''''''''''''
+
+.. program:: rdial timeclock
+
+Generate `ledger <http://ledger-cli.org/>`__ compatible timeclock file
+
+.. option:: -x, --from-dir
+
+    Use directory name as task name.
+
+.. option:: -d <duration>, --duration=<duration>
+
+    Filter events for specified time period {day,week,month,year,all}.
+
+.. option:: --help
+
+    Show help message and exit.
+
 BUGS
 ----
 

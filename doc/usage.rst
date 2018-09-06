@@ -304,3 +304,24 @@ See :ref:`run wrappers configuration <run-wrappers-label>`.
 .. option:: --help
 
    Show help message and exit.
+
+``timeclock`` - Generate ``ledger`` compatible timeclock file
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. program:: rdial timeclock
+
+::
+
+    rdial timeclock [--help] [-x] [-d <duration>] [task]
+
+.. option:: -x, --from-dir
+
+   Use directory name as task name.
+
+.. option:: -d <duration>, --duration=<duration>
+
+   Filter events for specified time period {day,week,month,year,all}.
+
+.. option:: --help
+
+   Show help message and exit.
