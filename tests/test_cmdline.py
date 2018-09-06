@@ -119,7 +119,7 @@ def test_get_stop_message_template(monkeypatch):
                         lambda s, **kwargs: output.extend(s.splitlines()))
     ev = Event('task', '2011-05-04T09:30:00Z')
     get_stop_message(ev)
-    assert '# Task “task” started 2011-05-04T09:30:00Z'.format(ev) in output
+    assert '# Task “task” started 2011-05-04T09:30:00Z' in output
 
 
 @mark.parametrize('config, result', [
@@ -135,8 +135,7 @@ def test_colour_for_u_deficient(config: str, result: bool):
     runner = CliRunner()
     with raises(ValueError) as excinfo:
         runner.invoke(cli,
-                      ['--config', 'tests/data/{}.ini'.format(config),
-                       'raise_config'],
+                      ['--config', f'tests/data/{config}.ini', 'raise_config'],
                       catch_exceptions=False)
     assert excinfo.value.args[0].colour is result
 

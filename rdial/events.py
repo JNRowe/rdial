@@ -79,7 +79,7 @@ class Event:
         self.task = __task
         if isinstance(start, datetime.datetime):
             if start.tzinfo:
-                raise ValueError('Must be a naive datetime {!r}'.format(start))
+                raise ValueError(f'Must be a naive datetime {start!r}')
             self.start = start
         else:
             self.start = iso_8601.parse_datetime(start).replace(tzinfo=None)
@@ -235,15 +235,14 @@ class Events(list):  # pylint: disable=too-many-public-methods
         cache_dir = os.path.join(xdg_cache_dir, __directory.replace('/', '_'))
         if write_cache and not os.path.isdir(cache_dir):
             os.makedirs(cache_dir)
-            with click.open_file('{}/CACHEDIR.TAG'.format(xdg_cache_dir),
-                                 'w') as f:
+            with click.open_file(f'{xdg_cache_dir}/CACHEDIR.TAG', 'w') as f:
                 f.writelines([
                     'Signature: 8a477f597d28d172789f06886806bc55\n',
                     '# This file is a cache directory tag created by rdial.\n',
                     '# For information about cache directory tags, see:\n',
                     '#   http://www.brynosaurus.com/cachedir/\n',
                 ])
-        for fname in glob.glob('{}/*.csv'.format(__directory)):
+        for fname in glob.glob(f'{__directory}/*.csv'):
             task = os.path.basename(fname)[:-4]
             cache_file = os.path.join(cache_dir, task) + '.pkl'
             evs = None
@@ -293,7 +292,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
             os.makedirs(__directory)
 
         for task in self.dirty:
-            task_file = '{}/{}.csv'.format(__directory, task)
+            task_file = f'{__directory}/{task}.csv'
             events = self.for_task(task)
             with click.utils.LazyFile(task_file, 'w', atomic=True) as temp:
                 writer = csv.DictWriter(temp, FIELDS, dialect=RdialDialect)
@@ -301,7 +300,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
                 for event in events:
                     writer.writerow(event.writer())
                 if self.backup and os.path.exists(task_file):
-                    os.rename(task_file, '{}~'.format(task_file))
+                    os.rename(task_file, f'{task_file}~')
         del self.dirty
 
     def tasks(self) -> List[str]:
@@ -354,11 +353,10 @@ class Events(list):  # pylint: disable=too-many-public-methods
         """
         if not new and __task not in self.tasks():
             raise TaskNotExistError(
-                'Task {} does not exist!  Use “--new” to create it'.format(
-                    __task))
+                f'Task {__task} does not exist!  Use “--new” to create it')
         running = self.running()
         if running:
-            raise TaskRunningError('Running task {}!'.format(running))
+            raise TaskRunningError(f'Running task {running}!')
         last = self.last()
         if last and start and last.start + last.delta > start:
             raise TaskRunningError('Start date overlaps previous task!')

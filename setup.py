@@ -53,7 +53,7 @@ def import_file(package: str, fname: str) -> ModuleType:
         Imported module
     """
     mod_name = fname.rstrip('.py')
-    spec = spec_from_file_location(mod_name, '{}/{}'.format(package, fname))
+    spec = spec_from_file_location(mod_name, f'{package}/{fname}')
     module = module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
@@ -65,7 +65,7 @@ def make_list(s: str) -> List[str]:
 
 def parse_requires(file: str) -> List[str]:
     deps = []
-    with open('extra/{}'.format(file)) as req_file:
+    with open(f'extra/{file}') as req_file:
         entries = [s.split('#')[0].strip() for s in req_file.readlines()]
     for dep in entries:
         if not dep or dep.startswith('#'):
