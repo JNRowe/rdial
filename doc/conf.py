@@ -22,7 +22,6 @@ import os
 import sys
 from contextlib import suppress
 from subprocess import CalledProcessError, PIPE, run
-from typing import Dict, List, Tuple
 
 root_dir = os.path.dirname(os.path.dirname(__file__))
 sys.path.insert(0, root_dir)

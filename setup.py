@@ -21,7 +21,7 @@
 from configparser import ConfigParser
 from importlib.util import module_from_spec, spec_from_file_location
 from types import ModuleType
-from typing import Dict, List, Union
+from typing import List
 
 from setuptools import setup
 from setuptools.command.test import test
