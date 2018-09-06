@@ -157,6 +157,14 @@ def test_command_defaults():
     assert defaults['choice'] == 'questionable'
 
 
+def test_bug_data():
+    runner = CliRunner()
+    result = runner.invoke(cli, ['bug-data', ])
+    assert result.exit_code == 0
+    assert '{' not in result.output
+    assert '}' not in result.output
+
+
 def test_start_event(tmpdir):
     test_dir = tmpdir.join('test').strpath
     copytree('tests/data/test_not_running', test_dir)
