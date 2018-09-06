@@ -42,7 +42,7 @@ class RdialError(ValueError):
 
 
 #: Map duration string keys to timedelta args
-_MAPPER = {'D': 'days', 'H': 'hours', 'M': 'minutes',  'S': 'seconds'} \
+_MAPPER = {'D': 'days', 'H': 'hours', 'M': 'minutes', 'S': 'seconds'} \
     # type : Dict[str, str]
 
 
@@ -71,7 +71,7 @@ def parse_datetime_user(__string: str) -> datetime:
         except subprocess.CalledProcessError:
             datetime_ = None
     if not datetime_:
-        raise ValueError('Unable to parse timestamp {!r}'.format(__string))
+        raise ValueError(f'Unable to parse timestamp {__string!r}')
     return datetime_.replace(tzinfo=None)
 
 
@@ -152,7 +152,7 @@ def write_current(__fun: Callable) -> Callable:
         """
         globs = args[0]
         __fun(*args, **kwargs)
-        with click.open_file('{}/.current'.format(globs.directory), 'w') as f:
+        with click.open_file(f'{globs.directory}/.current', 'w') as f:
             f.write(kwargs['task'])
     return wrapper
 
@@ -180,8 +180,8 @@ def remove_current(__fun: Callable) -> Callable:
         """
         globs = args[0]
         __fun(*args, **kwargs)
-        if os.path.isfile('{}/.current'.format(globs.directory)):
-            os.unlink('{}/.current'.format(globs.directory))
+        if os.path.isfile(f'{globs.directory}/.current'):
+            os.unlink(f'{globs.directory}/.current')
     return wrapper
 
 
@@ -213,4 +213,4 @@ def term_link(__target: str, name: Optional[str] = None) -> str:
     """
     if not name:
         name = os.path.basename(__target)
-    return '\033]8;;{}\007{}\033]8;;\007'.format(__target, name)
+    return f'\033]8;;{__target}\007{name}\033]8;;\007'

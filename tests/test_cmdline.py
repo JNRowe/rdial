@@ -119,7 +119,7 @@ def test_get_stop_message_template(monkeypatch):
                         lambda s, **kwargs: output.extend(s.splitlines()))
     ev = Event('task', '2011-05-04T09:30:00Z')
     get_stop_message(ev)
-    assert '# Task “task” started 2011-05-04T09:30:00Z'.format(ev) in output
+    assert '# Task “task” started 2011-05-04T09:30:00Z' in output
 
 
 @mark.parametrize('config, result', [
@@ -135,8 +135,7 @@ def test_colour_for_u_deficient(config: str, result: bool):
     runner = CliRunner()
     with raises(ValueError) as excinfo:
         runner.invoke(cli,
-                      ['--config', 'tests/data/{}.ini'.format(config),
-                       'raise_config'],
+                      ['--config', f'tests/data/{config}.ini', 'raise_config'],
                       catch_exceptions=False)
     assert excinfo.value.args[0].colour is result
 
@@ -158,11 +157,29 @@ def test_command_defaults():
     assert defaults['choice'] == 'questionable'
 
 
+def test_bug_data():
+    runner = CliRunner()
+    result = runner.invoke(cli, ['bug-data', ])
+    assert result.exit_code == 0
+    assert '{' not in result.output
+    assert '}' not in result.output
+
+
 def test_start_event(tmpdir):
     test_dir = tmpdir.join('test').strpath
     copytree('tests/data/test_not_running', test_dir)
     runner = CliRunner()
     result = runner.invoke(cli, ['--directory', test_dir, 'start', 'task'])
+    assert result.exit_code == 0
+    assert result.output == ''
+
+
+def test_restart_event(tmpdir):
+    test_dir = tmpdir.join('test').strpath
+    copytree('tests/data/test_not_running', test_dir)
+    runner = CliRunner()
+    result = runner.invoke(cli, ['--directory', test_dir, 'start',
+                                 '--continue'])
     assert result.exit_code == 0
     assert result.output == ''
 
@@ -451,14 +468,17 @@ def test_timeclock():
                                  'timeclock'])
     assert result.exit_code == 0
     assert 'i 2011-05-04 09:30:00 task' in result.output.splitlines()
-    assert 'o 2011-05-04 10:30:00  ; stop message' in result.output.splitlines()
+    assert 'o 2011-05-04 10:30:00  ; stop message' in \
+        result.output.splitlines()
 
 
 def test_timeclock_running():
     runner = CliRunner()
-    result = runner.invoke(cli, ['--directory', 'tests/data/test', 'timeclock'])
+    result = runner.invoke(cli, ['--directory', 'tests/data/test',
+                                 'timeclock'])
     assert result.exit_code == 0
     assert ';; Running event not included in output!' in result.output
+
 
 def test_main_wrapper(monkeypatch, capsys):
     monkeypatch.setattr('sys.argv', ['rdial', '--directory', 'tests/data/test',
