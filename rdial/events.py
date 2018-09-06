@@ -310,7 +310,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
             Names of tasks in database
 
         """
-        return sorted(set(event.task for event in self))
+        return sorted({event.task for event in self})
 
     def last(self) -> Optional[Event]:
         """Return current/last event.

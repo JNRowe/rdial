@@ -42,7 +42,7 @@ class RdialError(ValueError):
 
 
 #: Map duration string keys to timedelta args
-_MAPPER = {'D': 'days', 'H': 'hours', 'M': 'minutes',  'S': 'seconds'} \
+_MAPPER = {'D': 'days', 'H': 'hours', 'M': 'minutes', 'S': 'seconds'} \
     # type : Dict[str, str]
 
 

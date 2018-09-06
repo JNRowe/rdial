@@ -634,7 +634,7 @@ def report(globs: AttrDict, task: str, stats: bool, duration: str, sort: str,
         if events:
             click.echo(_('First entry started at {events[0].start}'))
             click.echo(_('Last entry started at {events[-1].start}'))
-        dates = set(e.start.date() for e in events)
+        dates = {e.start.date() for e in events}
         click.echo(_('Events exist on {len(dates)} dates'))
     else:
         data = sorted(([t, str(events.for_task(t).sum())]
