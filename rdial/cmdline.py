@@ -426,7 +426,7 @@ def start(globs: AttrDict, task: str, continue_: bool, new: bool,
 
     Args:
         globs: Global options object
-        taskk: Task name to operate on
+        task: Task name to operate on
         continue_: Pull task name from last running task
         new: Create a new task
         time: Task start time
