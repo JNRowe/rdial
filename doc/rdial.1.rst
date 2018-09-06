@@ -336,7 +336,7 @@ Issue tracker: https://github.com/JNRowe/rdial/issues/
 COPYING
 -------
 
-Copyright © 2011-2017  James Rowe.
+Copyright © 2011-2018  James Rowe.
 
 rdial is free software: you can redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software

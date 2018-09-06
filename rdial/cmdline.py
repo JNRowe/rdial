@@ -2,6 +2,9 @@
 """cmdline - Command line functionality for rdial."""
 # Copyright © 2012-2018  James Rowe <jnrowe@gmail.com>
 #                        Nathan McGregor <nathan.mcgregor@astrium.eads.net>
+#                        Rach Holmes <rach.c.holmes@gmail.com>
+#
+# SPDX-License-Identifier: GPL-3.0+
 #
 # This file is part of rdial.
 #
@@ -16,8 +19,6 @@
 #
 # You should have received a copy of the GNU General Public License along with
 # rdial.  If not, see <http://www.gnu.org/licenses/>.
-#
-# SPDX-License-Identifier: GPL-3.0+
 
 import datetime
 import operator

@@ -2,6 +2,8 @@
 """setup.py - Setuptools tasks and config for rdial."""
 # Copyright © 2011-2018  James Rowe <jnrowe@gmail.com>
 #
+# SPDX-License-Identifier: GPL-3.0+
+#
 # This file is part of rdial.
 #
 # rdial is free software: you can redistribute it and/or modify it under the
@@ -15,8 +17,6 @@
 #
 # You should have received a copy of the GNU General Public License along with
 # rdial.  If not, see <http://www.gnu.org/licenses/>.
-#
-# SPDX-License-Identifier: GPL-3.0+
 
 from configparser import ConfigParser
 from importlib.util import module_from_spec, spec_from_file_location
