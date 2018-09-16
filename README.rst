@@ -104,6 +104,7 @@ Ideas
 * Adam Baxter
 * Delphine Beauchemin
 * Kevin Simmons
+* Thomas Gallagher
 
 If I’ve forgotten to include your name I wholeheartedly apologise.  Just drop me
 a mail_ and I’ll update the list!

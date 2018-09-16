@@ -315,6 +315,28 @@ def test_switch_event_running_interactive(monkeypatch, tmpdir):
         assert len(f.read().splitlines()) == 3
 
 
+def test_switch_event_running_amend(tmpdir):
+    test_dir = tmpdir.join('test').strpath
+    copytree('tests/data/test', test_dir)
+    runner = CliRunner()
+    result = runner.invoke(cli, ['--directory', test_dir, 'switch', '--amend',
+                                 'task2'])
+    assert isinstance(result.exception, TaskRunningError)
+    assert result.exception.args[0] == 'Can’t amend running task task!'
+
+
+def test_switch_event_amend_message_reuse(tmpdir):
+    test_dir = tmpdir.join('test').strpath
+    copytree('tests/data/test_not_running', test_dir)
+    runner = CliRunner()
+    result = runner.invoke(cli, ['--directory', test_dir, 'switch', '--amend',
+                                 'task2'])
+    assert result.exit_code == 0
+    assert 'Task task running for' in result.output
+    with tmpdir.join('test', 'task.csv').open() as f:
+        assert f.read().endswith('stop message\n')
+
+
 def test_run_timed(capfd, tmpdir):
     test_dir = tmpdir.join('test').strpath
     copytree('tests/data/test_not_running', test_dir)

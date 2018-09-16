@@ -150,6 +150,10 @@ Switch to another task
 
     Closing message for current task.
 
+.. option:: --amend
+
+    Amend previous stop entry.
+
 .. option:: --help
 
     Show help message and exit.

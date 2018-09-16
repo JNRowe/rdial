@@ -478,9 +478,10 @@ def stop(globs: AttrDict, message: str, fname: str, amend: bool):
 @click.option('-t', '--time', default='', help='Set start time.',
               type=StartTimeParamType())
 @message_option
+@click.option('--amend', is_flag=True, help='Amend previous stop entry.')
 @click.pass_obj
 @utils.write_current
-def switch(globs: AttrDict, task: str, new: bool, time: datetime,
+def switch(globs: AttrDict, task: str, new: bool, time: datetime, amend: bool,
            message: str, fname: str):
     """Complete last task and start new one.
 
@@ -489,6 +490,7 @@ def switch(globs: AttrDict, task: str, new: bool, time: datetime,
         task: Task name to operate on
         new: Create a new task
         time: Task start time
+        amend: Amend a previously stopped event
         message: Message to assign to event
         fname: Filename to read message from
 
@@ -500,14 +502,19 @@ def switch(globs: AttrDict, task: str, new: bool, time: datetime,
         if time and time < event.start:
             raise TaskNotRunningError('Can’t specify a start time before '
                                       'current task started!')
-        if not event.running():
+        if event.running() and amend:
+            raise TaskRunningError(f'Can’t amend running task {event.task}!')
+        elif not event.running() and not amend:
             raise TaskNotRunningError('No task running!')
+
         if new or task in events.tasks():
+            if amend and not message:
+                message = event.message
             if globs.interactive and not message:
                 message = get_stop_message(event)
             # This is dirty, but we kick on to Events.start() to save
             # duplication of error handling for task names
-            events.stop(message)
+            events.stop(message, force=amend)
         events.last().delta = time - event.start
         events.start(task, new, time)
     click.echo('Task {} running for {}'.format(

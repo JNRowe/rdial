@@ -114,6 +114,7 @@ case "$words[1]" in
         '--time=[Set start time.]' \
         '--message=[Closing message.]:message text: ' \
         '--file=[Read closing message from file.]:select file:_files' \
+        '--amend[Amend previous stop entry.]' \
         ':select task:__list_tasks'
     ;;
 (run)
