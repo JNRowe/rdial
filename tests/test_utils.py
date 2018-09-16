@@ -40,7 +40,7 @@ def test_handle_current(tmpdir):
     assert tmpdir.join('.current').exists()
     remove_current(bare)(globs, task='test')
     assert not tmpdir.join('.current').exists()
-    # check idempotent...
+    # check idempotent…
     remove_current(bare)(globs, task='test')
 
 

@@ -13,7 +13,7 @@ Simple time tracking for simple people
 SYNOPSIS
 --------
 
-    rdial [option]... <command>
+    rdial [option]… <command>
 
 DESCRIPTION
 -----------
