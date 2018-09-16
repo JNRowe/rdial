@@ -33,6 +33,16 @@ def test_read_config_local():
     assert conf['local test'].getboolean('read')
 
 
+@mark.parametrize('config, options, result', [
+    (None, None, False),
+    ('tests/data/stacking.ini', None, True),
+    ('tests/data/stacking.ini', {'interactive': False}, False),
+])
+def test_read_config_stacking(config, options, result):
+    conf = read_config(config, options)
+    assert conf['rdial'].getboolean('interactive') is result
+
+
 def test_handle_current(tmpdir):
     globs = AttrDict(directory=tmpdir.strpath)
     bare = lambda globs, task: True
