@@ -26,10 +26,18 @@ from shutil import copytree
 from typing import Optional, Union
 
 from jnrbase.iso_8601 import parse_datetime, parse_delta
-from pytest import mark, raises
+from pytest import fixture, mark, raises
 
 from rdial import events as events_mod
 from rdial.events import Event, Events, TaskRunningError
+
+
+@fixture
+def temp_user_cache(monkeypatch, tmpdir):
+    cache_dir = tmpdir.join('cache')
+    cache_dir.mkdir()
+    monkeypatch.setattr(events_mod.xdg_basedir, 'user_cache',
+                        lambda s: cache_dir.strpath)
 
 
 @mark.parametrize('task, start, delta, message', [
@@ -184,9 +192,7 @@ def test_write_database_no_change_noop(tmpdir):
     assert glob(tmpdir.join('*').strpath) == []
 
 
-def test_write_database_cache(monkeypatch, tmpdir):
-    monkeypatch.setattr(events_mod.xdg_basedir, 'user_cache',
-                        lambda s: tmpdir.join('cache').strpath)
+def test_write_database_cache(temp_user_cache, tmpdir):
     events = Events.read('tests/data/test')
     events._dirty = events.tasks()
     events.write(tmpdir.join('database').strpath)
@@ -195,9 +201,7 @@ def test_write_database_cache(monkeypatch, tmpdir):
     assert {f.split('/')[-1][:-4] for f in cache_files} == set(events.tasks())
 
 
-def test_read_database_cache(monkeypatch, tmpdir):
-    monkeypatch.setattr(events_mod.xdg_basedir, 'user_cache',
-                        lambda s: tmpdir.join('cache').strpath)
+def test_read_database_cache(temp_user_cache, monkeypatch):
     read = set()
     monkeypatch.setattr(
         events_mod.pickle, 'load',
@@ -208,9 +212,7 @@ def test_read_database_cache(monkeypatch, tmpdir):
     assert read == set(events.tasks())
 
 
-def test_read_database_cache_broken(monkeypatch, tmpdir):
-    monkeypatch.setattr(events_mod.xdg_basedir, 'user_cache',
-                        lambda s: tmpdir.join('cache').strpath)
+def test_read_database_cache_broken(temp_user_cache, tmpdir):
     in_dir = 'tests/data/test'
     events = Events.read(in_dir)
     cache_files = glob(tmpdir.join('cache', '**', '*.pkl').strpath,

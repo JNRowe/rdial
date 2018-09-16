@@ -25,11 +25,20 @@ from typing import Callable, Optional
 from click import (BadParameter, Context, Option, command, echo, group,
                    option, pass_context, pass_obj)
 from click.testing import CliRunner
-from pytest import mark, raises
+from pytest import fixture, mark, raises
 
+from rdial import events as events_mod
 from rdial.cmdline import (HiddenGroup, StartTimeParamType, TaskNameParamType,
                            cli, get_stop_message, hidden, main, task_option)
 from rdial.events import Event, TaskNotRunningError, TaskRunningError
+
+
+@fixture(autouse=True)
+def temp_user_cache(monkeypatch, tmpdir):
+    cache_dir = tmpdir.join('cache')
+    cache_dir.mkdir()
+    monkeypatch.setattr(events_mod.xdg_basedir, 'user_cache',
+                        lambda s: cache_dir.strpath)
 
 
 @mark.parametrize('string, expected', [
