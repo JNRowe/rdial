@@ -25,6 +25,7 @@ import operator
 import os
 import shlex
 import subprocess
+import types
 from typing import Callable, List, Optional
 
 import click
@@ -308,6 +309,22 @@ def cli(ctx: click.Context, directory: str, backup: bool, cache: bool,
         directory=base['directory'],
         interactive=base.getboolean('interactive'),
     )
+
+
+def __no_sphinx_help(self, *args, **kwargs):
+    """Strip Sphinx type hints from docstrings for help output."""
+    def decorator(f):
+        if f.__doc__:
+            help_text = f.__doc__.split('Args:\n')[0].strip()
+        else:
+            help_text = None
+        cmd = click.command(*args, help=help_text, **kwargs)(f)
+        self.add_command(cmd)
+        return cmd
+    return decorator
+
+
+cli.command = __no_sphinx_help.__get__(cli)
 
 
 def filter_events(__globs: AttrDict, __task: Optional[str] = None,
