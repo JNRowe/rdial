@@ -20,6 +20,7 @@
 # You should have received a copy of the GNU General Public License along with
 # rdial.  If not, see <http://www.gnu.org/licenses/>.
 
+import contextlib
 import datetime
 import operator
 import os
@@ -383,14 +384,17 @@ def bug_data():
 
 
 @cli.command()
+@click.option('-p/-q', '--progress/--no-progress', default=True,
+              help='Display progress bar.')
 @click.pass_obj
 @click.pass_context
-def fsck(ctx: click.Context, globs: AttrDict):
+def fsck(ctx: click.Context, globs: AttrDict, progress: bool):
     """Check storage consistency.
 
     Args:
         ctx: Current command context
         globs: Global options object
+        progress: Display progressbar
 
     """
     warnings = 0
@@ -398,9 +402,17 @@ def fsck(ctx: click.Context, globs: AttrDict):
     now = datetime.datetime.utcnow()
     lines = []
     # Note: progress is *four* times slower on my data and system
-    with click.progressbar(events, label='Checking',
-                           fill_char=click.style(u'█', 'green'),
-                           empty_char=click.style(u'·', 'yellow')) as pbar:
+    if progress:
+        func = click.progressbar
+    else:
+        # Ferociously hacky way to save duplicating event checking code
+        # in ‘--no-progress’ code path
+        @contextlib.contextmanager
+        def func(evs, *args, **kwargs):
+            yield iter(evs)
+
+    with func(events, label='Checking', fill_char=click.style(u'█', 'green'),
+              empty_char=click.style(u'·', 'yellow')) as pbar:
         last_event = next(pbar)
         for event in pbar:
             if not last_event.start + last_event.delta <= event.start:

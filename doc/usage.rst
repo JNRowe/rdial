@@ -53,7 +53,11 @@ Commands
 
 ::
 
-    rdial fsck [--help]
+    rdial fsck [--help] [-q]
+
+.. option:: -p, --progress, -q, --no-progress
+
+   Display progress bar.
 
 .. option:: --help
 

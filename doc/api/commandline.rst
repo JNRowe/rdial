@@ -13,7 +13,7 @@ Commands
 ~~~~~~~~
 
 .. autofunction:: bug_data()
-.. autofunction:: fsck(ctx, globs)
+.. autofunction:: fsck(ctx, globs, progress)
 .. autofunction:: start(globs, task, new, time)
 .. autofunction:: stop(globs, message, fname, amend)
 .. autofunction:: switch(globs, task, new, time, message, fname)

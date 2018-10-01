@@ -69,6 +69,10 @@ COMMANDS
 
 Check storage consistency
 
+.. option:: -p, --progress, -q, --no-progress
+
+    Display progress bar.
+
 .. option:: --help
 
     Show help message and exit.

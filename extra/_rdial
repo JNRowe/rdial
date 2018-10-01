@@ -88,6 +88,7 @@ _arguments \
 case "$words[1]" in
 (fsck)
     _arguments \
+        '--no-progress[Display progress bar.]' \
         '--help[Show this message and exit.]'
     ;;
 (start)
