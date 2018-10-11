@@ -320,7 +320,7 @@ def filter_events(__globs: AttrDict, __task: Optional[str] = None,
     return events
 
 
-@cli.command('bug-data', hidden=True)
+@cli.command(hidden=True)
 def bug_data():
     """Produce data for rdial bug reports."""
     import sys
