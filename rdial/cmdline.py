@@ -273,22 +273,6 @@ def cli(ctx: click.Context, directory: str, backup: bool, cache: bool,
     )
 
 
-def __no_sphinx_help(self, *args, **kwargs):
-    """Strip Sphinx type hints from docstrings for help output."""
-    def decorator(f):
-        if f.__doc__:
-            help_text = f.__doc__.split('Args:\n')[0].strip()
-        else:
-            help_text = None
-        cmd = click.command(*args, help=help_text, **kwargs)(f)
-        self.add_command(cmd)
-        return cmd
-    return decorator
-
-
-cli.command = __no_sphinx_help.__get__(cli)
-
-
 def filter_events(__globs: AttrDict, __task: Optional[str] = None,
                   __duration: str = 'all') -> Events:
     """Filter events for report processing.
@@ -351,6 +335,7 @@ def bug_data():
 def fsck(ctx: click.Context, globs: AttrDict, progress: bool):
     """Check storage consistency.
 
+    \r
     Args:
         ctx: Current command context
         globs: Global options object
@@ -410,6 +395,7 @@ def start(globs: AttrDict, task: str, continue_: bool, new: bool,
           time: datetime):
     """Start task.
 
+    \r
     Args:
         globs: Global options object
         task: Task name to operate on
@@ -432,6 +418,7 @@ def start(globs: AttrDict, task: str, continue_: bool, new: bool,
 def stop(globs: AttrDict, message: str, fname: str, amend: bool):
     """Stop task.
 
+    \r
     Args:
         globs: Global options object
         message: Message to assign to event
@@ -474,6 +461,7 @@ def switch(globs: AttrDict, task: str, new: bool, time: datetime, amend: bool,
            message: str, fname: str):
     """Complete last task and start new one.
 
+    \r
     Args:
         globs: Global options object
         task: Task name to operate on
@@ -523,6 +511,7 @@ def run(globs: AttrDict, task: str, new: bool, time: datetime, message: str,
         fname: str, command: str):
     """Run command with timer.
 
+    \r
     Args:
         globs: Global options object
         task: Task name to operate on
@@ -569,6 +558,7 @@ def wrapper(ctx: click.Context, globs: AttrDict, time: datetime, message: str,
             fname: str, wrapper: str):
     """Run predefined command with timer.
 
+    \r
     Args:
         ctx: Click context object
         globs: Global options object
@@ -606,6 +596,7 @@ def report(globs: AttrDict, task: str, stats: bool, duration: str, sort: str,
            reverse: bool, style: str):
     """Report time tracking data.
 
+    \r
     Args:
         globs: Global options object
         task: Task name to operate on
@@ -646,6 +637,7 @@ def report(globs: AttrDict, task: str, stats: bool, duration: str, sort: str,
 def running(globs: AttrDict):
     """Display running task, if any.
 
+    \r
     Args:
         globs: Global options object
 
@@ -665,6 +657,7 @@ def running(globs: AttrDict):
 def last(globs: AttrDict):
     """Display last event, if any.
 
+    \r
     Args:
         globs: Global options object
 
@@ -688,6 +681,7 @@ def last(globs: AttrDict):
 def ledger(globs: AttrDict, task: str, duration: str, rate: str):
     """Generate ledger compatible data file.
 
+    \r
     Args:
         globs: Global options object
         task: Task name to operate on
@@ -723,6 +717,7 @@ def ledger(globs: AttrDict, task: str, duration: str, rate: str):
 def timeclock(globs: AttrDict, task: str, duration: str):
     """Generate ledger compatible timeclock file.
 
+    \r
     Args:
         globs: Global options object
         task: Task name to operate on
