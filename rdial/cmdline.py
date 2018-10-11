@@ -27,7 +27,7 @@ import os
 import shlex
 import subprocess
 import types
-from typing import Callable, List, Optional
+from typing import Callable, Optional
 
 import click
 import tabulate
@@ -37,28 +37,6 @@ from jnrbase.attrdict import AttrDict
 
 from . import _version, utils
 from .events import Event, Events, TaskNotRunningError, TaskRunningError
-
-
-class HiddenGroup(click.Group):
-
-    """Support for 'hidden' commands.
-
-    Any :obj:`click.Command` with the hidden attribute set will not be visible
-    in help output.  This is mainly to be used for diagnostic commands, and
-    shouldn’t be abused!
-
-    """
-
-    def list_commands(self, __ctx: click.Context) -> List[str]:
-        """List visible commands.
-
-        Args:
-            __ctx: Current command context
-        Returns:
-            Visible command names
-        """
-        return sorted(k for k, v in self.commands.items()
-                      if not hasattr(v, 'hidden'))
 
 
 class TaskNameParamType(click.ParamType):
@@ -221,26 +199,9 @@ def message_option(__fun: Callable) -> Callable:
     return __fun
 
 
-def hidden(__fun: click.Command) -> click.Command:
-    """Add a hidden attribute to a Command object.
-
-    :see:`HiddenGroup`.
-
-    Args:
-        __fun: Function to add hidden attribute to
-
-    Returns:
-        Function with hidden attribute set
-
-    """
-    __fun.hidden = True
-    return __fun
-
-
 # pylint: disable=too-many-arguments
 
-@click.group(cls=HiddenGroup,
-             help='Simple time tracking for simple people.',
+@click.group(help='Simple time tracking for simple people.',
              epilog=('Please report bugs at '
                      'https://github.com/JNRowe/rdial/issues'),
              context_settings={'help_option_names': ['-h', '--help']})
@@ -359,8 +320,7 @@ def filter_events(__globs: AttrDict, __task: Optional[str] = None,
     return events
 
 
-@hidden
-@cli.command('bug-data')
+@cli.command('bug-data', hidden=True)
 def bug_data():
     """Produce data for rdial bug reports."""
     import sys

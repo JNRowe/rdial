@@ -22,14 +22,14 @@ from datetime import datetime
 from shutil import copytree
 from typing import Callable, Optional
 
-from click import (BadParameter, Context, Option, command, echo, group,
-                   option, pass_context, pass_obj)
+from click import (BadParameter, Context, Option, command, echo, option,
+                   pass_context, pass_obj)
 from click.testing import CliRunner
 from pytest import fixture, mark, raises
 
 from rdial import events as events_mod
-from rdial.cmdline import (HiddenGroup, StartTimeParamType, TaskNameParamType,
-                           cli, get_stop_message, hidden, main, task_option)
+from rdial.cmdline import (StartTimeParamType, TaskNameParamType, cli,
+                           get_stop_message, main, task_option)
 from rdial.events import Event, TaskNotRunningError, TaskRunningError
 
 
@@ -87,27 +87,6 @@ def test_start_time_validity(string: str, expected: Optional[BadParameter]):
     else:
         with raises(expected):
             p.convert(string, None, None)
-
-
-def test_HiddenGroup():
-    @group(cls=HiddenGroup)
-    def cli():
-        pass
-
-    @cli.command()
-    def now_you_see_me():
-        pass
-
-    @hidden
-    @cli.command()
-    def now_you_dont():
-        pass
-
-    runner = CliRunner()
-    result = runner.invoke(cli, ['--help'])
-    lines = [s.strip() for s in result.output.splitlines()]
-    assert 'now_you_see_me' in lines
-    assert 'now_you_dont' not in lines
 
 
 @mark.parametrize('edit_func, message', [
