@@ -67,10 +67,10 @@ def test_task_name_from_dir(tmpdir):
         echo(task)
 
     runner = CliRunner()
-    result = runner.invoke(cli, ['--from-dir', ])
+    result = runner.invoke(cli, '--from-dir')
     assert result.output == 'rdial\n'
     with tmpdir.mkdir('new_dir').as_cwd():
-        result = runner.invoke(cli, ['--from-dir', ])
+        result = runner.invoke(cli, '--from-dir')
         assert result.output.endswith('new_dir\n')
 
 
@@ -122,8 +122,7 @@ def test_colour_for_u_deficient(config: str, output: bool):
 
     runner = CliRunner()
     result = runner.invoke(cli,
-                           ['--config', f'tests/data/{config}.ini',
-                            'echo-colour'])
+                           f'--config tests/data/{config}.ini echo-colour')
     assert result.output.strip() == repr(output)
 
 
@@ -136,14 +135,13 @@ def test_command_defaults():
 
     runner = CliRunner()
     result = runner.invoke(cli,
-                           ['--config', 'tests/data/defaults.ini',
-                            'echo-choice'])
+                           '--config tests/data/defaults.ini echo-choice')
     assert result.output.strip() == 'questionable'
 
 
 def test_bug_data():
     runner = CliRunner()
-    result = runner.invoke(cli, ['bug-data', ])
+    result = runner.invoke(cli, 'bug-data')
     assert result.exit_code == 0
     assert '{' not in result.output
     assert '}' not in result.output
@@ -153,7 +151,7 @@ def test_start_event(tmpdir):
     test_dir = tmpdir.join('test').strpath
     copytree('tests/data/test_not_running', test_dir)
     runner = CliRunner()
-    result = runner.invoke(cli, ['--directory', test_dir, 'start', 'task'])
+    result = runner.invoke(cli, f'--directory {test_dir} start task')
     assert result.exit_code == 0
     assert result.output == ''
 
@@ -162,8 +160,7 @@ def test_restart_event(tmpdir):
     test_dir = tmpdir.join('test').strpath
     copytree('tests/data/test_not_running', test_dir)
     runner = CliRunner()
-    result = runner.invoke(cli, ['--directory', test_dir, 'start',
-                                 '--continue'])
+    result = runner.invoke(cli, f'--directory {test_dir} start --continue')
     assert result.exit_code == 0
     assert result.output == ''
 
@@ -172,7 +169,7 @@ def test_stop_event(tmpdir):
     test_dir = tmpdir.join('test').strpath
     copytree('tests/data/test', test_dir)
     runner = CliRunner()
-    result = runner.invoke(cli, ['--directory', test_dir, 'stop'])
+    result = runner.invoke(cli, f'--directory {test_dir} stop')
     assert result.exit_code == 0
     assert 'Task task running for' in result.output
 
@@ -184,8 +181,7 @@ def test_stop_event_with_file_message(tmpdir):
         f.write('stopping message')
     copytree('tests/data/test', test_dir)
     runner = CliRunner()
-    result = runner.invoke(cli, ['--directory', test_dir, 'stop', '-F',
-                                 msg_file])
+    result = runner.invoke(cli, f'--directory {test_dir} stop -F {msg_file}')
     assert result.exit_code == 0
     assert 'Task task running for' in result.output
     with tmpdir.join('test', 'task.csv').open() as f:
@@ -196,7 +192,7 @@ def test_stop_event_not_running(tmpdir):
     test_dir = tmpdir.join('test').strpath
     copytree('tests/data/test_not_running', test_dir)
     runner = CliRunner()
-    result = runner.invoke(cli, ['--directory', test_dir, 'stop'])
+    result = runner.invoke(cli, f'--directory {test_dir} stop')
     assert isinstance(result.exception, TaskNotRunningError)
     assert result.exception.args[0] == 'No task running!'
 
@@ -205,7 +201,7 @@ def test_stop_event_running_amend(tmpdir):
     test_dir = tmpdir.join('test').strpath
     copytree('tests/data/test', test_dir)
     runner = CliRunner()
-    result = runner.invoke(cli, ['--directory', test_dir, 'stop', '--amend'])
+    result = runner.invoke(cli, f'--directory {test_dir} stop --amend')
     assert isinstance(result.exception, TaskRunningError)
     assert result.exception.args[0] == 'Can’t amend running task task!'
 
@@ -214,7 +210,7 @@ def test_stop_event_amend_message_reuse(tmpdir):
     test_dir = tmpdir.join('test').strpath
     copytree('tests/data/test_not_running', test_dir)
     runner = CliRunner()
-    result = runner.invoke(cli, ['--directory', test_dir, 'stop', '--amend'])
+    result = runner.invoke(cli, f'--directory {test_dir} stop --amend')
     assert result.exit_code == 0
     assert 'Task task running for' in result.output
     with tmpdir.join('test', 'task.csv').open() as f:
@@ -227,8 +223,7 @@ def test_stop_event_running_interactive(monkeypatch, tmpdir):
     test_dir = tmpdir.join('test').strpath
     copytree('tests/data/test', test_dir)
     runner = CliRunner()
-    result = runner.invoke(cli, ['--directory', test_dir, '--interactive',
-                                 'stop'])
+    result = runner.invoke(cli, f'--directory {test_dir} --interactive stop')
     assert result.exit_code == 0
     assert 'Task task running for' in result.output
     with tmpdir.join('test', 'task.csv').open() as f:
@@ -239,7 +234,7 @@ def test_switch_event(tmpdir):
     test_dir = tmpdir.join('test').strpath
     copytree('tests/data/test', test_dir)
     runner = CliRunner()
-    result = runner.invoke(cli, ['--directory', test_dir, 'switch', 'task2'])
+    result = runner.invoke(cli, f'--directory {test_dir} switch task2')
     assert result.exit_code == 0
     assert 'Task task running for' in result.output
     with tmpdir.join('test', 'task2.csv').open() as f:
@@ -253,8 +248,10 @@ def test_switch_event_with_file_message(tmpdir):
         f.write('stopping message')
     copytree('tests/data/test', test_dir)
     runner = CliRunner()
-    result = runner.invoke(cli, ['--directory', test_dir, 'switch', '-F',
-                                 msg_file, 'task2'])
+    result = runner.invoke(
+        cli,
+        f'--directory {test_dir} switch -F {msg_file} task2'
+    )
     assert result.exit_code == 0
     assert 'Task task running for' in result.output
     with tmpdir.join('test', 'task.csv').open() as f:
@@ -267,7 +264,7 @@ def test_switch_event_not_running(tmpdir):
     test_dir = tmpdir.join('test').strpath
     copytree('tests/data/test_not_running', test_dir)
     runner = CliRunner()
-    result = runner.invoke(cli, ['--directory', test_dir, 'switch', 'task2'])
+    result = runner.invoke(cli, f'--directory {test_dir} switch task2')
     assert isinstance(result.exception, TaskNotRunningError)
     assert result.exception.args[0] == 'No task running!'
 
@@ -276,8 +273,10 @@ def test_switch_start_date_overlaps(tmpdir):
     test_dir = tmpdir.join('test').strpath
     copytree('tests/data/test', test_dir)
     runner = CliRunner()
-    result = runner.invoke(cli, ['--directory', test_dir, 'switch', '--time',
-                                 '2011-05-04T09:15:00Z', 'task2'])
+    result = runner.invoke(
+        cli,
+        f'--directory {test_dir} switch --time 2011-05-04T09:15:00Z task2'
+    )
     assert isinstance(result.exception, TaskNotRunningError)
     assert result.exception.args[0] \
         == 'Can’t specify a start time before current task started!'
@@ -289,8 +288,10 @@ def test_switch_event_running_interactive(monkeypatch, tmpdir):
     test_dir = tmpdir.join('test').strpath
     copytree('tests/data/test', test_dir)
     runner = CliRunner()
-    result = runner.invoke(cli, ['--directory', test_dir, '--interactive',
-                                 'switch', 'task2'])
+    result = runner.invoke(
+        cli,
+        f'--directory {test_dir} --interactive switch task2'
+    )
     assert result.exit_code == 0
     assert 'Task task running for' in result.output
     with tmpdir.join('test', 'task.csv').open() as f:
@@ -303,8 +304,8 @@ def test_switch_event_running_amend(tmpdir):
     test_dir = tmpdir.join('test').strpath
     copytree('tests/data/test', test_dir)
     runner = CliRunner()
-    result = runner.invoke(cli, ['--directory', test_dir, 'switch', '--amend',
-                                 'task2'])
+    result = runner.invoke(cli,
+                           f'--directory {test_dir} switch --amend task2')
     assert isinstance(result.exception, TaskRunningError)
     assert result.exception.args[0] == 'Can’t amend running task task!'
 
@@ -313,8 +314,7 @@ def test_switch_event_amend_message_reuse(tmpdir):
     test_dir = tmpdir.join('test').strpath
     copytree('tests/data/test_not_running', test_dir)
     runner = CliRunner()
-    result = runner.invoke(cli, ['--directory', test_dir, 'switch', '--amend',
-                                 'task2'])
+    result = runner.invoke(cli, f'--directory {test_dir} switch --amend task2')
     assert result.exit_code == 0
     assert 'Task task running for' in result.output
     with tmpdir.join('test', 'task.csv').open() as f:
@@ -325,8 +325,10 @@ def test_run_timed(capfd, tmpdir):
     test_dir = tmpdir.join('test').strpath
     copytree('tests/data/test_not_running', test_dir)
     runner = CliRunner()
-    result = runner.invoke(cli, ['--directory', test_dir, 'run', '-c',
-                                 'echo "long running command"', 'task'])
+    result = runner.invoke(
+        cli,
+        f"""--directory {test_dir} run -c 'echo "long running command"' task"""
+    )
     assert result.exit_code == 0
     assert 'Task task running for' in result.output
     assert capfd.readouterr()[0] == 'long running command\n'
@@ -336,7 +338,7 @@ def test_run_event_already_running(tmpdir):
     test_dir = tmpdir.join('test').strpath
     copytree('tests/data/test', test_dir)
     runner = CliRunner()
-    result = runner.invoke(cli, ['--directory', test_dir, 'run', 'task2'])
+    result = runner.invoke(cli, f'--directory {test_dir} run task2')
     assert isinstance(result.exception, TaskRunningError)
     assert result.exception.args[0] == 'Task task is already started!'
 
@@ -345,8 +347,8 @@ def test_run_failed_command(tmpdir):
     test_dir = tmpdir.join('test').strpath
     copytree('tests/data/test_not_running', test_dir)
     runner = CliRunner()
-    result = runner.invoke(cli, ['--directory', test_dir, 'run', '-c',
-                                 '( exit 50 )', 'task'])
+    result = runner.invoke(cli,
+                           f'--directory {test_dir} run -c "( exit 50 )" task')
     assert isinstance(result.exception, OSError)
     assert result.exception.args == (50, 'Command failed')
 
@@ -358,9 +360,13 @@ def test_run_with_file_message(capfd, tmpdir):
         f.write('stopping message')
     copytree('tests/data/test_not_running', test_dir)
     runner = CliRunner()
-    result = runner.invoke(cli, ['--directory', test_dir, 'run', '-F',
-                                 msg_file, '-c',
-                                 'echo "long running command"', 'task'])
+    result = runner.invoke(
+        cli,
+        f"""
+        --directory {test_dir} run -F {msg_file}
+        -c 'echo "long running command"' task
+        """
+    )
     assert result.exit_code == 0
     assert 'Task task running for' in result.output
     with tmpdir.join('test', 'task.csv').open() as f:
@@ -374,9 +380,13 @@ def test_run_interactive(monkeypatch, tmpdir):
     test_dir = tmpdir.join('test').strpath
     copytree('tests/data/test_not_running', test_dir)
     runner = CliRunner()
-    result = runner.invoke(cli, ['--directory', test_dir, '--interactive',
-                                 'run', '-c', 'echo "long running command"',
-                                 'task'])
+    result = runner.invoke(
+        cli,
+        f"""
+        --directory {test_dir} --interactive run
+        -c 'echo "long running command"' task
+        """
+    )
     assert result.exit_code == 0
     assert 'Task task running for' in result.output
     with tmpdir.join('test', 'task.csv').open() as f:
@@ -385,8 +395,8 @@ def test_run_interactive(monkeypatch, tmpdir):
 
 def test_wrapper_no_config():
     runner = CliRunner()
-    result = runner.invoke(cli, ['--config', 'tests/data/defaults.ini',
-                                 'wrapper', 'calendar'])
+    result = runner.invoke(cli,
+                           '--config tests/data/defaults.ini wrapper calendar')
     assert isinstance(result.exception, SystemExit)
     assert "No such wrapper 'calendar'" in result.output
 
@@ -395,9 +405,13 @@ def test_wrapper_run_command(capfd, tmpdir):
     test_dir = tmpdir.join('test').strpath
     copytree('tests/data/test_not_running', test_dir)
     runner = CliRunner()
-    result = runner.invoke(cli, ['--config', 'tests/data/wrappers.ini',
-                                 '--directory', test_dir,
-                                 'wrapper', 'calendar'])
+    result = runner.invoke(
+        cli,
+        f"""
+        --config tests/data/wrappers.ini --directory {test_dir}
+        wrapper calendar
+        """
+    )
     assert result.exit_code == 0
     assert 'Task task running for' in result.output
     with tmpdir.join('test', 'task.csv').open() as f:
@@ -407,23 +421,25 @@ def test_wrapper_run_command(capfd, tmpdir):
 
 def test_report():
     runner = CliRunner()
-    result = runner.invoke(cli, ['--directory', 'tests/data/test_not_running',
-                                 'report'])
+    result = runner.invoke(cli,
+                           '--directory tests/data/test_not_running report')
     assert result.exit_code == 0
     assert 'task    2:00:00' in result.output
 
 
 def test_report_stats():
     runner = CliRunner()
-    result = runner.invoke(cli, ['--directory', 'tests/data/test_not_running',
-                                 'report', '--stats'])
+    result = runner.invoke(
+        cli,
+        '--directory tests/data/test_not_running report --stats'
+    )
     assert result.exit_code == 0
     assert 'Duration of events 2:15:00' in result.output
 
 
 def test_report_event_running():
     runner = CliRunner()
-    result = runner.invoke(cli, ['--directory', 'tests/data/test', 'report'])
+    result = runner.invoke(cli, '--directory tests/data/test report')
     assert result.exit_code == 0
     assert 'Task “task” started 2011-05-04T09:30:00Z' \
         in result.output.splitlines()
@@ -435,8 +451,7 @@ def test_report_event_running():
 ])
 def test_running(database: str, expected: str):
     runner = CliRunner()
-    result = runner.invoke(cli, ['--directory', 'tests/data/' + database,
-                                 'running'])
+    result = runner.invoke(cli, f'--directory tests/data/{database} running')
     assert result.exit_code == 0
     assert expected in result.output
 
@@ -447,31 +462,30 @@ def test_running(database: str, expected: str):
 ])
 def test_last(database: str, expected: str):
     runner = CliRunner()
-    result = runner.invoke(cli, ['--directory', 'tests/data/' + database,
-                                 'last'])
+    result = runner.invoke(cli, f'--directory tests/data/{database} last')
     assert result.exit_code == 0
     assert expected in result.output
 
 
 def test_ledger():
     runner = CliRunner()
-    result = runner.invoke(cli, ['--directory', 'tests/data/test_not_running',
-                                 'ledger'])
+    result = runner.invoke(cli,
+                           '--directory tests/data/test_not_running ledger')
     assert result.exit_code == 0
     assert '2011-05-04 * 09:30-10:30' in result.output
 
 
 def test_ledger_running():
     runner = CliRunner()
-    result = runner.invoke(cli, ['--directory', 'tests/data/test', 'ledger'])
+    result = runner.invoke(cli, '--directory tests/data/test ledger')
     assert result.exit_code == 0
     assert ';; Running event not included in output!' in result.output
 
 
 def test_timeclock():
     runner = CliRunner()
-    result = runner.invoke(cli, ['--directory', 'tests/data/test_not_running',
-                                 'timeclock'])
+    result = runner.invoke(cli,
+                           '--directory tests/data/test_not_running timeclock')
     assert result.exit_code == 0
     assert 'i 2011-05-04 09:30:00 task' in result.output.splitlines()
     assert 'o 2011-05-04 10:30:00  ; stop message' in \
@@ -480,8 +494,7 @@ def test_timeclock():
 
 def test_timeclock_running():
     runner = CliRunner()
-    result = runner.invoke(cli, ['--directory', 'tests/data/test',
-                                 'timeclock'])
+    result = runner.invoke(cli, '--directory tests/data/test timeclock')
     assert result.exit_code == 0
     assert ';; Running event not included in output!' in result.output
 
