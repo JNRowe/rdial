@@ -102,7 +102,6 @@ Ideas
 '''''
 
 * Adam Baxter
-* Delphine Beauchemin
 * Kevin Simmons
 * Thomas Gallagher
 
