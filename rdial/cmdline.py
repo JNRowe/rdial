@@ -413,7 +413,7 @@ def fsck(ctx: click.Context, globs: AttrDict, progress: bool):
 
     with func(events, label='Checking', fill_char=click.style(u'█', 'green'),
               empty_char=click.style(u'·', 'yellow')) as pbar:
-        last_event = next(pbar)
+        last_event = Event('none', datetime.datetime.min)
         for event in pbar:
             if not last_event.start + last_event.delta <= event.start:
                 warnings += 1

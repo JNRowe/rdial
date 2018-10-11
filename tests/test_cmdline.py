@@ -131,39 +131,35 @@ def test_get_stop_message_template(monkeypatch):
     assert '# Task “task” started 2011-05-04T09:30:00Z' in output
 
 
-@mark.parametrize('config, result', [
+@mark.parametrize('config, output', [
     ('color', True),
     ('no_color', False),
 ])
-def test_colour_for_u_deficient(config: str, result: bool):
+def test_colour_for_u_deficient(config: str, output: bool):
     @cli.command()
     @pass_obj
-    def raise_config(obj):
-        raise ValueError(obj)
+    def echo_colour(obj):
+        echo(obj.colour)
 
     runner = CliRunner()
-    with raises(ValueError) as excinfo:
-        runner.invoke(cli,
-                      ['--config', f'tests/data/{config}.ini', 'raise_config'],
-                      catch_exceptions=False)
-    assert excinfo.value.args[0].colour is result
+    result = runner.invoke(cli,
+                           ['--config', f'tests/data/{config}.ini',
+                            'echo-colour'])
+    assert result.output.strip() == repr(output)
 
 
 def test_command_defaults():
     @cli.command()
     @option('--choice')
     @pass_context
-    def raise_context(ctx: Context, choice: Option):
-        raise ValueError(ctx)
+    def echo_choice(ctx: Context, choice: Option):
+        echo(ctx.default_map['choice'])
 
     runner = CliRunner()
-    with raises(ValueError) as excinfo:
-        runner.invoke(cli,
-                      ['--config', 'tests/data/defaults.ini',
-                       'raise_context', ],
-                      catch_exceptions=False)
-    defaults = excinfo.value.args[0].default_map
-    assert defaults['choice'] == 'questionable'
+    result = runner.invoke(cli,
+                           ['--config', 'tests/data/defaults.ini',
+                            'echo-choice'])
+    assert result.output.strip() == 'questionable'
 
 
 def test_bug_data():
