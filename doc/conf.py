@@ -37,7 +37,7 @@ extensions = \
                                      'intersphinx', 'napoleon', 'todo',
                                      'viewcode']] \
     + [f'sphinxcontrib.{ext}' for ext in []] \
-    + ['sphinx_autodoc_typehints', ]  # type: List[str]
+    + ['sphinx_autodoc_typehints', 'sphinx_click.ext']  # type: List[str]
 
 
 if not on_rtd:
