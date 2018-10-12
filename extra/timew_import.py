@@ -36,7 +36,7 @@ from jnrbase.iso_8601 import format_datetime, format_delta
 from rdial.events import FIELDS, RdialDialect
 
 
-def munge(dct):
+def munge(dct: Dict) -> AttrDict:
     dct = AttrDict(**dct)
     if 'start' in dct:
         dct.start = parse_datetime(dct.start)
