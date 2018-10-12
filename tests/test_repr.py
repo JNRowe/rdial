@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU General Public License along with
 # rdial.  If not, see <http://www.gnu.org/licenses/>.
 
-import unittest
+from pytest import mark
 
 from rdial.events import Event, Events
 
@@ -33,24 +33,17 @@ def eval_repr(obj: object):
     return repr(eval(repr(obj)))
 
 
-class ReprTest(unittest.TestCase):
+@mark.parametrize('ev', [
+    Event('task', '2011-05-05T11:23:48Z', 'PT01H00M00S'),
+    Event('task', '2011-05-05T11:23:48Z', ''),
+    Event('task', '2011-05-05T11:23:48Z', 'PT01H00M00S', 'message'),
+])
+def test_event_repr(ev: Event):
+    assert repr(ev) == eval_repr(ev)
 
-    """``repr()`` should return self-documenting string."""
 
-    def test_event(self):
-        ev = Event('task', '2011-05-05T11:23:48Z', 'PT01H00M00S')
-        assert repr(ev) == eval_repr(ev)
-
-    def test_event_no_delta(self):
-        ev = Event('task', '2011-05-05T11:23:48Z', '')
-        assert repr(ev) == eval_repr(ev)
-
-    def test_event_with_message(self):
-        ev = Event('task', '2011-05-05T11:23:48Z', 'PT01H00M00S', 'message')
-        assert repr(ev) == eval_repr(ev)
-
-    def test_events(self):
-        ev1 = Event('task', '2011-05-05T11:23:48Z', 'PT01H00M00S')
-        ev2 = Event('task', '2011-05-05T12:23:48Z', 'PT00H30M00S')
-        events = Events([ev1, ev2])
-        assert repr(events) == eval_repr(events)
+def test_events_repr():
+    ev1 = Event('task', '2011-05-05T11:23:48Z', 'PT01H00M00S')
+    ev2 = Event('task', '2011-05-05T12:23:48Z', 'PT00H30M00S')
+    events = Events([ev1, ev2])
+    assert repr(events) == eval_repr(events)
