@@ -143,10 +143,8 @@ def test_fail_start_with_overlap():
 
 
 @mark.parametrize('n, task, start, delta', [
-    (0, 'task', datetime(2011, 5, 4, 8),
-     timedelta(hours=1)),
-    (1, 'task2', datetime(2011, 5, 4, 9, 15),
-     timedelta(minutes=15)),
+    (0, 'task', datetime(2011, 5, 4, 8), timedelta(hours=1)),
+    (1, 'task2', datetime(2011, 5, 4, 9, 15), timedelta(minutes=15)),
     (2, 'task', datetime(2011, 5, 4, 9, 30), timedelta()),
 ])
 def test_check_events(n: int, task: str, start: datetime, delta: timedelta):
