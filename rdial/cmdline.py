@@ -345,7 +345,6 @@ def fsck(ctx: click.Context, globs: AttrDict, progress: bool):
     warnings = 0
     events = Events.read(globs.directory, write_cache=globs.cache)
     now = datetime.datetime.utcnow()
-    lines = []
     # Note: progress is *four* times slower on my data and system
     if progress:
         func = click.progressbar
@@ -356,30 +355,32 @@ def fsck(ctx: click.Context, globs: AttrDict, progress: bool):
         def func(evs, *args, **kwargs):
             yield iter(evs)
 
-    with func(events, label='Checking', fill_char=click.style(u'█', 'green'),
-              empty_char=click.style(u'·', 'yellow')) as pbar:
-        last_event = Event('none', datetime.datetime.min)
-        for event in pbar:
-            if not last_event.start + last_event.delta <= event.start:
-                warnings += 1
-                lines.append(colourise.fail('Overlap:'))
-                lines.append(colourise.warn(f'   {last_event!r}'))
-                lines.append(colourise.info(f'   {event!r}'))
-            if event.start > now:
-                warnings += 1
-                lines.append(colourise.fail('Future start:'))
-                lines.append(colourise.warn(f'   {event!r}'))
-            elif event.start + event.delta > now:
-                warnings += 1
-                lines.append(colourise.fail('Future end:'))
-                lines.append(colourise.warn(f'   {event!r}'))
-            last_event = event
-    if lines:
-        click.echo_via_pager('\n'.join(lines))
-        if warnings:
-            # Will be success when 𝐱 % 256 == 0, so cap at 255.  That said
-            # you’ve got bigger problems if you’re hitting this ;)
-            ctx.exit(min(warnings, 255))
+    def gen_output():
+        nonlocal warnings
+        with func(events, label='Checking',
+                  fill_char=click.style('█', 'green'),
+                  empty_char=click.style('·', 'yellow')) as pbar:
+            last_event = Event('none', datetime.datetime.min)
+            for event in pbar:
+                if not last_event.start + last_event.delta <= event.start:
+                    warnings += 1
+                    yield colourise.fail('Overlap:\n')
+                    yield colourise.warn(f'   {last_event!r}\n')
+                    yield colourise.info(f'   {event!r}\n')
+                if event.start > now:
+                    warnings += 1
+                    yield colourise.fail('Future start:\n')
+                    yield colourise.warn(f'   {event!r}\n')
+                elif event.start + event.delta > now:
+                    warnings += 1
+                    yield colourise.fail('Future end:\n')
+                    yield colourise.warn(f'   {event!r}\n')
+                last_event = event
+    click.echo_via_pager(gen_output())
+    if warnings:
+        # Will be success when 𝐱 % 256 == 0, so cap at 255.  That said
+        # you’ve got bigger problems if you’re hitting this ;)
+        ctx.exit(min(warnings, 255))
 
 
 @cli.command()
@@ -693,21 +694,22 @@ def ledger(globs: AttrDict, task: str, duration: str, rate: str):
         # Lazy way to remove duplicate argument definitions
         task = None
     events = filter_events(globs, task, duration)
-    lines = []
-    if events.running():
-        lines.append(';; Running event not included in output!')
-    for event in events:
-        if not event.delta:
-            continue
-        end = event.start + event.delta
-        hours = event.delta.total_seconds() / 3600
-        lines.append(f'{event.start:%F * %H:%M}-{end:%H:%M}')
-        lines.append('    (task:{})  {:.2f}h{}{}'.format(
-            event.task, hours, ' @ {}'.format(rate) if rate else '',
-            '  ; {}'.format(event.message) if event.message else ''))
-    if events.running():
-        lines.append(';; Running event not included in output!')
-    click.echo_via_pager('\n'.join(lines))
+
+    def gen_output():
+        if events.running():
+            yield ';; Running event not included in output!\n'
+        for event in events:
+            if not event.delta:
+                continue
+            end = event.start + event.delta
+            hours = event.delta.total_seconds() / 3600
+            yield f'{event.start:%F * %H:%M}-{end:%H:%M}'
+            yield '    (task:{})  {:.2f}h{}{}\n'.format(
+                event.task, hours, ' @ {}'.format(rate) if rate else '',
+                '  ; {}'.format(event.message) if event.message else '')
+        if events.running():
+            yield ';; Running event not included in output!\n'
+    click.echo_via_pager(gen_output())
 
 
 @cli.command()
@@ -727,18 +729,19 @@ def timeclock(globs: AttrDict, task: str, duration: str):
         # Lazy way to remove duplicate argument definitions
         task = None
     events = filter_events(globs, task, duration)
-    lines = []
-    if events.running():
-        lines.append(';; Running event not included in output!')
-    for event in events:
-        if not event.delta:
-            continue
-        lines.append(f'i {event.start:%F %T} {event.task}')
-        lines.append(f'o {event.start + event.delta:%F %T}'
-                     f'{"  ; " + event.message if event.message else ""}\n')
-    if events.running():
-        lines.append(';; Running event not included in output!')
-    click.echo_via_pager('\n'.join(lines))
+
+    def gen_output():
+        if events.running():
+            yield ';; Running event not included in output!\n'
+        for event in events:
+            if not event.delta:
+                continue
+            yield f'i {event.start:%F %T} {event.task}\n'
+            yield f'o {event.start + event.delta:%F %T}' \
+                f'{"  ; " + event.message if event.message else ""}\n'
+        if events.running():
+            yield ';; Running event not included in output!\n'
+    click.echo_via_pager(gen_output())
 
 
 # pylint: enable=too-many-arguments
