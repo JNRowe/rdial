@@ -39,6 +39,11 @@ to make it easy for users to configure per-project defaults using shell hooks.
    they’re not provided as arguments.  It must be a boolean setting that
    accepts ``false``/``true``, ``0``/``1`` or ``n``/``y`` as its value.
 
+.. envvar:: RDIAL_PROFILE
+
+   This controls whether to profile the execution of :program:`rdial`.  It must
+   be a string value, and will be used as the profile’s output filename.
+
 .. envvar:: RDIAL_RATE
 
    The value for the :option:`rdial ledger -r` hourly rate setting.  It must be

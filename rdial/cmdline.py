@@ -755,8 +755,9 @@ def main() -> int:
 
     """
     try:
-        # pylint: disable=no-value-for-parameter
-        cli(auto_envvar_prefix='RDIAL')
+        with utils.maybe_profile():
+            # pylint: disable=no-value-for-parameter
+            cli(auto_envvar_prefix='RDIAL')
         return 0
     except (ValueError, utils.RdialError) as error:
         colourise.pfail(str(error))

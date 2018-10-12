@@ -22,8 +22,9 @@ import configparser
 import functools
 import os
 import subprocess
+from contextlib import contextmanager
 from datetime import date, datetime, timedelta
-from typing import Callable, Dict, Optional, Tuple, Union
+from typing import Callable, ContextManager, Dict, Optional, Tuple, Union
 
 import click
 
@@ -214,3 +215,26 @@ def term_link(__target: str, name: Optional[str] = None) -> str:
     if not name:
         name = os.path.basename(__target)
     return f'\033]8;;{__target}\007{name}\033]8;;\007'
+
+
+def maybe_profile() -> ContextManager:  # pragma: no cover
+    """Profile the wrapped code block.
+
+    When :envvar:`RDIAL_PROFILE` is set execute the enclosed block under
+    bprofile_.  The envvar’s value should be the name of the output file to
+    generate.
+
+    When :envvar:`RDIAL_PROFILE` is unset, this is just a no-op.
+
+    .. _bprofile: https://pypi.org/project/bprofile/
+    """
+    profile = os.getenv('RDIAL_PROFILE')
+    if profile:
+        from bprofile import BProfile
+        profiler = BProfile(profile)
+    else:
+        @contextmanager
+        def noop():
+            yield
+        profiler = noop()
+    return profiler
