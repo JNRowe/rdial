@@ -43,7 +43,7 @@ class TaskNameParamType(click.ParamType):
 
     """Task name parameter handler."""
 
-    name = 'taskname'
+    name = "taskname"
 
     def convert(
         self,
@@ -63,19 +63,19 @@ class TaskNameParamType(click.ParamType):
 
         """
         if not __value:
-            raise click.BadParameter('No task name given')
-        if __value.startswith('-'):
+            raise click.BadParameter("No task name given")
+        if __value.startswith("-"):
             raise click.BadParameter(
-                'Task names with leading dashes are ' 'non-portable'
+                "Task names with leading dashes are " "non-portable"
             )
-        if __value.startswith('.') or '/' in __value or '\000' in __value:
-            raise click.BadParameter(f'{__value!r} is not a valid task name')
+        if __value.startswith(".") or "/" in __value or "\000" in __value:
+            raise click.BadParameter(f"{__value!r} is not a valid task name")
         # Should be based on platform’s PATH_MAX, but it isn’t exposed in a
         # clean way to Python
         if len(__value) > 255:
             raise click.BadParameter(
-                f'{__value!r} is too long to be a valid '
-                'task name(max 255 characters)'
+                f"{__value!r} is too long to be a valid "
+                "task name(max 255 characters)"
             )
         return __value
 
@@ -84,7 +84,7 @@ class StartTimeParamType(click.ParamType):
 
     """Start time parameter handler."""
 
-    name = 'time'
+    name = "time"
 
     def convert(
         self,
@@ -107,7 +107,7 @@ class StartTimeParamType(click.ParamType):
             __value = utils.parse_datetime_user(__value)
         except ValueError:
             raise click.BadParameter(
-                f'{__value!r} is not a valid ISO-8601 ' 'time string'
+                f"{__value!r} is not a valid ISO-8601 " "time string"
             )
         return __value
 
@@ -125,7 +125,7 @@ def task_from_dir(
     """
     if not __value or __ctx.resilient_parsing:
         return
-    __param = [p for p in __ctx.command.params if p.name == 'task'][0]
+    __param = [p for p in __ctx.command.params if p.name == "task"][0]
     __param.default = os.path.basename(os.path.abspath(os.curdir))
 
 
@@ -140,17 +140,17 @@ def get_stop_message(__current: Event, __edit: bool = False) -> str:
         Message to use
 
     """
-    marker = '# Text below here ignored\n'
+    marker = "# Text below here ignored\n"
     task_message = (
-        f'# Task “{__current.task}” started '
-        f'{iso_8601.format_datetime(__current.start)}Z'
+        f"# Task “{__current.task}” started "
+        f"{iso_8601.format_datetime(__current.start)}Z"
     )
-    template = f'{__current.message}\n{marker}{task_message}'
+    template = f"{__current.message}\n{marker}{task_message}"
     message = click.edit(template, require_save=not __edit)
     if message is None:
-        message = ''
+        message = ""
     else:
-        message = message.split(marker, 1)[0].rstrip('\n')
+        message = message.split(marker, 1)[0].rstrip("\n")
     return message
 
 
@@ -168,18 +168,18 @@ def task_option(__fun: Callable) -> Callable:
 
     """
     __fun = click.option(
-        '-x',
-        '--from-dir',
+        "-x",
+        "--from-dir",
         is_flag=True,
         expose_value=False,
         is_eager=True,
         callback=task_from_dir,
-        help='Use directory name as task name.',
+        help="Use directory name as task name.",
     )(__fun)
     __fun = click.argument(
-        'task',
-        default='default',
-        envvar='RDIAL_TASK',
+        "task",
+        default="default",
+        envvar="RDIAL_TASK",
         required=False,
         type=TaskNameParamType(),
     )(__fun)
@@ -200,11 +200,11 @@ def duration_option(__fun: Callable) -> Callable:
 
     """
     __fun = click.option(
-        '-d',
-        '--duration',
-        default='all',
-        type=click.Choice(['day', 'week', 'month', 'year', 'all']),
-        help='Filter events for specified time period.',
+        "-d",
+        "--duration",
+        default="all",
+        type=click.Choice(["day", "week", "month", "year", "all"]),
+        help="Filter events for specified time period.",
     )(__fun)
     return __fun
 
@@ -222,13 +222,13 @@ def message_option(__fun: Callable) -> Callable:
         Function with additional options
 
     """
-    __fun = click.option('-m', '--message', help='Closing message.')(__fun)
+    __fun = click.option("-m", "--message", help="Closing message.")(__fun)
     __fun = click.option(
-        '-F',
-        '--file',
-        'fname',
+        "-F",
+        "--file",
+        "fname",
         type=click.File(),
-        help='Read closing message from file.',
+        help="Read closing message from file.",
     )(__fun)
     return __fun
 
@@ -237,42 +237,42 @@ def message_option(__fun: Callable) -> Callable:
 
 
 @click.group(
-    help='Simple time tracking for simple people.',
-    epilog=('Please report bugs at ' 'https://github.com/JNRowe/rdial/issues'),
-    context_settings={'help_option_names': ['-h', '--help']},
+    help="Simple time tracking for simple people.",
+    epilog=("Please report bugs at " "https://github.com/JNRowe/rdial/issues"),
+    context_settings={"help_option_names": ["-h", "--help"]},
 )
 @click.version_option(_version.dotted)
 @click.option(
-    '-d',
-    '--directory',
-    metavar='DIR',
+    "-d",
+    "--directory",
+    metavar="DIR",
     type=click.Path(file_okay=False),
-    help='Directory to read/write to.',
+    help="Directory to read/write to.",
 )
 @click.option(
-    '--backup/--no-backup', default=None, help='Do not write data file backups.'
+    "--backup/--no-backup", default=None, help="Do not write data file backups."
 )
 @click.option(
-    '--cache/--no-cache', default=None, help='Do not write cache files.'
+    "--cache/--no-cache", default=None, help="Do not write cache files."
 )
 @click.option(
-    '--config',
+    "--config",
     type=click.Path(
         exists=True, dir_okay=False, resolve_path=True, allow_dash=True
     ),
-    help='File to read configuration data from.',
+    help="File to read configuration data from.",
 )
 @click.option(
-    '-i',
-    '--interactive/--no-interactive',
+    "-i",
+    "--interactive/--no-interactive",
     default=None,
-    help='Support interactive message editing.',
+    help="Support interactive message editing.",
 )
 @click.option(
-    '--colour/--no-colour',
-    envvar='RDIAL_COLOUR',
+    "--colour/--no-colour",
+    envvar="RDIAL_COLOUR",
     default=None,
-    help='Output colourised informational text.',
+    help="Output colourised informational text.",
 )
 @click.pass_context
 def cli(
@@ -297,20 +297,20 @@ def cli(
 
     """
     cli_options = {
-        'backup': backup,
-        'cache': cache,
-        'directory': directory,
-        'interactive': interactive,
+        "backup": backup,
+        "cache": cache,
+        "directory": directory,
+        "interactive": interactive,
     }
 
     cfg = utils.read_config(config, cli_options)
 
-    base = cfg['rdial']
+    base = cfg["rdial"]
 
     if colour is None:
-        if 'color' in base:
-            base['colour'] = base['color']
-        colour = base.getboolean('colour')
+        if "color" in base:
+            base["colour"] = base["color"]
+        colour = base.getboolean("colour")
     colourise.COLOUR = colour
 
     ctx.default_map = {}
@@ -325,17 +325,17 @@ def cli(
             ctx.default_map[name] = defs
 
     ctx.obj = AttrDict(
-        backup=base.getboolean('backup'),
-        cache=base.getboolean('cache'),
+        backup=base.getboolean("backup"),
+        cache=base.getboolean("cache"),
         colour=colour,
         config=cfg,
-        directory=base['directory'],
-        interactive=base.getboolean('interactive'),
+        directory=base["directory"],
+        interactive=base.getboolean("interactive"),
     )
 
 
 def filter_events(
-    __globs: AttrDict, __task: Optional[str] = None, __duration: str = 'all'
+    __globs: AttrDict, __task: Optional[str] = None, __duration: str = "all"
 ) -> Events:
     """Filter events for report processing.
 
@@ -351,15 +351,15 @@ def filter_events(
     events = Events.read(__globs.directory, write_cache=__globs.cache)
     if __task:
         events = events.for_task(__task)
-    if not __duration == 'all':  # pragma: no cover
-        if __duration == 'week':
+    if not __duration == "all":  # pragma: no cover
+        if __duration == "week":
             today = datetime.date.today()
             events = events.for_week(*today.isocalendar()[:2])
         else:
             year, month, day = datetime.date.today().timetuple()[:3]
-            if __duration == 'month':
+            if __duration == "month":
                 day = None
-            elif __duration == 'year':
+            elif __duration == "year":
                 month = None
                 day = None
             events = events.for_date(year, month, day)
@@ -373,29 +373,29 @@ def bug_data():
 
     from pkg_resources import DistributionNotFound, get_distribution
 
-    click.echo(f'* OS: {sys.platform}')
-    click.echo(f'* `rdial` version: {_version.dotted}')
-    click.echo('* `python` version: {}'.format(sys.version.replace('\n', '|')))
+    click.echo(f"* OS: {sys.platform}")
+    click.echo(f"* `rdial` version: {_version.dotted}")
+    click.echo("* `python` version: {}".format(sys.version.replace("\n", "|")))
     click.echo()
 
-    for m in ['click', 'cduration', 'jnrbase', 'tabulate']:
+    for m in ["click", "cduration", "jnrbase", "tabulate"]:
         try:
             pkg = get_distribution(m)
         except DistributionNotFound:
             continue
         link = utils.term_link(
-            f'https://pypi.org/project/{pkg.project_name}/',
-            f'`{pkg.project_name}`',
+            f"https://pypi.org/project/{pkg.project_name}/",
+            f"`{pkg.project_name}`",
         )
-        click.echo(f'* {link}: {pkg.version}')
+        click.echo(f"* {link}: {pkg.version}")
 
 
 @cli.command()
 @click.option(
-    '-p/-q',
-    '--progress/--no-progress',
+    "-p/-q",
+    "--progress/--no-progress",
     default=True,
-    help='Display progress bar.',
+    help="Display progress bar.",
 )
 @click.pass_obj
 @click.pass_context
@@ -426,25 +426,25 @@ def fsck(ctx: click.Context, globs: AttrDict, progress: bool):
         nonlocal warnings
         with func(
             events,
-            label='Checking',
-            fill_char=click.style('█', 'green'),
-            empty_char=click.style('·', 'yellow'),
+            label="Checking",
+            fill_char=click.style("█", "green"),
+            empty_char=click.style("·", "yellow"),
         ) as pbar:
-            last_event = Event('none', datetime.datetime.min)
+            last_event = Event("none", datetime.datetime.min)
             for event in pbar:
                 if not last_event.start + last_event.delta <= event.start:
                     warnings += 1
-                    yield colourise.fail('Overlap:\n')
-                    yield colourise.warn(f'   {last_event!r}\n')
-                    yield colourise.info(f'   {event!r}\n')
+                    yield colourise.fail("Overlap:\n")
+                    yield colourise.warn(f"   {last_event!r}\n")
+                    yield colourise.info(f"   {event!r}\n")
                 if event.start > now:
                     warnings += 1
-                    yield colourise.fail('Future start:\n')
-                    yield colourise.warn(f'   {event!r}\n')
+                    yield colourise.fail("Future start:\n")
+                    yield colourise.warn(f"   {event!r}\n")
                 elif event.start + event.delta > now:
                     warnings += 1
-                    yield colourise.fail('Future end:\n')
-                    yield colourise.warn(f'   {event!r}\n')
+                    yield colourise.fail("Future end:\n")
+                    yield colourise.warn(f"   {event!r}\n")
                 last_event = event
 
     click.echo_via_pager(gen_output())
@@ -457,14 +457,14 @@ def fsck(ctx: click.Context, globs: AttrDict, progress: bool):
 @cli.command()
 @task_option
 @click.option(
-    '-c', '--continue', 'continue_', is_flag=True, help='Restart previous task.'
+    "-c", "--continue", "continue_", is_flag=True, help="Restart previous task."
 )
-@click.option('-n', '--new', is_flag=True, help='Start a new task.')
+@click.option("-n", "--new", is_flag=True, help="Start a new task.")
 @click.option(
-    '-t',
-    '--time',
-    default='',
-    help='Set start time.',
+    "-t",
+    "--time",
+    default="",
+    help="Set start time.",
     type=StartTimeParamType(),
 )
 @click.pass_obj
@@ -491,7 +491,7 @@ def start(
 
 @cli.command()
 @message_option
-@click.option('--amend', is_flag=True, help='Amend previous stop entry.')
+@click.option("--amend", is_flag=True, help="Amend previous stop entry.")
 @click.pass_obj
 @utils.remove_current
 def stop(globs: AttrDict, message: str, fname: str, amend: bool):
@@ -512,11 +512,11 @@ def stop(globs: AttrDict, message: str, fname: str, amend: bool):
         if last_event.running():
             if amend:
                 raise TaskRunningError(
-                    'Can’t amend running task ' f'{last_event.task}!'
+                    "Can’t amend running task " f"{last_event.task}!"
                 )
         else:
             if not amend:
-                raise TaskNotRunningError('No task running!')
+                raise TaskNotRunningError("No task running!")
         if amend and not message:
             message = last_event.message
         if globs.interactive and not message:
@@ -524,24 +524,24 @@ def stop(globs: AttrDict, message: str, fname: str, amend: bool):
         events.stop(message, force=amend)
     event = events.last()
     click.echo(
-        'Task {} running for {}'.format(
-            event.task, str(event.delta).split('.')[0]
+        "Task {} running for {}".format(
+            event.task, str(event.delta).split(".")[0]
         )
     )
 
 
 @cli.command()
 @task_option
-@click.option('-n', '--new', is_flag=True, help='Start a new task.')
+@click.option("-n", "--new", is_flag=True, help="Start a new task.")
 @click.option(
-    '-t',
-    '--time',
-    default='',
-    help='Set start time.',
+    "-t",
+    "--time",
+    default="",
+    help="Set start time.",
     type=StartTimeParamType(),
 )
 @message_option
-@click.option('--amend', is_flag=True, help='Amend previous stop entry.')
+@click.option("--amend", is_flag=True, help="Amend previous stop entry.")
 @click.pass_obj
 @utils.write_current
 def switch(
@@ -572,12 +572,12 @@ def switch(
         event = events.last()
         if time and time < event.start:
             raise TaskNotRunningError(
-                'Can’t specify a start time before ' 'current task started!'
+                "Can’t specify a start time before " "current task started!"
             )
         if event.running() and amend:
-            raise TaskRunningError(f'Can’t amend running task {event.task}!')
+            raise TaskRunningError(f"Can’t amend running task {event.task}!")
         elif not event.running() and not amend:
-            raise TaskNotRunningError('No task running!')
+            raise TaskNotRunningError("No task running!")
 
         if new or task in events.tasks():
             if amend and not message:
@@ -590,24 +590,24 @@ def switch(
         events.last().delta = time - event.start
         events.start(task, new, time)
     click.echo(
-        'Task {} running for {}'.format(
-            event.task, str(event.delta).split('.')[0]
+        "Task {} running for {}".format(
+            event.task, str(event.delta).split(".")[0]
         )
     )
 
 
 @cli.command()
 @task_option
-@click.option('-n', '--new', is_flag=True, help='Start a new task.')
+@click.option("-n", "--new", is_flag=True, help="Start a new task.")
 @click.option(
-    '-t',
-    '--time',
-    default='',
-    help='Set start time.',
+    "-t",
+    "--time",
+    default="",
+    help="Set start time.",
     type=StartTimeParamType(),
 )
 @message_option
-@click.option('-c', '--command', help='Command to run.')
+@click.option("-c", "--command", help="Command to run.")
 @click.pass_obj
 def run(
     globs: AttrDict,
@@ -634,13 +634,13 @@ def run(
     with Events.wrapping(globs.directory, globs.backup, globs.cache) as events:
         if events.running():
             raise TaskRunningError(
-                f'Task {events.last().task} is already started!'
+                f"Task {events.last().task} is already started!"
             )
 
         proc = subprocess.run(command, shell=True)
 
         events.start(task, new, time)
-        with click.open_file(f'{globs.directory}/.current', 'w') as f:
+        with click.open_file(f"{globs.directory}/.current", "w") as f:
             f.write(task)
 
         if fname:
@@ -650,25 +650,25 @@ def run(
         events.stop(message)
     event = events.last()
     click.echo(
-        'Task {} running for {}'.format(
-            event.task, str(event.delta).split('.')[0]
+        "Task {} running for {}".format(
+            event.task, str(event.delta).split(".")[0]
         )
     )
-    os.unlink(f'{globs.directory}/.current')
+    os.unlink(f"{globs.directory}/.current")
     if proc.returncode != 0:
-        raise OSError(proc.returncode, 'Command failed')
+        raise OSError(proc.returncode, "Command failed")
 
 
 @cli.command()
 @click.option(
-    '-t',
-    '--time',
-    default='',
-    help='Set start time.',
+    "-t",
+    "--time",
+    default="",
+    help="Set start time.",
     type=StartTimeParamType(),
 )
 @message_option
-@click.argument('wrapper', default='default')
+@click.argument("wrapper", default="default")
 @click.pass_obj
 @click.pass_context
 def wrapper(
@@ -692,39 +692,39 @@ def wrapper(
 
     """
     try:
-        command = globs.config['run wrappers'][wrapper]
+        command = globs.config["run wrappers"][wrapper]
     except KeyError:
-        raise click.BadParameter(f'No such wrapper {wrapper!r}')
-    parser = ctx.parent.command.commands['run'].make_parser(ctx)
-    args = {'time': time, 'message': message, 'fname': fname, 'new': False}
+        raise click.BadParameter(f"No such wrapper {wrapper!r}")
+    parser = ctx.parent.command.commands["run"].make_parser(ctx)
+    args = {"time": time, "message": message, "fname": fname, "new": False}
     args.update(parser.parse_args(shlex.split(command))[0])
     ctx.invoke(run, **args)  # pylint: disable=star-args
 
 
 @cli.command()
 @task_option
-@click.option('--stats', is_flag=True, help='Display database statistics.')
+@click.option("--stats", is_flag=True, help="Display database statistics.")
 @duration_option
 @click.option(
-    '-s',
-    '--sort',
-    default='task',
-    envvar='RDIAL_SORT',
-    type=click.Choice(['task', 'time']),
-    help='Field to sort by.',
+    "-s",
+    "--sort",
+    default="task",
+    envvar="RDIAL_SORT",
+    type=click.Choice(["task", "time"]),
+    help="Field to sort by.",
 )
 @click.option(
-    '-r',
-    '--reverse/--no-reverse',
+    "-r",
+    "--reverse/--no-reverse",
     default=False,
-    envvar='RDIAL_REVERSE',
-    help='Reverse sort order.',
+    envvar="RDIAL_REVERSE",
+    help="Reverse sort order.",
 )
 @click.option(
-    '--style',
-    default='simple',
+    "--style",
+    default="simple",
     type=click.Choice(tabulate._table_formats.keys()),
-    help='Table output style.',
+    help="Table output style.",
 )
 @click.pass_obj
 def report(
@@ -749,32 +749,32 @@ def report(
         style: Table formatting style
 
     """
-    if task == 'default':
+    if task == "default":
         # Lazy way to remove duplicate argument definitions
         task = None
     events = filter_events(globs, task, duration)
     if stats:
         click.echo(f'{len(events)} event{"s" if events else ""} in query')
-        click.echo(f'Duration of events {events.sum()}')
+        click.echo(f"Duration of events {events.sum()}")
         if events:
-            click.echo(f'First entry started at {events[0].start}')
-            click.echo(f'Last entry started at {events[-1].start}')
+            click.echo(f"First entry started at {events[0].start}")
+            click.echo(f"Last entry started at {events[-1].start}")
         dates = {e.start.date() for e in events}
-        click.echo(f'Events exist on {len(dates)} dates')
+        click.echo(f"Events exist on {len(dates)} dates")
     else:
         data = sorted(
             ([t, str(events.for_task(t).sum())] for t in events.tasks()),
-            key=operator.itemgetter(['task', 'time'].index(sort)),
+            key=operator.itemgetter(["task", "time"].index(sort)),
             reverse=reverse,
         )
         click.echo_via_pager(
-            tabulate.tabulate(data, ['task', 'time'], tablefmt=style)
+            tabulate.tabulate(data, ["task", "time"], tablefmt=style)
         )
     if events.running():
         current = events.last()
         click.echo(
-            f'Task “{current.task}” started '
-            f'{iso_8601.format_datetime(current.start)}Z'
+            f"Task “{current.task}” started "
+            f"{iso_8601.format_datetime(current.start)}Z"
         )
 
 
@@ -793,12 +793,12 @@ def running(globs: AttrDict):
         current = events.last()
         now = datetime.datetime.utcnow()
         click.echo(
-            'Task “{}” started {}'.format(
-                current.task, str(now - current.start).split('.')[0]
+            "Task “{}” started {}".format(
+                current.task, str(now - current.start).split(".")[0]
             )
         )
     else:
-        colourise.pwarn('No task is running!')
+        colourise.pwarn("No task is running!")
 
 
 @cli.command()
@@ -814,22 +814,22 @@ def last(globs: AttrDict):
     events = Events.read(globs.directory, write_cache=globs.cache)
     event = events.last()
     if not events.running():
-        click.echo(f'Last task {event.task}, ran for {event.delta}')
+        click.echo(f"Last task {event.task}, ran for {event.delta}")
         if event.message:
             click.echo(event.message)
     else:
-        colourise.pwarn(f'Task {event.task} is still running')
+        colourise.pwarn(f"Task {event.task} is still running")
 
 
 @cli.command()
 @task_option
 @duration_option
 @click.option(
-    '-r',
-    '--rate',
+    "-r",
+    "--rate",
     type=float,
-    envvar='RDIAL_RATE',
-    help='Hourly rate for task output.',
+    envvar="RDIAL_RATE",
+    help="Hourly rate for task output.",
 )
 @click.pass_obj
 def ledger(globs: AttrDict, task: str, duration: str, rate: str):
@@ -843,28 +843,28 @@ def ledger(globs: AttrDict, task: str, duration: str, rate: str):
         rate: Rate to assign hours in report
 
     """
-    if task == 'default':
+    if task == "default":
         # Lazy way to remove duplicate argument definitions
         task = None
     events = filter_events(globs, task, duration)
 
     def gen_output():
         if events.running():
-            yield ';; Running event not included in output!\n'
+            yield ";; Running event not included in output!\n"
         for event in events:
             if not event.delta:
                 continue
             end = event.start + event.delta
             hours = event.delta.total_seconds() / 3600
-            yield f'{event.start:%F * %H:%M}-{end:%H:%M}'
-            yield '    (task:{})  {:.2f}h{}{}\n'.format(
+            yield f"{event.start:%F * %H:%M}-{end:%H:%M}"
+            yield "    (task:{})  {:.2f}h{}{}\n".format(
                 event.task,
                 hours,
-                ' @ {}'.format(rate) if rate else '',
-                '  ; {}'.format(event.message) if event.message else '',
+                " @ {}".format(rate) if rate else "",
+                "  ; {}".format(event.message) if event.message else "",
             )
         if events.running():
-            yield ';; Running event not included in output!\n'
+            yield ";; Running event not included in output!\n"
 
     click.echo_via_pager(gen_output())
 
@@ -882,21 +882,21 @@ def timeclock(globs: AttrDict, task: str, duration: str):
         task: Task name to operate on
         duration: Time window to filter on
     """
-    if task == 'default':
+    if task == "default":
         # Lazy way to remove duplicate argument definitions
         task = None
     events = filter_events(globs, task, duration)
 
     def gen_output():
         if events.running():
-            yield ';; Running event not included in output!\n'
+            yield ";; Running event not included in output!\n"
         for event in events:
             if not event.delta:
                 continue
-            yield f'i {event.start:%F %T} {event.task}\n'
-            yield f'o {event.start + event.delta:%F %T}' f'{"  ; " + event.message if event.message else ""}\n'
+            yield f"i {event.start:%F %T} {event.task}\n"
+            yield f"o {event.start + event.delta:%F %T}" f'{"  ; " + event.message if event.message else ""}\n'
         if events.running():
-            yield ';; Running event not included in output!\n'
+            yield ";; Running event not included in output!\n"
 
     click.echo_via_pager(gen_output())
 
@@ -913,7 +913,7 @@ def main() -> int:
     """
     try:
         # pylint: disable=no-value-for-parameter
-        cli(auto_envvar_prefix='RDIAL')
+        cli(auto_envvar_prefix="RDIAL")
         return 0
     except (ValueError, utils.RdialError) as error:
         colourise.pfail(str(error))

@@ -30,7 +30,7 @@ from setuptools.command.test import test
 class PytestTest(test):
     def finalize_options(self):
         test.finalize_options(self)
-        self.test_args = ['tests/']
+        self.test_args = ["tests/"]
         self.test_suite = True
 
     def run_tests(self):
@@ -53,8 +53,8 @@ def import_file(package: str, fname: str) -> ModuleType:
     Returns:
         Imported module
     """
-    mod_name = fname.rstrip('.py')
-    spec = spec_from_file_location(mod_name, f'{package}/{fname}')
+    mod_name = fname.rstrip(".py")
+    spec = spec_from_file_location(mod_name, f"{package}/{fname}")
     module = module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
@@ -66,12 +66,12 @@ def make_list(s: str) -> List[str]:
 
 def parse_requires(file: str) -> List[str]:
     deps = []
-    with open(f'extra/{file}') as req_file:
-        entries = [s.split('#')[0].strip() for s in req_file.readlines()]
+    with open(f"extra/{file}") as req_file:
+        entries = [s.split("#")[0].strip() for s in req_file.readlines()]
     for dep in entries:
-        if not dep or dep.startswith('#'):
+        if not dep or dep.startswith("#"):
             continue
-        elif dep.startswith('-r '):
+        elif dep.startswith("-r "):
             deps.extend(parse_requires(dep.split()[1]))
             continue
         deps.append(dep)
@@ -79,36 +79,36 @@ def parse_requires(file: str) -> List[str]:
 
 
 conf = ConfigParser()
-conf.read('setup.cfg')
+conf.read("setup.cfg")
 
-install_requires = parse_requires('requirements.txt')
-tests_require = parse_requires('requirements-test.txt')
+install_requires = parse_requires("requirements.txt")
+tests_require = parse_requires("requirements-test.txt")
 
-metadata = dict(conf['metadata'])
+metadata = dict(conf["metadata"])
 # type: Dict[str, Union[List[str], bool, str]]
-for k in ['classifiers', 'packages', 'py_modules']:
+for k in ["classifiers", "packages", "py_modules"]:
     if k in metadata:
         metadata[k] = make_list(metadata[k])
 
-for k in ['include_package_data']:
+for k in ["include_package_data"]:
     if k in metadata:
-        metadata[k] = conf.getboolean('metadata', k)
+        metadata[k] = conf.getboolean("metadata", k)
 
-for k in ['entry_points', 'package_data']:
+for k in ["entry_points", "package_data"]:
     if k in metadata:
-        metadata[k] = eval(metadata[k], {'__builtins__': {}})
+        metadata[k] = eval(metadata[k], {"__builtins__": {}})
 
-with open('README.rst') as readme:
-    metadata['long_description'] = readme.read()
+with open("README.rst") as readme:
+    metadata["long_description"] = readme.read()
 
-_version = import_file(metadata['name'], '_version.py')
+_version = import_file(metadata["name"], "_version.py")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     setup(
         version=_version.dotted,
         install_requires=install_requires,
         tests_require=tests_require,
-        cmdclass={'test': PytestTest},
+        cmdclass={"test": PytestTest},
         zip_safe=False,
         **metadata,
     )

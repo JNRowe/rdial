@@ -24,20 +24,20 @@ from rdial.events import Events
 
 
 def test_list_tasks():
-    events = Events.read('tests/data/test', write_cache=False)
-    assert events.tasks() == ['task', 'task2']
+    events = Events.read("tests/data/test", write_cache=False)
+    assert events.tasks() == ["task", "task2"]
 
 
 def test_current_running_event():
-    events = Events.read('tests/data/test', write_cache=False)
-    assert events.running() == 'task'
+    events = Events.read("tests/data/test", write_cache=False)
+    assert events.running() == "task"
 
 
 def test_no_currently_running_event():
-    events = Events.read('tests/data/test_not_running', write_cache=False)
+    events = Events.read("tests/data/test_not_running", write_cache=False)
     assert not events.running()
 
 
 def test_sum_durations_in_database():
-    events = Events.read('tests/data/test_not_running', write_cache=False)
+    events = Events.read("tests/data/test_not_running", write_cache=False)
     assert events.sum() == timedelta(hours=2, minutes=15)

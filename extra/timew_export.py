@@ -37,52 +37,52 @@ def process_events(location: str) -> Dict[str, List[str]]:
         message_warning = False
         files = defaultdict(list)
         for ev in evs:
-            if '-' in ev.task:
-                task = ev.task.replace('-', '_')
+            if "-" in ev.task:
+                task = ev.task.replace("-", "_")
                 if not task_warning:
-                    pwarn('Task names containing ‘-’ will use ‘_’ in export')
+                    pwarn("Task names containing ‘-’ will use ‘_’ in export")
                 task_warning = True
             else:
                 task = ev.task
             if ev.message and not message_warning:
-                pwarn('Event messages aren’t supported by timew')
+                pwarn("Event messages aren’t supported by timew")
                 message_warning = True
-            out = [f'inc {ev.start:%Y%m%dT%H%M%SZ}']
+            out = [f"inc {ev.start:%Y%m%dT%H%M%SZ}"]
             if ev.delta:
-                out.append(f'- {ev.start + ev.delta:%Y%m%dT%H%M%SZ}')
-            out.append(f'# {task}\n')
-            files[ev.start.strftime('%Y-%m')].append(' '.join(out))
+                out.append(f"- {ev.start + ev.delta:%Y%m%dT%H%M%SZ}")
+            out.append(f"# {task}\n")
+            files[ev.start.strftime("%Y-%m")].append(" ".join(out))
     return files
 
 
 def write_events(location: str, files: Dict[str, List[str]]) -> None:
     makedirs(location)
     for fn, data in files.items():
-        with open_file(f'{location}/{fn}.data', 'w', atomic=True) as f:
+        with open_file(f"{location}/{fn}.data", "w", atomic=True) as f:
             f.writelines(data)
 
 
 @command(
-    epilog=('Please report bugs at ' 'https://github.com/JNRowe/rdial/issues'),
-    context_settings={'help_option_names': ['-h', '--help']},
+    epilog=("Please report bugs at " "https://github.com/JNRowe/rdial/issues"),
+    context_settings={"help_option_names": ["-h", "--help"]},
 )
 @option(
-    '--database',
-    default=user_data('rdial'),
+    "--database",
+    default=user_data("rdial"),
     type=Path(exists=True, file_okay=False),
-    help='Path to rdial database',
+    help="Path to rdial database",
 )
-@argument('output', type=Path(exists=False))
+@argument("output", type=Path(exists=False))
 def main(database: str, output: str) -> None:
     """Export rdial data for use with timew.
 
     Writes timew compatible data to ‘output’.
     """
     if exists(output):
-        raise BadOptionUsage('output', 'Output path must not exist')
+        raise BadOptionUsage("output", "Output path must not exist")
     files = process_events(database)
     write_events(output, files)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

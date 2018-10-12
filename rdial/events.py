@@ -68,7 +68,7 @@ class Event:
         __task: str,
         start: Optional[Union[datetime.datetime, str]] = None,
         delta: Optional[Union[datetime.timedelta, str]] = None,
-        message: Optional[str] = '',
+        message: Optional[str] = "",
     ) -> None:
         """Initialise a new ``Event`` object.
 
@@ -82,7 +82,7 @@ class Event:
         self.task = __task
         if isinstance(start, datetime.datetime):
             if start.tzinfo:
-                raise ValueError(f'Must be a naive datetime {start!r}')
+                raise ValueError(f"Must be a naive datetime {start!r}")
             self.start = start
         else:
             self.start = iso_8601.parse_datetime(start).replace(tzinfo=None)
@@ -92,7 +92,7 @@ class Event:
             self.delta = iso_8601.parse_delta(delta)
         self.message = message
 
-    def __eq__(self, __other: 'Event') -> bool:
+    def __eq__(self, __other: "Event") -> bool:
         """Comare ``Event`` objects for equality.
 
         Args:
@@ -108,7 +108,7 @@ class Event:
             and self.message == __other.message
         )
 
-    def __ne__(self, __other: 'Event') -> bool:
+    def __ne__(self, __other: "Event") -> bool:
         """Comare ``Event`` objects for inequality.
 
         Args:
@@ -125,9 +125,9 @@ class Event:
         Returns:
             Event representation suitable for :func:`eval`
         """
-        return 'Event({!r}, {!r}, {!r}, {!r})'.format(
+        return "Event({!r}, {!r}, {!r}, {!r})".format(
             self.task,
-            iso_8601.format_datetime(self.start) + 'Z',
+            iso_8601.format_datetime(self.start) + "Z",
             iso_8601.format_delta(self.delta),
             self.message,
         )
@@ -140,9 +140,9 @@ class Event:
 
         """
         return {
-            'start': iso_8601.format_datetime(self.start) + 'Z',
-            'delta': iso_8601.format_delta(self.delta),
-            'message': self.message,
+            "start": iso_8601.format_datetime(self.start) + "Z",
+            "delta": iso_8601.format_delta(self.delta),
+            "message": self.message,
         }
 
     def running(self) -> Union[str, bool]:
@@ -168,7 +168,7 @@ class Event:
 
         """
         if not force and self.delta:
-            raise TaskNotRunningError('No task running!')
+            raise TaskNotRunningError("No task running!")
         self.delta = datetime.datetime.utcnow() - self.start
         self.message = message
 
@@ -200,7 +200,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
         Returns:
             Events representation suitable for :func:`eval`
         """
-        return 'Events({})'.format(super(self.__class__, self).__repr__())
+        return "Events({})".format(super(self.__class__, self).__repr__())
 
     @property
     def dirty(self) -> Iterable[str]:
@@ -225,7 +225,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
     @staticmethod
     def read(
         __directory: str, backup: bool = True, write_cache: bool = True
-    ) -> 'Events':
+    ) -> "Events":
         """Read and parse database.
 
         .. note::
@@ -245,28 +245,28 @@ class Events(list):  # pylint: disable=too-many-public-methods
         if not os.path.exists(__directory):
             return Events(backup=backup)
         events = []
-        xdg_cache_dir = xdg_basedir.user_cache('rdial')
-        cache_dir = os.path.join(xdg_cache_dir, __directory.replace('/', '_'))
+        xdg_cache_dir = xdg_basedir.user_cache("rdial")
+        cache_dir = os.path.join(xdg_cache_dir, __directory.replace("/", "_"))
         if write_cache and not os.path.isdir(cache_dir):
             os.makedirs(cache_dir)
-            with click.open_file(f'{xdg_cache_dir}/CACHEDIR.TAG', 'w') as f:
+            with click.open_file(f"{xdg_cache_dir}/CACHEDIR.TAG", "w") as f:
                 f.writelines(
                     [
-                        'Signature: 8a477f597d28d172789f06886806bc55\n',
-                        '# This file is a cache directory tag created by rdial.\n',
-                        '# For information about cache directory tags, see:\n',
-                        '#   http://www.brynosaurus.com/cachedir/\n',
+                        "Signature: 8a477f597d28d172789f06886806bc55\n",
+                        "# This file is a cache directory tag created by rdial.\n",
+                        "# For information about cache directory tags, see:\n",
+                        "#   http://www.brynosaurus.com/cachedir/\n",
                     ]
                 )
-        for fname in glob.glob(f'{__directory}/*.csv'):
+        for fname in glob.glob(f"{__directory}/*.csv"):
             task = os.path.basename(fname)[:-4]
-            cache_file = os.path.join(cache_dir, task) + '.pkl'
+            cache_file = os.path.join(cache_dir, task) + ".pkl"
             evs = None
             if os.path.exists(cache_file) and utils.newer(cache_file, fname):
                 try:
                     # UnicodeDecodeError must be caught for the Python 2 to
                     # 3 upgrade path.
-                    with click.open_file(cache_file, 'rb') as f:
+                    with click.open_file(cache_file, "rb") as f:
                         cache = pickle.load(f)
                 except (
                     pickle.UnpicklingError,
@@ -277,17 +277,17 @@ class Events(list):  # pylint: disable=too-many-public-methods
                     pass
                 else:
                     try:
-                        assert cache['version'] == 1
+                        assert cache["version"] == 1
                     except TypeError:
                         os.unlink(cache_file)
                     else:
-                        evs = cache['events']
+                        evs = cache["events"]
             if evs is None:
-                with click.open_file(fname, encoding='utf-8') as f:
+                with click.open_file(fname, encoding="utf-8") as f:
                     # We're not using the prettier DictReader here as it is
                     # *significantly* slower for large data files (~5x).
                     reader = csv.reader(f, dialect=RdialDialect)
-                    assert next(reader) == FIELDS, 'Invalid data {!r}'.format(
+                    assert next(reader) == FIELDS, "Invalid data {!r}".format(
                         click.format_filename(fname)
                     )
                     evs = [
@@ -295,14 +295,14 @@ class Events(list):  # pylint: disable=too-many-public-methods
                         for row in reader
                     ]
                 if write_cache:
-                    with click.open_file(cache_file, 'wb', atomic=True) as f:
+                    with click.open_file(cache_file, "wb", atomic=True) as f:
                         pickle.dump(
-                            {'version': 1, 'events': evs},
+                            {"version": 1, "events": evs},
                             f,
                             pickle.HIGHEST_PROTOCOL,
                         )
             events.extend(evs)
-        return Events(sorted(events, key=operator.attrgetter('start')))
+        return Events(sorted(events, key=operator.attrgetter("start")))
 
     def write(self, __directory: str) -> None:
         """Write database file.
@@ -317,15 +317,15 @@ class Events(list):  # pylint: disable=too-many-public-methods
             os.makedirs(__directory)
 
         for task in self.dirty:
-            task_file = f'{__directory}/{task}.csv'
+            task_file = f"{__directory}/{task}.csv"
             events = self.for_task(task)
-            with click.utils.LazyFile(task_file, 'w', atomic=True) as temp:
+            with click.utils.LazyFile(task_file, "w", atomic=True) as temp:
                 writer = csv.DictWriter(temp, FIELDS, dialect=RdialDialect)
                 writer.writeheader()
                 for event in events:
                     writer.writerow(event.writer())
                 if self.backup and os.path.exists(task_file):
-                    os.rename(task_file, f'{task_file}~')
+                    os.rename(task_file, f"{task_file}~")
         del self.dirty
 
     def tasks(self) -> List[str]:
@@ -367,7 +367,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
         self,
         __task: str,
         new: bool = False,
-        start: Union[datetime.datetime, str] = '',
+        start: Union[datetime.datetime, str] = "",
     ) -> None:
         """Start a new event.
 
@@ -382,14 +382,14 @@ class Events(list):  # pylint: disable=too-many-public-methods
         """
         if not new and __task not in self.tasks():
             raise TaskNotExistError(
-                f'Task {__task} does not exist!  Use “--new” to create it'
+                f"Task {__task} does not exist!  Use “--new” to create it"
             )
         running = self.running()
         if running:
-            raise TaskRunningError(f'Running task {running}!')
+            raise TaskRunningError(f"Running task {running}!")
         last = self.last()
         if last and start and last.start + last.delta > start:
-            raise TaskRunningError('Start date overlaps previous task!')
+            raise TaskRunningError("Start date overlaps previous task!")
         self.append(Event(__task, start))
         self.dirty = __task
 
@@ -405,11 +405,11 @@ class Events(list):  # pylint: disable=too-many-public-methods
 
         """
         if not force and not self.running():
-            raise TaskNotRunningError('No task running!')
+            raise TaskNotRunningError("No task running!")
         self.last().stop(message, force)
         self.dirty = self.last().task
 
-    def filter(self, __filt: Callable[[Event], bool]) -> 'Events':
+    def filter(self, __filt: Callable[[Event], bool]) -> "Events":
         """Apply filter to events.
 
         Args:
@@ -421,7 +421,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
         """
         return Events(x for x in self if __filt(x))
 
-    def for_task(self, __task: str) -> 'Events':
+    def for_task(self, __task: str) -> "Events":
         """Filter events for a specific task.
 
         Args:
@@ -435,7 +435,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
 
     def for_date(
         self, year: int, month: Optional[int] = None, day: Optional[int] = None
-    ) -> 'Events':
+    ) -> "Events":
         """Filter events for a specific date.
 
         Args:
@@ -454,7 +454,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
             events = events.filter(lambda x: x.start.day == day)
         return events
 
-    def for_week(self, __year: int, __week: int) -> 'Events':
+    def for_week(self, __year: int, __week: int) -> "Events":
         """Filter events for a specific ISO-8601 week.
 
         Args:
@@ -480,7 +480,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
     @contextlib.contextmanager
     def wrapping(
         __directory: str, backup: bool = True, write_cache: bool = True
-    ) -> Iterator['Events']:
+    ) -> Iterator["Events"]:
         """Convenience context handler to manage reading and writing database.
 
         Args:

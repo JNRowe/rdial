@@ -26,10 +26,10 @@ from rdial.utils import parse_datetime_user
 
 
 @mark.parametrize(
-    'string, delta',
+    "string, delta",
     [
-        ('5 minutes ago', timedelta(minutes=5)),
-        ('1 hour ago -5 minutes', timedelta(hours=1, minutes=5)),
+        ("5 minutes ago", timedelta(minutes=5)),
+        ("1 hour ago -5 minutes", timedelta(hours=1, minutes=5)),
     ],
 )
 def test_parse_datetime_via_date_command(string: str, delta: timedelta):

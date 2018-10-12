@@ -27,7 +27,7 @@ from rdial.utils import iso_week_to_date
 
 
 @mark.parametrize(
-    'year, week, expected',
+    "year, week, expected",
     [
         (2007, 1, (date(2007, 1, 1), date(2007, 1, 8))),  # Year starts same day
         (

@@ -28,25 +28,25 @@ sys.path.insert(0, root_dir)
 
 import rdial  # NOQA: E402
 
-on_rtd = 'READTHEDOCS' in os.environ
+on_rtd = "READTHEDOCS" in os.environ
 if not on_rtd:
     import sphinx_rtd_theme
 
 extensions = (
     [
-        f'sphinx.ext.{ext}'
+        f"sphinx.ext.{ext}"
         for ext in [
-            'autodoc',
-            'coverage',
-            'doctest',
-            'intersphinx',
-            'napoleon',
-            'todo',
-            'viewcode',
+            "autodoc",
+            "coverage",
+            "doctest",
+            "intersphinx",
+            "napoleon",
+            "todo",
+            "viewcode",
         ]
     ]
-    + [f'sphinxcontrib.{ext}' for ext in []]
-    + ['sphinx_autodoc_typehints']
+    + [f"sphinxcontrib.{ext}" for ext in []]
+    + ["sphinx_autodoc_typehints"]
 )  # type: List[str]
 
 
@@ -59,56 +59,56 @@ if not on_rtd:
     except ImportError:
         pass
     else:
-        extensions.append('sphinxcontrib.spelling')
+        extensions.append("sphinxcontrib.spelling")
 
-master_doc = 'index'
-source_suffix = '.rst'
+master_doc = "index"
+source_suffix = ".rst"
 
-project = 'rdial'
-copyright = '2011-2017  James Rowe'
+project = "rdial"
+copyright = "2011-2017  James Rowe"
 
 release = rdial._version.dotted
-version = release.rsplit('.', 1)[0]
+version = release.rsplit(".", 1)[0]
 
 html_experimental_html5_writer = True
-modindex_common_prefix = ['rdial.']
+modindex_common_prefix = ["rdial."]
 
 # readthedocs.org handles this setup for their builds, but it is nice to see
 # approximately correct builds on the local system too
 if not on_rtd:
-    html_theme = 'sphinx_rtd_theme'
+    html_theme = "sphinx_rtd_theme"
     html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
     # type: List[str]
 
-pygments_style = 'sphinx'
+pygments_style = "sphinx"
 with suppress(CalledProcessError):
     proc = run(
-        ['git', 'log', "--pretty=format:'%ad [%h]'", '--date=short', '-n1'],
+        ["git", "log", "--pretty=format:'%ad [%h]'", "--date=short", "-n1"],
         stdout=PIPE,
     )
     html_last_updated_fmt = proc.stdout.decode()
 
 man_pages = [
-    ('rdial.1', 'rdial', 'rdial Documentation', ['James Rowe'], 1)
+    ("rdial.1", "rdial", "rdial Documentation", ["James Rowe"], 1)
 ]  # type: Tuple[str, str, str, List[str], int]
 
 # Autodoc extension settings
-autoclass_content = 'init'
-autodoc_default_flags = ['members']  # type: List[str]
+autoclass_content = "init"
+autodoc_default_flags = ["members"]  # type: List[str]
 
 # intersphinx extension settings
 intersphinx_mapping = {
-    k: (v, os.getenv(f'SPHINX_{k.upper()}_OBJECTS'))
+    k: (v, os.getenv(f"SPHINX_{k.upper()}_OBJECTS"))
     for k, v in {
-        'click': 'http://click.pocoo.org/6/',
-        'jnrbase': 'https://jnrbase.readthedocs.io/en/latest/',
-        'python': 'https://docs.python.org/3/',
+        "click": "http://click.pocoo.org/6/",
+        "jnrbase": "https://jnrbase.readthedocs.io/en/latest/",
+        "python": "https://docs.python.org/3/",
     }.items()
 }  # type: Dict[str, str]
 
 # spelling extension settings
-spelling_lang = 'en_GB'
-spelling_word_list_filename = 'wordlist.txt'
+spelling_lang = "en_GB"
+spelling_word_list_filename = "wordlist.txt"
 
 # napoleon extension settings
 napoleon_numpy_docstring = False

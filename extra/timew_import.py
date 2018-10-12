@@ -38,9 +38,9 @@ from rdial.events import FIELDS, RdialDialect
 
 def munge(dct):
     dct = AttrDict(**dct)
-    if 'start' in dct:
+    if "start" in dct:
         dct.start = parse_datetime(dct.start)
-    if 'end' in dct:
+    if "end" in dct:
         dct.end = parse_datetime(dct.end)
     return dct
 
@@ -51,9 +51,9 @@ def process_records(location: TextIO) -> Dict[str, List[str]]:
     files = defaultdict(list)
     for ev in data:
         if len(ev.tags) > 1 and not tag_warning:
-            pwarn('Multiple tags are not supported, using first')
+            pwarn("Multiple tags are not supported, using first")
             tag_warning = True
-        if 'end' in ev:
+        if "end" in ev:
             ev.end = ev.end - ev.start
         else:
             ev.end = timedelta(0)
@@ -66,7 +66,7 @@ def process_records(location: TextIO) -> Dict[str, List[str]]:
 def write_events(location: str, files: Dict[str, List[str]]) -> None:
     makedirs(location)
     for fn, data in files.items():
-        with LazyFile(f'{location}/{fn}.csv', 'w', atomic=True) as temp:
+        with LazyFile(f"{location}/{fn}.csv", "w", atomic=True) as temp:
             w = writer(temp, dialect=RdialDialect)
             w.writerow(FIELDS)
             for ev in data:
@@ -74,11 +74,11 @@ def write_events(location: str, files: Dict[str, List[str]]) -> None:
 
 
 @command(
-    epilog=('Please report bugs at ' 'https://github.com/JNRowe/rdial/issues'),
-    context_settings={'help_option_names': ['-h', '--help']},
+    epilog=("Please report bugs at " "https://github.com/JNRowe/rdial/issues"),
+    context_settings={"help_option_names": ["-h", "--help"]},
 )
-@argument('input', type=File())
-@argument('output', type=Path(exists=False))
+@argument("input", type=File())
+@argument("output", type=Path(exists=False))
 def main(input: TextIO, output: str) -> None:
     """Export timew data for use with rdial.
 
@@ -86,10 +86,10 @@ def main(input: TextIO, output: str) -> None:
     ‘output’.
     """
     if path.exists(output):
-        raise BadOptionUsage('output', 'Output path must not exist')
+        raise BadOptionUsage("output", "Output path must not exist")
     files = process_records(input)
     write_events(output, files)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

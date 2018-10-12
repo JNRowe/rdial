@@ -34,27 +34,27 @@ from rdial.events import Event, Events, TaskRunningError
 
 @fixture
 def temp_user_cache(monkeypatch, tmpdir):
-    cache_dir = tmpdir.join('cache')
+    cache_dir = tmpdir.join("cache")
     cache_dir.mkdir()
     monkeypatch.setattr(
-        events_mod.xdg_basedir, 'user_cache', lambda s: cache_dir.strpath
+        events_mod.xdg_basedir, "user_cache", lambda s: cache_dir.strpath
     )
 
 
 @mark.parametrize(
-    'task, start, delta, message',
+    "task, start, delta, message",
     [
-        ('test', None, None, None),
-        ('test', '2013-02-26T19:45:14', None, None),
-        ('test', datetime(2013, 2, 26, 19, 45, 14), None, None),
-        ('test', '2013-02-26T19:45:14', 'PT8M19S', None),
+        ("test", None, None, None),
+        ("test", "2013-02-26T19:45:14", None, None),
+        ("test", datetime(2013, 2, 26, 19, 45, 14), None, None),
+        ("test", "2013-02-26T19:45:14", "PT8M19S", None),
         (
-            'test',
-            '2013-02-26T19:45:14',
+            "test",
+            "2013-02-26T19:45:14",
             timedelta(minutes=8, seconds=19.770_869),
             None,
         ),
-        ('test', '2013-02-26T19:45:14', 'PT8M19S', 'stopped'),
+        ("test", "2013-02-26T19:45:14", "PT8M19S", "stopped"),
     ],
 )
 def test_event_creation(
@@ -80,9 +80,9 @@ def test_event_creation(
 
 
 def test_event_creation_non_naive():
-    with raises(ValueError, match='Must be a naive datetime'):
+    with raises(ValueError, match="Must be a naive datetime"):
         Event(
-            'test',
+            "test",
             datetime(2013, 2, 26, 19, 45, 14, tzinfo=timezone.utc),
             None,
             None,
@@ -90,26 +90,26 @@ def test_event_creation_non_naive():
 
 
 def test_event_equality():
-    ev1 = Event('test', datetime(2013, 2, 26, 19, 45, 14), None, None)
-    ev2 = Event('test', datetime(2013, 2, 26, 19, 45, 14), None, None)
+    ev1 = Event("test", datetime(2013, 2, 26, 19, 45, 14), None, None)
+    ev2 = Event("test", datetime(2013, 2, 26, 19, 45, 14), None, None)
     assert ev1 == ev2
 
 
 @mark.parametrize(
-    'ev1, ev2',
+    "ev1, ev2",
     [
         (
-            Event('test', datetime(2013, 2, 26, 19, 45, 14)),
-            Event('not_test', datetime(2013, 2, 26, 19, 45, 14)),
+            Event("test", datetime(2013, 2, 26, 19, 45, 14)),
+            Event("not_test", datetime(2013, 2, 26, 19, 45, 14)),
         ),
         (
-            Event('date', datetime(2013, 2, 26, 19, 45, 14)),
-            Event('date', datetime(2001, 1, 1, 0, 0, 0)),
+            Event("date", datetime(2013, 2, 26, 19, 45, 14)),
+            Event("date", datetime(2001, 1, 1, 0, 0, 0)),
         ),
         (
-            Event('message', datetime(2013, 2, 26, 19, 45, 14), None, 'test'),
+            Event("message", datetime(2013, 2, 26, 19, 45, 14), None, "test"),
             Event(
-                'message', datetime(2013, 2, 26, 19, 45, 14), None, 'breakage'
+                "message", datetime(2013, 2, 26, 19, 45, 14), None, "breakage"
             ),
         ),
     ],
@@ -119,73 +119,73 @@ def test_event_inequality(ev1: Event, ev2: Event):
 
 
 @mark.parametrize(
-    'database, events',
-    [('test', 3), ('date_filtering', 3), ('test_not_running', 3)],
+    "database, events",
+    [("test", 3), ("date_filtering", 3), ("test_not_running", 3)],
 )
 def test_read_datebase(database: str, events: int):
-    evs = Events.read('tests/data/' + database, write_cache=False)
+    evs = Events.read("tests/data/" + database, write_cache=False)
     assert len(evs) == events
 
 
 @mark.parametrize(
-    'database, events',
-    [('test', 3), ('date_filtering', 3), ('test_not_running', 3)],
+    "database, events",
+    [("test", 3), ("date_filtering", 3), ("test_not_running", 3)],
 )
 def test_read_datebase_wrapper(database: str, events: int):
-    with Events.wrapping('tests/data/' + database, write_cache=False) as evs:
+    with Events.wrapping("tests/data/" + database, write_cache=False) as evs:
         assert len(evs) == events
 
 
 def test_read_datebase_wrapper_write(tmpdir):
-    test_dir = tmpdir.join('test').strpath
-    copytree('tests/data/test', test_dir)
+    test_dir = tmpdir.join("test").strpath
+    copytree("tests/data/test", test_dir)
     with Events.wrapping(test_dir, write_cache=False) as evs:
         evs.stop()
-    comp = dircmp('tests/data/test', test_dir, [])
-    assert comp.diff_files == ['task.csv']
+    comp = dircmp("tests/data/test", test_dir, [])
+    assert comp.diff_files == ["task.csv"]
     assert comp.left_only == []
-    assert comp.right_only == ['task.csv~']
+    assert comp.right_only == ["task.csv~"]
     assert comp.funny_files == []
     assert comp.subdirs == {}
 
 
 @mark.parametrize(
-    'database, result',
+    "database, result",
     [
-        ('test', Event('task', '2011-05-04T09:30:00Z', '', 'finished')),
-        ('', None),
+        ("test", Event("task", "2011-05-04T09:30:00Z", "", "finished")),
+        ("", None),
     ],
 )
 def test_read_last(database: str, result: Optional[Event]):
-    evs = Events.read('tests/data/' + database, write_cache=False)
+    evs = Events.read("tests/data/" + database, write_cache=False)
     assert evs.last() == result
 
 
 def test_fail_start_with_overlap():
-    evs = Events.read('tests/data/test_not_running', write_cache=False)
-    with raises(TaskRunningError, match='Start date overlaps'):
-        evs.start('task', start=datetime(2011, 5, 4, 9, 33))
+    evs = Events.read("tests/data/test_not_running", write_cache=False)
+    with raises(TaskRunningError, match="Start date overlaps"):
+        evs.start("task", start=datetime(2011, 5, 4, 9, 33))
 
 
 @mark.parametrize(
-    'n, task, start, delta',
+    "n, task, start, delta",
     [
-        (0, 'task', datetime(2011, 5, 4, 8), timedelta(hours=1)),
-        (1, 'task2', datetime(2011, 5, 4, 9, 15), timedelta(minutes=15)),
-        (2, 'task', datetime(2011, 5, 4, 9, 30), timedelta()),
+        (0, "task", datetime(2011, 5, 4, 8), timedelta(hours=1)),
+        (1, "task2", datetime(2011, 5, 4, 9, 15), timedelta(minutes=15)),
+        (2, "task", datetime(2011, 5, 4, 9, 30), timedelta()),
     ],
 )
 def test_check_events(n: int, task: str, start: datetime, delta: timedelta):
     # FIXME: Clean-ish way to perform check, with the caveat that it parses the
     # database on each entry.  Need a better solution.
-    events = Events.read('tests/data/test', write_cache=False)
+    events = Events.read("tests/data/test", write_cache=False)
     assert events[n].task == task
     assert events[n].start == start
     assert events[n].delta == delta
 
 
 def test_write_database(tmpdir):
-    in_dir = 'tests/data/test'
+    in_dir = "tests/data/test"
     events = Events.read(in_dir, write_cache=False)
     events._dirty = events.tasks()
     events.write(tmpdir.strpath)
@@ -198,65 +198,65 @@ def test_write_database(tmpdir):
 
 
 def test_write_database_event_backups(tmpdir):
-    test_dir = tmpdir.join('test').strpath
-    copytree('tests/data/test_not_running', test_dir)
+    test_dir = tmpdir.join("test").strpath
+    copytree("tests/data/test_not_running", test_dir)
     events = Events.read(test_dir, write_cache=False)
-    events.start('task')
+    events.start("task")
     events.write(test_dir)
-    comp = dircmp('tests/data/test_not_running', test_dir, [])
-    assert comp.diff_files == ['task.csv']
+    comp = dircmp("tests/data/test_not_running", test_dir, [])
+    assert comp.diff_files == ["task.csv"]
     assert comp.left_only == []
-    assert comp.right_only == ['task.csv~']
+    assert comp.right_only == ["task.csv~"]
     assert comp.funny_files == []
     assert comp.subdirs == {}
 
 
 def test_write_database_no_change_noop(tmpdir):
-    in_dir = 'tests/data/test'
+    in_dir = "tests/data/test"
     events = Events.read(in_dir, write_cache=False)
     events.write(tmpdir.strpath)
-    assert glob(tmpdir.join('*').strpath) == []
+    assert glob(tmpdir.join("*").strpath) == []
 
 
 def test_write_database_cache(temp_user_cache, tmpdir):
-    events = Events.read('tests/data/test')
+    events = Events.read("tests/data/test")
     events._dirty = events.tasks()
-    events.write(tmpdir.join('database').strpath)
+    events.write(tmpdir.join("database").strpath)
     cache_files = glob(
-        tmpdir.join('cache', '**', '*.pkl').strpath, recursive=True
+        tmpdir.join("cache", "**", "*.pkl").strpath, recursive=True
     )
-    assert {f.split('/')[-1][:-4] for f in cache_files} == set(events.tasks())
+    assert {f.split("/")[-1][:-4] for f in cache_files} == set(events.tasks())
 
 
 def test_read_database_cache(temp_user_cache, monkeypatch):
     read = set()
     monkeypatch.setattr(
         events_mod.pickle,
-        'load',
-        lambda f: read.add(f.name.split('/')[-1][:-4]),
+        "load",
+        lambda f: read.add(f.name.split("/")[-1][:-4]),
     )
-    in_dir = 'tests/data/test'
+    in_dir = "tests/data/test"
     events = Events.read(in_dir)
     events = Events.read(in_dir)
     assert read == set(events.tasks())
 
 
 def test_read_database_cache_broken(temp_user_cache, tmpdir):
-    in_dir = 'tests/data/test'
+    in_dir = "tests/data/test"
     events = Events.read(in_dir)
     cache_files = glob(
-        tmpdir.join('cache', '**', '*.pkl').strpath, recursive=True
+        tmpdir.join("cache", "**", "*.pkl").strpath, recursive=True
     )
-    with open(cache_files[0], 'w') as f:
-        f.write('Broken data')
+    with open(cache_files[0], "w") as f:
+        f.write("Broken data")
     events2 = Events.read(in_dir)
     assert events == events2
 
 
 def test_store_messages_with_events():
-    events = Events.read('tests/data/test', write_cache=False)
-    assert events.last().message == 'finished'
+    events = Events.read("tests/data/test", write_cache=False)
+    assert events.last().message == "finished"
 
 
 def test_non_existing_database():
-    assert Events() == Events.read('I_NEVER_EXIST', write_cache=False)
+    assert Events() == Events.read("I_NEVER_EXIST", write_cache=False)

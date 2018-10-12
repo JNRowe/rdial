@@ -30,46 +30,46 @@ from rdial.events import (
 
 
 def test_start_event():
-    events = Events.read('tests/data/test_not_running', write_cache=False)
-    events.start('task2')
-    assert events.running() == 'task2'
+    events = Events.read("tests/data/test_not_running", write_cache=False)
+    events.start("task2")
+    assert events.running() == "task2"
 
 
 def test_fail_start_when_task_typo():
-    events = Events.read('tests/data/test_not_running', write_cache=False)
+    events = Events.read("tests/data/test_not_running", write_cache=False)
     with raises(
         TaskNotExistError,
-        match='Task non_existent does not exist!  Use “--new” to ' 'create it',
+        match="Task non_existent does not exist!  Use “--new” to " "create it",
     ):
-        events.start('non_existent')
+        events.start("non_existent")
 
 
 def test_fail_start_when_running():
-    events = Events.read('tests/data/test', write_cache=False)
-    with raises(TaskRunningError, match='Running task task!'):
-        events.start('task2')
+    events = Events.read("tests/data/test", write_cache=False)
+    with raises(TaskRunningError, match="Running task task!"):
+        events.start("task2")
 
 
 def test_stop_event():
-    events = Events.read('tests/data/test', write_cache=False)
+    events = Events.read("tests/data/test", write_cache=False)
     events.stop()
     assert not events.running()
 
 
 def test_stop_event_with_message():
-    events = Events.read('tests/data/test', write_cache=False)
-    events.stop(message='test')
+    events = Events.read("tests/data/test", write_cache=False)
+    events.stop(message="test")
     last = events.last()
-    assert last.message == 'test'
+    assert last.message == "test"
 
 
 def test_fail_stop_when_not_running():
-    events = Events.read('tests/data/test_not_running', write_cache=False)
-    with raises(TaskNotRunningError, match='No task running!'):
+    events = Events.read("tests/data/test_not_running", write_cache=False)
+    with raises(TaskNotRunningError, match="No task running!"):
         events.stop()
 
 
 def test_fail_stop_single_when_not_running():
-    events = Events.read('tests/data/test_not_running', write_cache=False)
-    with raises(TaskNotRunningError, match='No task running!'):
+    events = Events.read("tests/data/test_not_running", write_cache=False)
+    with raises(TaskNotRunningError, match="No task running!"):
         events.last().stop()

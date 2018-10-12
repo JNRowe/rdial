@@ -42,7 +42,7 @@ class RdialError(ValueError):
 
 
 #: Map duration string keys to timedelta args
-_MAPPER = {'D': 'days', 'H': 'hours', 'M': 'minutes', 'S': 'seconds'}
+_MAPPER = {"D": "days", "H": "hours", "M": "minutes", "S": "seconds"}
 # type : Dict[str, str]
 
 
@@ -64,7 +64,7 @@ def parse_datetime_user(__string: str) -> datetime:
     except ValueError:
         try:
             proc = subprocess.run(
-                ['date', '--utc', '--iso-8601=seconds', '-d', __string],
+                ["date", "--utc", "--iso-8601=seconds", "-d", __string],
                 stdout=subprocess.PIPE,
                 check=True,
             )
@@ -73,7 +73,7 @@ def parse_datetime_user(__string: str) -> datetime:
         except subprocess.CalledProcessError:
             datetime_ = None
     if not datetime_:
-        raise ValueError(f'Unable to parse timestamp {__string!r}')
+        raise ValueError(f"Unable to parse timestamp {__string!r}")
     return datetime_.replace(tzinfo=None)
 
 
@@ -116,18 +116,18 @@ def read_config(
     # Only base *must* exist
     conf = configparser.ConfigParser()
     # No, it *really* must
-    with open(os.path.dirname(__file__) + '/config') as f:
+    with open(os.path.dirname(__file__) + "/config") as f:
         conf.read_file(f)
-    conf['DEFAULT'] = {'xdg_data_location': xdg_basedir.user_data('rdial')}
-    for f in xdg_basedir.get_configs('rdial'):
+    conf["DEFAULT"] = {"xdg_data_location": xdg_basedir.user_data("rdial")}
+    for f in xdg_basedir.get_configs("rdial"):
         conf.read(f)
-    conf.read(os.path.abspath('.rdialrc'))
+    conf.read(os.path.abspath(".rdialrc"))
     if user_config:
         conf.read(user_config)
 
     if cli_options:
         conf.read_dict(
-            {'rdial': {k: v for k, v in cli_options.items() if v is not None}}
+            {"rdial": {k: v for k, v in cli_options.items() if v is not None}}
         )
 
     return conf
@@ -157,8 +157,8 @@ def write_current(__fun: Callable) -> Callable:
         """
         globs = args[0]
         __fun(*args, **kwargs)
-        with click.open_file(f'{globs.directory}/.current', 'w') as f:
-            f.write(kwargs['task'])
+        with click.open_file(f"{globs.directory}/.current", "w") as f:
+            f.write(kwargs["task"])
 
     return wrapper
 
@@ -187,8 +187,8 @@ def remove_current(__fun: Callable) -> Callable:
         """
         globs = args[0]
         __fun(*args, **kwargs)
-        if os.path.isfile(f'{globs.directory}/.current'):
-            os.unlink(f'{globs.directory}/.current')
+        if os.path.isfile(f"{globs.directory}/.current"):
+            os.unlink(f"{globs.directory}/.current")
 
     return wrapper
 
@@ -221,4 +221,4 @@ def term_link(__target: str, name: Optional[str] = None) -> str:
     """
     if not name:
         name = os.path.basename(__target)
-    return f'\033]8;;{__target}\007{name}\033]8;;\007'
+    return f"\033]8;;{__target}\007{name}\033]8;;\007"
