@@ -27,7 +27,7 @@ import os
 import shlex
 import subprocess
 import types
-from typing import Callable, List, Optional
+from typing import Callable, Optional
 
 import click
 import tabulate
@@ -37,28 +37,6 @@ from jnrbase.attrdict import AttrDict
 
 from . import _version, utils
 from .events import Event, Events, TaskNotRunningError, TaskRunningError
-
-
-class HiddenGroup(click.Group):
-
-    """Support for 'hidden' commands.
-
-    Any :obj:`click.Command` with the hidden attribute set will not be visible
-    in help output.  This is mainly to be used for diagnostic commands, and
-    shouldn’t be abused!
-
-    """
-
-    def list_commands(self, __ctx: click.Context) -> List[str]:
-        """List visible commands.
-
-        Args:
-            __ctx: Current command context
-        Returns:
-            Visible command names
-        """
-        return sorted(k for k, v in self.commands.items()
-                      if not hasattr(v, 'hidden'))
 
 
 class TaskNameParamType(click.ParamType):
@@ -221,26 +199,9 @@ def message_option(__fun: Callable) -> Callable:
     return __fun
 
 
-def hidden(__fun: click.Command) -> click.Command:
-    """Add a hidden attribute to a Command object.
-
-    :see:`HiddenGroup`.
-
-    Args:
-        __fun: Function to add hidden attribute to
-
-    Returns:
-        Function with hidden attribute set
-
-    """
-    __fun.hidden = True
-    return __fun
-
-
 # pylint: disable=too-many-arguments
 
-@click.group(cls=HiddenGroup,
-             help='Simple time tracking for simple people.',
+@click.group(help='Simple time tracking for simple people.',
              epilog=('Please report bugs at '
                      'https://github.com/JNRowe/rdial/issues'),
              context_settings={'help_option_names': ['-h', '--help']})
@@ -312,22 +273,6 @@ def cli(ctx: click.Context, directory: str, backup: bool, cache: bool,
     )
 
 
-def __no_sphinx_help(self, *args, **kwargs):
-    """Strip Sphinx type hints from docstrings for help output."""
-    def decorator(f):
-        if f.__doc__:
-            help_text = f.__doc__.split('Args:\n')[0].strip()
-        else:
-            help_text = None
-        cmd = click.command(*args, help=help_text, **kwargs)(f)
-        self.add_command(cmd)
-        return cmd
-    return decorator
-
-
-cli.command = __no_sphinx_help.__get__(cli)
-
-
 def filter_events(__globs: AttrDict, __task: Optional[str] = None,
                   __duration: str = 'all') -> Events:
     """Filter events for report processing.
@@ -359,8 +304,7 @@ def filter_events(__globs: AttrDict, __task: Optional[str] = None,
     return events
 
 
-@hidden
-@cli.command('bug-data')
+@cli.command(hidden=True)
 def bug_data():
     """Produce data for rdial bug reports."""
     import sys
@@ -391,6 +335,7 @@ def bug_data():
 def fsck(ctx: click.Context, globs: AttrDict, progress: bool):
     """Check storage consistency.
 
+    \f
     Args:
         ctx: Current command context
         globs: Global options object
@@ -400,7 +345,6 @@ def fsck(ctx: click.Context, globs: AttrDict, progress: bool):
     warnings = 0
     events = Events.read(globs.directory, write_cache=globs.cache)
     now = datetime.datetime.utcnow()
-    lines = []
     # Note: progress is *four* times slower on my data and system
     if progress:
         func = click.progressbar
@@ -411,30 +355,32 @@ def fsck(ctx: click.Context, globs: AttrDict, progress: bool):
         def func(evs, *args, **kwargs):
             yield iter(evs)
 
-    with func(events, label='Checking', fill_char=click.style(u'█', 'green'),
-              empty_char=click.style(u'·', 'yellow')) as pbar:
-        last_event = next(pbar)
-        for event in pbar:
-            if not last_event.start + last_event.delta <= event.start:
-                warnings += 1
-                lines.append(colourise.fail('Overlap:'))
-                lines.append(colourise.warn(f'   {last_event!r}'))
-                lines.append(colourise.info(f'   {event!r}'))
-            if event.start > now:
-                warnings += 1
-                lines.append(colourise.fail('Future start:'))
-                lines.append(colourise.warn(f'   {event!r}'))
-            elif event.start + event.delta > now:
-                warnings += 1
-                lines.append(colourise.fail('Future end:'))
-                lines.append(colourise.warn(f'   {event!r}'))
-            last_event = event
-    if lines:
-        click.echo_via_pager('\n'.join(lines))
-        if warnings:
-            # Will be success when 𝐱 % 256 == 0, so cap at 255.  That said
-            # you’ve got bigger problems if you’re hitting this ;)
-            ctx.exit(min(warnings, 255))
+    def gen_output():
+        nonlocal warnings
+        with func(events, label='Checking',
+                  fill_char=click.style('█', 'green'),
+                  empty_char=click.style('·', 'yellow')) as pbar:
+            last_event = Event('none', datetime.datetime.min)
+            for event in pbar:
+                if not last_event.start + last_event.delta <= event.start:
+                    warnings += 1
+                    yield colourise.fail('Overlap:\n')
+                    yield colourise.warn(f'   {last_event!r}\n')
+                    yield colourise.info(f'   {event!r}\n')
+                if event.start > now:
+                    warnings += 1
+                    yield colourise.fail('Future start:\n')
+                    yield colourise.warn(f'   {event!r}\n')
+                elif event.start + event.delta > now:
+                    warnings += 1
+                    yield colourise.fail('Future end:\n')
+                    yield colourise.warn(f'   {event!r}\n')
+                last_event = event
+    click.echo_via_pager(gen_output())
+    if warnings:
+        # Will be success when 𝐱 % 256 == 0, so cap at 255.  That said
+        # you’ve got bigger problems if you’re hitting this ;)
+        ctx.exit(min(warnings, 255))
 
 
 @cli.command()
@@ -450,6 +396,7 @@ def start(globs: AttrDict, task: str, continue_: bool, new: bool,
           time: datetime):
     """Start task.
 
+    \f
     Args:
         globs: Global options object
         task: Task name to operate on
@@ -472,6 +419,7 @@ def start(globs: AttrDict, task: str, continue_: bool, new: bool,
 def stop(globs: AttrDict, message: str, fname: str, amend: bool):
     """Stop task.
 
+    \f
     Args:
         globs: Global options object
         message: Message to assign to event
@@ -514,6 +462,7 @@ def switch(globs: AttrDict, task: str, new: bool, time: datetime, amend: bool,
            message: str, fname: str):
     """Complete last task and start new one.
 
+    \f
     Args:
         globs: Global options object
         task: Task name to operate on
@@ -563,6 +512,7 @@ def run(globs: AttrDict, task: str, new: bool, time: datetime, message: str,
         fname: str, command: str):
     """Run command with timer.
 
+    \f
     Args:
         globs: Global options object
         task: Task name to operate on
@@ -609,6 +559,7 @@ def wrapper(ctx: click.Context, globs: AttrDict, time: datetime, message: str,
             fname: str, wrapper: str):
     """Run predefined command with timer.
 
+    \f
     Args:
         ctx: Click context object
         globs: Global options object
@@ -646,6 +597,7 @@ def report(globs: AttrDict, task: str, stats: bool, duration: str, sort: str,
            reverse: bool, style: str):
     """Report time tracking data.
 
+    \f
     Args:
         globs: Global options object
         task: Task name to operate on
@@ -686,6 +638,7 @@ def report(globs: AttrDict, task: str, stats: bool, duration: str, sort: str,
 def running(globs: AttrDict):
     """Display running task, if any.
 
+    \f
     Args:
         globs: Global options object
 
@@ -705,6 +658,7 @@ def running(globs: AttrDict):
 def last(globs: AttrDict):
     """Display last event, if any.
 
+    \f
     Args:
         globs: Global options object
 
@@ -728,6 +682,7 @@ def last(globs: AttrDict):
 def ledger(globs: AttrDict, task: str, duration: str, rate: str):
     """Generate ledger compatible data file.
 
+    \f
     Args:
         globs: Global options object
         task: Task name to operate on
@@ -739,21 +694,22 @@ def ledger(globs: AttrDict, task: str, duration: str, rate: str):
         # Lazy way to remove duplicate argument definitions
         task = None
     events = filter_events(globs, task, duration)
-    lines = []
-    if events.running():
-        lines.append(';; Running event not included in output!')
-    for event in events:
-        if not event.delta:
-            continue
-        end = event.start + event.delta
-        hours = event.delta.total_seconds() / 3600
-        lines.append(f'{event.start:%F * %H:%M}-{end:%H:%M}')
-        lines.append('    (task:{})  {:.2f}h{}{}'.format(
-            event.task, hours, ' @ {}'.format(rate) if rate else '',
-            '  ; {}'.format(event.message) if event.message else ''))
-    if events.running():
-        lines.append(';; Running event not included in output!')
-    click.echo_via_pager('\n'.join(lines))
+
+    def gen_output():
+        if events.running():
+            yield ';; Running event not included in output!\n'
+        for event in events:
+            if not event.delta:
+                continue
+            end = event.start + event.delta
+            hours = event.delta.total_seconds() / 3600
+            yield f'{event.start:%F * %H:%M}-{end:%H:%M}'
+            yield '    (task:{})  {:.2f}h{}{}\n'.format(
+                event.task, hours, ' @ {}'.format(rate) if rate else '',
+                '  ; {}'.format(event.message) if event.message else '')
+        if events.running():
+            yield ';; Running event not included in output!\n'
+    click.echo_via_pager(gen_output())
 
 
 @cli.command()
@@ -763,6 +719,7 @@ def ledger(globs: AttrDict, task: str, duration: str, rate: str):
 def timeclock(globs: AttrDict, task: str, duration: str):
     """Generate ledger compatible timeclock file.
 
+    \f
     Args:
         globs: Global options object
         task: Task name to operate on
@@ -772,18 +729,19 @@ def timeclock(globs: AttrDict, task: str, duration: str):
         # Lazy way to remove duplicate argument definitions
         task = None
     events = filter_events(globs, task, duration)
-    lines = []
-    if events.running():
-        lines.append(';; Running event not included in output!')
-    for event in events:
-        if not event.delta:
-            continue
-        lines.append(f'i {event.start:%F %T} {event.task}')
-        lines.append(f'o {event.start + event.delta:%F %T}'
-                     f'{"  ; " + event.message if event.message else ""}\n')
-    if events.running():
-        lines.append(';; Running event not included in output!')
-    click.echo_via_pager('\n'.join(lines))
+
+    def gen_output():
+        if events.running():
+            yield ';; Running event not included in output!\n'
+        for event in events:
+            if not event.delta:
+                continue
+            yield f'i {event.start:%F %T} {event.task}\n'
+            yield f'o {event.start + event.delta:%F %T}' \
+                f'{"  ; " + event.message if event.message else ""}\n'
+        if events.running():
+            yield ';; Running event not included in output!\n'
+    click.echo_via_pager(gen_output())
 
 
 # pylint: enable=too-many-arguments
