@@ -84,7 +84,7 @@ def main(input: TextIO, output: str) -> None:
     ‘output’.
     """
     if path.exists(output):
-        raise BadOptionUsage('Output path must not exist')
+        raise BadOptionUsage('output', 'Output path must not exist')
     files = process_records(input)
     write_events(output, files)
 
