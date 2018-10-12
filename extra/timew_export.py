@@ -75,7 +75,7 @@ def main(database: str, output: str) -> None:
     Writes timew compatible data to ‘output’.
     """
     if exists(output):
-        raise BadOptionUsage('Output path must not exist')
+        raise BadOptionUsage('output', 'Output path must not exist')
     files = process_events(database)
     write_events(output, files)
 
