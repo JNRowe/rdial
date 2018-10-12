@@ -30,12 +30,13 @@ from setuptools.command.test import test
 class PytestTest(test):
     def finalize_options(self):
         test.finalize_options(self)
-        self.test_args = ['tests/', ]
+        self.test_args = ['tests/']
         self.test_suite = True
 
     def run_tests(self):
         from sys import exit
         from pytest import main
+
         exit(main(self.test_args))
 
 
@@ -83,13 +84,13 @@ conf.read('setup.cfg')
 install_requires = parse_requires('requirements.txt')
 tests_require = parse_requires('requirements-test.txt')
 
-metadata = dict(conf['metadata']) \
-    # type: Dict[str, Union[List[str], bool, str]]
+metadata = dict(conf['metadata'])
+# type: Dict[str, Union[List[str], bool, str]]
 for k in ['classifiers', 'packages', 'py_modules']:
     if k in metadata:
         metadata[k] = make_list(metadata[k])
 
-for k in ['include_package_data', ]:
+for k in ['include_package_data']:
     if k in metadata:
         metadata[k] = conf.getboolean('metadata', k)
 

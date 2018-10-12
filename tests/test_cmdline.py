@@ -22,14 +22,28 @@ from datetime import datetime
 from shutil import copytree
 from typing import Callable, Optional
 
-from click import (BadParameter, Context, Option, command, echo, option,
-                   pass_context, pass_obj)
+from click import (
+    BadParameter,
+    Context,
+    Option,
+    command,
+    echo,
+    option,
+    pass_context,
+    pass_obj,
+)
 from click.testing import CliRunner
 from pytest import fixture, mark, raises
 
 from rdial import events as events_mod
-from rdial.cmdline import (StartTimeParamType, TaskNameParamType, cli,
-                           get_stop_message, main, task_option)
+from rdial.cmdline import (
+    StartTimeParamType,
+    TaskNameParamType,
+    cli,
+    get_stop_message,
+    main,
+    task_option,
+)
 from rdial.events import Event, TaskNotRunningError, TaskRunningError
 
 
@@ -37,20 +51,24 @@ from rdial.events import Event, TaskNotRunningError, TaskRunningError
 def temp_user_cache(monkeypatch, tmpdir):
     cache_dir = tmpdir.join('cache')
     cache_dir.mkdir()
-    monkeypatch.setattr(events_mod.xdg_basedir, 'user_cache',
-                        lambda s: cache_dir.strpath)
+    monkeypatch.setattr(
+        events_mod.xdg_basedir, 'user_cache', lambda s: cache_dir.strpath
+    )
 
 
-@mark.parametrize('string, expected', [
-    ('valid_name', True),
-    ('also-valid-name', True),
-    ('.invalid_name', BadParameter),
-    ('valid.name', True),
-    ('invalid/name', BadParameter),
-    ('', BadParameter),
-    ('x' * 256, BadParameter),
-    ('-bad-start', BadParameter),
-])
+@mark.parametrize(
+    'string, expected',
+    [
+        ('valid_name', True),
+        ('also-valid-name', True),
+        ('.invalid_name', BadParameter),
+        ('valid.name', True),
+        ('invalid/name', BadParameter),
+        ('', BadParameter),
+        ('x' * 256, BadParameter),
+        ('-bad-start', BadParameter),
+    ],
+)
 def test_task_name_validity(string: str, expected: Optional[BadParameter]):
     p = TaskNameParamType()
     if expected is True:
@@ -74,12 +92,15 @@ def test_task_name_from_dir(tmpdir):
         assert result.stdout.endswith('new_dir\n')
 
 
-@mark.parametrize('string, expected', [
-    ('yesterday', True),
-    ('', True),
-    ('2011-05-04T09:15:00Z', True),
-    ('AB1 time', BadParameter),
-])
+@mark.parametrize(
+    'string, expected',
+    [
+        ('yesterday', True),
+        ('', True),
+        ('2011-05-04T09:15:00Z', True),
+        ('AB1 time', BadParameter),
+    ],
+)
 def test_start_time_validity(string: str, expected: Optional[BadParameter]):
     p = StartTimeParamType()
     if expected is True:
@@ -89,12 +110,10 @@ def test_start_time_validity(string: str, expected: Optional[BadParameter]):
             p.convert(string, None, None)
 
 
-@mark.parametrize('edit_func, message', [
-    (lambda s, **kwargs: s,
-     'finished'),
-    (lambda _, **kwargs: None,
-     ''),
-])
+@mark.parametrize(
+    'edit_func, message',
+    [(lambda s, **kwargs: s, 'finished'), (lambda _, **kwargs: None, '')],
+)
 def test_get_stop_message(edit_func: Callable, message: str, monkeypatch):
     monkeypatch.setattr('click.edit', edit_func)
     ev = Event('task', '2011-05-04T09:30:00Z', '', message)
@@ -103,17 +122,15 @@ def test_get_stop_message(edit_func: Callable, message: str, monkeypatch):
 
 def test_get_stop_message_template(monkeypatch):
     output = []
-    monkeypatch.setattr('click.edit',
-                        lambda s, **kwargs: output.extend(s.splitlines()))
+    monkeypatch.setattr(
+        'click.edit', lambda s, **kwargs: output.extend(s.splitlines())
+    )
     ev = Event('task', '2011-05-04T09:30:00Z')
     get_stop_message(ev)
     assert '# Task “task” started 2011-05-04T09:30:00Z' in output
 
 
-@mark.parametrize('config, output', [
-    ('color', True),
-    ('no_color', False),
-])
+@mark.parametrize('config, output', [('color', True), ('no_color', False)])
 def test_colour_for_u_deficient(config: str, output: bool):
     @cli.command()
     @pass_obj
@@ -121,8 +138,7 @@ def test_colour_for_u_deficient(config: str, output: bool):
         echo(obj.colour)
 
     runner = CliRunner()
-    result = runner.invoke(cli,
-                           f'--config tests/data/{config}.ini echo-colour')
+    result = runner.invoke(cli, f'--config tests/data/{config}.ini echo-colour')
     assert result.stdout.strip() == repr(output)
 
 
@@ -134,8 +150,7 @@ def test_command_defaults():
         echo(ctx.default_map['choice'])
 
     runner = CliRunner()
-    result = runner.invoke(cli,
-                           '--config tests/data/defaults.ini echo-choice')
+    result = runner.invoke(cli, '--config tests/data/defaults.ini echo-choice')
     assert result.stdout.strip() == 'questionable'
 
 
@@ -218,8 +233,7 @@ def test_stop_event_amend_message_reuse(tmpdir):
 
 
 def test_stop_event_running_interactive(monkeypatch, tmpdir):
-    monkeypatch.setattr('click.edit',
-                        lambda s, **kwargs: 'interactive message')
+    monkeypatch.setattr('click.edit', lambda s, **kwargs: 'interactive message')
     test_dir = tmpdir.join('test').strpath
     copytree('tests/data/test', test_dir)
     runner = CliRunner()
@@ -249,8 +263,7 @@ def test_switch_event_with_file_message(tmpdir):
     copytree('tests/data/test', test_dir)
     runner = CliRunner()
     result = runner.invoke(
-        cli,
-        f'--directory {test_dir} switch -F {msg_file} task2'
+        cli, f'--directory {test_dir} switch -F {msg_file} task2'
     )
     assert result.exit_code == 0
     assert 'Task task running for' in result.stdout
@@ -274,23 +287,22 @@ def test_switch_start_date_overlaps(tmpdir):
     copytree('tests/data/test', test_dir)
     runner = CliRunner()
     result = runner.invoke(
-        cli,
-        f'--directory {test_dir} switch --time 2011-05-04T09:15:00Z task2'
+        cli, f'--directory {test_dir} switch --time 2011-05-04T09:15:00Z task2'
     )
     assert isinstance(result.exception, TaskNotRunningError)
-    assert result.exception.args[0] \
+    assert (
+        result.exception.args[0]
         == 'Can’t specify a start time before current task started!'
+    )
 
 
 def test_switch_event_running_interactive(monkeypatch, tmpdir):
-    monkeypatch.setattr('click.edit',
-                        lambda s, **kwargs: 'interactive message')
+    monkeypatch.setattr('click.edit', lambda s, **kwargs: 'interactive message')
     test_dir = tmpdir.join('test').strpath
     copytree('tests/data/test', test_dir)
     runner = CliRunner()
     result = runner.invoke(
-        cli,
-        f'--directory {test_dir} --interactive switch task2'
+        cli, f'--directory {test_dir} --interactive switch task2'
     )
     assert result.exit_code == 0
     assert 'Task task running for' in result.stdout
@@ -304,8 +316,7 @@ def test_switch_event_running_amend(tmpdir):
     test_dir = tmpdir.join('test').strpath
     copytree('tests/data/test', test_dir)
     runner = CliRunner()
-    result = runner.invoke(cli,
-                           f'--directory {test_dir} switch --amend task2')
+    result = runner.invoke(cli, f'--directory {test_dir} switch --amend task2')
     assert isinstance(result.exception, TaskRunningError)
     assert result.exception.args[0] == 'Can’t amend running task task!'
 
@@ -327,7 +338,7 @@ def test_run_timed(capfd, tmpdir):
     runner = CliRunner()
     result = runner.invoke(
         cli,
-        f"""--directory {test_dir} run -c 'echo "long running command"' task"""
+        f"""--directory {test_dir} run -c 'echo "long running command"' task""",
     )
     assert result.exit_code == 0
     assert 'Task task running for' in result.stdout
@@ -347,8 +358,9 @@ def test_run_failed_command(tmpdir):
     test_dir = tmpdir.join('test').strpath
     copytree('tests/data/test_not_running', test_dir)
     runner = CliRunner()
-    result = runner.invoke(cli,
-                           f'--directory {test_dir} run -c "( exit 50 )" task')
+    result = runner.invoke(
+        cli, f'--directory {test_dir} run -c "( exit 50 )" task'
+    )
     assert isinstance(result.exception, OSError)
     assert result.exception.args == (50, 'Command failed')
 
@@ -365,7 +377,7 @@ def test_run_with_file_message(capfd, tmpdir):
         f"""
         --directory {test_dir} run -F {msg_file}
         -c 'echo "long running command"' task
-        """
+        """,
     )
     assert result.exit_code == 0
     assert 'Task task running for' in result.stdout
@@ -375,8 +387,7 @@ def test_run_with_file_message(capfd, tmpdir):
 
 
 def test_run_interactive(monkeypatch, tmpdir):
-    monkeypatch.setattr('click.edit',
-                        lambda s, **kwargs: 'interactive message')
+    monkeypatch.setattr('click.edit', lambda s, **kwargs: 'interactive message')
     test_dir = tmpdir.join('test').strpath
     copytree('tests/data/test_not_running', test_dir)
     runner = CliRunner()
@@ -385,7 +396,7 @@ def test_run_interactive(monkeypatch, tmpdir):
         f"""
         --directory {test_dir} --interactive run
         -c 'echo "long running command"' task
-        """
+        """,
     )
     assert result.exit_code == 0
     assert 'Task task running for' in result.stdout
@@ -395,8 +406,9 @@ def test_run_interactive(monkeypatch, tmpdir):
 
 def test_wrapper_no_config():
     runner = CliRunner()
-    result = runner.invoke(cli,
-                           '--config tests/data/defaults.ini wrapper calendar')
+    result = runner.invoke(
+        cli, '--config tests/data/defaults.ini wrapper calendar'
+    )
     assert isinstance(result.exception, SystemExit)
     assert "No such wrapper 'calendar'" in result.stdout
 
@@ -410,7 +422,7 @@ def test_wrapper_run_command(capfd, tmpdir):
         f"""
         --config tests/data/wrappers.ini --directory {test_dir}
         wrapper calendar
-        """
+        """,
     )
     assert result.exit_code == 0
     assert 'Task task running for' in result.stdout
@@ -421,8 +433,9 @@ def test_wrapper_run_command(capfd, tmpdir):
 
 def test_report():
     runner = CliRunner()
-    result = runner.invoke(cli,
-                           '--directory tests/data/test_not_running report')
+    result = runner.invoke(
+        cli, '--directory tests/data/test_not_running report'
+    )
     assert result.exit_code == 0
     assert 'task    2:00:00' in result.stdout
 
@@ -430,8 +443,7 @@ def test_report():
 def test_report_stats():
     runner = CliRunner()
     result = runner.invoke(
-        cli,
-        '--directory tests/data/test_not_running report --stats'
+        cli, '--directory tests/data/test_not_running report --stats'
     )
     assert result.exit_code == 0
     assert 'Duration of events 2:15:00' in result.stdout
@@ -441,14 +453,18 @@ def test_report_event_running():
     runner = CliRunner()
     result = runner.invoke(cli, '--directory tests/data/test report')
     assert result.exit_code == 0
-    assert 'Task “task” started 2011-05-04T09:30:00Z' \
-        in result.stdout.splitlines()
+    assert (
+        'Task “task” started 2011-05-04T09:30:00Z' in result.stdout.splitlines()
+    )
 
 
-@mark.parametrize('database, expected', [
-    ('test', 'Task “task” started'),
-    ('test_not_running', 'No task is running!'),
-])
+@mark.parametrize(
+    'database, expected',
+    [
+        ('test', 'Task “task” started'),
+        ('test_not_running', 'No task is running!'),
+    ],
+)
 def test_running(database: str, expected: str):
     runner = CliRunner()
     result = runner.invoke(cli, f'--directory tests/data/{database} running')
@@ -456,10 +472,13 @@ def test_running(database: str, expected: str):
     assert expected in result.stdout
 
 
-@mark.parametrize('database, expected', [
-    ('test', 'Task task is still running'),
-    ('test_not_running', 'Last task task, ran for 1:00:00'),
-])
+@mark.parametrize(
+    'database, expected',
+    [
+        ('test', 'Task task is still running'),
+        ('test_not_running', 'Last task task, ran for 1:00:00'),
+    ],
+)
 def test_last(database: str, expected: str):
     runner = CliRunner()
     result = runner.invoke(cli, f'--directory tests/data/{database} last')
@@ -469,8 +488,9 @@ def test_last(database: str, expected: str):
 
 def test_ledger():
     runner = CliRunner()
-    result = runner.invoke(cli,
-                           '--directory tests/data/test_not_running ledger')
+    result = runner.invoke(
+        cli, '--directory tests/data/test_not_running ledger'
+    )
     assert result.exit_code == 0
     assert '2011-05-04 * 09:30-10:30' in result.stdout
 
@@ -484,12 +504,12 @@ def test_ledger_running():
 
 def test_timeclock():
     runner = CliRunner()
-    result = runner.invoke(cli,
-                           '--directory tests/data/test_not_running timeclock')
+    result = runner.invoke(
+        cli, '--directory tests/data/test_not_running timeclock'
+    )
     assert result.exit_code == 0
     assert 'i 2011-05-04 09:30:00 task' in result.stdout.splitlines()
-    assert 'o 2011-05-04 10:30:00  ; stop message' in \
-        result.stdout.splitlines()
+    assert 'o 2011-05-04 10:30:00  ; stop message' in result.stdout.splitlines()
 
 
 def test_timeclock_running():
@@ -500,14 +520,16 @@ def test_timeclock_running():
 
 
 def test_main_wrapper(monkeypatch, capsys):
-    monkeypatch.setattr('sys.argv', ['rdial', '--directory', 'tests/data/test',
-                                     'running'])
+    monkeypatch.setattr(
+        'sys.argv', ['rdial', '--directory', 'tests/data/test', 'running']
+    )
 
     def exit_mock(n):
         if n == 0:
             return n
         else:
             raise ValueError(n)
+
     monkeypatch.setattr('sys.exit', exit_mock)
     result = main()
     assert result == 0
@@ -515,14 +537,17 @@ def test_main_wrapper(monkeypatch, capsys):
 
 
 def test_main_wrapper_error(monkeypatch, capsys):
-    monkeypatch.setattr('sys.argv', ['rdial', '--directory',
-                                     'tests/data/test_not_running', 'stop'])
+    monkeypatch.setattr(
+        'sys.argv',
+        ['rdial', '--directory', 'tests/data/test_not_running', 'stop'],
+    )
 
     def exit_mock(n):
         if n == 0:
             return n
         else:
             raise ValueError(n)
+
     monkeypatch.setattr('sys.exit', exit_mock)
     result = main()
     assert result == 2
@@ -532,8 +557,10 @@ def test_main_wrapper_error(monkeypatch, capsys):
 def test_main_wrapper_informative_return_code(capsys, monkeypatch, tmpdir):
     test_dir = tmpdir.join('test').strpath
     copytree('tests/data/test_not_running', test_dir)
-    monkeypatch.setattr('sys.argv', ['rdial', '--directory', test_dir, 'run',
-                                     '-c', '( exit 50 )', 'task'])
+    monkeypatch.setattr(
+        'sys.argv',
+        ['rdial', '--directory', test_dir, 'run', '-c', '( exit 50 )', 'task'],
+    )
     result = main()
     assert result == 50
     assert 'Task task running for' in capsys.readouterr()[0]

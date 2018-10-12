@@ -47,7 +47,7 @@ def process_events(location: str) -> Dict[str, List[str]]:
             if ev.message and not message_warning:
                 pwarn('Event messages aren’t supported by timew')
                 message_warning = True
-            out = [f'inc {ev.start:%Y%m%dT%H%M%SZ}', ]
+            out = [f'inc {ev.start:%Y%m%dT%H%M%SZ}']
             if ev.delta:
                 out.append(f'- {ev.start + ev.delta:%Y%m%dT%H%M%SZ}')
             out.append(f'# {task}\n')
@@ -62,12 +62,16 @@ def write_events(location: str, files: Dict[str, List[str]]) -> None:
             f.writelines(data)
 
 
-@command(epilog=('Please report bugs at '
-                 'https://github.com/JNRowe/rdial/issues'),
-         context_settings={'help_option_names': ['-h', '--help']})
-@option('--database', default=user_data('rdial'),
-        type=Path(exists=True, file_okay=False),
-        help="Path to rdial database")
+@command(
+    epilog=('Please report bugs at ' 'https://github.com/JNRowe/rdial/issues'),
+    context_settings={'help_option_names': ['-h', '--help']},
+)
+@option(
+    '--database',
+    default=user_data('rdial'),
+    type=Path(exists=True, file_okay=False),
+    help='Path to rdial database',
+)
 @argument('output', type=Path(exists=False))
 def main(database: str, output: str) -> None:
     """Export rdial data for use with timew.
@@ -80,5 +84,5 @@ def main(database: str, output: str) -> None:
     write_events(output, files)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

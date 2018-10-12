@@ -24,8 +24,13 @@ from typing import Optional
 from jnrbase.attrdict import AttrDict
 from pytest import mark
 
-from rdial.utils import (newer, read_config, remove_current, term_link,
-                         write_current)
+from rdial.utils import (
+    newer,
+    read_config,
+    remove_current,
+    term_link,
+    write_current,
+)
 
 
 def test_read_config_local():
@@ -33,11 +38,14 @@ def test_read_config_local():
     assert conf['local test'].getboolean('read')
 
 
-@mark.parametrize('config, options, result', [
-    (None, None, False),
-    ('tests/data/stacking.ini', None, True),
-    ('tests/data/stacking.ini', {'interactive': False}, False),
-])
+@mark.parametrize(
+    'config, options, result',
+    [
+        (None, None, False),
+        ('tests/data/stacking.ini', None, True),
+        ('tests/data/stacking.ini', {'interactive': False}, False),
+    ],
+)
 def test_read_config_stacking(config, options, result):
     conf = read_config(config, options)
     assert conf['rdial'].getboolean('interactive') is result
@@ -63,10 +71,16 @@ def test_newer(tmpdir):
     assert not newer(f1.strpath, f1.strpath)
 
 
-@mark.parametrize('target, name, result', [
-    ('pypi://rdial', 'this package',
-     '\x1b]8;;pypi://rdial\x07this package\x1b]8;;\x07'),
-    ('pypi://rdial', None, '\x1b]8;;pypi://rdial\x07rdial\x1b]8;;\x07'),
-])
+@mark.parametrize(
+    'target, name, result',
+    [
+        (
+            'pypi://rdial',
+            'this package',
+            '\x1b]8;;pypi://rdial\x07this package\x1b]8;;\x07',
+        ),
+        ('pypi://rdial', None, '\x1b]8;;pypi://rdial\x07rdial\x1b]8;;\x07'),
+    ],
+)
 def test_term_link(target: str, name: Optional[str], result: str):
     assert term_link(target, name) == result

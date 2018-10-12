@@ -32,12 +32,15 @@ def test_fetch_events_for_task():
     assert len(events.for_task('task2')) == 1
 
 
-@mark.parametrize('date, expected', [
-    ({'year': 2011, }, 2),
-    ({'year': 2011, 'month': 1}, 1),
-    ({'year': 2011, 'month': 3, 'day': 1}, 1),
-    ({'year': 2011, 'month': 3, 'day': 31}, 0),
-])
+@mark.parametrize(
+    'date, expected',
+    [
+        ({'year': 2011}, 2),
+        ({'year': 2011, 'month': 1}, 1),
+        ({'year': 2011, 'month': 3, 'day': 1}, 1),
+        ({'year': 2011, 'month': 3, 'day': 31}, 0),
+    ],
+)
 def test_fetch_events_for_date(date: Dict[str, int], expected: int):
     events = Events.read('tests/data/date_filtering', write_cache=False)
     assert len(events.for_date(**date)) == expected
@@ -48,10 +51,9 @@ def test_fetch_events_for_week():
     assert len(events.for_week(2011, 9)) == 1
 
 
-@mark.parametrize('task, result', [
-    (None, ['task', 'task2']),
-    ('task', ['task', ]),
-])
+@mark.parametrize(
+    'task, result', [(None, ['task', 'task2']), ('task', ['task'])]
+)
 def test_filter_events_by_task(task: Optional[str], result: List[str]):
     globs = AttrDict(directory='tests/data/test', cache=False)
     evs = filter_events(globs, task)

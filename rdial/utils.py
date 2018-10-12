@@ -42,8 +42,8 @@ class RdialError(ValueError):
 
 
 #: Map duration string keys to timedelta args
-_MAPPER = {'D': 'days', 'H': 'hours', 'M': 'minutes', 'S': 'seconds'} \
-    # type : Dict[str, str]
+_MAPPER = {'D': 'days', 'H': 'hours', 'M': 'minutes', 'S': 'seconds'}
+# type : Dict[str, str]
 
 
 def parse_datetime_user(__string: str) -> datetime:
@@ -63,9 +63,11 @@ def parse_datetime_user(__string: str) -> datetime:
         datetime_ = parse_datetime(__string)
     except ValueError:
         try:
-            proc = subprocess.run(['date', '--utc', '--iso-8601=seconds',
-                                   '-d', __string],
-                                  stdout=subprocess.PIPE, check=True)
+            proc = subprocess.run(
+                ['date', '--utc', '--iso-8601=seconds', '-d', __string],
+                stdout=subprocess.PIPE,
+                check=True,
+            )
             output = proc.stdout.decode()
             datetime_ = parse_datetime(output.strip()[:19])
         except subprocess.CalledProcessError:
@@ -75,8 +77,9 @@ def parse_datetime_user(__string: str) -> datetime:
     return datetime_.replace(tzinfo=None)
 
 
-def iso_week_to_date(__year: int, __week: int) -> Tuple[datetime.date,
-                                                        datetime.date]:
+def iso_week_to_date(
+    __year: int, __week: int
+) -> Tuple[datetime.date, datetime.date]:
     """Generate date range for a given ISO-8601 week.
 
     ISO-8601 defines a week as Monday to Sunday, with the first week of a year
@@ -96,9 +99,10 @@ def iso_week_to_date(__year: int, __week: int) -> Tuple[datetime.date,
     return start, end
 
 
-def read_config(user_config: Optional[str] = None,
-                cli_options: Optional[Dict[str, Union[bool, str]]] = None
-                ) -> configparser.ConfigParser:
+def read_config(
+    user_config: Optional[str] = None,
+    cli_options: Optional[Dict[str, Union[bool, str]]] = None,
+) -> configparser.ConfigParser:
     """Read configuration data.
 
     Args:
@@ -122,9 +126,9 @@ def read_config(user_config: Optional[str] = None,
         conf.read(user_config)
 
     if cli_options:
-        conf.read_dict({
-            'rdial': {k: v for k, v in cli_options.items() if v is not None}
-        })
+        conf.read_dict(
+            {'rdial': {k: v for k, v in cli_options.items() if v is not None}}
+        )
 
     return conf
 
@@ -141,6 +145,7 @@ def write_current(__fun: Callable) -> Callable:
     Returns:
         Wrapped function
     """
+
     @functools.wraps(__fun)
     def wrapper(*args, **kwargs):
         """Write value of ``task`` argument to ``.current`` on exit.
@@ -154,6 +159,7 @@ def write_current(__fun: Callable) -> Callable:
         __fun(*args, **kwargs)
         with click.open_file(f'{globs.directory}/.current', 'w') as f:
             f.write(kwargs['task'])
+
     return wrapper
 
 
@@ -169,6 +175,7 @@ def remove_current(__fun: Callable) -> Callable:
     Returns:
         Wrapped function
     """
+
     @functools.wraps(__fun)
     def wrapper(*args, **kwargs):
         """Remove ``.current`` file on exit.
@@ -182,6 +189,7 @@ def remove_current(__fun: Callable) -> Callable:
         __fun(*args, **kwargs)
         if os.path.isfile(f'{globs.directory}/.current'):
             os.unlink(f'{globs.directory}/.current')
+
     return wrapper
 
 
