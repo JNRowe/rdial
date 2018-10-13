@@ -246,10 +246,9 @@ def cli(ctx: click.Context, directory: str, backup: bool, cache: bool,
 
     base = cfg['rdial']
 
-    if colour is None:
-        if 'color' in base:
-            base['colour'] = base['color']
-        colour = base.getboolean('colour')
+    if 'color' in base:
+        base['colour'] = base['color']
+    colour = base.getboolean('colour')
     colourise.COLOUR = colour
 
     ctx.default_map = {}
