@@ -485,7 +485,8 @@ def test_running(database: str, expected: str):
 
 @mark.parametrize('database, expected', [
     ('test', 'Task task is still running'),
-    ('test_not_running', 'Last task task, ran for 1:00:00'),
+    ('test_no_message', 'Last task task, ran for 1:00:00'),
+    ('test_not_running', 'stop message'),
 ])
 def test_last(database: str, expected: str):
     runner = CliRunner()
