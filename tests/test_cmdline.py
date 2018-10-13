@@ -30,7 +30,8 @@ from pytest import fixture, mark, raises
 from rdial import events as events_mod
 from rdial.cmdline import (StartTimeParamType, TaskNameParamType, cli,
                            get_stop_message, main, task_option)
-from rdial.events import Event, TaskNotRunningError, TaskRunningError
+from rdial.events import (Event, TaskNotExistError, TaskNotRunningError,
+                          TaskRunningError)
 
 
 @fixture(autouse=True)
@@ -267,6 +268,15 @@ def test_switch_event_not_running(tmpdir):
     result = runner.invoke(cli, f'--directory {test_dir} switch task2')
     assert isinstance(result.exception, TaskNotRunningError)
     assert result.exception.args[0] == 'No task running!'
+
+
+def test_switch_invalid_new_task(tmpdir):
+    test_dir = tmpdir.join('test').strpath
+    copytree('tests/data/test', test_dir)
+    runner = CliRunner()
+    result = runner.invoke(cli, f'--directory {test_dir} switch whoops')
+    assert isinstance(result.exception, TaskNotExistError)
+    assert 'Task whoops does not exist!' in result.exception.args[0]
 
 
 def test_switch_start_date_overlaps(tmpdir):
