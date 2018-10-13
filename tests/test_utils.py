@@ -21,7 +21,7 @@
 from time import sleep
 from typing import Optional
 
-from jnrbase.attrdict import AttrDict
+from jnrbase.attrdict import ROAttrDict
 from pytest import mark
 
 from rdial.utils import (newer, read_config, remove_current, term_link,
@@ -44,7 +44,7 @@ def test_read_config_stacking(config, options, result):
 
 
 def test_handle_current(tmpdir):
-    globs = AttrDict(directory=tmpdir.strpath)
+    globs = ROAttrDict(directory=tmpdir.strpath)
     bare = lambda globs, task: True
     write_current(bare)(globs, task='test')
     assert tmpdir.join('.current').exists()

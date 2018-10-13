@@ -20,7 +20,7 @@
 
 from typing import Dict, List, Optional
 
-from jnrbase.attrdict import AttrDict
+from jnrbase.attrdict import ROAttrDict
 from pytest import mark
 
 from rdial.cmdline import filter_events
@@ -53,6 +53,6 @@ def test_fetch_events_for_week():
     ('task', ['task', ]),
 ])
 def test_filter_events_by_task(task: Optional[str], result: List[str]):
-    globs = AttrDict(directory='tests/data/test', cache=False)
+    globs = ROAttrDict(directory='tests/data/test', cache=False)
     evs = filter_events(globs, task)
     assert evs.tasks() == result

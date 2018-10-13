@@ -33,7 +33,7 @@ import click
 import tabulate
 
 from jnrbase import colourise, iso_8601
-from jnrbase.attrdict import AttrDict
+from jnrbase.attrdict import ROAttrDict
 
 from . import _version, utils
 from .events import Event, Events, TaskNotRunningError, TaskRunningError
@@ -263,7 +263,7 @@ def cli(ctx: click.Context, directory: str, backup: bool, cache: bool,
                     defs[k] = cfg[name][k]
             ctx.default_map[name] = defs
 
-    ctx.obj = AttrDict(
+    ctx.obj = ROAttrDict(
         backup=base.getboolean('backup'),
         cache=base.getboolean('cache'),
         colour=colour,
@@ -273,7 +273,7 @@ def cli(ctx: click.Context, directory: str, backup: bool, cache: bool,
     )
 
 
-def filter_events(__globs: AttrDict, __task: Optional[str] = None,
+def filter_events(__globs: ROAttrDict, __task: Optional[str] = None,
                   __duration: str = 'all') -> Events:
     """Filter events for report processing.
 
@@ -332,7 +332,7 @@ def bug_data():
               help='Display progress bar.')
 @click.pass_obj
 @click.pass_context
-def fsck(ctx: click.Context, globs: AttrDict, progress: bool):
+def fsck(ctx: click.Context, globs: ROAttrDict, progress: bool):
     """Check storage consistency.
 
     \f
@@ -392,7 +392,7 @@ def fsck(ctx: click.Context, globs: AttrDict, progress: bool):
               type=StartTimeParamType())
 @click.pass_obj
 @utils.write_current
-def start(globs: AttrDict, task: str, continue_: bool, new: bool,
+def start(globs: ROAttrDict, task: str, continue_: bool, new: bool,
           time: datetime):
     """Start task.
 
@@ -416,7 +416,7 @@ def start(globs: AttrDict, task: str, continue_: bool, new: bool,
 @click.option('--amend', is_flag=True, help='Amend previous stop entry.')
 @click.pass_obj
 @utils.remove_current
-def stop(globs: AttrDict, message: str, fname: str, amend: bool):
+def stop(globs: ROAttrDict, message: str, fname: str, amend: bool):
     """Stop task.
 
     \f
@@ -458,8 +458,8 @@ def stop(globs: AttrDict, message: str, fname: str, amend: bool):
 @click.option('--amend', is_flag=True, help='Amend previous stop entry.')
 @click.pass_obj
 @utils.write_current
-def switch(globs: AttrDict, task: str, new: bool, time: datetime, amend: bool,
-           message: str, fname: str):
+def switch(globs: ROAttrDict, task: str, new: bool, time: datetime,
+           amend: bool, message: str, fname: str):
     """Complete last task and start new one.
 
     \f
@@ -508,7 +508,7 @@ def switch(globs: AttrDict, task: str, new: bool, time: datetime, amend: bool,
 @message_option
 @click.option('-c', '--command', help='Command to run.')
 @click.pass_obj
-def run(globs: AttrDict, task: str, new: bool, time: datetime, message: str,
+def run(globs: ROAttrDict, task: str, new: bool, time: datetime, message: str,
         fname: str, command: str):
     """Run command with timer.
 
@@ -555,8 +555,8 @@ def run(globs: AttrDict, task: str, new: bool, time: datetime, message: str,
 @click.argument('wrapper', default='default')
 @click.pass_obj
 @click.pass_context
-def wrapper(ctx: click.Context, globs: AttrDict, time: datetime, message: str,
-            fname: str, wrapper: str):
+def wrapper(ctx: click.Context, globs: ROAttrDict, time: datetime,
+            message: str, fname: str, wrapper: str):
     """Run predefined command with timer.
 
     \f
@@ -593,7 +593,7 @@ def wrapper(ctx: click.Context, globs: AttrDict, time: datetime, message: str,
               type=click.Choice(tabulate._table_formats.keys()),
               help='Table output style.')
 @click.pass_obj
-def report(globs: AttrDict, task: str, stats: bool, duration: str, sort: str,
+def report(globs: ROAttrDict, task: str, stats: bool, duration: str, sort: str,
            reverse: bool, style: str):
     """Report time tracking data.
 
@@ -635,7 +635,7 @@ def report(globs: AttrDict, task: str, stats: bool, duration: str, sort: str,
 
 @cli.command()
 @click.pass_obj
-def running(globs: AttrDict):
+def running(globs: ROAttrDict):
     """Display running task, if any.
 
     \f
@@ -655,7 +655,7 @@ def running(globs: AttrDict):
 
 @cli.command()
 @click.pass_obj
-def last(globs: AttrDict):
+def last(globs: ROAttrDict):
     """Display last event, if any.
 
     \f
@@ -679,7 +679,7 @@ def last(globs: AttrDict):
 @click.option('-r', '--rate', type=float, envvar='RDIAL_RATE',
               help='Hourly rate for task output.')
 @click.pass_obj
-def ledger(globs: AttrDict, task: str, duration: str, rate: str):
+def ledger(globs: ROAttrDict, task: str, duration: str, rate: str):
     """Generate ledger compatible data file.
 
     \f
@@ -716,7 +716,7 @@ def ledger(globs: AttrDict, task: str, duration: str, rate: str):
 @task_option
 @duration_option
 @click.pass_obj
-def timeclock(globs: AttrDict, task: str, duration: str):
+def timeclock(globs: ROAttrDict, task: str, duration: str):
     """Generate ledger compatible timeclock file.
 
     \f
