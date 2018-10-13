@@ -22,14 +22,21 @@ from datetime import datetime
 
 from click.testing import CliRunner
 from hiro import Timeline
+from pytest import mark
 
 from rdial.cmdline import cli
 
 
-def test_fsck_overlap():
+@mark.parametrize('progress', [
+    '--progress',
+    '--no-progress'
+])
+def test_fsck_overlap(progress: str):
     runner = CliRunner()
-    result = runner.invoke(cli,
-                           '--directory=tests/data/test_fsck --no-cache fsck')
+    result = runner.invoke(
+        cli,
+        f'--directory=tests/data/test_fsck --no-cache fsck {progress}'
+    )
     assert result.exit_code == 1
     assert 'Overlap' in result.stdout
     assert "'2011-05-04T09:15:00Z', 'PT35M'" in result.stdout
