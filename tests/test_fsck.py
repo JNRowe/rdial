@@ -27,6 +27,14 @@ from pytest import mark
 from rdial.cmdline import cli
 
 
+def test_fsck_clean():
+    runner = CliRunner()
+    result = runner.invoke(cli,
+                           '--directory=tests/data/test --no-cache fsck')
+    assert result.exit_code == 0
+    assert result.stdout.strip() == ''
+
+
 @mark.parametrize('progress', [
     '--progress',
     '--no-progress'
