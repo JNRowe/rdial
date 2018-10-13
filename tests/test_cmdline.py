@@ -429,10 +429,15 @@ def test_wrapper_run_command(capfd, tmpdir):
     assert 'May 2011' in capfd.readouterr()[0]
 
 
-def test_report():
+@mark.parametrize('task', [
+    '',
+    'task',
+])
+def test_report(task):
     runner = CliRunner()
-    result = runner.invoke(cli,
-                           '--directory tests/data/test_not_running report')
+    result = runner.invoke(
+        cli,
+        f'--directory tests/data/test_not_running report {task}')
     assert result.exit_code == 0
     assert 'task    2:00:00' in result.stdout
 
@@ -477,10 +482,16 @@ def test_last(database: str, expected: str):
     assert expected in result.stdout
 
 
-def test_ledger():
+@mark.parametrize('task', [
+    '',
+    'task',
+])
+def test_ledger(task: str):
     runner = CliRunner()
-    result = runner.invoke(cli,
-                           '--directory tests/data/test_not_running ledger')
+    result = runner.invoke(
+        cli,
+        f'--directory tests/data/test_not_running ledger {task}'
+    )
     assert result.exit_code == 0
     assert '2011-05-04 * 09:30-10:30' in result.stdout
 
@@ -492,10 +503,16 @@ def test_ledger_running():
     assert ';; Running event not included in output!' in result.stdout
 
 
-def test_timeclock():
+@mark.parametrize('task', [
+    '',
+    'task',
+])
+def test_timeclock(task: str):
     runner = CliRunner()
-    result = runner.invoke(cli,
-                           '--directory tests/data/test_not_running timeclock')
+    result = runner.invoke(
+        cli,
+        f'--directory tests/data/test_not_running timeclock {task}'
+    )
     assert result.exit_code == 0
     assert 'i 2011-05-04 09:30:00 task' in result.stdout.splitlines()
     assert 'o 2011-05-04 10:30:00  ; stop message' in \
