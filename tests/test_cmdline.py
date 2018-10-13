@@ -450,6 +450,18 @@ def test_report_stats():
     )
     assert result.exit_code == 0
     assert 'Duration of events 2:15:00' in result.stdout
+    assert 'First entry started at 2011-05-04 08:00:00' in result.stdout
+    assert 'Last entry started at 2011-05-04 09:30:00' in result.stdout
+
+
+def test_report_stats_no_events(tmpdir):
+    runner = CliRunner()
+    result = runner.invoke(
+        cli,
+        f'--directory {tmpdir.strpath} report --stats'
+    )
+    assert result.exit_code == 0
+    assert 'Duration of events 0:00:00' in result.stdout
 
 
 def test_report_event_running():
