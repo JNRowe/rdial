@@ -89,7 +89,7 @@ autodoc_default_flags = ['members', ]  # type: List[str]
 intersphinx_mapping = {
     k: (v, os.getenv(f'SPHINX_{k.upper()}_OBJECTS'))
     for k, v in {
-        'click': 'http://click.pocoo.org/6/',
+        'click': 'https://click.palletsprojects.com/en/7.x/',
         'jnrbase': 'https://jnrbase.readthedocs.io/en/latest/',
         'python': 'https://docs.python.org/3/',
 }.items()}  # type: Dict[str, str]
