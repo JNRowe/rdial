@@ -14,9 +14,8 @@ Requirements
 
 ``rdial``’s mandatory dependencies outside of the standard library are:
 
-* ciso8601_ ≥ 1.0.1
-* click_ ≥ 5.1
-* jnrbase_ ``[colour]`` ≥ 0.8.1
+* click_ ≥ 7.0
+* jnrbase_ ``[colour,iso_8601]`` ≥ 1.0.0
 * tabulate_
 
 It should work with Python_ version 3.6, or newer.  If ``rdial`` doesn’t work
@@ -29,35 +28,31 @@ X, but it may work fine on other systems too.
 To run the tests you’ll need pytest_.  Once you have pytest_ installed you can
 run the tests with the following commands:
 
-.. code:: console
+.. code-block:: console
 
     $ pytest tests
 
 Database
 --------
 
-The database is just a directory of simple text files, making it useful to use
+The database is just a directory of simple CSV files, making it useful to use
 and abuse in other applications.  A sample database could be a file named
-``task.csv`` with the following contents:
-
-.. code:: text
+``task.csv`` with the following contents::
 
     start,delta,message
     2011-05-04T08:00:00Z,PT01H00M00S,working on issue 4
     2011-05-04T09:30:00Z,,
 
-and a ``task2.csv`` file with the following contents:
-
-.. code:: text
+and a ``task2.csv`` file with the following contents::
 
     start,delta,message
     2011-05-04T09:15:00Z,PT00H15M00S,
 
-The format is a CSV file containing the following fields:
+The CSV files contain the following fields:
 
 1. Start time expressed in UTC
 2. Task duration
-3. Message associated with the event
+3. An optional message associated with the event
 
 The start time and duration fields are given as `ISO 8601`_ formatted strings.
 
@@ -67,7 +62,7 @@ running.
 Interface
 ---------
 
-.. code:: console
+.. code-block:: console
 
     $ rdial start <task_name>
     $ rdial stop
@@ -118,7 +113,6 @@ If you’ve found a bug please try to include a minimal testcase that reproduces
 the problem, or even better a patch that fixes it!
 
 .. _GPL v3: http://www.gnu.org/licenses/
-.. _ciso8601: https://pypi.org/project/ciso8601/
 .. _click: https://pypi.org/project/click/
 .. _jnrbase: https://pypi.org/project/jnrbase/
 .. _tabulate: https://pypi.org/project/tabulate/

@@ -2,4 +2,5 @@
 
 sphinx>=1.6
 sphinx-autodoc-typehints>=1.2.3
+sphinx-click>=1.4.0
 sphinx_rtd_theme>=0.2.4

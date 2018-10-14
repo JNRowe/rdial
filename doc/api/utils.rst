@@ -12,6 +12,8 @@ Utilities
 Convenience functions and classes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. autofunction:: read_config
+
 .. autofunction:: write_current
 .. autofunction:: remove_current
 
@@ -21,6 +23,7 @@ Convenience functions and classes
 Time handling
 ~~~~~~~~~~~~~
 
+.. autofunction:: iso_week_to_date
 .. autofunction:: parse_datetime_user
 
 Development tools

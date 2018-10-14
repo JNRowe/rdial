@@ -9,6 +9,7 @@ Errors
 
 .. autoexception:: rdial.utils.RdialError
 
+.. autoexception:: rdial.events.TaskNotExistError
 .. autoexception:: rdial.events.TaskNotRunningError
 .. autoexception:: rdial.events.TaskRunningError
 

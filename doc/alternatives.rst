@@ -80,3 +80,15 @@ I still take advantage of its functionality now, in combination with ``rdial``,
 so that I can see when I started working toward a task in my to-do list.
 
 .. _taskwarrior: http://taskwarrior.org/
+
+``timewarrior``
+---------------
+
+From the same stable as taskwarrior_, timewarrior_ is an *excellent* solution
+for time tracking.  It doesn’t support close messages, but it does have amazing
+tag support and some really useful query options.
+
+There are import and export scripts in the ``extra`` subdirectory, and I truly
+recommend trying timewarrior_ out.
+
+.. _timewarrior: https://taskwarrior.org/news/news.20160821.html

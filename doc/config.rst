@@ -71,15 +71,13 @@ with the per-directory config file, to keep per-project task databases.
 If this key is set to ``True`` then ``rdial`` will interactively ask the user
 for for messages if they’re not supplied as arguments.
 
-.. _run-wrappers-label:
-
 ``run wrappers`` section
 ------------------------
 
-This section is used to configure pre-defined arguments for the :ref:`rdial run
-<run-subcommand-label>` subcommand.  It consists of a series of string keys to
-use as the wrapper title, and arguments to the :program:`rdial run` subcommand
-as values.  For example::
+This section is used to configure pre-defined arguments for the :program:`rdial
+run` subcommand.  It consists of a series of string keys to use as the wrapper
+title, and arguments to the :program:`rdial run` subcommand as values.  For
+example::
 
     [run wrappers]
     feeds = -c 'mutt -f ~/Mail/RSS2email/' procrast
