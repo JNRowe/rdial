@@ -3,6 +3,15 @@ User-visible changes
 
 .. contents::
 
+* Click v7 is now required
+* ``switch`` now supports ``--amend``, to mirror ``stop``
+* ``fsck``’s progress bar can be disabled globally or with an option
+* ``gettext`` is no longer supported, use ``retext`` if you need translations
+* Naïve import/export scripts for timewarrior_ in ``extra/``
+* Python 3.5 is no longer supported
+
+.. _timewarrior: https://taskwarrior.org/news/news.20160821.html
+
 1.0.0 - 2018-09-06
 ------------------
 
