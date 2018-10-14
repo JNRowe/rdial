@@ -246,10 +246,9 @@ def cli(ctx: click.Context, directory: str, backup: bool, cache: bool,
 
     base = cfg['rdial']
 
-    if colour is None:
-        if 'color' in base:
-            base['colour'] = base['color']
-        colour = base.getboolean('colour')
+    if 'color' in base:
+        base['colour'] = base['color']
+    colour = base.getboolean('colour')
     colourise.COLOUR = colour
 
     ctx.default_map = {}
@@ -755,8 +754,9 @@ def main() -> int:
 
     """
     try:
-        # pylint: disable=no-value-for-parameter
-        cli(auto_envvar_prefix='RDIAL')
+        with utils.maybe_profile():
+            # pylint: disable=no-value-for-parameter
+            cli(auto_envvar_prefix='RDIAL')
         return 0
     except (ValueError, utils.RdialError) as error:
         colourise.pfail(str(error))

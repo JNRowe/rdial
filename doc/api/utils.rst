@@ -23,6 +23,11 @@ Time handling
 
 .. autofunction:: parse_datetime_user
 
+Development tools
+~~~~~~~~~~~~~~~~~
+
+.. autofunction:: maybe_profile
+
 Examples
 --------
 
@@ -38,3 +43,12 @@ Time handling
 
     >>> parse_datetime_user('40 minutes ago')
     datetime.datetime(2012, 2, 15, 18, 59, 18)
+
+Development tools
+~~~~~~~~~~~~~~~~~
+
+.. doctest::
+   :options: +SKIP
+
+    >>> with maybe_profile():
+    ...     time.sleep(10)

@@ -19,7 +19,7 @@
 # rdial.  If not, see <http://www.gnu.org/licenses/>.
 
 from time import sleep
-from typing import Optional
+from typing import Dict, Optional
 
 from jnrbase.attrdict import ROAttrDict
 from pytest import mark
@@ -38,7 +38,9 @@ def test_read_config_local():
     ('tests/data/stacking.ini', None, True),
     ('tests/data/stacking.ini', {'interactive': False}, False),
 ])
-def test_read_config_stacking(config, options, result):
+def test_read_config_stacking(config: Optional[str],
+                              options: Optional[Dict[str, bool]],
+                              result: bool):
     conf = read_config(config, options)
     assert conf['rdial'].getboolean('interactive') is result
 

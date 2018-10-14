@@ -30,7 +30,8 @@ from pytest import fixture, mark, raises
 from rdial import events as events_mod
 from rdial.cmdline import (StartTimeParamType, TaskNameParamType, cli,
                            get_stop_message, main, task_option)
-from rdial.events import Event, TaskNotRunningError, TaskRunningError
+from rdial.events import (Event, TaskNotExistError, TaskNotRunningError,
+                          TaskRunningError)
 
 
 @fixture(autouse=True)
@@ -269,6 +270,15 @@ def test_switch_event_not_running(tmpdir):
     assert result.exception.args[0] == 'No task running!'
 
 
+def test_switch_invalid_new_task(tmpdir):
+    test_dir = tmpdir.join('test').strpath
+    copytree('tests/data/test', test_dir)
+    runner = CliRunner()
+    result = runner.invoke(cli, f'--directory {test_dir} switch whoops')
+    assert isinstance(result.exception, TaskNotExistError)
+    assert 'Task whoops does not exist!' in result.exception.args[0]
+
+
 def test_switch_start_date_overlaps(tmpdir):
     test_dir = tmpdir.join('test').strpath
     copytree('tests/data/test', test_dir)
@@ -419,10 +429,15 @@ def test_wrapper_run_command(capfd, tmpdir):
     assert 'May 2011' in capfd.readouterr()[0]
 
 
-def test_report():
+@mark.parametrize('task', [
+    '',
+    'task',
+])
+def test_report(task):
     runner = CliRunner()
-    result = runner.invoke(cli,
-                           '--directory tests/data/test_not_running report')
+    result = runner.invoke(
+        cli,
+        f'--directory tests/data/test_not_running report {task}')
     assert result.exit_code == 0
     assert 'task    2:00:00' in result.stdout
 
@@ -435,6 +450,18 @@ def test_report_stats():
     )
     assert result.exit_code == 0
     assert 'Duration of events 2:15:00' in result.stdout
+    assert 'First entry started at 2011-05-04 08:00:00' in result.stdout
+    assert 'Last entry started at 2011-05-04 09:30:00' in result.stdout
+
+
+def test_report_stats_no_events(tmpdir):
+    runner = CliRunner()
+    result = runner.invoke(
+        cli,
+        f'--directory {tmpdir.strpath} report --stats'
+    )
+    assert result.exit_code == 0
+    assert 'Duration of events 0:00:00' in result.stdout
 
 
 def test_report_event_running():
@@ -458,7 +485,8 @@ def test_running(database: str, expected: str):
 
 @mark.parametrize('database, expected', [
     ('test', 'Task task is still running'),
-    ('test_not_running', 'Last task task, ran for 1:00:00'),
+    ('test_no_message', 'Last task task, ran for 1:00:00'),
+    ('test_not_running', 'stop message'),
 ])
 def test_last(database: str, expected: str):
     runner = CliRunner()
@@ -467,10 +495,16 @@ def test_last(database: str, expected: str):
     assert expected in result.stdout
 
 
-def test_ledger():
+@mark.parametrize('task', [
+    '',
+    'task',
+])
+def test_ledger(task: str):
     runner = CliRunner()
-    result = runner.invoke(cli,
-                           '--directory tests/data/test_not_running ledger')
+    result = runner.invoke(
+        cli,
+        f'--directory tests/data/test_not_running ledger {task}'
+    )
     assert result.exit_code == 0
     assert '2011-05-04 * 09:30-10:30' in result.stdout
 
@@ -482,10 +516,16 @@ def test_ledger_running():
     assert ';; Running event not included in output!' in result.stdout
 
 
-def test_timeclock():
+@mark.parametrize('task', [
+    '',
+    'task',
+])
+def test_timeclock(task: str):
     runner = CliRunner()
-    result = runner.invoke(cli,
-                           '--directory tests/data/test_not_running timeclock')
+    result = runner.invoke(
+        cli,
+        f'--directory tests/data/test_not_running timeclock {task}'
+    )
     assert result.exit_code == 0
     assert 'i 2011-05-04 09:30:00 task' in result.stdout.splitlines()
     assert 'o 2011-05-04 10:30:00  ; stop message' in \
