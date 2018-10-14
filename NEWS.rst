@@ -3,6 +3,9 @@ User-visible changes
 
 .. contents::
 
+1.0.0 - 2018-09-06
+------------------
+
 * ``timeclock`` subcommand to create output suitable for processing with
   ledger_’s timeclock mode
 * Python 3.7 is officially supported
