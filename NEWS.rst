@@ -3,6 +3,9 @@ User-visible changes
 
 .. contents::
 
+1.1.0 - 2018-10-14
+------------------
+
 * Click v7 is now required
 * ``switch`` now supports ``--amend``, to mirror ``stop``
 * ``fsck``’s progress bar can be disabled globally or with an option
