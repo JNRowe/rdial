@@ -60,6 +60,7 @@ __list_wrappers() {
 
 _arguments \
     '--version[Show the version and exit.]' \
+    '--verbosity:[Set verbosity level.]:select log level:(CRITICAL ERROR WARNING INFO DEBUG)' \
     "--directory=[Directory to read/write to.]:select directory:_files -/ ${XDG_DATA_HOME:-~/.local/share}" \
     '--backup[Write data file backups.]' \
     '--no-backup[Do not write data file backups.]' \
