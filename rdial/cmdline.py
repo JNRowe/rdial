@@ -22,6 +22,7 @@
 
 import contextlib
 import datetime
+import logging
 import operator
 import os
 import shlex
@@ -30,6 +31,7 @@ import types
 from typing import Callable, Optional
 
 import click
+import click_log
 import tabulate
 
 from jnrbase import colourise, iso_8601
@@ -37,6 +39,10 @@ from jnrbase.attrdict import ROAttrDict
 
 from . import _version, utils
 from .events import Event, Events, TaskNotRunningError, TaskRunningError
+
+
+LOGGER = logging.getLogger('rdial')
+click_log.basic_config(LOGGER)
 
 
 class TaskNameParamType(click.ParamType):
@@ -206,6 +212,8 @@ def message_option(__fun: Callable) -> Callable:
                      'https://github.com/JNRowe/rdial/issues'),
              context_settings={'help_option_names': ['-h', '--help']})
 @click.version_option(_version.dotted)
+@click_log.simple_verbosity_option(LOGGER, help='Set verbosity level.',
+                                   metavar='LEVEL')
 @click.option('-d', '--directory', metavar='DIR',
               type=click.Path(file_okay=False),
               help='Directory to read/write to.')
@@ -248,6 +256,7 @@ def cli(ctx: click.Context, directory: str, backup: bool, cache: bool,
 
     if 'color' in base:
         base['colour'] = base['color']
+        LOGGER.debug('Handling ‘color’ to set {base["colour"]}')
     colour = base.getboolean('colour')
     colourise.COLOUR = colour
 
@@ -260,6 +269,7 @@ def cli(ctx: click.Context, directory: str, backup: bool, cache: bool,
                     defs[k] = cfg[name].getboolean(k)
                 except ValueError:
                     defs[k] = cfg[name][k]
+                LOGGER.debug(f'Setting {name}’s {k} default to {defs[k]}')
             ctx.default_map[name] = defs
 
     ctx.obj = ROAttrDict(
@@ -270,6 +280,7 @@ def cli(ctx: click.Context, directory: str, backup: bool, cache: bool,
         directory=base['directory'],
         interactive=base.getboolean('interactive'),
     )
+    LOGGER.debug(f'Setting ctx’s obj to {ctx.obj!r}')
 
 
 def filter_events(__globs: ROAttrDict, __task: Optional[str] = None,
@@ -649,7 +660,7 @@ def running(globs: ROAttrDict):
         click.echo('Task “{}” started {}'.format(
             current.task, str(now - current.start).split('.')[0]))
     else:
-        colourise.pwarn('No task is running!')
+        LOGGER.warning('No task is running!')
 
 
 @cli.command()
@@ -669,7 +680,7 @@ def last(globs: ROAttrDict):
         if event.message:
             click.echo(event.message)
     else:
-        colourise.pwarn(f'Task {event.task} is still running')
+        LOGGER.warning(f'Task {event.task} is still running')
 
 
 @cli.command()
@@ -759,7 +770,7 @@ def main() -> int:
             cli(auto_envvar_prefix='RDIAL')
         return 0
     except (ValueError, utils.RdialError) as error:
-        colourise.pfail(str(error))
+        LOGGER.critical(str(error))
         return 2
     except OSError as error:
         return error.errno
