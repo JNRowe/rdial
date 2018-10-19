@@ -1,4 +1,4 @@
-sudo: false
+dist: xenial
 language: python
 cache:
     directories:
@@ -7,6 +7,8 @@ matrix:
     fast_finish: true
 python:
   - 3.6
+  - 3.7
+sudo: required
 install:
   - pip install -r extra/requirements.txt
   - pip install -r extra/requirements-test.txt
