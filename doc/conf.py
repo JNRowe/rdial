@@ -55,7 +55,8 @@ master_doc = 'index'
 source_suffix = '.rst'
 
 project = 'rdial'
-copyright = '2011-2017  James Rowe'
+author = 'James Rowe'
+copyright = f'2011-2017  {author}'
 
 release = rdial._version.dotted
 version = release.rsplit('.', 1)[0]
@@ -77,13 +78,17 @@ with suppress(CalledProcessError):
                stdout=PIPE)
     html_last_updated_fmt = proc.stdout.decode()
 
+html_baseurl = 'https://hubugs.readthedocs.io/'
+
 man_pages = [
     ('rdial.1', 'rdial', 'rdial Documentation', ['James Rowe', ], 1)
 ]  # type: Tuple[str, str, str, List[str], int]
 
 # Autodoc extension settings
 autoclass_content = 'init'
-autodoc_default_flags = ['members', ]  # type: List[str]
+autodoc_default_options = {
+    'members': None,
+}  # type: Dict[str, Optional[str]]
 
 # intersphinx extension settings
 intersphinx_mapping = {
