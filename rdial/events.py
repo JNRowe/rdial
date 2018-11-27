@@ -256,20 +256,19 @@ class Events(list):  # pylint: disable=too-many-public-methods
                         UnicodeDecodeError):
                     pass
                 else:
-                    try:
-                        assert cache['version'] == 1
-                    except TypeError:
-                        os.unlink(cache_file)
-                    else:
+                    if isinstance(cache, dict) and cache['version'] == 1:
                         evs = cache['events']
+                    else:
+                        os.unlink(cache_file)
             if evs is None:
                 with click.open_file(fname, encoding='utf-8') as f:
                     # We're not using the prettier DictReader here as it is
                     # *significantly* slower for large data files (~5x).
                     reader = csv.reader(f, dialect=RdialDialect)
-                    assert next(reader) == FIELDS, \
-                        'Invalid data {!r}'.format(
-                            click.format_filename(fname))
+                    if not next(reader) == FIELDS:
+                        raise ValueError('Invalid data {!r}'.format(
+                            click.format_filename(fname)
+                        ))
                     evs = [Event(task, *row)  # pylint: disable=star-args
                            for row in reader]
                 if write_cache:
