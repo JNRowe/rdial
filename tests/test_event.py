@@ -104,6 +104,11 @@ def test_read_datebase(database: str, events: int):
     assert len(evs) == events
 
 
+def test_read_invalid_data():
+    with raises(ValueError, match='Invalid data'):
+        Events.read('tests/data/faulty_csv', write_cache=False)
+
+
 @mark.parametrize('database, events', [
     ('test', 3),
     ('date_filtering', 3),
