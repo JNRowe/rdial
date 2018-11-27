@@ -27,7 +27,9 @@ from setuptools.command.test import test
 class PytestTest(test):
     def finalize_options(self):
         test.finalize_options(self)
-        self.test_args = ['tests/', ]
+        self.test_args = [
+            'tests/',
+        ]
         self.test_suite = True
 
     def run_tests(self):
@@ -54,7 +56,6 @@ def parse_requires(file: str) -> List[str]:
 # and doesn’t support pip’s inclusion mechanism
 install_requires = parse_requires('requirements.txt')
 tests_require = parse_requires('requirements-test.txt')
-
 
 if __name__ == '__main__':
     setup(
