@@ -18,11 +18,11 @@
 # You should have received a copy of the GNU General Public License along with
 # rdial.  If not, see <http://www.gnu.org/licenses/>.
 
-
 from pytest import raises
 
-from rdial.events import (Events, TaskNotExistError, TaskNotRunningError,
-                          TaskRunningError)
+from rdial.events import (
+    Events, TaskNotExistError, TaskNotRunningError, TaskRunningError
+)
 
 
 def test_start_event():
@@ -33,9 +33,11 @@ def test_start_event():
 
 def test_fail_start_when_task_typo():
     events = Events.read('tests/data/test_not_running', write_cache=False)
-    with raises(TaskNotExistError,
-                match='Task non_existent does not exist!  Use “--new” to '
-                      'create it'):
+    with raises(
+        TaskNotExistError,
+        match='Task non_existent does not exist!  Use “--new” to '
+        'create it'
+    ):
         events.start('non_existent')
 
 

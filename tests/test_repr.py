@@ -33,11 +33,13 @@ def eval_repr(obj: object):
     return repr(eval(repr(obj)))
 
 
-@mark.parametrize('ev', [
-    Event('task', '2011-05-05T11:23:48Z', 'PT01H00M00S'),
-    Event('task', '2011-05-05T11:23:48Z', ''),
-    Event('task', '2011-05-05T11:23:48Z', 'PT01H00M00S', 'message'),
-])
+@mark.parametrize(
+    'ev', [
+        Event('task', '2011-05-05T11:23:48Z', 'PT01H00M00S'),
+        Event('task', '2011-05-05T11:23:48Z', ''),
+        Event('task', '2011-05-05T11:23:48Z', 'PT01H00M00S', 'message'),
+    ]
+)
 def test_event_repr(ev: Event):
     assert repr(ev) == eval_repr(ev)
 

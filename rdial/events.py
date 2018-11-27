@@ -37,7 +37,6 @@ from . import utils
 
 
 class RdialDialect(csv.unix_dialect):  # pylint: disable=too-few-public-methods
-
     """CSV dialect for rdial data files."""
 
     quoting = csv.QUOTE_MINIMAL
@@ -45,28 +44,27 @@ class RdialDialect(csv.unix_dialect):  # pylint: disable=too-few-public-methods
 
 
 class TaskNotRunningError(utils.RdialError):
-
     """Exception for calling mutators when a task is not running."""
 
 
 class TaskRunningError(utils.RdialError):
-
     """Exception for starting task when a task is already running."""
 
 
 class TaskNotExistError(utils.RdialError):
-
     """Exception for attempting to operate on a non-existing task."""
 
 
 class Event:
-
     """Base object for handling database event."""
 
-    def __init__(self, __task: str,
-                 start: Optional[Union[datetime.datetime, str]] = None,
-                 delta: Optional[Union[datetime.timedelta, str]] = None,
-                 message: Optional[str] = '') -> None:
+    def __init__(
+        self,
+        __task: str,
+        start: Optional[Union[datetime.datetime, str]] = None,
+        delta: Optional[Union[datetime.timedelta, str]] = None,
+        message: Optional[str] = ''
+    ) -> None:
         """Initialise a new ``Event`` object.
 
         Args:
@@ -119,8 +117,10 @@ class Event:
             Event representation suitable for :func:`eval`
         """
         return 'Event({!r}, {!r}, {!r}, {!r})'.format(
-            self.task, iso_8601.format_datetime(self.start) + 'Z',
-            iso_8601.format_delta(self.delta), self.message)
+            self.task,
+            iso_8601.format_datetime(self.start) + 'Z',
+            iso_8601.format_delta(self.delta), self.message
+        )
 
     def writer(self) -> Dict[str, Optional[str]]:
         """Prepare object for export.
@@ -161,15 +161,17 @@ class Event:
             raise TaskNotRunningError('No task running!')
         self.delta = datetime.datetime.utcnow() - self.start
         self.message = message
+
+
 FIELDS = list(inspect.signature(Event).parameters.keys())[1:]  # NOQA
 
 
 class Events(list):  # pylint: disable=too-many-public-methods
-
     """Container for database events."""
 
-    def __init__(self, __iterable: Optional[List[Event]] = None,
-                 backup: bool = True) -> None:
+    def __init__(
+        self, __iterable: Optional[List[Event]] = None, backup: bool = True
+    ) -> None:
         """Initialise a new ``Events`` object.
 
         Args:
@@ -210,8 +212,9 @@ class Events(list):  # pylint: disable=too-many-public-methods
         self._dirty = set()
 
     @staticmethod
-    def read(__directory: str, backup: bool = True,
-             write_cache: bool = True) -> 'Events':
+    def read(
+        __directory: str, backup: bool = True, write_cache: bool = True
+    ) -> 'Events':
         """Read and parse database.
 
         .. note::
@@ -252,8 +255,10 @@ class Events(list):  # pylint: disable=too-many-public-methods
                     # 3 upgrade path.
                     with click.open_file(cache_file, 'rb') as f:
                         cache = pickle.load(f)
-                except (pickle.UnpicklingError, EOFError, ImportError,
-                        UnicodeDecodeError):
+                except (
+                    pickle.UnpicklingError, EOFError, ImportError,
+                    UnicodeDecodeError
+                ):
                     pass
                 else:
                     if isinstance(cache, dict) and cache['version'] == 1:
@@ -266,15 +271,21 @@ class Events(list):  # pylint: disable=too-many-public-methods
                     # *significantly* slower for large data files (~5x).
                     reader = csv.reader(f, dialect=RdialDialect)
                     if not next(reader) == FIELDS:
-                        raise ValueError('Invalid data {!r}'.format(
-                            click.format_filename(fname)
-                        ))
-                    evs = [Event(task, *row)  # pylint: disable=star-args
-                           for row in reader]
+                        raise ValueError(
+                            'Invalid data {!r}'.format(
+                                click.format_filename(fname)
+                            )
+                        )
+                    evs = [
+                        Event(task, *row)  # pylint: disable=star-args
+                        for row in reader
+                    ]
                 if write_cache:
                     with click.open_file(cache_file, 'wb', atomic=True) as f:
-                        pickle.dump({'version': 1, 'events': evs}, f,
-                                    pickle.HIGHEST_PROTOCOL)
+                        pickle.dump({
+                            'version': 1,
+                            'events': evs
+                        }, f, pickle.HIGHEST_PROTOCOL)
             events.extend(evs)
         return Events(sorted(events, key=operator.attrgetter('start')))
 
@@ -337,8 +348,12 @@ class Events(list):  # pylint: disable=too-many-public-methods
         last = self.last()
         return last.running() if last else False
 
-    def start(self, __task: str, new: bool = False,
-              start: Union[datetime.datetime, str] = '') -> None:
+    def start(
+        self,
+        __task: str,
+        new: bool = False,
+        start: Union[datetime.datetime, str] = ''
+    ) -> None:
         """Start a new event.
 
         Args:
@@ -352,7 +367,8 @@ class Events(list):  # pylint: disable=too-many-public-methods
         """
         if not new and __task not in self.tasks():
             raise TaskNotExistError(
-                f'Task {__task} does not exist!  Use “--new” to create it')
+                f'Task {__task} does not exist!  Use “--new” to create it'
+            )
         running = self.running()
         if running:
             raise TaskRunningError(f'Running task {running}!')
@@ -378,7 +394,9 @@ class Events(list):  # pylint: disable=too-many-public-methods
         self.last().stop(message, force)
         self.dirty = self.last().task
 
-    def filter(self, __filt: Callable[[Event, ], bool]) -> 'Events':
+    def filter(self, __filt: Callable[[
+        Event,
+    ], bool]) -> 'Events':
         """Apply filter to events.
 
         Args:
@@ -402,8 +420,12 @@ class Events(list):  # pylint: disable=too-many-public-methods
         """
         return self.filter(lambda x: x.task == __task)
 
-    def for_date(self, year: int, month: Optional[int] = None,
-                 day: Optional[int] = None) -> 'Events':
+    def for_date(
+        self,
+        year: int,
+        month: Optional[int] = None,
+        day: Optional[int] = None
+    ) -> 'Events':
         """Filter events for a specific date.
 
         Args:
@@ -446,8 +468,9 @@ class Events(list):  # pylint: disable=too-many-public-methods
 
     @staticmethod
     @contextlib.contextmanager
-    def wrapping(__directory: str, backup: bool = True,
-                 write_cache: bool = True) -> Iterator['Events']:
+    def wrapping(
+        __directory: str, backup: bool = True, write_cache: bool = True
+    ) -> Iterator['Events']:
         """Convenience context handler to manage reading and writing database.
 
         Args:

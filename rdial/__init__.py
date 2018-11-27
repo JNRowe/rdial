@@ -23,7 +23,6 @@ A simple time tracking tool, with no frills and no fizzy coating.
 
 from . import _version
 
-
 __version__ = _version.dotted
 __date__ = _version.date
 __copyright__ = 'Copyright © 2011-2017  James Rowe <jnrowe@gmail.com>'

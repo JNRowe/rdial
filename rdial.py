@@ -22,5 +22,4 @@ import sys
 
 from rdial import cmdline
 
-
 sys.exit(cmdline.main())

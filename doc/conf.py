@@ -39,7 +39,6 @@ extensions = \
     + [f'sphinxcontrib.{ext}' for ext in []] \
     + ['sphinx_autodoc_typehints', 'sphinx_click.ext']  # type: List[str]
 
-
 if not on_rtd:
     # Only activate spelling if it is installed.  It is not required in the
     # general case and we don’t have the granularity to describe this in a
@@ -62,7 +61,9 @@ release = rdial._version.dotted
 version = release.rsplit('.', 1)[0]
 
 html_experimental_html5_writer = True
-modindex_common_prefix = ['rdial.', ]
+modindex_common_prefix = [
+    'rdial.',
+]
 
 # readthedocs.org handles this setup for their builds, but it is nice to see
 # approximately correct builds on the local system too
@@ -73,16 +74,17 @@ if not on_rtd:
 
 pygments_style = 'sphinx'
 with suppress(CalledProcessError):
-    proc = run(['git', 'log', "--pretty=format:'%ad [%h]'", '--date=short',
-                '-n1'],
+    proc = run([
+        'git', 'log', "--pretty=format:'%ad [%h]'", '--date=short', '-n1'
+    ],
                stdout=PIPE)
     html_last_updated_fmt = proc.stdout.decode()
 
 html_baseurl = 'https://hubugs.readthedocs.io/'
 
-man_pages = [
-    ('rdial.1', 'rdial', 'rdial Documentation', ['James Rowe', ], 1)
-]  # type: Tuple[str, str, str, List[str], int]
+man_pages = [('rdial.1', 'rdial', 'rdial Documentation', [
+    'James Rowe',
+], 1)]  # type: Tuple[str, str, str, List[str], int]
 
 # Autodoc extension settings
 autoclass_content = 'init'
@@ -97,7 +99,8 @@ intersphinx_mapping = {
         'click': 'https://click.palletsprojects.com/en/7.x/',
         'jnrbase': 'https://jnrbase.readthedocs.io/en/latest/',
         'python': 'https://docs.python.org/3/',
-}.items()}  # type: Dict[str, str]
+    }.items()
+}  # type: Dict[str, str]
 
 # spelling extension settings
 spelling_lang = 'en_GB'

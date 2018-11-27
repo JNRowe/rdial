@@ -18,7 +18,6 @@
 # You should have received a copy of the GNU General Public License along with
 # rdial.  If not, see <http://www.gnu.org/licenses/>.
 
-
 from collections import defaultdict
 from csv import writer
 from datetime import timedelta
@@ -57,8 +56,10 @@ def process_records(location: TextIO) -> Dict[str, List[str]]:
             ev.end = ev.end - ev.start
         else:
             ev.end = timedelta(0)
-        files[ev.tags[0]].append([format_datetime(ev.start),
-                                  format_delta(ev.end), None])
+        files[ev.tags[0]].append([
+            format_datetime(ev.start),
+            format_delta(ev.end), None
+        ])
     return files
 
 
@@ -72,9 +73,11 @@ def write_events(location: str, files: Dict[str, List[str]]) -> None:
                 w.writerow(ev)
 
 
-@command(epilog=('Please report bugs at '
-                 'https://github.com/JNRowe/rdial/issues'),
-         context_settings={'help_option_names': ['-h', '--help']})
+@command(
+    epilog=('Please report bugs at '
+            'https://github.com/JNRowe/rdial/issues'),
+    context_settings={'help_option_names': ['-h', '--help']}
+)
 @argument('input', type=File())
 @argument('output', type=Path(exists=False))
 def main(input: TextIO, output: str) -> None:
