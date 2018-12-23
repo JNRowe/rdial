@@ -566,7 +566,7 @@ def test_main_wrapper_error(monkeypatch, capsys):
     monkeypatch.setattr('sys.exit', exit_mock)
     result = main()
     assert result == 2
-    assert capsys.readouterr()[0] == 'No task running!\n'
+    assert capsys.readouterr()[1] == 'No task running!\n'
 
 
 def test_main_wrapper_informative_return_code(capsys, monkeypatch, tmpdir):
