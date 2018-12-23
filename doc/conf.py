@@ -56,7 +56,7 @@ source_suffix = '.rst'
 
 project = 'rdial'
 author = 'James Rowe'
-copyright = f'2011-2017  {author}'
+copyright = f'2011-2018  {author}'
 
 release = rdial._version.dotted
 version = release.rsplit('.', 1)[0]
