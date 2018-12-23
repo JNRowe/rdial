@@ -618,7 +618,7 @@ def report(globs: ROAttrDict, task: str, stats: bool, duration: str, sort: str,
         dates = {e.start.date() for e in events}
         click.echo(f'Events exist on {len(dates)} dates')
     else:
-        data = sorted(([t, str(events.for_task(t).sum())]
+        data = sorted(([t, events.for_task(t).sum()]
                        for t in events.tasks()),
                       key=operator.itemgetter(['task', 'time'].index(sort)),
                       reverse=reverse)
