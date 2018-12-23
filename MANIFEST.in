@@ -1,3 +1,6 @@
+include .editorconfig
+include .projections.json
+include .readthedocs.yml
 include .travis.yml
 include COPYING
 include *.rst
@@ -9,6 +12,8 @@ include extra/_rdial
 include extra/doap.rdf
 include extra/rdial.png
 include extra/requirements*.txt
+include extra/timew_export.py
+include extra/timew_import.py
 include rdial.py
 include rdial/config
 
