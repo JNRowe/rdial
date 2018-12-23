@@ -35,11 +35,6 @@ import click
 from jnrbase import xdg_basedir
 from jnrbase.iso_8601 import parse_datetime
 
-try:
-    import cduration
-except ImportError:  # pragma: no cover
-    cduration = None
-
 
 class RdialError(ValueError):
 

@@ -33,6 +33,11 @@ import click
 
 from jnrbase import iso_8601, xdg_basedir
 
+try:
+    import cduration
+except ImportError:  # pragma: no cover
+    cduration = None
+
 from . import utils
 
 
@@ -86,7 +91,14 @@ class Event:
         if isinstance(delta, datetime.timedelta):
             self.delta = delta
         else:
-            self.delta = iso_8601.parse_delta(delta)
+            if cduration:  # pragma: no cover
+                delta = cduration.parse_duration(delta)
+                if delta:
+                    self.delta = delta
+                else:
+                    self.delta = datetime.timedelta(0)
+            else:
+                self.delta = iso_8601.parse_delta(delta)
         self.message = message
 
     def __eq__(self, __other: 'Event') -> bool:
