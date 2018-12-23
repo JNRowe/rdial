@@ -25,7 +25,10 @@ import subprocess
 from contextlib import contextmanager
 from datetime import date, datetime, timedelta
 from typing import Callable, ContextManager, Dict, Optional, Tuple, Union
-from pkg_resources import resource_string
+try:
+    from importlib import resources
+except ImportError:  # pragma: no cover
+    import importlib_resources as resources
 
 import click
 
@@ -114,8 +117,7 @@ def read_config(user_config: Optional[str] = None,
     # Only base *must* exist
     conf = configparser.ConfigParser()
     # No, it *really* must
-    conf.read_string(resource_string('rdial', 'config').decode(),
-                     'pkg config')
+    conf.read_string(resources.read_text('rdial', 'config'), 'pkg config')
     conf['DEFAULT'] = {'xdg_data_location': xdg_basedir.user_data('rdial')}
     for f in xdg_basedir.get_configs('rdial'):
         conf.read(f)
