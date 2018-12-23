@@ -3,6 +3,18 @@ User-visible changes
 
 .. contents::
 
+1.2.0 - 2018-12-23
+------------------
+
+* importlib_resources_ is required for Python 3.6
+* This package is now supported when used as a ``.zip``
+* ``cduration`` support has been re-added
+* ``jnrbase`` v1.1.0, or later, is now required
+*  ``sphinx`` v1.8, or later, is required to build documentation
+* ``pytest`` v4.0, or later, is required to run tests
+
+.. _importlib_resources: https://pypi.org/project/importlib_resources/
+
 1.1.0 - 2018-10-14
 ------------------
 
