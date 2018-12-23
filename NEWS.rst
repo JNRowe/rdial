@@ -6,7 +6,7 @@ User-visible changes
 1.1.0 - 2018-10-14
 ------------------
 
-* Click v7 is now required
+* ``Click`` v7 is now required
 * ``switch`` now supports ``--amend``, to mirror ``stop``
 * ``fsck``’s progress bar can be disabled globally or with an option
 * ``gettext`` is no longer supported, use ``retext`` if you need translations
