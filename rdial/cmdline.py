@@ -26,7 +26,6 @@ import operator
 import os
 import shlex
 import subprocess
-import types
 from typing import Callable, Optional
 
 import click
