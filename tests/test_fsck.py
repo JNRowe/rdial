@@ -29,21 +29,16 @@ from rdial.cmdline import cli
 
 def test_fsck_clean():
     runner = CliRunner()
-    result = runner.invoke(cli,
-                           '--directory=tests/data/test --no-cache fsck')
+    result = runner.invoke(cli, '--directory=tests/data/test --no-cache fsck')
     assert result.exit_code == 0
     assert result.stdout.strip() == ''
 
 
-@mark.parametrize('progress', [
-    '--progress',
-    '--no-progress'
-])
+@mark.parametrize('progress', ['--progress', '--no-progress'])
 def test_fsck_overlap(progress: str):
     runner = CliRunner()
     result = runner.invoke(
-        cli,
-        f'--directory=tests/data/test_fsck --no-cache fsck {progress}'
+        cli, f'--directory=tests/data/test_fsck --no-cache fsck {progress}'
     )
     assert result.exit_code == 1
     assert 'Overlap' in result.stdout
@@ -54,8 +49,8 @@ def test_fsck_future_start():
     with Timeline(start=datetime(2016, 12, 13, 23, 0)):
         runner = CliRunner()
         result = runner.invoke(
-            cli,
-            '--directory=tests/data/test_fsck_future --no-cache fsck')
+            cli, '--directory=tests/data/test_fsck_future --no-cache fsck'
+        )
     assert result.exit_code == 1
     assert 'Future start' in result.stdout
 
@@ -64,6 +59,7 @@ def test_fsck_future_end():
     with Timeline(start=datetime(2016, 12, 13, 23, 7)):
         runner = CliRunner()
         result = runner.invoke(
-            cli, '--directory=tests/data/test_fsck_future --no-cache fsck')
+            cli, '--directory=tests/data/test_fsck_future --no-cache fsck'
+        )
     assert result.exit_code == 1
     assert 'Future end' in result.stdout
