@@ -1,6 +1,6 @@
 #
 """events - Event models for rdial."""
-# Copyright © 2011-2018  James Rowe <jnrowe@gmail.com>
+# Copyright © 2011-2019  James Rowe <jnrowe@gmail.com>
 #                        Nathan McGregor <nathan.mcgregor@astrium.eads.net>
 #
 # SPDX-License-Identifier: GPL-3.0+
