@@ -12,6 +12,20 @@ out people who are already familiar with one of the entries below.
 
 .. todo:: Check for recent additions to the arena.
 
+``arbtt``
+---------
+
+The “Automatic Rule-Based Time Tracker”, where automatic could equally be
+awesome.  You run the daemon and it records yours tasks automatically.  The
+rules to configure switching are easy to write, and depending on your needs may
+well catch all your task switching.
+
+It only falls down when you need to record tasks which aren’t 100% about
+whacking away at the keyboard in a window, so if your time tracking needs are
+*entirely* screen based I recommend you try it out.
+
+.. _arbtt: http://hackage.haskell.org/package/arbtt
+
 ``gtimelog``
 ------------
 
