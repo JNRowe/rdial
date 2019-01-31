@@ -62,6 +62,22 @@ spent working on small projects.
 
 .. _hammertime: https://pypi.org/project/Hammertime/
 
+``hamster-time-tracker``
+------------------------
+
+ProjectHamster_ and its associated clients are a neat solution to time
+tracking.  The gnome applet and command line interface are particularly
+polished.  The :command:`hamster-cli` in particular is extremely nice to use,
+and the built-in :abbr:`DWIM (Do What I Mean)` date handling provides some
+great shortcuts for adding missing entries.
+
+The data backend is a simple SQLite_ database, and is therefore very amenable
+to external processing.  It provides tagging on top of the fields provided
+by :command:`rdial`, and that alone may make it more useful to you.
+
+.. _ProjectHamster: http://projecthamster.org/
+.. _SQLite: http://www.sqlite.org/
+
 ``ktimetracker``
 ----------------
 
