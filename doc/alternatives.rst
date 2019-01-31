@@ -105,4 +105,8 @@ tag support and some really useful query options.
 There are import and export scripts in the ``extra`` subdirectory, and I truly
 recommend trying timewarrior_ out.
 
+The only possible drawback is its speed, as with large numbers of records its
+startup becomes *very* slow.  Exporting my eight year :command:`rdial`
+database results in three second pauses on each :command:`timew` run.
+
 .. _timewarrior: https://taskwarrior.org/news/news.20160821.html
