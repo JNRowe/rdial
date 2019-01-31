@@ -12,6 +12,20 @@ out people who are already familiar with one of the entries below.
 
 .. todo:: Check for recent additions to the arena.
 
+``arbtt``
+---------
+
+The “Automatic Rule-Based Time Tracker”, where automatic could equally be
+awesome.  You run the daemon and it records yours tasks automatically.  The
+rules to configure switching are easy to write, and depending on your needs may
+well catch all your task switching.
+
+It only falls down when you need to record tasks which aren’t 100% about
+whacking away at the keyboard in a window, so if your time tracking needs are
+*entirely* screen based I recommend you try it out.
+
+.. _arbtt: http://hackage.haskell.org/package/arbtt
+
 ``gtimelog``
 ------------
 
@@ -20,7 +34,7 @@ ideas are quite well thought out, and the interface is simple to use.  I’m sur
 it’s great for people with strictly structured working days, but that
 definitely isn’t me.
 
-As a side note, when we were playing with it at the office a several of
+As a side note, when we were playing with it at the office several of my
 co-workers stumbled across various bugs that dogged its usage.  Unfortunately,
 the project is developed with bzr and launchpad, therefore it was simply
 abandoned in favour of trying to fix it.  Most moved on to ``org-mode``, and
@@ -47,6 +61,22 @@ I still happily recommend it to people who are simply trying to log the time
 spent working on small projects.
 
 .. _hammertime: https://pypi.org/project/Hammertime/
+
+``hamster-time-tracker``
+------------------------
+
+ProjectHamster_ and its associated clients are a neat solution to time
+tracking.  The gnome applet and command line interface are particularly
+polished.  The :command:`hamster-cli` in particular is extremely nice to use,
+and the built-in :abbr:`DWIM (Do What I Mean)` date handling provides some
+great shortcuts for adding missing entries.
+
+The data backend is a simple SQLite_ database, and is therefore very amenable
+to external processing.  It provides tagging on top of the fields provided
+by :command:`rdial`, and that alone may make it more useful to you.
+
+.. _ProjectHamster: http://projecthamster.org/
+.. _SQLite: http://www.sqlite.org/
 
 ``ktimetracker``
 ----------------
@@ -90,5 +120,9 @@ tag support and some really useful query options.
 
 There are import and export scripts in the ``extra`` subdirectory, and I truly
 recommend trying timewarrior_ out.
+
+The only possible drawback is its speed, as with large numbers of records its
+startup becomes *very* slow.  Exporting my eight year :command:`rdial`
+database results in three second pauses on each :command:`timew` run.
 
 .. _timewarrior: https://taskwarrior.org/news/news.20160821.html
