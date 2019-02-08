@@ -370,7 +370,7 @@ def bug_data():
     click.echo()
 
     for m in ['click', 'cduration', 'jnrbase', 'tabulate']:
-        if m not in sys.modules:
+        if m not in sys.modules:  # pragma: no cover
             try:
                 import_module(m)
             except ModuleNotFoundError:
