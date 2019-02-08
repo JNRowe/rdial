@@ -1,5 +1,5 @@
 #
-"""test_datetime - Test ISO-8601 handling"""
+"""test_datetime - Test ISO-8601 handling."""
 # Copyright © 2011-2018  James Rowe <jnrowe@gmail.com>
 #
 # SPDX-License-Identifier: GPL-3.0+

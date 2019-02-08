@@ -1,5 +1,5 @@
 #
-"""test_utils - Test utility functions"""
+"""test_utils - Test utility functions."""
 # Copyright © 2014-2018  James Rowe <jnrowe@gmail.com>
 #
 # SPDX-License-Identifier: GPL-3.0+

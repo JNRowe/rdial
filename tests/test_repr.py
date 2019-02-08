@@ -1,5 +1,5 @@
 #
-"""test_repr - Test __repr__ methods for self-reproducibility"""
+"""test_repr - Test __repr__ methods for self-reproducibility."""
 # Copyright © 2011-2018  James Rowe <jnrowe@gmail.com>
 #
 # SPDX-License-Identifier: GPL-3.0+

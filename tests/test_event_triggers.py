@@ -1,5 +1,5 @@
 #
-"""test_event_triggers - Test event trigger handling"""
+"""test_event_triggers - Test event trigger handling."""
 # Copyright © 2012-2018  James Rowe <jnrowe@gmail.com>
 #
 # SPDX-License-Identifier: GPL-3.0+

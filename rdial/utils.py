@@ -207,7 +207,7 @@ def newer(__fname: str, __reference: str) -> bool:
 
 
 def term_link(__target: str, name: Optional[str] = None) -> str:
-    """Generate a terminal hyperlink
+    """Generate a terminal hyperlink.
 
     See https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda.
 

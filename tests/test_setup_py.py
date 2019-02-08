@@ -1,5 +1,5 @@
 #
-"""test_setup_py - Test setup.py functionality"""
+"""test_setup_py - Test setup.py functionality."""
 # Copyright © 2011-2018  James Rowe <jnrowe@gmail.com>
 #
 # SPDX-License-Identifier: GPL-3.0+
