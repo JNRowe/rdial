@@ -7,8 +7,8 @@
 rdial
 =====
 
-Simple time tracking for simple people
---------------------------------------
+Minimal time tracking for maximal benefit
+-----------------------------------------
 
 SYNOPSIS
 --------

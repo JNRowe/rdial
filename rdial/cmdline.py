@@ -232,7 +232,7 @@ def message_option(__fun: Callable) -> Callable:
 
 
 @click.group(
-    help='Simple time tracking for simple people.',
+    help='Minimal time tracking for maximal benefit.',
     epilog=('Please report bugs at '
             'https://github.com/JNRowe/rdial/issues'),
     context_settings={'help_option_names': ['-h', '--help']}

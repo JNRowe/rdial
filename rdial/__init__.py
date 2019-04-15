@@ -1,5 +1,5 @@
 #
-"""rdial - Simple time tracking for simple people.
+"""rdial - Minimal time tracking for maximal benefit.
 
 A simple time tracking tool, with no frills and no fizzy coating.
 """
