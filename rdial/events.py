@@ -89,7 +89,7 @@ class Event:
         if isinstance(delta, datetime.timedelta):
             self.delta = delta
         else:
-            if cduration:  # pragma: no cover
+            if cduration:
                 if delta:
                     self.delta = cduration.parse_duration(delta)
                 else:

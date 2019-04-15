@@ -277,3 +277,11 @@ def test_store_messages_with_events():
 
 def test_non_existing_database():
     assert Events() == Events.read('I_NEVER_EXIST', write_cache=False)
+
+
+@mark.skipif(not events_mod.cduration,
+             reason='Skipping tests for cduration fallbacks')
+def test_handling_of_cduration(monkeypatch):
+    monkeypatch.setattr(events_mod, 'cduration', None)
+    events = Events.read('tests/data/test', write_cache=False)
+    assert events.last().message == 'finished'
