@@ -50,7 +50,6 @@ if not on_rtd:
     else:
         extensions.append('sphinxcontrib.spelling')
 
-master_doc = 'index'
 source_suffix = '.rst'
 
 project = 'rdial'
@@ -60,7 +59,6 @@ copyright = f'2011-2019  {author}'
 release = rdial._version.dotted
 version = release.rsplit('.', 1)[0]
 
-html_experimental_html5_writer = True
 modindex_common_prefix = [
     'rdial.',
 ]
