@@ -86,3 +86,7 @@ example::
 The above configuration entry ``feeds`` allows us to use :samp:`rdial wrapper
 {feeds}` to open ``mutt`` in a specific mailbox, and time our usage under the
 ever popular ``procrast``-ination task.
+
+.. spelling::
+
+    ination

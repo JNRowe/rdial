@@ -47,3 +47,7 @@ CLI support
 .. autofunction:: task_option
 .. autofunction:: duration_option
 .. autofunction:: message_option
+
+.. spelling::
+
+    progressbar

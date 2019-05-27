@@ -44,3 +44,8 @@ fields by setting the ``TrailingComma`` attribute on your CSV reader.
 
     reader := csv.NewReader(file)
     reader.TrailingComma = true
+
+.. spelling::
+
+    golang
+    pkg
