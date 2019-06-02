@@ -19,7 +19,8 @@ DESCRIPTION
 -----------
 
 :mod:`rdial` is a simple way to track the time you spend on tasks.  It tracks
-the name of a task, its start time and its duration… nothing more.
+the name of a task, its start time, its duration and optionally a message…
+nothing more.
 
 OPTIONS
 -------
