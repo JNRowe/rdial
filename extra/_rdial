@@ -25,7 +25,7 @@
 (( $+functions[__list_styles] )) ||
 __list_styles() {
     local tmp
-    tmp=($(python -c 'import tabulate; print(" ".join(tabulate._table_formats.keys()))' 2>/dev/null))
+    tmp=($(python3 -c 'import tabulate; print(" ".join(tabulate._table_formats.keys()))' 2>/dev/null))
     if [ -z "${tmp}" ]; then
         _message "No styles found!"
     else
