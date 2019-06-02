@@ -76,8 +76,7 @@ def parse_datetime_user(__string: str) -> datetime:
     return datetime_.replace(tzinfo=None)
 
 
-def iso_week_to_date(__year: int,
-                     __week: int) -> Tuple[datetime.date, datetime.date]:
+def iso_week_to_date(__year: int, __week: int) -> Tuple[date, date]:
     """Generate date range for a given |ISO|-8601 week.
 
     |ISO|-8601 defines a week as Monday to Sunday, with the first week of a
@@ -216,7 +215,7 @@ def term_link(__target: str, name: Optional[str] = None) -> str:
         name: Target name
 
     Returns:
-        str: Formatted hyperlink for terminal output
+        Formatted hyperlink for terminal output
     """
     if not name:
         name = os.path.basename(__target)
