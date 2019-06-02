@@ -44,7 +44,7 @@ if not on_rtd:
     # general case and we don’t have the granularity to describe this in a
     # clean way
     try:
-        from sphinxcontrib import spelling  # NOQA: E401
+        from sphinxcontrib import spelling  # NOQA: F401
     except ImportError:
         pass
     else:
