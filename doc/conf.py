@@ -78,7 +78,7 @@ if not on_rtd:
 pygments_style = 'sphinx'
 with suppress(CalledProcessError):
     proc = run([
-        'git', 'log', "--pretty=format:'%ad [%h]'", '--date=short', '-n1'
+        'git', 'log', '--pretty=format:%ad [%h]', '--date=short', '-n1'
     ],
                stdout=PIPE)
     html_last_updated_fmt = proc.stdout.decode()
