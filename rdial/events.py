@@ -73,7 +73,7 @@ class Event:
         """Initialise a new ``Event`` object.
 
         Args:
-            __task: Task name to tracking
+            __task: Task name to track
             start: Start time for event
             delta: Duration for event
             message: Message to attach to event
@@ -368,7 +368,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
         """Start a new event.
 
         Args:
-            __task: Task name to tracking
+            __task: Task name to track
             new: Whether to create a new task
             start: |ISO|-8601 start time for event
 
