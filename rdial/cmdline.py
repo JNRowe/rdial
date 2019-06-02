@@ -399,7 +399,6 @@ def fsck(ctx: click.Context, globs: ROAttrDict, progress: bool):
         progress: Display progressbar
 
     """
-    warnings = 0
     events = Events.read(globs.directory, write_cache=globs.cache)
     now = datetime.datetime.utcnow()
     # Note: progress is *four* times slower on my data and system
@@ -412,36 +411,38 @@ def fsck(ctx: click.Context, globs: ROAttrDict, progress: bool):
         def func(evs, *args, **kwargs):
             yield iter(evs)
 
-    def gen_output():
-        nonlocal warnings
-        with func(
-            events,
-            label='Checking',
-            fill_char=click.style('█', 'green'),
-            empty_char=click.style('·', 'yellow')
-        ) as pbar:
-            last_event = Event('none', datetime.datetime.min)
-            for event in pbar:
-                if not last_event.start + last_event.delta <= event.start:
-                    warnings += 1
-                    yield colourise.fail('Overlap:\n')
-                    yield colourise.warn(f'   {last_event!r}\n')
-                    yield colourise.info(f'   {event!r}\n')
-                if event.start > now:
-                    warnings += 1
-                    yield colourise.fail('Future start:\n')
-                    yield colourise.warn(f'   {event!r}\n')
-                elif event.start + event.delta > now:
-                    warnings += 1
-                    yield colourise.fail('Future end:\n')
-                    yield colourise.warn(f'   {event!r}\n')
-                last_event = event
+    output = []
+    with func(
+        events,
+        label='Checking',
+        fill_char=click.style('█', 'green'),
+        empty_char=click.style('·', 'yellow')
+    ) as pbar:
+        last_event = Event('none', datetime.datetime.min)
+        for event in pbar:
+            if not last_event.start + last_event.delta <= event.start:
+                output.extend([
+                    colourise.fail('Overlap:\n'),
+                    colourise.warn(f'   {last_event!r}\n'),
+                    colourise.info(f'   {event!r}\n'),
+                ])
+            if event.start > now:
+                output.extend([
+                    colourise.fail('Future start:\n'),
+                    colourise.warn(f'   {event!r}\n'),
+                ])
+            elif event.start + event.delta > now:
+                output.extend([
+                    colourise.fail('Future end:\n'),
+                    colourise.warn(f'   {event!r}\n'),
+                ])
+            last_event = event
 
-    click.echo_via_pager(gen_output())
-    if warnings:
+    if output:
+        click.echo_via_pager(output)
         # Will be success when 𝐱 % 256 == 0, so cap at 255.  That said
         # you’ve got bigger problems if you’re hitting this ;)
-        ctx.exit(min(warnings, 255))
+        ctx.exit(min(len(output), 255))
 
 
 @cli.command()
