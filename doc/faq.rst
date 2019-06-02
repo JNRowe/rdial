@@ -38,7 +38,7 @@ If you keep receiving ``ErrTrailingComma`` errors when reading files using
 golang it is because you are processing files with empty message fields.  The
 default behaviour of the ``encoding/csv`` pkg is to raise an error when it
 encounters an empty final field.  You can tell ``go`` to accept empty final
-fields by setting the ``TrailingComma`` attribute on your CSV reader.
+fields by setting the ``TrailingComma`` attribute on your |CSV| reader.
 
 .. code-block:: go
 

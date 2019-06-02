@@ -60,6 +60,7 @@ release = rdial._version.dotted
 version = release.rsplit('.', 1)[0]
 
 rst_prolog = """
+.. |CSV| replace:: :abbr:`CSV (Comma Separated Values)`
 .. |ISO| replace:: :abbr:`ISO (International Organization for Standardization)`
 """
 
