@@ -370,7 +370,7 @@ class Events(list):  # pylint: disable=too-many-public-methods
         Args:
             __task: Task name to tracking
             new: Whether to create a new task
-            start: ISO-8601 start time for event
+            start: |ISO|-8601 start time for event
 
         Raises:
             TaskRunningError: An event is already running
@@ -456,14 +456,14 @@ class Events(list):  # pylint: disable=too-many-public-methods
         return events
 
     def for_week(self, __year: int, __week: int) -> 'Events':
-        """Filter events for a specific ISO-8601 week.
+        """Filter events for a specific |ISO|-8601 week.
 
         Args:
             __year: Year to filter events on
-            __week: ISO-8601 month number to filter events on
+            __week: |ISO|-8601 week number to filter events on
 
         Returns:
-            Events occurring in given ISO-8601 week
+            Events occurring in given |ISO|-8601 week
         """
         start, end = utils.iso_week_to_date(__year, __week)
         return self.filter(lambda x: start <= x.start.date() < end)

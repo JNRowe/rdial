@@ -59,6 +59,10 @@ copyright = f'2011-2019  {author}'
 release = rdial._version.dotted
 version = release.rsplit('.', 1)[0]
 
+rst_prolog = """
+.. |ISO| replace:: :abbr:`ISO (International Organization for Standardization)`
+"""
+
 modindex_common_prefix = [
     'rdial.',
 ]

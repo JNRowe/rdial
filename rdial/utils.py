@@ -48,8 +48,8 @@ _MAPPER = {'D': 'days', 'H': 'hours', 'M': 'minutes', 'S': 'seconds'} \
 def parse_datetime_user(__string: str) -> datetime:
     """Parse datetime string from user.
 
-    We accept the normal ISO-8601 formats, but kick through to the formats
-    supported by the system’s date command if parsing fails.
+    We accept the normal |ISO|-8601 formats, but kick through to the formats
+    supported by the system’s :command:`date` command if parsing fails.
 
     Args:
         __string: Datetime string to parse
@@ -78,10 +78,10 @@ def parse_datetime_user(__string: str) -> datetime:
 
 def iso_week_to_date(__year: int,
                      __week: int) -> Tuple[datetime.date, datetime.date]:
-    """Generate date range for a given ISO-8601 week.
+    """Generate date range for a given |ISO|-8601 week.
 
-    ISO-8601 defines a week as Monday to Sunday, with the first week of a year
-    being the first week containing a Thursday.
+    |ISO|-8601 defines a week as Monday to Sunday, with the first week of a
+    year being the first week containing a Thursday.
 
     Args:
         __year: Year to process
