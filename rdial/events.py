@@ -336,7 +336,9 @@ class Events(list):  # pylint: disable=too-many-public-methods
     def last(self) -> Optional[Event]:
         """Return current/last event.
 
-        This handles the empty database case by returning ``None``
+        .. note::
+
+            This handles the empty database case by returning ``None``.
 
         Returns:
             Last recorded event
