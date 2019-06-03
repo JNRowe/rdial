@@ -7,14 +7,14 @@ Configuration
 in the following order:
 
 * The package’s :file:`rdial/config` file which contains the base configuration
-* Any :file:`rdial/config` file that exists in :envvar:`$XDG_CONFIG_DIRS`
-* The user’s :file:`rdial/config` file found in :envvar:`$XDG_CONFIG_HOME`
+* Any :file:`rdial/config` file that exists in :envvar:`XDG_CONFIG_DIRS`
+* The user’s :file:`rdial/config` file found in :envvar:`XDG_CONFIG_HOME`
 * The :file:`.rdialrc` found in the current directory
 
 .. note::
 
    See the `XDG base directory specification`_ for more information on
-   using :envvar:`$XDG_CONFIG_DIRS` and :envvar:`$XDG_CONFIG_HOME`.
+   using :envvar:`XDG_CONFIG_DIRS` and :envvar:`XDG_CONFIG_HOME`.
 
 .. _XDG base directory specification: http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
 

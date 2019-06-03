@@ -66,3 +66,16 @@ to make it easy for users to configure per-project defaults using shell hooks.
    This controls the default task name for :program:`rdial`, and is a good way
    to configure a project default within a shell hook.  It must be a string
    value.
+
+.. envvar:: XDG_CONFIG_DIRS
+
+    Stacked location of directories storing configuration files, see the `XDG
+    base directory specification`_ for more information.
+
+.. envvar:: XDG_CONFIG_HOME
+
+    Path to configuration files as given by the user, if unset use the default
+    value of ``$HOME/.config``.  See the `XDG base directory specification`_
+    for more information.
+
+.. _XDG base directory specification: http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
