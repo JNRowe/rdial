@@ -138,7 +138,7 @@ def write_current(__fun: Callable) -> Callable:
         :doc:`/taskbars`
 
     Args:
-        __fun: Function to add hidden attribute to
+        __fun: Function to wrap
 
     Returns:
         Wrapped function
@@ -168,7 +168,7 @@ def remove_current(__fun: Callable) -> Callable:
         :doc:`/taskbars`
 
     Args:
-        __fun: Function to add hidden attribute to
+        __fun: Function to wrap
 
     Returns:
         Wrapped function
