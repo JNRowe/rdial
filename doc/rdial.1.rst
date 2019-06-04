@@ -7,8 +7,8 @@
 rdial
 =====
 
-Simple time tracking for simple people
---------------------------------------
+Minimal time tracking for maximal benefit
+-----------------------------------------
 
 SYNOPSIS
 --------
@@ -19,7 +19,8 @@ DESCRIPTION
 -----------
 
 :mod:`rdial` is a simple way to track the time you spend on tasks.  It tracks
-the name of a task, its start time and its duration… nothing more.
+the name of a task, its start time, its duration and optionally a message…
+nothing more.
 
 OPTIONS
 -------
@@ -128,3 +129,7 @@ A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with
 rdial.  If not, see <http://www.gnu.org/licenses/>.
+
+.. spelling::
+
+    fsck

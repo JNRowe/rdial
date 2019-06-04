@@ -55,3 +55,9 @@ Development tools
 
     >>> with maybe_profile():
     ...     time.sleep(10)
+
+.. spelling::
+
+    Datetime
+    datetime
+    envvar

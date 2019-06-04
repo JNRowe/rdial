@@ -28,6 +28,7 @@ Contents
    faq
    taskbars
    alternatives
+   future
    release
    todo
    api/index

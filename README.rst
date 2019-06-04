@@ -1,5 +1,5 @@
-rdial - Simple time tracking for simple people
-==============================================
+rdial - Minimal time tracking for maximal benefit
+=================================================
 
 |status| |travis| |coveralls| |pypi| |pyvers| |readthedocs| |develop|
 

@@ -47,3 +47,8 @@ Similarly, if you wish to switch to a new task then a task *must* be running.
 It might be convenient to make :command:`rdial switch` just start the new task
 if a task is not running, but again it encourages users to be unaware of their
 current state.
+
+.. spelling::
+
+    stopstart
+    thinkos

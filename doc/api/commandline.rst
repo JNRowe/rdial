@@ -14,16 +14,16 @@ Commands
 
 .. autofunction:: bug_data()
 .. autofunction:: fsck(ctx, globs, progress)
-.. autofunction:: start(globs, task, new, time)
+.. autofunction:: start(globs, task, continue, new, time)
 .. autofunction:: stop(globs, message, fname, amend)
-.. autofunction:: switch(globs, task, new, time, message, fname)
+.. autofunction:: switch(globs, task, new, time, amend, message, fname)
 .. autofunction:: run(globs, task, new, time, message, fname, command)
 .. autofunction:: wrapper(ctx, globs, time, message, fname, wrapper)
 .. autofunction:: report(globs, task, stats, duration, sort, reverse, style)
 .. autofunction:: running(globs)
 .. autofunction:: last(globs)
 .. autofunction:: ledger(globs, task, duration, rate)
-.. autofunction:: timeclock(globs, task, duration, rate)
+.. autofunction:: timeclock(globs, task, duration)
 
 Entry points
 ~~~~~~~~~~~~~
@@ -47,3 +47,7 @@ CLI support
 .. autofunction:: task_option
 .. autofunction:: duration_option
 .. autofunction:: message_option
+
+.. spelling::
+
+    progressbar

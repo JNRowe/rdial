@@ -1,5 +1,5 @@
 #! /usr/bin/env python3
-"""rdial - Simple time tracking for simple people."""
+"""rdial - Minimal time tracking for maximal benefit."""
 # Copyright © 2011-2018  James Rowe <jnrowe@gmail.com>
 #
 # SPDX-License-Identifier: GPL-3.0+

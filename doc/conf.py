@@ -44,13 +44,12 @@ if not on_rtd:
     # general case and we don’t have the granularity to describe this in a
     # clean way
     try:
-        from sphinxcontrib import spelling  # NOQA: E401
+        from sphinxcontrib import spelling  # NOQA: F401
     except ImportError:
         pass
     else:
         extensions.append('sphinxcontrib.spelling')
 
-master_doc = 'index'
 source_suffix = '.rst'
 
 project = 'rdial'
@@ -60,7 +59,11 @@ copyright = f'2011-2019  {author}'
 release = rdial._version.dotted
 version = release.rsplit('.', 1)[0]
 
-html_experimental_html5_writer = True
+rst_prolog = """
+.. |CSV| replace:: :abbr:`CSV (Comma Separated Values)`
+.. |ISO| replace:: :abbr:`ISO (International Organization for Standardization)`
+"""
+
 modindex_common_prefix = [
     'rdial.',
 ]
@@ -75,7 +78,7 @@ if not on_rtd:
 pygments_style = 'sphinx'
 with suppress(CalledProcessError):
     proc = run([
-        'git', 'log', "--pretty=format:'%ad [%h]'", '--date=short', '-n1'
+        'git', 'log', '--pretty=format:%ad [%h]', '--date=short', '-n1'
     ],
                stdout=PIPE)
     html_last_updated_fmt = proc.stdout.decode()
@@ -103,8 +106,11 @@ intersphinx_mapping = {
 }  # type: Dict[str, str]
 
 # spelling extension settings
+spelling_ignore_acronyms = False
 spelling_lang = 'en_GB'
 spelling_word_list_filename = 'wordlist.txt'
+spelling_ignore_python_builtins = False
+spelling_ignore_importable_modules = False
 
 # napoleon extension settings
 napoleon_numpy_docstring = False

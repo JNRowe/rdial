@@ -48,8 +48,8 @@ _MAPPER = {'D': 'days', 'H': 'hours', 'M': 'minutes', 'S': 'seconds'} \
 def parse_datetime_user(__string: str) -> datetime:
     """Parse datetime string from user.
 
-    We accept the normal ISO-8601 formats, but kick through to the formats
-    supported by the system’s date command if parsing fails.
+    We accept the normal |ISO|-8601 formats, but kick through to the formats
+    supported by the system’s :command:`date` command if parsing fails.
 
     Args:
         __string: Datetime string to parse
@@ -76,12 +76,11 @@ def parse_datetime_user(__string: str) -> datetime:
     return datetime_.replace(tzinfo=None)
 
 
-def iso_week_to_date(__year: int,
-                     __week: int) -> Tuple[datetime.date, datetime.date]:
-    """Generate date range for a given ISO-8601 week.
+def iso_week_to_date(__year: int, __week: int) -> Tuple[date, date]:
+    """Generate date range for a given |ISO|-8601 week.
 
-    ISO-8601 defines a week as Monday to Sunday, with the first week of a year
-    being the first week containing a Thursday.
+    |ISO|-8601 defines a week as Monday to Sunday, with the first week of a
+    year being the first week containing a Thursday.
 
     Args:
         __year: Year to process
@@ -139,7 +138,7 @@ def write_current(__fun: Callable) -> Callable:
         :doc:`/taskbars`
 
     Args:
-        __fun: Function to add hidden attribute to
+        __fun: Function to wrap
 
     Returns:
         Wrapped function
@@ -169,7 +168,7 @@ def remove_current(__fun: Callable) -> Callable:
         :doc:`/taskbars`
 
     Args:
-        __fun: Function to add hidden attribute to
+        __fun: Function to wrap
 
     Returns:
         Wrapped function
@@ -216,7 +215,7 @@ def term_link(__target: str, name: Optional[str] = None) -> str:
         name: Target name
 
     Returns:
-        str: Formatted hyperlink for terminal output
+        Formatted hyperlink for terminal output
     """
     if not name:
         name = os.path.basename(__target)

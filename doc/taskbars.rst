@@ -109,3 +109,8 @@ task:
 .. _rofi: https://github.com/DaveDavenport/rofi/
 .. _zsh: http://www.zsh.org/
 
+.. spelling::
+
+    ab
+    popup
+    taskbars

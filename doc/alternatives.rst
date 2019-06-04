@@ -126,3 +126,9 @@ startup becomes *very* slow.  Exporting my eight year :command:`rdial`
 database results in three second pauses on each :command:`timew` run.
 
 .. _timewarrior: https://taskwarrior.org/news/news.20160821.html
+
+.. spelling::
+
+    backend
+    bzr
+    startup
