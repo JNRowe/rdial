@@ -43,10 +43,8 @@ class TaskNameParamType(click.ParamType):
 
     name = 'taskname'
 
-    def convert(
-        self, __value: str, __param: Optional[click.Argument],
-        __ctx: Optional[click.Context]
-    ) -> str:
+    def convert(self, __value: str, __param: Optional[click.Argument],
+                __ctx: Optional[click.Context]) -> str:
         """Check given task name is valid.
 
         Args:
@@ -61,19 +59,15 @@ class TaskNameParamType(click.ParamType):
         if not __value:
             raise click.BadParameter('No task name given')
         if __value.startswith('-'):
-            raise click.BadParameter(
-                'Task names with leading dashes are '
-                'non-portable'
-            )
+            raise click.BadParameter('Task names with leading dashes are '
+                                     'non-portable')
         if __value.startswith('.') or '/' in __value or '\000' in __value:
             raise click.BadParameter(f'{__value!r} is not a valid task name')
         # Should be based on platform’s PATH_MAX, but it isn’t exposed in a
         # clean way to Python
         if len(__value) > 255:
-            raise click.BadParameter(
-                f'{__value!r} is too long to be a valid '
-                'task name(max 255 characters)'
-            )
+            raise click.BadParameter(f'{__value!r} is too long to be a valid '
+                                     'task name(max 255 characters)')
         return __value
 
 
@@ -82,10 +76,8 @@ class StartTimeParamType(click.ParamType):
 
     name = 'time'
 
-    def convert(
-        self, __value: str, __param: Optional[click.Argument],
-        __ctx: Optional[click.Context]
-    ) -> datetime.datetime:
+    def convert(self, __value: str, __param: Optional[click.Argument],
+                __ctx: Optional[click.Context]) -> datetime.datetime:
         """Check given start time is valid.
 
         Args:
@@ -100,16 +92,13 @@ class StartTimeParamType(click.ParamType):
         try:
             __value = utils.parse_datetime_user(__value)
         except ValueError:
-            raise click.BadParameter(
-                f'{__value!r} is not a valid ISO-8601 '
-                'time string'
-            )
+            raise click.BadParameter(f'{__value!r} is not a valid ISO-8601 '
+                                     'time string')
         return __value
 
 
-def task_from_dir(
-    __ctx: click.Context, __param: click.Option, __value: bool
-) -> None:
+def task_from_dir(__ctx: click.Context, __param: click.Option,
+                  __value: bool) -> None:
     """Override task name default using name of current directory.
 
     Args:
@@ -136,10 +125,8 @@ def get_stop_message(__current: Event, __edit: bool = False) -> str:
 
     """
     marker = '# Text below here ignored\n'
-    task_message = (
-        f'# Task “{__current.task}” started '
-        f'{iso_8601.format_datetime(__current.start)}Z'
-    )
+    task_message = (f'# Task “{__current.task}” started '
+                    f'{iso_8601.format_datetime(__current.start)}Z')
     template = f'{__current.message}\n{marker}{task_message}'
     message = click.edit(template, require_save=not __edit)
     if message is None:
@@ -169,15 +156,13 @@ def task_option(__fun: Callable) -> Callable:
         expose_value=False,
         is_eager=True,
         callback=task_from_dir,
-        help='Use directory name as task name.'
-    )(__fun)
+        help='Use directory name as task name.')(__fun)
     __fun = click.argument(
         'task',
         default='default',
         envvar='RDIAL_TASK',
         required=False,
-        type=TaskNameParamType()
-    )(__fun)
+        type=TaskNameParamType())(__fun)
     return __fun
 
 
@@ -199,8 +184,7 @@ def duration_option(__fun: Callable) -> Callable:
         '--duration',
         default='all',
         type=click.Choice(['day', 'week', 'month', 'year', 'all']),
-        help='Filter events for specified time period.'
-    )(__fun)
+        help='Filter events for specified time period.')(__fun)
     return __fun
 
 
@@ -223,8 +207,7 @@ def message_option(__fun: Callable) -> Callable:
         '--file',
         'fname',
         type=click.File(),
-        help='Read closing message from file.'
-    )(__fun)
+        help='Read closing message from file.')(__fun)
     return __fun
 
 
@@ -235,48 +218,38 @@ def message_option(__fun: Callable) -> Callable:
     help='Minimal time tracking for maximal benefit.',
     epilog=('Please report bugs at '
             'https://github.com/JNRowe/rdial/issues'),
-    context_settings={'help_option_names': ['-h', '--help']}
-)
+    context_settings={'help_option_names': ['-h', '--help']})
 @click.version_option(_version.dotted)
 @click.option(
     '-d',
     '--directory',
     metavar='DIR',
     type=click.Path(file_okay=False),
-    help='Directory to read/write to.'
-)
+    help='Directory to read/write to.')
 @click.option(
     '--backup/--no-backup',
     default=None,
-    help='Do not write data file backups.'
-)
+    help='Do not write data file backups.')
 @click.option(
-    '--cache/--no-cache', default=None, help='Do not write cache files.'
-)
+    '--cache/--no-cache', default=None, help='Do not write cache files.')
 @click.option(
     '--config',
     type=click.Path(
-        exists=True, dir_okay=False, resolve_path=True, allow_dash=True
-    ),
-    help='File to read configuration data from.'
-)
+        exists=True, dir_okay=False, resolve_path=True, allow_dash=True),
+    help='File to read configuration data from.')
 @click.option(
     '-i',
     '--interactive/--no-interactive',
     default=None,
-    help='Support interactive message editing.'
-)
+    help='Support interactive message editing.')
 @click.option(
     '--colour/--no-colour',
     envvar='RDIAL_COLOUR',
     default=None,
-    help='Output colourised informational text.'
-)
+    help='Output colourised informational text.')
 @click.pass_context
-def cli(
-    ctx: click.Context, directory: str, backup: bool, cache: bool, config: str,
-    interactive: bool, colour: bool
-):
+def cli(ctx: click.Context, directory: str, backup: bool, cache: bool,
+        config: str, interactive: bool, colour: bool):
     """Main command entry point.
 
     Args:
@@ -326,9 +299,9 @@ def cli(
     )
 
 
-def filter_events(
-    __globs: ROAttrDict, __task: Optional[str] = None, __duration: str = 'all'
-) -> Events:
+def filter_events(__globs: ROAttrDict,
+                  __task: Optional[str] = None,
+                  __duration: str = 'all') -> Events:
     """Filter events for report processing.
 
     Args:
@@ -385,8 +358,7 @@ def bug_data():
     '-p/-q',
     '--progress/--no-progress',
     default=True,
-    help='Display progress bar.'
-)
+    help='Display progress bar.')
 @click.pass_obj
 @click.pass_context
 def fsck(ctx: click.Context, globs: ROAttrDict, progress: bool):
@@ -413,11 +385,10 @@ def fsck(ctx: click.Context, globs: ROAttrDict, progress: bool):
 
     output = []
     with func(
-        events,
-        label='Checking',
-        fill_char=click.style('█', 'green'),
-        empty_char=click.style('·', 'yellow')
-    ) as pbar:
+            events,
+            label='Checking',
+            fill_char=click.style('█', 'green'),
+            empty_char=click.style('·', 'yellow')) as pbar:
         last_event = Event('none', datetime.datetime.min)
         for event in pbar:
             if not last_event.start + last_event.delta <= event.start:
@@ -452,21 +423,18 @@ def fsck(ctx: click.Context, globs: ROAttrDict, progress: bool):
     '--continue',
     'continue_',
     is_flag=True,
-    help='Restart previous task.'
-)
+    help='Restart previous task.')
 @click.option('-n', '--new', is_flag=True, help='Start a new task.')
 @click.option(
     '-t',
     '--time',
     default='',
     help='Set start time.',
-    type=StartTimeParamType()
-)
+    type=StartTimeParamType())
 @click.pass_obj
 @utils.write_current
-def start(
-    globs: ROAttrDict, task: str, continue_: bool, new: bool, time: datetime
-):
+def start(globs: ROAttrDict, task: str, continue_: bool, new: bool,
+          time: datetime):
     """Start task.
 
     \f
@@ -506,10 +474,8 @@ def stop(globs: ROAttrDict, message: str, fname: str, amend: bool):
         last_event = events.last()
         if last_event.running():
             if amend:
-                raise TaskRunningError(
-                    'Can’t amend running task '
-                    f'{last_event.task}!'
-                )
+                raise TaskRunningError('Can’t amend running task '
+                                       f'{last_event.task}!')
         else:
             if not amend:
                 raise TaskNotRunningError('No task running!')
@@ -519,12 +485,8 @@ def stop(globs: ROAttrDict, message: str, fname: str, amend: bool):
             message = get_stop_message(last_event, amend)
         events.stop(message, force=amend)
     event = events.last()
-    click.echo(
-        'Task {} running for {}'.format(
-            event.task,
-            str(event.delta).split('.')[0]
-        )
-    )
+    click.echo('Task {} running for {}'.format(event.task,
+                                               str(event.delta).split('.')[0]))
 
 
 @cli.command()
@@ -535,16 +497,13 @@ def stop(globs: ROAttrDict, message: str, fname: str, amend: bool):
     '--time',
     default='',
     help='Set start time.',
-    type=StartTimeParamType()
-)
+    type=StartTimeParamType())
 @message_option
 @click.option('--amend', is_flag=True, help='Amend previous stop entry.')
 @click.pass_obj
 @utils.write_current
-def switch(
-    globs: ROAttrDict, task: str, new: bool, time: datetime, amend: bool,
-    message: str, fname: str
-):
+def switch(globs: ROAttrDict, task: str, new: bool, time: datetime,
+           amend: bool, message: str, fname: str):
     """Complete last task and start new one.
 
     \f
@@ -563,10 +522,8 @@ def switch(
     with Events.wrapping(globs.directory, globs.backup, globs.cache) as events:
         event = events.last()
         if time and time < event.start:
-            raise TaskNotRunningError(
-                'Can’t specify a start time before '
-                'current task started!'
-            )
+            raise TaskNotRunningError('Can’t specify a start time before '
+                                      'current task started!')
         if event.running() and amend:
             raise TaskRunningError(f'Can’t amend running task {event.task}!')
         elif not event.running() and not amend:
@@ -582,12 +539,8 @@ def switch(
             events.stop(message, force=amend)
         events.last().delta = time - event.start
         events.start(task, new, time)
-    click.echo(
-        'Task {} running for {}'.format(
-            event.task,
-            str(event.delta).split('.')[0]
-        )
-    )
+    click.echo('Task {} running for {}'.format(event.task,
+                                               str(event.delta).split('.')[0]))
 
 
 @cli.command()
@@ -598,15 +551,12 @@ def switch(
     '--time',
     default='',
     help='Set start time.',
-    type=StartTimeParamType()
-)
+    type=StartTimeParamType())
 @message_option
 @click.option('-c', '--command', help='Command to run.')
 @click.pass_obj
-def run(
-    globs: ROAttrDict, task: str, new: bool, time: datetime, message: str,
-    fname: str, command: str
-):
+def run(globs: ROAttrDict, task: str, new: bool, time: datetime, message: str,
+        fname: str, command: str):
     """Run command with timer.
 
     \f
@@ -623,8 +573,7 @@ def run(
     with Events.wrapping(globs.directory, globs.backup, globs.cache) as events:
         if events.running():
             raise TaskRunningError(
-                f'Task {events.last().task} is already started!'
-            )
+                f'Task {events.last().task} is already started!')
 
         proc = subprocess.run(command, shell=True)
 
@@ -638,12 +587,8 @@ def run(
             message = get_stop_message(events.last())
         events.stop(message)
     event = events.last()
-    click.echo(
-        'Task {} running for {}'.format(
-            event.task,
-            str(event.delta).split('.')[0]
-        )
-    )
+    click.echo('Task {} running for {}'.format(event.task,
+                                               str(event.delta).split('.')[0]))
     os.unlink(f'{globs.directory}/.current')
     if proc.returncode != 0:
         raise OSError(proc.returncode, 'Command failed')
@@ -655,16 +600,13 @@ def run(
     '--time',
     default='',
     help='Set start time.',
-    type=StartTimeParamType()
-)
+    type=StartTimeParamType())
 @message_option
 @click.argument('wrapper', default='default')
 @click.pass_obj
 @click.pass_context
-def wrapper(
-    ctx: click.Context, globs: ROAttrDict, time: datetime, message: str,
-    fname: str, wrapper: str
-):
+def wrapper(ctx: click.Context, globs: ROAttrDict, time: datetime,
+            message: str, fname: str, wrapper: str):
     """Run predefined command with timer.
 
     \f
@@ -697,26 +639,21 @@ def wrapper(
     default='task',
     envvar='RDIAL_SORT',
     type=click.Choice(['task', 'time']),
-    help='Field to sort by.'
-)
+    help='Field to sort by.')
 @click.option(
     '-r',
     '--reverse/--no-reverse',
     default=False,
     envvar='RDIAL_REVERSE',
-    help='Reverse sort order.'
-)
+    help='Reverse sort order.')
 @click.option(
     '--style',
     default='simple',
     type=click.Choice(tabulate._table_formats.keys()),
-    help='Table output style.'
-)
+    help='Table output style.')
 @click.pass_obj
-def report(
-    globs: ROAttrDict, task: str, stats: bool, duration: str, sort: str,
-    reverse: bool, style: str
-):
+def report(globs: ROAttrDict, task: str, stats: bool, duration: str, sort: str,
+           reverse: bool, style: str):
     """Report time tracking data.
 
     \f
@@ -747,14 +684,11 @@ def report(
                       key=operator.itemgetter(['task', 'time'].index(sort)),
                       reverse=reverse)
         click.echo_via_pager(
-            tabulate.tabulate(data, ['task', 'time'], tablefmt=style)
-        )
+            tabulate.tabulate(data, ['task', 'time'], tablefmt=style))
     if events.running():
         current = events.last()
-        click.echo(
-            f'Task “{current.task}” started '
-            f'{iso_8601.format_datetime(current.start)}Z'
-        )
+        click.echo(f'Task “{current.task}” started '
+                   f'{iso_8601.format_datetime(current.start)}Z')
 
 
 @cli.command()
@@ -771,12 +705,9 @@ def running(globs: ROAttrDict):
     if events.running():
         current = events.last()
         now = datetime.datetime.utcnow()
-        click.echo(
-            'Task “{}” started {}'.format(
-                current.task,
-                str(now - current.start).split('.')[0]
-            )
-        )
+        click.echo('Task “{}” started {}'.format(
+            current.task,
+            str(now - current.start).split('.')[0]))
     else:
         colourise.pwarn('No task is running!')
 
@@ -809,8 +740,7 @@ def last(globs: ROAttrDict):
     '--rate',
     type=float,
     envvar='RDIAL_RATE',
-    help='Hourly rate for task output.'
-)
+    help='Hourly rate for task output.')
 @click.pass_obj
 def ledger(globs: ROAttrDict, task: str, duration: str, rate: str):
     """Generate ledger compatible data file.
@@ -839,8 +769,7 @@ def ledger(globs: ROAttrDict, task: str, duration: str, rate: str):
             yield f'{event.start:%F * %H:%M}-{end:%H:%M}'
             yield '    (task:{})  {:.2f}h{}{}\n'.format(
                 event.task, hours, ' @ {}'.format(rate) if rate else '',
-                '  ; {}'.format(event.message) if event.message else ''
-            )
+                '  ; {}'.format(event.message) if event.message else '')
         if events.running():
             yield ';; Running event not included in output!\n'
 

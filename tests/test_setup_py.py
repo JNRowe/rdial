@@ -25,17 +25,15 @@ from pytest import mark
 import setup
 
 
-@mark.parametrize(
-    'input, expected', [
-        ('plain', [
-            'tabulate',
-        ]),
-        ('recurse', [
-            'click',
-            'tabulate',
-        ]),
-    ]
-)
+@mark.parametrize('input, expected', [
+    ('plain', [
+        'tabulate',
+    ]),
+    ('recurse', [
+        'click',
+        'tabulate',
+    ]),
+])
 def test_parse_requires(input: str, expected: List[str]):
     requires = setup.parse_requires(f'../tests/data/requires/{input}.txt')
     assert requires == expected

@@ -35,28 +35,21 @@ from rdial.events import Event, Events, TaskRunningError
 def temp_user_cache(monkeypatch, tmpdir):
     cache_dir = tmpdir.join('cache')
     cache_dir.mkdir()
-    monkeypatch.setattr(
-        events_mod.xdg_basedir, 'user_cache', lambda s: cache_dir.strpath
-    )
+    monkeypatch.setattr(events_mod.xdg_basedir, 'user_cache',
+                        lambda s: cache_dir.strpath)
 
 
-@mark.parametrize(
-    'task, start, delta, message', [
-        ('test', None, None, None),
-        ('test', '2013-02-26T19:45:14', None, None),
-        ('test', datetime(2013, 2, 26, 19, 45, 14), None, None),
-        ('test', '2013-02-26T19:45:14', 'PT8M19S', None),
-        (
-            'test', '2013-02-26T19:45:14',
-            timedelta(minutes=8, seconds=19.770869), None
-        ),
-        ('test', '2013-02-26T19:45:14', 'PT8M19S', 'stopped'),
-    ]
-)
-def test_event_creation(
-    task: str, start: Optional[Union[str, datetime]],
-    delta: Optional[Union[str, timedelta]], message: str
-):
+@mark.parametrize('task, start, delta, message', [
+    ('test', None, None, None),
+    ('test', '2013-02-26T19:45:14', None, None),
+    ('test', datetime(2013, 2, 26, 19, 45, 14), None, None),
+    ('test', '2013-02-26T19:45:14', 'PT8M19S', None),
+    ('test', '2013-02-26T19:45:14', timedelta(minutes=8, seconds=19.770869),
+     None),
+    ('test', '2013-02-26T19:45:14', 'PT8M19S', 'stopped'),
+])
+def test_event_creation(task: str, start: Optional[Union[str, datetime]],
+                        delta: Optional[Union[str, timedelta]], message: str):
     e = Event(task, start, delta, message)
     assert e.task == task
     if isinstance(start, datetime):
@@ -75,10 +68,8 @@ def test_event_creation(
 
 def test_event_creation_non_naive():
     with raises(ValueError, match='Must be a naive datetime'):
-        Event(
-            'test', datetime(2013, 2, 26, 19, 45, 14, tzinfo=timezone.utc),
-            None, None
-        )
+        Event('test', datetime(2013, 2, 26, 19, 45, 14, tzinfo=timezone.utc),
+              None, None)
 
 
 def test_event_equality():
@@ -87,45 +78,33 @@ def test_event_equality():
     assert ev1 == ev2
 
 
-@mark.parametrize(
-    'ev1, ev2', [
-        (
-            Event(
-                'test',
-                datetime(2013, 2, 26, 19, 45, 14),
-            ), Event(
-                'not_test',
-                datetime(2013, 2, 26, 19, 45, 14),
-            )
-        ),
-        (
-            Event(
-                'date',
-                datetime(2013, 2, 26, 19, 45, 14),
-            ), Event(
-                'date',
-                datetime(2001, 1, 1, 0, 0, 0),
-            )
-        ),
-        (
-            Event('message', datetime(2013, 2, 26, 19, 45, 14), None, 'test'),
-            Event(
-                'message', datetime(2013, 2, 26, 19, 45, 14), None, 'breakage'
-            )
-        ),
-    ]
-)
+@mark.parametrize('ev1, ev2', [
+    (Event(
+        'test',
+        datetime(2013, 2, 26, 19, 45, 14),
+    ), Event(
+        'not_test',
+        datetime(2013, 2, 26, 19, 45, 14),
+    )),
+    (Event(
+        'date',
+        datetime(2013, 2, 26, 19, 45, 14),
+    ), Event(
+        'date',
+        datetime(2001, 1, 1, 0, 0, 0),
+    )),
+    (Event('message', datetime(2013, 2, 26, 19, 45, 14), None, 'test'),
+     Event('message', datetime(2013, 2, 26, 19, 45, 14), None, 'breakage')),
+])
 def test_event_inequality(ev1: Event, ev2: Event):
     assert ev1 != ev2
 
 
-@mark.parametrize(
-    'database, events', [
-        ('test', 3),
-        ('date_filtering', 3),
-        ('test_not_running', 3),
-    ]
-)
+@mark.parametrize('database, events', [
+    ('test', 3),
+    ('date_filtering', 3),
+    ('test_not_running', 3),
+])
 def test_read_datebase(database: str, events: int):
     evs = Events.read('tests/data/' + database, write_cache=False)
     assert len(evs) == events
@@ -136,13 +115,11 @@ def test_read_invalid_data():
         Events.read('tests/data/faulty_csv', write_cache=False)
 
 
-@mark.parametrize(
-    'database, events', [
-        ('test', 3),
-        ('date_filtering', 3),
-        ('test_not_running', 3),
-    ]
-)
+@mark.parametrize('database, events', [
+    ('test', 3),
+    ('date_filtering', 3),
+    ('test_not_running', 3),
+])
 def test_read_datebase_wrapper(database: str, events: int):
     with Events.wrapping('tests/data/' + database, write_cache=False) as evs:
         assert len(evs) == events
@@ -165,12 +142,10 @@ def test_read_datebase_wrapper_write(tmpdir):
     assert comp.subdirs == {}
 
 
-@mark.parametrize(
-    'database, result', [
-        ('test', Event('task', '2011-05-04T09:30:00Z', '', 'finished')),
-        ('', None),
-    ]
-)
+@mark.parametrize('database, result', [
+    ('test', Event('task', '2011-05-04T09:30:00Z', '', 'finished')),
+    ('', None),
+])
 def test_read_last(database: str, result: Optional[Event]):
     evs = Events.read('tests/data/' + database, write_cache=False)
     assert evs.last() == result
@@ -182,13 +157,11 @@ def test_fail_start_with_overlap():
         evs.start('task', start=datetime(2011, 5, 4, 9, 33))
 
 
-@mark.parametrize(
-    'n, task, start, delta', [
-        (0, 'task', datetime(2011, 5, 4, 8), timedelta(hours=1)),
-        (1, 'task2', datetime(2011, 5, 4, 9, 15), timedelta(minutes=15)),
-        (2, 'task', datetime(2011, 5, 4, 9, 30), timedelta()),
-    ]
-)
+@mark.parametrize('n, task, start, delta', [
+    (0, 'task', datetime(2011, 5, 4, 8), timedelta(hours=1)),
+    (1, 'task2', datetime(2011, 5, 4, 9, 15), timedelta(minutes=15)),
+    (2, 'task', datetime(2011, 5, 4, 9, 30), timedelta()),
+])
 def test_check_events(n: int, task: str, start: datetime, delta: timedelta):
     # FIXME: Clean-ish way to perform check, with the caveat that it parses the
     # database on each entry.  Need a better solution.
@@ -241,17 +214,14 @@ def test_write_database_cache(temp_user_cache, tmpdir):
     events._dirty = events.tasks()
     events.write(tmpdir.join('database').strpath)
     cache_files = glob(
-        tmpdir.join('cache', '**', '*.pkl').strpath, recursive=True
-    )
+        tmpdir.join('cache', '**', '*.pkl').strpath, recursive=True)
     assert {f.split('/')[-1][:-4] for f in cache_files} == set(events.tasks())
 
 
 def test_read_database_cache(temp_user_cache, monkeypatch):
     read = set()
-    monkeypatch.setattr(
-        events_mod.pickle, 'load',
-        lambda f: read.add(f.name.split('/')[-1][:-4])
-    )
+    monkeypatch.setattr(events_mod.pickle, 'load',
+                        lambda f: read.add(f.name.split('/')[-1][:-4]))
     in_dir = 'tests/data/test'
     events = Events.read(in_dir)
     events = Events.read(in_dir)
@@ -262,8 +232,7 @@ def test_read_database_cache_broken(temp_user_cache, tmpdir):
     in_dir = 'tests/data/test'
     events = Events.read(in_dir)
     cache_files = glob(
-        tmpdir.join('cache', '**', '*.pkl').strpath, recursive=True
-    )
+        tmpdir.join('cache', '**', '*.pkl').strpath, recursive=True)
     with open(cache_files[0], 'w') as f:
         f.write('Broken data')
     events2 = Events.read(in_dir)
@@ -279,8 +248,8 @@ def test_non_existing_database():
     assert Events() == Events.read('I_NEVER_EXIST', write_cache=False)
 
 
-@mark.skipif(not events_mod.cduration,
-             reason='Skipping tests for cduration fallbacks')
+@mark.skipif(
+    not events_mod.cduration, reason='Skipping tests for cduration fallbacks')
 def test_handling_of_cduration(monkeypatch):
     monkeypatch.setattr(events_mod, 'cduration', None)
     events = Events.read('tests/data/test', write_cache=False)

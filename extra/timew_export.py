@@ -66,14 +66,12 @@ def write_events(location: str, files: Dict[str, List[str]]) -> None:
 @command(
     epilog=('Please report bugs at '
             'https://github.com/JNRowe/rdial/issues'),
-    context_settings={'help_option_names': ['-h', '--help']}
-)
+    context_settings={'help_option_names': ['-h', '--help']})
 @option(
     '--database',
     default=user_data('rdial'),
     type=Path(exists=True, file_okay=False),
-    help="Path to rdial database"
-)
+    help='Path to rdial database')
 @argument('output', type=Path(exists=False))
 def main(database: str, output: str) -> None:
     """Export rdial data for use with timew.
@@ -86,5 +84,5 @@ def main(database: str, output: str) -> None:
     write_events(output, files)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

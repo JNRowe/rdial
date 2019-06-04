@@ -34,7 +34,6 @@ from rdial.utils import iso_week_to_date
         (2009, 53,
          (date(2009, 12, 28), date(2010, 1, 4))),  # ISO year spans 2010
         (2013, 52, (date(2013, 12, 23), date(2013, 12, 30))),
-    ]
-)
+    ])
 def test_iso_week_to_date(year: int, week: int, expected: Tuple[date, date]):
     assert iso_week_to_date(year, week) == expected

@@ -62,11 +62,10 @@ def parse_datetime_user(__string: str) -> datetime:
         datetime_ = parse_datetime(__string)
     except ValueError:
         try:
-            proc = subprocess.run([
-                'date', '--utc', '--iso-8601=seconds', '-d', __string
-            ],
-                                  stdout=subprocess.PIPE,
-                                  check=True)
+            proc = subprocess.run(
+                ['date', '--utc', '--iso-8601=seconds', '-d', __string],
+                stdout=subprocess.PIPE,
+                check=True)
             output = proc.stdout.decode()
             datetime_ = parse_datetime(output.strip()[:19])
         except subprocess.CalledProcessError:
@@ -96,10 +95,9 @@ def iso_week_to_date(__year: int, __week: int) -> Tuple[date, date]:
     return start, end
 
 
-def read_config(
-    user_config: Optional[str] = None,
-    cli_options: Optional[Dict[str, Union[bool, str]]] = None
-) -> configparser.ConfigParser:
+def read_config(user_config: Optional[str] = None,
+                cli_options: Optional[Dict[str, Union[bool, str]]] = None
+                ) -> configparser.ConfigParser:
     """Read configuration data.
 
     Args:
@@ -124,8 +122,7 @@ def read_config(
     if cli_options:
         conf.read_dict({
             'rdial': {k: v
-                      for k, v in cli_options.items()
-                      if v is not None}
+                      for k, v in cli_options.items() if v is not None}
         })
 
     return conf

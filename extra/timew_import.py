@@ -56,10 +56,9 @@ def process_records(location: TextIO) -> Dict[str, List[str]]:
             ev.end = ev.end - ev.start
         else:
             ev.end = timedelta(0)
-        files[ev.tags[0]].append([
-            format_datetime(ev.start),
-            format_delta(ev.end), None
-        ])
+        files[ev.tags[0]].append(
+            [format_datetime(ev.start),
+             format_delta(ev.end), None])
     return files
 
 
@@ -76,8 +75,7 @@ def write_events(location: str, files: Dict[str, List[str]]) -> None:
 @command(
     epilog=('Please report bugs at '
             'https://github.com/JNRowe/rdial/issues'),
-    context_settings={'help_option_names': ['-h', '--help']}
-)
+    context_settings={'help_option_names': ['-h', '--help']})
 @argument('input', type=File())
 @argument('output', type=Path(exists=False))
 def main(input: TextIO, output: str) -> None:
@@ -92,5 +90,5 @@ def main(input: TextIO, output: str) -> None:
     write_events(output, files)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
