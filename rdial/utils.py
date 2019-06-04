@@ -1,6 +1,6 @@
 #
 """utils - Utility functions for rdial."""
-# Copyright © 2012-2018  James Rowe <jnrowe@gmail.com>
+# Copyright © 2012-2019  James Rowe <jnrowe@gmail.com>
 #
 # SPDX-License-Identifier: GPL-3.0+
 #

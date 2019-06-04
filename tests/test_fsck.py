@@ -1,6 +1,6 @@
 #
 """test_fsck - Test database fsck support."""
-# Copyright © 2011-2018  James Rowe <jnrowe@gmail.com>
+# Copyright © 2011-2019  James Rowe <jnrowe@gmail.com>
 #
 # SPDX-License-Identifier: GPL-3.0+
 #

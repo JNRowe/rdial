@@ -1,6 +1,6 @@
 #
 """cmdline - Command line functionality for rdial."""
-# Copyright © 2012-2018  James Rowe <jnrowe@gmail.com>
+# Copyright © 2012-2019  James Rowe <jnrowe@gmail.com>
 #                        Nathan McGregor <nathan.mcgregor@astrium.eads.net>
 #                        Rach Holmes <rach.c.holmes@gmail.com>
 #
