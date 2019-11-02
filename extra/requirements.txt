@@ -1,4 +1,5 @@
 click>=7.0
+click-log>=0.3.2
 jnrbase[colour,iso_8601]>=1.1.0
 importlib_resources>=1.0.2;python_version<"3.7"
 tabulate>=0.8.2
