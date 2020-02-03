@@ -125,7 +125,14 @@ The only possible drawback is its speed, as with large numbers of records its
 startup becomes *very* slow.  Exporting my eight year :command:`rdial`
 database results in three second pauses on each :command:`timew` run.
 
+.. note::
+
+    This *may* be fixed in future releases, see timewarrior’s issue
+    tracker(`#245`_ and `#269`_) for more information and possible fixes.
+
 .. _timewarrior: https://taskwarrior.org/news/news.20160821.html
+.. _#245: https://github.com/GothenburgBitFactory/timewarrior/issues/245
+.. _#269: https://github.com/GothenburgBitFactory/timewarrior/pull/269
 
 .. spelling::
 
