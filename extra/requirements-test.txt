@@ -1,10 +1,10 @@
 -r requirements.txt
 
-hiro>=0.2
+hiro>=1.1.1
 # hiro explicitly requires mock, and not Python 3’s unittest.mock
-mock>=0.7.1
+mock>=5.2.0
 pytest>=4.0
-pytest-cov>=1.8
-pytest-icdiff>=0.0.3
+pytest-cov>=7.1.0
+pytest-icdiff>=0.9
 pytest-randomly>=1.2
 pytest-sugar>=0.9.1
