@@ -9,4 +9,4 @@ flake8-import-order>=0.16
 flake8-string-format>=0.3.0
 pep8-naming
 pep257
-pytest-html>=1.14
+pytest-html>=4.2.0
