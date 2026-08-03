@@ -6,7 +6,7 @@ flake8-chart>=0.1
 flake8-copyright>=0.2.4
 flake8-comprehensions>=3.17.0
 flake8-import-order>=0.19.2
-flake8-string-format>=0.3.0
+flake8-string-format>=0.4.0
 pep8-naming
 pep257
 pytest-html>=4.2.0
